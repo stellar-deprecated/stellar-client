@@ -1,0 +1,13 @@
+{
+    "name": "stellar-client",
+    "version": "0.0.1",
+    "dependencies": {
+        "express": "*",
+        "express-brute": "*",
+        "async": "*",
+        "body-parser": "*",
+        "fb": "*",
+        "crypto-js": "*",
+        "winston": ">= 0.0.1"
+    }
+}
