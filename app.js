@@ -2,7 +2,7 @@ var express = require('express');
 var ExpressBrute = require('express-brute');
 var bodyParser = require('body-parser');
 
-var config = require('./config');
+var config = require('./config-example');
 
 var https = require('https');
 var http = require('http');
