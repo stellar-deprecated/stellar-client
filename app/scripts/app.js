@@ -5,10 +5,19 @@ var stellarClient = angular.module('stellarClient', ['ui.router']);
 stellarClient.config(function($stateProvider, $urlRouterProvider) {
 
   $stateProvider
-    .state('welcome', {
-      url:         '/welcome',
-      templateUrl: 'states/welcome.html'
-    });
+    .state('login', {
+      url:         '/login',
+      templateUrl: 'states/login.html'
+    })
+    .state('register', {
+      url:         '/register',
+      templateUrl: 'states/register.html'
+    })
+    .state('dashboard', {
+      url:         '/dashboard',
+      templateUrl: 'states/dashboard.html'
+    })
+  ;
 
-  $urlRouterProvider.otherwise('/welcome');
+  $urlRouterProvider.otherwise('/login');
 });
