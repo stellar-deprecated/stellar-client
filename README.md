@@ -7,5 +7,5 @@ and manage their account and wallet.
 ## Starting your dev server
 
 ```bash
-gulp serve
+gulp watch
 ```
