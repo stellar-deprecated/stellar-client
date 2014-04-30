@@ -1,6 +1,40 @@
-<h1>
-  REGISTER GOES HERE
-</h1>
-
-
-<a href="#" ui-sref="dashboard">Go to dashboard</a>
+<h1>Register</h1>
+<form role="form" ng-controller="RegistrationCtrl">
+    <div class="form-group">
+        <label for="username">Username</label>
+        <div class="input-icon-wrapper">
+            <i class="username-status glyphicon" ng-class="usernameClass()"></i>
+            <input id="username" type="text" class="form-control" placeholder="Username" ng-model="username" ng-change="checkUsername()">
+        </div>
+        <div class="alert alert-danger ng-hide" ng-show="usernameErrors">
+            <ul>
+                <li ng-repeat="error in usernameErrors">{{ error }}</li>
+            </ul>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="email">Email address</label>
+        <input id="email" type="email" class="form-control" placeholder="Email (optional)" ng-model="email">
+    </div>
+    <div class="form-group">
+        <label for="password">Password</label>
+        <input id="password" type="password" class="form-control" placeholder="Password" ng-model="password" ng-change="checkPassword()">
+        <div class="password-strength {{ password | passwordLevel:4 }}" ng-class="{hidden: password == ''}"></div>
+        <div class="alert alert-danger ng-hide" ng-show="passwordErrors">
+            <ul>
+                <li ng-repeat="error in passwordErrors">{{ error }}</li>
+            </ul>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="password-confirmation">Confirm Password</label>
+        <input id="password-confirmation" type="password" class="form-control" placeholder="Confirm Password" ng-model="passwordConfirmation" ng-change="checkConfirmPassword()">
+        <div class="password-strength" ng-class="passwordConfirmClass()"></div>
+        <div class="alert alert-danger ng-hide" ng-show="passwordConfirmErrors">
+            <ul>
+                <li ng-repeat="error in passwordConfirmErrors">{{ error }}</li>
+            </ul>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-default" ng-click="attemptRegistration()">Submit</button>
+</form>

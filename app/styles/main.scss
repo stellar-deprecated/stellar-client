@@ -4,6 +4,8 @@ $icon-font-path: "../bower_components/bootstrap-sass-official/vendor/assets/font
 @import "../bower_components/bootstrap-sass-official/vendor/assets/stylesheets/bootstrap.scss";
 // endbower
 
+@import "registration.scss";
+
 body {
     padding-top: 50px;
     padding-bottom: 20px;
