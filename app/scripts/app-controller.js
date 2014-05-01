@@ -48,19 +48,25 @@ sc.controller('RegistrationCtrl', function($scope, $state, debounce, passwordStr
 
   // Checks to see if the supplied username is available.
   // This function is debounced to prevent API calls before the user is finished typing.
-  var checkUsername = debounce(500, function(){
+  var checkUsername = debounce(2000, function(){
     if($scope.username === '') $scope.usernameAvailable = null;
     else
     {
       //TODO: Check API to see if the user name is already taken.
-      if($scope.username === 'stellar') {
-        $scope.usernameErrors = [];
-        $scope.usernameAvailable = true;
-      }
-      else
-      {
-        $scope.usernameAvailable = false;
-      }
+      var params = {username: $scope.username};
+      $.post("http://localhost/validname", params, null, "json").done(function (response) {
+        $scope.$apply(function(){
+          console.log(response.status);
+          if(response.status === 'usernameAvailable') {
+            $scope.usernameErrors = [];
+            $scope.usernameAvailable = true;
+          }
+          else
+          {
+            $scope.usernameAvailable = false;
+          }
+        });
+      });
     }
   });
 
@@ -149,7 +155,36 @@ sc.controller('RegistrationCtrl', function($scope, $state, debounce, passwordStr
       //      go to dashboard
 
       // this is the dummy success state
-      $state.go('dashboard');
+      var publicKey = '1';
+
+      var params = {
+        username: $scope.username,
+        email: $scope.email,
+        publicKey: publicKey
+      };
+
+      $.post("http://localhost/user", params, null, "json").done(function (response) {
+        console.log(response.status);
+        // error, nameTaken, alreadyClaimed, newFB, queued, success
+        switch(response.status)
+        {
+          case 'nameTaken':
+            break;
+          case 'alreadyClaimed':
+            break;
+          case 'newFB':
+            break;
+          case 'queued':
+            break;
+          case 'success':
+            // TODO: Store tokens.
+            $state.go('dashboard');
+            break;
+          case 'error':
+          default:
+            break;
+        }
+      });
     }
   };
 });
