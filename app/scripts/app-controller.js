@@ -3,7 +3,7 @@
 var sc = angular.module('stellarClient');
 
 sc.controller('AppCtrl', function($scope) {
-  
+
 });
 
 sc.controller('NavCtrl', function($scope) {
@@ -32,7 +32,7 @@ sc.controller('LoginCtrl', function($scope, $state) {
   };
 });
 
-sc.controller('RegistrationCtrl', function($scope, $state, API_LOCATION, debounce, passwordStrengthComputations) {
+sc.controller('RegistrationCtrl', function($scope, $state, API_LOCATION, bruteRequest, debounce, passwordStrengthComputations) {
   $scope.username             = '';
   $scope.email                = '';
   $scope.password             = '';
@@ -46,27 +46,61 @@ sc.controller('RegistrationCtrl', function($scope, $state, API_LOCATION, debounc
   $scope.passwordErrors        = [];
   $scope.passwordConfirmErrors = [];
 
+  var requestUsernameStatus = new bruteRequest({
+    url: API_LOCATION + '/validname',
+    type: 'POST',
+    dataType: 'json',
+
+    success: function (response) {
+      $scope.$apply(function(){
+        console.log(response.status);
+        if(response.status === 'usernameAvailable') {
+          $scope.usernameErrors = [];
+          $scope.usernameAvailable = true;
+        }
+        else
+        {
+          $scope.usernameAvailable = false;
+        }
+      });
+    }
+  });
+
+  var requestRegistration = new bruteRequest({
+    url: API_LOCATION + '/user',
+    type: 'POST',
+    dataType: 'json',
+
+    success: function (response) {
+      $scope.$apply(function () {
+        console.log(response.status);
+        switch(response.status)
+        {
+          case 'nameTaken':
+            break;
+          case 'success':
+            // TODO: Store tokens.
+            // TODO: hash up the passwords
+            //      locate the user blob and decrypt
+            //      go to dashboard
+
+            // this is the dummy success state
+            $state.go('dashboard');
+            break;
+          case 'error':
+          default:
+            break;
+        }
+      });
+    }
+  });
+
   // Checks to see if the supplied username is available.
   // This function is debounced to prevent API calls before the user is finished typing.
   var checkUsername = debounce(2000, function(){
     if($scope.username === '') $scope.usernameAvailable = null;
-    else
-    {
-      //TODO: Check API to see if the user name is already taken.
-      var params = {username: $scope.username};
-      $.post(API_LOCATION + '/validname', params, null, "json").done(function (response) {
-        $scope.$apply(function(){
-          console.log(response.status);
-          if(response.status === 'usernameAvailable') {
-            $scope.usernameErrors = [];
-            $scope.usernameAvailable = true;
-          }
-          else
-          {
-            $scope.usernameAvailable = false;
-          }
-        });
-      });
+    else{
+      requestUsernameStatus.send({username: $scope.username});
     }
   });
 
@@ -131,7 +165,7 @@ sc.controller('RegistrationCtrl', function($scope, $state, API_LOCATION, debounc
       validInput = false;
       $scope.usernameErrors.push('The username field is required.');
     }
-    else if(!$scope.usernameAvailable){
+    else if($scope.usernameAvailable === false){
       validInput = false;
       $scope.usernameErrors.push('The username "' + $scope.username + '" is taken.');
     }
@@ -150,41 +184,15 @@ sc.controller('RegistrationCtrl', function($scope, $state, API_LOCATION, debounc
     }
 
     if(validInput){
-      //TODO: hash up the passwords
-      //      locate the user blob and decrypt
-      //      go to dashboard
-
-      // this is the dummy success state
       var publicKey = '1';
 
-      var params = {
+      var data = {
         username: $scope.username,
         email: $scope.email,
         publicKey: publicKey
       };
 
-      $.post(API_LOCATION + '/user', params, null, "json").done(function (response) {
-        console.log(response.status);
-        // error, nameTaken, alreadyClaimed, newFB, queued, success
-        switch(response.status)
-        {
-          case 'nameTaken':
-            break;
-          case 'alreadyClaimed':
-            break;
-          case 'newFB':
-            break;
-          case 'queued':
-            break;
-          case 'success':
-            // TODO: Store tokens.
-            $state.go('dashboard');
-            break;
-          case 'error':
-          default:
-            break;
-        }
-      });
+      requestRegistration.send(data);
     }
   };
 });
