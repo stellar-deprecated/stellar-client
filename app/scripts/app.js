@@ -1,6 +1,6 @@
 'use strict';
 
-var stellarClient = angular.module('stellarClient', ['ui.router', 'rt.debounce', 'vr.passwordStrength']);
+var stellarClient = angular.module('stellarClient', ['config', 'ui.router', 'rt.debounce', 'vr.passwordStrength']);
 
 stellarClient.config(function($stateProvider, $urlRouterProvider) {
 

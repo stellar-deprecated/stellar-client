@@ -32,7 +32,7 @@ sc.controller('LoginCtrl', function($scope, $state) {
   };
 });
 
-sc.controller('RegistrationCtrl', function($scope, $state, debounce, passwordStrengthComputations) {
+sc.controller('RegistrationCtrl', function($scope, $state, API_LOCATION, debounce, passwordStrengthComputations) {
   $scope.username             = '';
   $scope.email                = '';
   $scope.password             = '';
@@ -54,7 +54,7 @@ sc.controller('RegistrationCtrl', function($scope, $state, debounce, passwordStr
     {
       //TODO: Check API to see if the user name is already taken.
       var params = {username: $scope.username};
-      $.post("http://localhost/validname", params, null, "json").done(function (response) {
+      $.post(API_LOCATION + '/validname', params, null, "json").done(function (response) {
         $scope.$apply(function(){
           console.log(response.status);
           if(response.status === 'usernameAvailable') {
@@ -163,7 +163,7 @@ sc.controller('RegistrationCtrl', function($scope, $state, debounce, passwordStr
         publicKey: publicKey
       };
 
-      $.post("http://localhost/user", params, null, "json").done(function (response) {
+      $.post(API_LOCATION + '/user', params, null, "json").done(function (response) {
         console.log(response.status);
         // error, nameTaken, alreadyClaimed, newFB, queued, success
         switch(response.status)
