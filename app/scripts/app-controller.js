@@ -32,7 +32,7 @@ sc.controller('LoginCtrl', function($scope, $state) {
   };
 });
 
-sc.controller('RegistrationCtrl', function($scope, $state, API_LOCATION, bruteRequest, debounce, passwordStrengthComputations) {
+sc.controller('RegistrationCtrl', function($scope, $state, API_LOCATION, bruteRequest, debounce, passwordStrengthComputations, KeyGen) {
   $scope.username             = '';
   $scope.email                = '';
   $scope.password             = '';
@@ -184,12 +184,15 @@ sc.controller('RegistrationCtrl', function($scope, $state, API_LOCATION, bruteRe
     }
 
     if(validInput){
-      var publicKey = '1';
+      // TODO: Store the keys in the blob.
+      var keys = KeyGen.generateKeys();
+      var packedKeys = KeyGen.pack(keys);
+      var address = KeyGen.getAddress(packedKeys.pub);
 
       var data = {
         username: $scope.username,
         email: $scope.email,
-        publicKey: publicKey
+        publicKey: packedKeys.pub
       };
 
       requestRegistration.send(data);
