@@ -37,7 +37,7 @@ var base58check = angular.module('base58check', [])
      * @potected
      *
      * @param {Number} version The version number to encode into the output.
-     * @param {Array.<bytes>} input The input to encode.
+     * @param {Array.<bytes>} input The input to decode.
      *
      * @return {Array.<bytes>} The byte array decoded from base58check.
      */

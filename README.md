@@ -12,8 +12,6 @@ npm install
 bower install
 
 # Build dependencies
-browserify ./app/bower_components/bs58/lib/bs58.js > ./app/bower_components/bs58/lib/bs58.bundle.js --standalone base58
-
 ./app/bower_components/sjcl/configure --with-all
 ./app/bower_components/sjcl/make
 ```
