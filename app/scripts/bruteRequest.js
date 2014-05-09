@@ -7,15 +7,15 @@ var bruteRequest = angular.module('bruteRequest', [])
       this.pendingRequest = null;
     };
 
-    bruteRequest.prototype.send = function(data){
+    bruteRequest.prototype.send = function(data, success, fail){
       var options = this.options;
 
-      options.success = options.success || function () {};
-      options.fail = options.fail || function () {};
+      success = success || function () {};
+      fail = fail || function () {};
 
       if (this.pendingRequest) this.pendingRequest.abort();
 
-      pendingRequest = $.ajax({url: options.url, success: options.success, data: data, dataType: options.dataType, type: options.type})
+      pendingRequest = $.ajax({url: options.url, success: success, data: data, dataType: options.dataType, type: options.type})
         .done(function (response) {
           this.pendingRequest = null;
         })
@@ -31,7 +31,7 @@ var bruteRequest = angular.module('bruteRequest', [])
             }.bind(this), waitTime);
           }
 
-          options.fail(response, error, message);
+          fail(response, error, message);
         }.bind(this));
     };
 

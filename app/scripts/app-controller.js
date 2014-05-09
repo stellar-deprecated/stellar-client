@@ -2,17 +2,28 @@
 
 var sc = angular.module('stellarClient');
 
+sc.factory('session', function($cacheFactory){
+  return $cacheFactory('session');
+});
+
 sc.controller('AppCtrl', function($scope) {
 
 });
 
-sc.controller('NavCtrl', function($scope) {
+sc.controller('NavCtrl', function($scope, session) {
   //TODO: figure out how we express the current user to controllers
-  $scope.loggedIn = false;
+  $scope.session = session;
+  session.put('loggedIn',  false);
 });
 
-sc.controller('LoginCtrl', function($scope, $state) {
-  $scope.email      = null;
+sc.controller('LoginCtrl', function($scope, $state, session, DataBlob) {
+  if(session.get('loggedIn')){
+    // Logout
+    session.remove('blob');
+    session.put('loggedIn', false);
+  }
+
+  $scope.username   = null;
   $scope.password   = null;
   $scope.loginError = null;
 
@@ -21,8 +32,12 @@ sc.controller('LoginCtrl', function($scope, $state) {
     //      locate the user blob and decrypt
     //      go to dashboard
 
-    if($scope.email === 'success@example.com') {
+    if($scope.username === 'stellar') {
       // this is the dummy success state
+      session.put('username', $scope.username);
+      session.put('password', $scope.password);
+      session.put('blob', new DataBlob());
+      session.put('loggedIn', true);
       $state.go('dashboard');
     } else {
       // this is the dummy failure state
@@ -32,7 +47,16 @@ sc.controller('LoginCtrl', function($scope, $state) {
   };
 });
 
-sc.controller('RegistrationCtrl', function($scope, $state, API_LOCATION, bruteRequest, debounce, passwordStrengthComputations, KeyGen) {
+sc.controller('DashboardCtrl', function($scope, $state, session) {
+  if(!session.get('loggedIn') || !session.get('blob')){
+    $state.go('login');
+    return;
+  }
+
+  $scope.blob = session.get('blob');
+});
+
+sc.controller('RegistrationCtrl', function($scope, $state, session, API_LOCATION, bruteRequest, debounce, passwordStrengthComputations, KeyGen, DataBlob) {
   $scope.username             = '';
   $scope.email                = '';
   $scope.password             = '';
@@ -49,50 +73,13 @@ sc.controller('RegistrationCtrl', function($scope, $state, API_LOCATION, bruteRe
   var requestUsernameStatus = new bruteRequest({
     url: API_LOCATION + '/validname',
     type: 'POST',
-    dataType: 'json',
-
-    success: function (response) {
-      $scope.$apply(function(){
-        console.log(response.status);
-        if(response.status === 'usernameAvailable') {
-          $scope.usernameErrors = [];
-          $scope.usernameAvailable = true;
-        }
-        else
-        {
-          $scope.usernameAvailable = false;
-        }
-      });
-    }
+    dataType: 'json'
   });
 
   var requestRegistration = new bruteRequest({
     url: API_LOCATION + '/user',
     type: 'POST',
-    dataType: 'json',
-
-    success: function (response) {
-      $scope.$apply(function () {
-        console.log(response.status);
-        switch(response.status)
-        {
-          case 'nameTaken':
-            break;
-          case 'success':
-            // TODO: Store tokens.
-            // TODO: hash up the passwords
-            //      locate the user blob and decrypt
-            //      go to dashboard
-
-            // this is the dummy success state
-            $state.go('dashboard');
-            break;
-          case 'error':
-          default:
-            break;
-        }
-      });
-    }
+    dataType: 'json'
   });
 
   // Checks to see if the supplied username is available.
@@ -100,7 +87,26 @@ sc.controller('RegistrationCtrl', function($scope, $state, API_LOCATION, bruteRe
   var checkUsername = debounce(2000, function(){
     if($scope.username === '') $scope.usernameAvailable = null;
     else{
-      requestUsernameStatus.send({username: $scope.username});
+      requestUsernameStatus.send({username: $scope.username},
+        // Success
+        function (response) {
+          $scope.$apply(function(){
+            console.log(response.status);
+            if(response.status === 'usernameAvailable') {
+              $scope.usernameErrors = [];
+              $scope.usernameAvailable = true;
+            }
+            else
+            {
+              $scope.usernameAvailable = false;
+            }
+          });
+        },
+        // Fail
+        function(){
+
+        }
+      );
     }
   });
 
@@ -195,7 +201,48 @@ sc.controller('RegistrationCtrl', function($scope, $state, API_LOCATION, bruteRe
         publicKey: packedKeys.pub
       };
 
-      requestRegistration.send(data);
+      requestRegistration.send(data,
+        // Success
+        function (response) {
+          $scope.$apply(function () {
+            console.log(response.status);
+            switch(response.status)
+            {
+              case 'nameTaken':
+                $scope.usernameAvailable = false;
+                $scope.usernameErrors.push('The username "' + $scope.username + '" is taken.');
+
+                break;
+              case 'success':
+                var blob = new DataBlob();
+
+                blob.data.username = $scope.username;
+                blob.data.email = $scope.email;
+
+                blob.data.packedKeys = packedKeys;
+
+                blob.data.updateToken = response.updateToken;
+                blob.data.walletAuthToken = response.walletAuthToken;
+
+                session.put('blob', blob);
+                session.put('username', $scope.username);
+                session.put('password', $scope.password);
+                session.put('loggedIn', true);
+
+                $state.go('dashboard');
+
+                break;
+              case 'error':
+              default:
+                break;
+            }
+          });
+        },
+        // Fail
+        function(){
+
+        }
+      );
     }
   };
 });
