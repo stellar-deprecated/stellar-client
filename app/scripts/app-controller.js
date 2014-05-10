@@ -3,6 +3,7 @@
 var sc = angular.module('stellarClient');
 
 sc.factory('session', function($cacheFactory){
+  // A place to store session information that will persist until the user leaves the page.
   return $cacheFactory('session');
 });
 
@@ -11,15 +12,36 @@ sc.controller('AppCtrl', function($scope) {
 });
 
 sc.controller('NavCtrl', function($scope, session) {
-  //TODO: figure out how we express the current user to controllers
-  $scope.session = session;
+  // The session is initially not logged in.
   session.put('loggedIn',  false);
+
+  // Allow the nav to access the session variables.
+  $scope.session = session;
 });
 
-sc.controller('LoginCtrl', function($scope, $state, session, DataBlob) {
+sc.factory('storeCredentials', function(session, KeyGen){
+  // Expand the user credentials into a key and an ID for the blob,
+  // and save them to the session cache.
+  return function(username, password){
+    // Expand the user's credentials into the key used to encrypt the blob.
+    var blobKey = KeyGen.expandCredentials(password, username);
+
+    // Expand the user's credentials into the ID used to encrypt the blob.
+    // The blobID must not allow an attacker to compute the blobKey.
+    var blobID = sjcl.codec.hex.fromBits(sjcl.codec.bytes.toBits(KeyGen.expandCredentials(password, blobKey)));
+
+    // Store the username, key, and ID in the session cache.
+    // Don't store the password since we no longer need it.
+    session.put('username', username);
+    session.put('blobKey', blobKey);
+    session.put('blobID', blobID);
+  };
+});
+
+sc.controller('LoginCtrl', function($scope, $state, session, BLOB_LOCATION, DataBlob, storeCredentials) {
   if(session.get('loggedIn')){
-    // Logout
-    session.remove('blob');
+    // Log out if the there is an active session.
+    session.removeAll();
     session.put('loggedIn', false);
   }
 
@@ -28,22 +50,40 @@ sc.controller('LoginCtrl', function($scope, $state, session, DataBlob) {
   $scope.loginError = null;
 
   $scope.attemptLogin = function() {
-    //TODO: hash up the passwords
-    //      locate the user blob and decrypt
-    //      go to dashboard
+    storeCredentials($scope.username, $scope.password);
 
-    if($scope.username === 'stellar') {
-      // this is the dummy success state
-      session.put('username', $scope.username);
-      session.put('password', $scope.password);
-      session.put('blob', new DataBlob());
-      session.put('loggedIn', true);
-      $state.go('dashboard');
-    } else {
-      // this is the dummy failure state
-      // TODO: we should tell them _why_ they failed to login here
-      $scope.loginError = 'Error!';
-    }
+    $.ajax({
+      method: 'GET',
+      url: BLOB_LOCATION + '/' + session.get('blobID'),
+      dataType: 'json',
+      success: function(data, status, xhr){
+        $scope.$apply(function() {
+          if (data) {
+            try {
+              var blob = new DataBlob();
+              blob.decrypt(data.blob, session.get('blobKey'));
+
+              session.put('blob', blob);
+              session.put('loggedIn', true);
+
+              $state.go('dashboard');
+            } catch (err) {
+              // Error decrypting blob.
+              $scope.loginError = err;
+            }
+          } else {
+            // No blob found.
+            $scope.loginError = 'Invalid username or password.';
+          }
+        });
+      },
+      error: function(){
+        $scope.$apply(function() {
+          // Request failed.
+          $scope.loginError = 'Unable to contact the server.';
+        });
+      }
+    });
   };
 });
 
@@ -56,7 +96,7 @@ sc.controller('DashboardCtrl', function($scope, $state, session) {
   $scope.blob = session.get('blob');
 });
 
-sc.controller('RegistrationCtrl', function($scope, $state, session, API_LOCATION, bruteRequest, debounce, passwordStrengthComputations, KeyGen, DataBlob) {
+sc.controller('RegistrationCtrl', function($scope, $state, session, API_LOCATION, BLOB_LOCATION, bruteRequest, debounce, passwordStrengthComputations, KeyGen, DataBlob, storeCredentials) {
   $scope.username             = '';
   $scope.email                = '';
   $scope.password             = '';
@@ -104,7 +144,7 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, API_LOCATION
         },
         // Fail
         function(){
-
+          // TODO: Show an error.
         }
       );
     }
@@ -201,6 +241,7 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, API_LOCATION
         publicKey: packedKeys.pub
       };
 
+      // Submit the registration data to the server.
       requestRegistration.send(data,
         // Success
         function (response) {
@@ -208,31 +249,45 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, API_LOCATION
             console.log(response.status);
             switch(response.status)
             {
-              case 'nameTaken':
-                $scope.usernameAvailable = false;
-                $scope.usernameErrors.push('The username "' + $scope.username + '" is taken.');
-
-                break;
               case 'success':
+                // Create the initial blob and insert the user's data.
                 var blob = new DataBlob();
-
-                blob.data.username = $scope.username;
                 blob.data.email = $scope.email;
-
                 blob.data.packedKeys = packedKeys;
-
                 blob.data.updateToken = response.updateToken;
                 blob.data.walletAuthToken = response.walletAuthToken;
 
+                // Save the new blob to the session
                 session.put('blob', blob);
-                session.put('username', $scope.username);
-                session.put('password', $scope.password);
+                session.put('keys', keys);
                 session.put('loggedIn', true);
 
-                $state.go('dashboard');
+                // Store the credentials needed to encrypt and decrypt the blob.
+                storeCredentials($scope.username, $scope.password);
 
+                // Encrypt the blob and send it to the server.
+                // TODO: Handle failures when trying to save the blob.
+                $.ajax({
+                  url: BLOB_LOCATION + '/' + session.get('blobID'),
+                  method: 'POST',
+                  data: {blob: blob.encrypt(session.get('blobKey'))},
+                  dataType: 'json'
+                });
+
+                // Take the user to the dashboard.
+                $state.go('dashboard');
                 break;
+
+              case 'nameTaken':
+                // Show an error stating the username is already taken.
+                $scope.usernameAvailable = false;
+                $scope.usernameErrors.push('The username "' + $scope.username + '" is taken.');
+                break;
+
               case 'error':
+                // TODO: Show an error.
+                break;
+
               default:
                 break;
             }
@@ -240,7 +295,7 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, API_LOCATION
         },
         // Fail
         function(){
-
+          // TODO: Show an error.
         }
       );
     }
