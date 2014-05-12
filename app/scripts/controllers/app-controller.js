@@ -29,3 +29,15 @@ sc.factory('storeCredentials', function(session, KeyGen){
     session.put('blobID', blobID);
   };
 });
+
+sc.service('loggedIn', function($state, session){
+  return function(){
+    // If the user is not logged in send them to the login page.
+    if(!session.get('loggedIn') || !session.get('blob')){
+      $state.go('login');
+      return false;
+    }
+
+    return true;
+  }
+});
