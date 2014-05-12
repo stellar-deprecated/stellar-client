@@ -17,6 +17,10 @@ stellarClient.config(function($stateProvider, $urlRouterProvider) {
       url:         '/dashboard',
       templateUrl: 'states/dashboard.html'
     })
+    .state('settings', {
+      url:         '/settings',
+      templateUrl: 'states/settings.html'
+    })
   ;
 
   $urlRouterProvider.otherwise('/login');

@@ -1,0 +1,40 @@
+<div class="settings" ng-controller="SettingsCtrl">
+    <label for="account-settings">Account</label>
+    <form id="account-settings" role="form">
+        <div class="alert alert-danger ng-hide" ng-show="loginError">{{loginError}}</div>
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input id="username" type="text" class="form-control" placeholder="Username" ng-model="username">
+        </div>
+        <div class="form-group">
+            <label for="date-format">Date Format</label>
+            <input id="date-format" type="text" class="form-control" ng-model="dateFormat">
+            <label for="date-format">Automatically detect timezone</label>
+            <input id="detect-timezone" type="checkbox" class="form-control" ng-model="detectTimezone">
+        </div>
+        <div class="form-group">
+            <label>Sound</label>
+            <input id="received-sound" type="checkbox" class="form-control" ng-model="receivedSound">
+            <label for="received-sound">Received Stellars</label>
+            <input id="sent-sound" type="checkbox" class="form-control" ng-model="sentSound">
+            <label for="sent-sound">Sent Stellars</label>
+        </div>
+        <div class="form-group">
+            <label for="contacts">Contacts</label>
+            <button id="fb-contacts">Connect with Facebook</button>
+            <input id="contacts" type="hidden" class="form-control" ng-model="contacts">
+        </div>
+    </form>
+    <label for="security-settings">Security</label>
+    <form id="security-settings" role="form">
+        <div class="form-group">
+            <label for="email">Email address</label>
+            <input id="email" type="email" class="form-control" placeholder="Email" ng-model="email">
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input id="password" type="password" class="form-control" placeholder="Password" ng-model="password">
+        </div>
+    </form>
+    <button>Submit</button>
+</div>
