@@ -38,7 +38,7 @@
                     </ul>
 
                     <ul class="nav navbar-nav navbar-right ng-hide" ng-show="session.get('loggedIn')">
-                        <li><a href="">@{{ session.get('username') }}</a></li>
+                        <li><a href="#/settings">@{{ session.get('username') }}</a></li>
                         <li><a href="#/login" ui-sref="login">Logout</a></li>
                     </ul>
                 </div>
@@ -91,16 +91,17 @@
         <!-- build:js scripts/app.js -->
         <script src="scripts/app.js"></script>
         <script src="scripts/config.js"></script>
-        <script src="scripts/bruteRequest.js"></script>
         <script src="scripts/controllers/app-controller.js"></script>
         <script src="scripts/controllers/nav-controller.js"></script>
         <script src="scripts/controllers/login-controller.js"></script>
         <script src="scripts/controllers/registration-controller.js"></script>
         <script src="scripts/controllers/dashboard-controller.js"></script>
-        <script src="scripts/keygen.js"></script>
-        <script src="scripts/base58.js"></script>
-        <script src="scripts/base58check.js"></script>
-        <script src="scripts/dataBlob.js"></script>
+        <script src="scripts/controllers/settings-controller.js"></script>
+        <script src="scripts/libraries/base58.js"></script>
+        <script src="scripts/utilities/keygen.js"></script>
+        <script src="scripts/utilities/bruteRequest.js"></script>
+        <script src="scripts/utilities/base58check.js"></script>
+        <script src="scripts/utilities/dataBlob.js"></script>
         <!-- endbuild -->
 </body>
 </html>
