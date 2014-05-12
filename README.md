@@ -12,8 +12,9 @@ npm install
 bower install
 
 # Build dependencies
-./app/bower_components/sjcl/configure --with-all
-./app/bower_components/sjcl/make
+cd app/bower_components/sjcl/
+./configure --with-all
+./make
 ```
 
 ## Starting your dev server

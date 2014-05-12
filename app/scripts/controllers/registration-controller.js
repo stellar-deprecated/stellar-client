@@ -2,37 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('AppCtrl', function($scope) {
-
-});
-
-sc.controller('NavCtrl', function($scope) {
-  //TODO: figure out how we express the current user to controllers
-  $scope.loggedIn = false;
-});
-
-sc.controller('LoginCtrl', function($scope, $state) {
-  $scope.email      = null;
-  $scope.password   = null;
-  $scope.loginError = null;
-
-  $scope.attemptLogin = function() {
-    //TODO: hash up the passwords
-    //      locate the user blob and decrypt
-    //      go to dashboard
-
-    if($scope.email === 'success@example.com') {
-      // this is the dummy success state
-      $state.go('dashboard');
-    } else {
-      // this is the dummy failure state
-      // TODO: we should tell them _why_ they failed to login here
-      $scope.loginError = 'Error!';
-    }
-  };
-});
-
-sc.controller('RegistrationCtrl', function($scope, $state, API_LOCATION, bruteRequest, debounce, passwordStrengthComputations, KeyGen) {
+sc.controller('RegistrationCtrl', function($scope, $state, session, API_LOCATION, BLOB_LOCATION, bruteRequest, debounce, passwordStrengthComputations, KeyGen, DataBlob, storeCredentials) {
   $scope.username             = '';
   $scope.email                = '';
   $scope.password             = '';
@@ -49,50 +19,13 @@ sc.controller('RegistrationCtrl', function($scope, $state, API_LOCATION, bruteRe
   var requestUsernameStatus = new bruteRequest({
     url: API_LOCATION + '/validname',
     type: 'POST',
-    dataType: 'json',
-
-    success: function (response) {
-      $scope.$apply(function(){
-        console.log(response.status);
-        if(response.status === 'usernameAvailable') {
-          $scope.usernameErrors = [];
-          $scope.usernameAvailable = true;
-        }
-        else
-        {
-          $scope.usernameAvailable = false;
-        }
-      });
-    }
+    dataType: 'json'
   });
 
   var requestRegistration = new bruteRequest({
     url: API_LOCATION + '/user',
     type: 'POST',
-    dataType: 'json',
-
-    success: function (response) {
-      $scope.$apply(function () {
-        console.log(response.status);
-        switch(response.status)
-        {
-          case 'nameTaken':
-            break;
-          case 'success':
-            // TODO: Store tokens.
-            // TODO: hash up the passwords
-            //      locate the user blob and decrypt
-            //      go to dashboard
-
-            // this is the dummy success state
-            $state.go('dashboard');
-            break;
-          case 'error':
-          default:
-            break;
-        }
-      });
-    }
+    dataType: 'json'
   });
 
   // Checks to see if the supplied username is available.
@@ -100,7 +33,26 @@ sc.controller('RegistrationCtrl', function($scope, $state, API_LOCATION, bruteRe
   var checkUsername = debounce(2000, function(){
     if($scope.username === '') $scope.usernameAvailable = null;
     else{
-      requestUsernameStatus.send({username: $scope.username});
+      requestUsernameStatus.send({username: $scope.username},
+        // Success
+        function (response) {
+          $scope.$apply(function(){
+            console.log(response.status);
+            if(response.status === 'usernameAvailable') {
+              $scope.usernameErrors = [];
+              $scope.usernameAvailable = true;
+            }
+            else
+            {
+              $scope.usernameAvailable = false;
+            }
+          });
+        },
+        // Fail
+        function(){
+          // TODO: Show an error.
+        }
+      );
     }
   });
 
@@ -195,7 +147,63 @@ sc.controller('RegistrationCtrl', function($scope, $state, API_LOCATION, bruteRe
         publicKey: packedKeys.pub
       };
 
-      requestRegistration.send(data);
+      // Submit the registration data to the server.
+      requestRegistration.send(data,
+        // Success
+        function (response) {
+          $scope.$apply(function () {
+            console.log(response.status);
+            switch(response.status)
+            {
+              case 'success':
+                // Create the initial blob and insert the user's data.
+                var blob = new DataBlob();
+                blob.data.email = $scope.email;
+                blob.data.packedKeys = packedKeys;
+                blob.data.updateToken = response.updateToken;
+                blob.data.walletAuthToken = response.walletAuthToken;
+
+                // Save the new blob to the session
+                session.put('blob', blob);
+                session.put('keys', keys);
+                session.put('loggedIn', true);
+
+                // Store the credentials needed to encrypt and decrypt the blob.
+                storeCredentials($scope.username, $scope.password);
+
+                // Encrypt the blob and send it to the server.
+                // TODO: Handle failures when trying to save the blob.
+                $.ajax({
+                  url: BLOB_LOCATION + '/' + session.get('blobID'),
+                  method: 'POST',
+                  data: {blob: blob.encrypt(session.get('blobKey'))},
+                  dataType: 'json'
+                });
+
+                // Take the user to the dashboard.
+                $state.go('dashboard');
+                break;
+
+              case 'nameTaken':
+                // Show an error stating the username is already taken.
+                $scope.usernameAvailable = false;
+                $scope.usernameErrors.push('The username "' + $scope.username + '" is taken.');
+                break;
+
+              case 'error':
+                // TODO: Show an error.
+                break;
+
+              default:
+                break;
+            }
+          });
+        },
+        // Fail
+        function(){
+          // TODO: Show an error.
+        }
+      );
     }
   };
 });
