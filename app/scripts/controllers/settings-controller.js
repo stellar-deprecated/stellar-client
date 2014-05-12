@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('SettingsCtrl', function($scope, session, loggedIn){
+sc.controller('SettingsCtrl', function($scope, session, loggedIn, saveBlob){
   if(!loggedIn()) return;
 
   var settings = session.get('blob').data;
@@ -18,4 +18,21 @@ sc.controller('SettingsCtrl', function($scope, session, loggedIn){
   // Security settings.
   $scope.email = settings.email;
   $scope.password = null;
+
+  // Apply the new setting to the session blob and save it to the server.
+  // TODO: Change password.
+  // TODO: Load contacts from facebook.
+  // TODO: Validate input.
+  $scope.saveSettings = function(){
+    // Store the new setting in the blob.
+    settings.dateFormat = $scope.dateFormat;
+    settings.detectTimezone = $scope.detectTimezone;
+    settings.receivedSound = $scope.receivedSound;
+    settings.sentSound = $scope.sentSound;
+    settings.contacts = $scope.contacts;
+    settings.email = $scope.email;
+
+    // Save the updated blob to the server.
+    saveBlob();
+  }
 });

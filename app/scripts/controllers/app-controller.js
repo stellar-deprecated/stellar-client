@@ -30,6 +30,21 @@ sc.factory('storeCredentials', function(session, KeyGen){
   };
 });
 
+sc.factory('saveBlob', function(BLOB_LOCATION, session){
+  return function() {
+    // Get the blob from the session cache.
+    var blob = session.get('blob');
+
+    // Encrypt the blob and upload it to the server.
+    $.ajax({
+      url: BLOB_LOCATION + '/' + session.get('blobID'),
+      method: 'POST',
+      data: {blob: blob.encrypt(session.get('blobKey'))},
+      dataType: 'json'
+    });
+  }
+});
+
 sc.service('loggedIn', function($state, session){
   return function(){
     // If the user is not logged in send them to the login page.

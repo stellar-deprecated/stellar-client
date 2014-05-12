@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('RegistrationCtrl', function($scope, $state, session, API_LOCATION, BLOB_LOCATION, bruteRequest, debounce, passwordStrengthComputations, KeyGen, DataBlob, storeCredentials) {
+sc.controller('RegistrationCtrl', function($scope, $state, session, API_LOCATION, BLOB_LOCATION, bruteRequest, debounce, passwordStrengthComputations, KeyGen, DataBlob, storeCredentials, saveBlob) {
   $scope.username             = '';
   $scope.email                = '';
   $scope.password             = '';
@@ -173,12 +173,7 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, API_LOCATION
 
                 // Encrypt the blob and send it to the server.
                 // TODO: Handle failures when trying to save the blob.
-                $.ajax({
-                  url: BLOB_LOCATION + '/' + session.get('blobID'),
-                  method: 'POST',
-                  data: {blob: blob.encrypt(session.get('blobKey'))},
-                  dataType: 'json'
-                });
+                saveBlob();
 
                 // Take the user to the dashboard.
                 $state.go('dashboard');
