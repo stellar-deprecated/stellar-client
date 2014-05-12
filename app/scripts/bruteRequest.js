@@ -27,7 +27,7 @@ var bruteRequest = angular.module('bruteRequest', [])
             // Resend the request at the suggested time.
             console.log("Waiting " + waitTime + "ms");
             $timeout(function(){
-              this.send(data);
+              this.send(data, success, fail);
             }.bind(this), waitTime);
           }
 
