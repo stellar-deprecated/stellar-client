@@ -32,12 +32,13 @@
                     <a class="navbar-brand" href="#/">Stellar</a>
                 </div>
                 <div class="collapse navbar-collapse" id="navbar">
-                    <ul class="nav navbar-nav navbar-right" ng-hide="loggedIn">
+                    <ul class="nav navbar-nav navbar-right" ng-hide="session.get('loggedIn')">
                         <li><a href="#/login" ui-sref="login">Login</a></li>
                         <li><a href="#/register" ui-sref="register">Register</a></li>
                     </ul>
 
-                    <ul class="nav navbar-nav navbar-right ng-hide" ng-show="loggedIn">
+                    <ul class="nav navbar-nav navbar-right ng-hide" ng-show="session.get('loggedIn')">
+                        <li><a href="">@{{ session.get('username') }}</a></li>
                         <li><a href="#/login" ui-sref="login">Logout</a></li>
                     </ul>
                 </div>
@@ -91,7 +92,10 @@
         <script src="scripts/app.js"></script>
         <script src="scripts/config.js"></script>
         <script src="scripts/bruteRequest.js"></script>
-        <script src="scripts/app-controller.js"></script>
+        <script src="scripts/controllers/app-controller.js"></script>
+        <script src="scripts/controllers/login-controller.js"></script>
+        <script src="scripts/controllers/registration-controller.js"></script>
+        <script src="scripts/controllers/dashboard-controller.js"></script>
         <script src="scripts/keygen.js"></script>
         <script src="scripts/base58.js"></script>
         <script src="scripts/base58check.js"></script>

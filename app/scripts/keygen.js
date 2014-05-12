@@ -50,6 +50,29 @@ var keygen = angular.module('keygen', ['base58check'])
     };
 
     /**
+     * Configure the key expansion setting.
+     */
+    var settings = {
+      pbkdf2: {
+        iterations: 1000,
+        size: 256
+      }
+    };
+
+    /**
+     * Expand a password into a key using PBKDF2.
+     *
+     * @param {string | Array.<bytes>} password
+     * @param {string | Array.<bytes>} salt
+     *
+     * @returns {Array.<bytes>} The hashed credentials as a byte array.
+     */
+    KeyGen.expandCredentials = function(password, salt){
+      var rawKey = sjcl.misc.pbkdf2(password, salt, settings.pbkdf2.iterations, settings.pbkdf2.size);
+      return sjcl.codec.bytes.fromBits(rawKey);
+    };
+
+    /**
      * Packs a public/private key pair using the base58check encoding.
      *
      * @param {Object} keys The public/private key pair to encode.
