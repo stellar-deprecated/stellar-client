@@ -33,6 +33,14 @@ var dataBlob = angular.module('dataBlob', [])
       return String.fromCharCode.apply(null, bytes);
     }
 
+    DataBlob.prototype.get = function(name){
+      return this.data[name];
+    };
+
+    DataBlob.prototype.put = function(name, value){
+      return this.data[name] = value;
+    };
+
     /**
      * Encrypt the blob's data using 256bit AES in CBC mode with HMAC-SHA256 integrity checking.
      *

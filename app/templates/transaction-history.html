@@ -1,0 +1,15 @@
+<div class="transaction-history">
+    <b>My Transactions</b><br>
+    <div style="float: right;">
+        Current balance <b>Stellars</b><br>
+        <b>{{ $root.balance }}</b>
+    </div>
+    <table ng-table="tableParams" class="table">
+        <tr ng-repeat="tx in $data">
+            <td data-title="'Type'">{{ tx.transaction.type }}</td>
+            <td data-title="'Date'" sortable="'date'" am-time-ago="tx.date"></td>
+            <td data-title="'Amount'" sortable="'transaction.amount'">{{ tx.transaction.amount.to_human() }}</td>
+            <td data-title="'Destination'" sortable="'transaction.counterparty'">{{ tx.transaction.counterparty }}</td>
+        </tr>
+    </table>
+</div>

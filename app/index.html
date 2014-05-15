@@ -8,7 +8,7 @@
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
         <!-- build:css styles/vendor.css -->
-        <link rel="stylesheet" href="styles/main.css">
+        <link rel="stylesheet" href="bower_components/ng-table/ng-table.min.css">
         <!-- endbuild -->
 
         <!-- build:css({.tmp,app}) styles/main.css -->
@@ -67,10 +67,13 @@
         <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
         <script src="bower_components/angular-debounce/dist/angular-debounce.min.js"></script>
         <script src="bower_components/angular-password-strength/build/angular-password-strength.min.js"></script>
+        <script src="bower_components/ng-table/ng-table.min.js"></script>
         <script src="bower_components/sjcl/sjcl.js"></script>
         <script src="bower_components/crypto-js/components/core.js"></script>
         <script src="bower_components/crypto-js/components/ripemd160.js"></script>
         <script src="bower_components/crypto-js/rollups/hmac-sha256.js"></script>
+        <script src="bower_components/moment/moment.js"></script>
+        <script src="bower_components/angular-moment/angular-moment.js"></script>
         <!-- endbuild -->
 
         <!-- build:js scripts/plugins.js -->
@@ -91,17 +94,24 @@
         <!-- build:js scripts/app.js -->
         <script src="scripts/app.js"></script>
         <script src="scripts/config.js"></script>
+
         <script src="scripts/controllers/app-controller.js"></script>
         <script src="scripts/controllers/nav-controller.js"></script>
         <script src="scripts/controllers/login-controller.js"></script>
         <script src="scripts/controllers/registration-controller.js"></script>
         <script src="scripts/controllers/dashboard-controller.js"></script>
         <script src="scripts/controllers/settings-controller.js"></script>
+
+        <script src="scripts/directives/transaction-history.js"></script>
+
         <script src="scripts/libraries/base58.js"></script>
+        <script src="scripts/libraries/ripple-0.7.35-min.js"></script>
+
         <script src="scripts/utilities/keygen.js"></script>
         <script src="scripts/utilities/bruteRequest.js"></script>
         <script src="scripts/utilities/base58check.js"></script>
         <script src="scripts/utilities/dataBlob.js"></script>
+        <script src="scripts/utilities/jsonrewriter.js"></script>
         <!-- endbuild -->
 </body>
 </html>

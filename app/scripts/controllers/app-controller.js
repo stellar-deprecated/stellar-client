@@ -48,6 +48,29 @@ sc.factory('connectToNetwork', function($rootScope, session){
   }
 });
 
+sc.service('updateBalance', function($rootScope, session){
+  function requestBalance() {
+    var network = session.get('network');
+    network.request_account_info('gHb9CJAWyB4gj91VRWn96DkukG4bwdtyTh' /*session.get('address')*/)
+      .on('success', function (data) {
+        $rootScope.$apply(function(){
+          $rootScope.balance = data.account_data.Balance / 1000000;
+        });
+
+        console.log('Account success: "' + JSON.stringify(data) + '"');
+      })
+      .on('error', function (data) {
+        console.log('Account error: "' + JSON.stringify(data) + '"');
+      })
+      .request();
+  }
+
+  return function(){
+    if(session.get('network')) requestBalance();
+    else $rootScope.$on('connected', requestBalance);
+  }
+});
+
 sc.factory('saveBlob', function(BLOB_LOCATION, session){
   return function() {
     // Get the blob from the session cache.

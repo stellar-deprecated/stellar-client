@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('RegistrationCtrl', function($scope, $state, session, API_LOCATION, BLOB_LOCATION, bruteRequest, debounce, passwordStrengthComputations, KeyGen, DataBlob, storeCredentials, saveBlob) {
+sc.controller('RegistrationCtrl', function($scope, $state, session, API_LOCATION, BLOB_LOCATION, BLOB_DEFAULTS, bruteRequest, debounce, passwordStrengthComputations, KeyGen, DataBlob, storeCredentials, saveBlob) {
   $scope.username             = '';
   $scope.email                = '';
   $scope.password             = '';
@@ -137,9 +137,9 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, API_LOCATION
 
     if(validInput){
       // TODO: Store the keys in the blob.
-      var keys = KeyGen.generateKeys();
+      var privateKey = 'snoPBgXtMeMyMHUVTrbuqAfr1SUTb';
+      var keys = KeyGen.generateKeys(privateKey);
       var packedKeys = KeyGen.pack(keys);
-      var address = KeyGen.getAddress(packedKeys.pub);
 
       var data = {
         username: $scope.username,
@@ -158,14 +158,18 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, API_LOCATION
               case 'success':
                 // Create the initial blob and insert the user's data.
                 var blob = new DataBlob();
-                blob.data.email = $scope.email;
-                blob.data.packedKeys = packedKeys;
-                blob.data.updateToken = response.updateToken;
-                blob.data.walletAuthToken = response.walletAuthToken;
+                blob.put('email', $scope.email);
+                blob.put('packedKeys', packedKeys);
+                blob.put('updateToken', response.updateToken);
+                blob.put('walletAuthToken', response.walletAuthToken);
+
+                // Set the default client configuration
+                blob.put('server', BLOB_DEFAULTS.server);
 
                 // Save the new blob to the session
                 session.put('blob', blob);
                 session.put('keys', keys);
+                session.put('address', packedKeys.address)
                 session.put('loggedIn', true);
 
                 // Store the credentials needed to encrypt and decrypt the blob.
