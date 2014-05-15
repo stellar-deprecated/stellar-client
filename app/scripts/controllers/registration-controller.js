@@ -16,6 +16,9 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, API_LOCATION
   $scope.passwordErrors        = [];
   $scope.passwordConfirmErrors = [];
 
+    // make sure they went through the alpha page
+    if(!session.get('alpha')) $state.go('alpha');
+
   var requestUsernameStatus = new bruteRequest({
     url: API_LOCATION + '/validname',
     type: 'POST',
@@ -142,9 +145,10 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, API_LOCATION
       var packedKeys = KeyGen.pack(keys);
 
       var data = {
+        alphaCode: session.get('alpha'),
         username: $scope.username,
         email: $scope.email,
-        publicKey: packedKeys.pub
+        address: packedKeys.address
       };
 
       // Submit the registration data to the server.
@@ -190,17 +194,18 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, API_LOCATION
                 break;
 
               case 'error':
-                // TODO: Show an error.
+                  $scope.usernameErrors.push('Registration error?');
                 break;
 
               default:
+                  $scope.usernameErrors.push('Unknown response.');
                 break;
             }
           });
         },
         // Fail
         function(){
-          // TODO: Show an error.
+            $scope.usernameErrors.push('Something is wrong?');
         }
       );
     }

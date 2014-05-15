@@ -6,6 +6,9 @@ and manage their account and wallet.
 ## Setting up your dev server
 **TODO:** Script setup with makefile.
 
+npm install -g bower
+npm install -g gulp
+
 ```bash
 # Install dependencies
 npm install

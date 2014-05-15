@@ -9,6 +9,10 @@ stellarClient.config(function($stateProvider, $urlRouterProvider) {
       url:         '/login',
       templateUrl: 'states/login.html'
     })
+    .state('alpha', {
+      url:         '/alpha',
+      templateUrl: 'states/alpha.html'
+    })
     .state('register', {
       url:         '/register',
       templateUrl: 'states/register.html'
