@@ -30,6 +30,24 @@ sc.factory('storeCredentials', function(session, KeyGen){
   };
 });
 
+sc.factory('connectToNetwork', function($rootScope, session){
+  return function() {
+    // Connect to the network.
+    var server = session.get('blob').get('server');
+    var network = new ripple.Remote(server, true);
+    network.on('connected', function () {
+      $rootScope.$broadcast('connected');
+    });
+    network.on('disconnected', function () {
+      $rootScope.$broadcast('disconnected');
+    });
+    network.connect();
+
+    // Store the network connection in the session.
+    session.put('network', network);
+  }
+});
+
 sc.factory('saveBlob', function(BLOB_LOCATION, session){
   return function() {
     // Get the blob from the session cache.

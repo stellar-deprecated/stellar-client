@@ -1,6 +1,6 @@
 'use strict';
 
-var stellarClient = angular.module('stellarClient', ['config', 'bruteRequest', 'ui.router', 'rt.debounce', 'vr.passwordStrength', 'keygen', 'dataBlob']);
+var stellarClient = angular.module('stellarClient', ['config', 'bruteRequest', 'ui.router', 'rt.debounce', 'vr.passwordStrength', 'ngTable', 'keygen', 'dataBlob', 'angularMoment']);
 
 stellarClient.config(function($stateProvider, $urlRouterProvider) {
 
@@ -15,13 +15,24 @@ stellarClient.config(function($stateProvider, $urlRouterProvider) {
     })
     .state('dashboard', {
       url:         '/dashboard',
-      templateUrl: 'states/dashboard.html'
+      templateUrl: 'states/dashboard.html',
+      authenticate: true
     })
     .state('settings', {
       url:         '/settings',
-      templateUrl: 'states/settings.html'
+      templateUrl: 'states/settings.html',
+      authenticate: true
     })
   ;
 
   $urlRouterProvider.otherwise('/login');
 });
+
+stellarClient.run(function($rootScope, $state, loggedIn){
+  $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){
+    if(toState.authenticate && !loggedIn()){
+      $state.transitionTo('login');
+      event.preventDefault();
+    }
+  })
+})

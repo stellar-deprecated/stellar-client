@@ -2,8 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('DashboardCtrl', function($scope, $state, loggedIn, session) {
-  if(!loggedIn()) return;
-
+sc.controller('DashboardCtrl', function($rootScope, $scope, $state, loggedIn, session, connectToNetwork) {
   $scope.blob = session.get('blob');
+  connectToNetwork();
 });

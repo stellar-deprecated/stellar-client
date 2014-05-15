@@ -3,8 +3,6 @@
 var sc = angular.module('stellarClient');
 
 sc.controller('SettingsCtrl', function($scope, session, loggedIn, saveBlob){
-  if(!loggedIn()) return;
-
   var settings = session.get('blob').data;
 
   // Account settings.
