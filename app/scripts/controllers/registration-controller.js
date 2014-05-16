@@ -26,7 +26,7 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, API_LOCATION
   });
 
   var requestRegistration = new bruteRequest({
-    url: API_LOCATION + '/user',
+    url: API_LOCATION + '/register',
     type: 'POST',
     dataType: 'json'
   });
@@ -68,8 +68,8 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, API_LOCATION
   };
 
   $scope.checkPassword = function(){
-    $scope.passwordValid = (passwordStrengthComputations.getStrength($scope.password) > 50);
-
+    //TODO: $scope.passwordValid = (passwordStrengthComputations.getStrength($scope.password) > 50);
+      $scope.passwordValid=true;
     if($scope.passwordValid) $scope.passwordErrors = [];
 
     $scope.checkConfirmPassword();

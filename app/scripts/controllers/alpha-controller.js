@@ -6,7 +6,7 @@ sc.controller('AlphaCtrl', function($scope, $state, session, API_LOCATION, brute
     $scope.alphaCode            = '';
     $scope.alphaCodeErrors       = [];
 
-    var requestRegistration = new bruteRequest({
+    var requestAlpha = new bruteRequest({
         url: API_LOCATION + '/checkAlphaCode',
         type: 'POST',
         dataType: 'json'
@@ -22,19 +22,22 @@ sc.controller('AlphaCtrl', function($scope, $state, session, API_LOCATION, brute
 
         if(!$scope.alphaCode){
             validInput = false;
-            $scope.usernameErrors.push('The Alpha Code field is required.');
+            $scope.alphaCodeErrors.push('The Alpha Code field is required.');
         }
 
         if(validInput){
             var data = {
-                code: $scope.alphaCode
+                alphaCode: $scope.alphaCode
             };
 
+            //$scope.alphaCodeErrors.push('test1');
+
             // Submit the registration data to the server.
-            requestRegistration.send(data,
+            requestAlpha.send(data,
                 // Success
                 function (response) {
                     $scope.$apply(function () {
+                        //$scope.alphaCodeErrors.push('test');
                         console.log(response.status);
                         switch(response.status)
                         {
@@ -45,18 +48,20 @@ sc.controller('AlphaCtrl', function($scope, $state, session, API_LOCATION, brute
                                 break;
 
                             case 'used':
-                                $scope.usernameErrors.push('Sorry this code has already been used.');
+                                $scope.alphaCodeErrors.push('Sorry this code has already been used.');
                                 break;
 
                             default:
-                                $scope.usernameErrors.push('Sorry this code is invalid.');
+                                //console.log($scope.alphaCodeErrors[0]);
+                                $scope.alphaCodeErrors.push('Sorry this code is invalid.');  // TODO: why is this not displaying?
+                                //$scope.$apply();
                                 break;
                         }
                     });
                 },
                 // Fail
                 function(){
-                    $scope.usernameErrors.push('Something is wrong?');
+                    $scope.alphaCodeErrors.push('Something is wrong?');
                 }
             );
         }
