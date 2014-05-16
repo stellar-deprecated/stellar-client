@@ -7,14 +7,16 @@ and manage their account and wallet.
 **TODO:** Script setup with makefile.
 
 ```bash
-# Install dependencies
-npm install
-bower install
+# Install ruby
 
-# Build dependencies
-cd app/bower_components/sjcl/
-./configure --with-all
-./make
+# Install the sass gem
+gem install sass
+
+# Install dev dependencies
+npm install
+
+# Install app dependencies
+bower install
 ```
 
 ## Starting your dev server
