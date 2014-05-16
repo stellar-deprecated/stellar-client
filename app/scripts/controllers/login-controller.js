@@ -2,11 +2,16 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('LoginCtrl', function($scope, $state, session, BLOB_LOCATION, DataBlob, storeCredentials) {
+sc.controller('LoginCtrl', function($scope, $state, session, loggedIn, BLOB_LOCATION, DataBlob, storeCredentials, startSession, PERSISTENT_SESSION) {
   if(session.get('loggedIn')){
     // Log out if the there is an active session.
     session.removeAll();
+    if(PERSISTENT_SESSION) delete localStorage.blob;
     session.put('loggedIn', false);
+  } else if(loggedIn()){
+    // If the user has persistent login enabled, loggedIn() will log them in
+    // so they can go to the dashboard.
+    $state.go('dashboard');
   }
 
   $scope.username   = null;
@@ -28,7 +33,7 @@ sc.controller('LoginCtrl', function($scope, $state, session, BLOB_LOCATION, Data
               blob.decrypt(data.blob, session.get('blobKey'));
 
               session.put('blob', blob);
-              session.put('loggedIn', true);
+              startSession();
 
               $state.go('dashboard');
             } catch (err) {

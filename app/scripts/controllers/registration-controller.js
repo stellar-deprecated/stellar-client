@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('RegistrationCtrl', function($scope, $state, session, API_LOCATION, BLOB_LOCATION, BLOB_DEFAULTS, bruteRequest, debounce, passwordStrengthComputations, KeyGen, DataBlob, storeCredentials, saveBlob) {
+sc.controller('RegistrationCtrl', function($scope, $state, session, startSession, API_LOCATION, BLOB_LOCATION, BLOB_DEFAULTS, bruteRequest, debounce, passwordStrengthComputations, KeyGen, DataBlob, storeCredentials, saveBlob) {
   $scope.username             = '';
   $scope.email                = '';
   $scope.password             = '';
@@ -158,6 +158,7 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, API_LOCATION
               case 'success':
                 // Create the initial blob and insert the user's data.
                 var blob = new DataBlob();
+                blob.put('username', $scope.username);
                 blob.put('email', $scope.email);
                 blob.put('packedKeys', packedKeys);
                 blob.put('updateToken', response.updateToken);
@@ -168,12 +169,12 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, API_LOCATION
 
                 // Save the new blob to the session
                 session.put('blob', blob);
-                session.put('keys', keys);
-                session.put('address', packedKeys.address)
-                session.put('loggedIn', true);
 
                 // Store the credentials needed to encrypt and decrypt the blob.
                 storeCredentials($scope.username, $scope.password);
+
+                // Initialize the session variables.
+                startSession();
 
                 // Encrypt the blob and send it to the server.
                 // TODO: Handle failures when trying to save the blob.

@@ -26,11 +26,12 @@ stellarClient.config(function($stateProvider, $urlRouterProvider) {
   ;
 
   $urlRouterProvider.otherwise('/login');
+
 });
 
-stellarClient.run(function($rootScope, $state, loggedIn){
+stellarClient.run(function($rootScope, $state, session){
   $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){
-    if(toState.authenticate && !loggedIn()){
+    if(toState.authenticate && !session.get('loggedIn')){
       $state.transitionTo('login');
       event.preventDefault();
     }
