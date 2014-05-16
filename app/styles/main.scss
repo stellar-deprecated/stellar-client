@@ -5,6 +5,7 @@ $icon-font-path: "../bower_components/bootstrap-sass-official/vendor/assets/font
 // endbower
 
 @import "registration.scss";
+@import "transactionHistory.scss";
 
 body {
     padding-top: 50px;
@@ -13,4 +14,12 @@ body {
 
 .ng-cloak, .ng-hide {
     display: none;
+}
+
+.dash-title {
+
+}
+
+.dash-balance {
+
 }

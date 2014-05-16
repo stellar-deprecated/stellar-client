@@ -1,2 +1,18 @@
 <div class="dashboard" ng-controller="DashboardCtrl">
+    <div class="row">
+        <div class="col-md-4">
+            <a ng-click="toggleReceive()">Receive stellars</a>
+        </div>
+        <div class="col-md-4">
+            <span class="dash-balance">{{ $root.balance }}</span><br>
+            Current Balance in <b>stellars</b>
+        </div>
+        <div class="col-md-4">
+            <a ng-click="toggleSend()">Send stellars</a>
+        </div>
+    </div>
+    <send-pane></send-pane>
+    <div ng-include="'templates/receive.html'"></div>
 </div>
+<reward-pane></reward-pane>
+<transaction-history></transaction-history>

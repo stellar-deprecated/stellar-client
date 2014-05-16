@@ -1,0 +1,17 @@
+<h1>Welcome to the Stellar Alpha Test</h1>
+        Only available to people we have mailed an Alpha code to. If you haven't gotten a code just *hang on*. We will have a general beta soon!
+        <p></p>
+<form role="form" ng-controller="AlphaCtrl">
+    <div class="form-group">
+        <label for="code">Alpha Code</label>
+        <div class="input-icon-wrapper">
+            <input id="code" type="text" class="form-control" ng-model="alphaCode" placeholder="Alpha Tester Code emailed to you" >
+        </div>
+        <div class="alert alert-danger ng-hide" ng-show="alphaCodeErrors.length">
+            <ul>
+                <li ng-repeat="error in alphaCodeErrors">{{ error }}</li>
+            </ul>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-default" ng-click="attemptAlpha()">Submit</button>
+</form>

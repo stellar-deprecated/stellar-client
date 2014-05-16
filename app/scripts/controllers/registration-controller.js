@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('RegistrationCtrl', function($scope, $state, session, API_LOCATION, BLOB_LOCATION, bruteRequest, debounce, passwordStrengthComputations, KeyGen, DataBlob, storeCredentials, saveBlob) {
+sc.controller('RegistrationCtrl', function($scope, $state, session, API_LOCATION, BLOB_LOCATION, BLOB_DEFAULTS, bruteRequest, debounce, passwordStrengthComputations, KeyGen, DataBlob) {
   $scope.username             = '';
   $scope.email                = '';
   $scope.password             = '';
@@ -23,7 +23,7 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, API_LOCATION
   });
 
   var requestRegistration = new bruteRequest({
-    url: API_LOCATION + '/user',
+    url: API_LOCATION + '/register',
     type: 'POST',
     dataType: 'json'
   });
@@ -65,8 +65,8 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, API_LOCATION
   };
 
   $scope.checkPassword = function(){
-    $scope.passwordValid = (passwordStrengthComputations.getStrength($scope.password) > 50);
-
+    //TODO: $scope.passwordValid = (passwordStrengthComputations.getStrength($scope.password) > 50);
+      $scope.passwordValid=true;
     if($scope.passwordValid) $scope.passwordErrors = [];
 
     $scope.checkConfirmPassword();
@@ -136,15 +136,17 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, API_LOCATION
     }
 
     if(validInput){
-      // TODO: Store the keys in the blob.
       var keys = KeyGen.generateKeys();
       var packedKeys = KeyGen.pack(keys);
-      var address = KeyGen.getAddress(packedKeys.pub);
+
+      // TODO: Don't spoof the address.
+      packedKeys.address = 'gHb9CJAWyB4gj91VRWn96DkukG4bwdtyTh';
 
       var data = {
+        alphaCode: session.get('alpha'),
         username: $scope.username,
         email: $scope.email,
-        publicKey: packedKeys.pub
+        address: packedKeys.address
       };
 
       // Submit the registration data to the server.
@@ -158,22 +160,27 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, API_LOCATION
               case 'success':
                 // Create the initial blob and insert the user's data.
                 var blob = new DataBlob();
-                blob.data.email = $scope.email;
-                blob.data.packedKeys = packedKeys;
-                blob.data.updateToken = response.updateToken;
-                blob.data.walletAuthToken = response.walletAuthToken;
+                blob.put('username', $scope.username);
+                blob.put('email', $scope.email);
+                blob.put('packedKeys', packedKeys);
+                blob.put('updateToken', response.updateToken);
+                blob.put('walletAuthToken', response.walletAuthToken);
+
+                // Set the default client configuration
+                blob.put('server', BLOB_DEFAULTS.server);
 
                 // Save the new blob to the session
                 session.put('blob', blob);
-                session.put('keys', keys);
-                session.put('loggedIn', true);
 
                 // Store the credentials needed to encrypt and decrypt the blob.
-                storeCredentials($scope.username, $scope.password);
+                session.storeCredentials($scope.username, $scope.password);
+
+                // Initialize the session variables.
+                session.start();
 
                 // Encrypt the blob and send it to the server.
                 // TODO: Handle failures when trying to save the blob.
-                saveBlob();
+                session.storeBlob();
 
                 // Take the user to the dashboard.
                 $state.go('dashboard');
@@ -186,17 +193,18 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, API_LOCATION
                 break;
 
               case 'error':
-                // TODO: Show an error.
+                  $scope.usernameErrors.push('Registration error?');
                 break;
 
               default:
+                  $scope.usernameErrors.push('Unknown response.');
                 break;
             }
           });
         },
         // Fail
         function(){
-          // TODO: Show an error.
+            $scope.usernameErrors.push('Something is wrong?');
         }
       );
     }

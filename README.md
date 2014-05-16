@@ -6,15 +6,20 @@ and manage their account and wallet.
 ## Setting up your dev server
 **TODO:** Script setup with makefile.
 
-```bash
-# Install dependencies
-npm install
-bower install
+npm install -g bower
+npm install -g gulp
 
-# Build dependencies
-cd app/bower_components/sjcl/
-./configure --with-all
-./make
+```bash
+# Install ruby
+
+# Install the sass gem
+gem install sass
+
+# Install dev dependencies
+npm install
+
+# Install app dependencies
+bower install
 ```
 
 ## Starting your dev server

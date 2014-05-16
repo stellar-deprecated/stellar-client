@@ -31,12 +31,17 @@ var keygen = angular.module('keygen', ['base58check'])
      * @param {string} publicKey The base58check encoded public key.
      */
     KeyGen.getAddress = function (publicKey) {
-      var bits = sjcl.codec.bytes.toBits(base58check.decode(0, publicKey));
-      return base58check.encode(0, sjcl.codec.bytes.fromBits(SHA256_RIPEMD160(bits)));
+      if(typeof publicKey === 'string') {
+        publicKey = sjcl.codec.bytes.toBits(base58check.decode(0, publicKey));
+      }
+
+      return base58check.encode(0, sjcl.codec.bytes.fromBits(SHA256_RIPEMD160(publicKey)));
     };
 
     /**
      * Generates a public/private key pair using the ECDSA p256k1 curve.
+     *
+     * @param {string} [privateKey] The base58check encoded private key.
      *
      * @return {
      *   {
@@ -45,8 +50,11 @@ var keygen = angular.module('keygen', ['base58check'])
      *   }
      * }
      */
-    KeyGen.generateKeys = function () {
-      return sjcl.ecc.ecdsa.generateKeys(256, 1);
+    KeyGen.generateKeys = function (privateKey) {
+      if(privateKey){
+        privateKey = new sjcl.bn(sjcl.codec.hex.fromBits(sjcl.codec.bytes.toBits(base58check.decode(33, privateKey))));
+      }
+      return sjcl.ecc.ecdsa.generateKeys(256, 1, privateKey);
     };
 
     /**
@@ -82,7 +90,8 @@ var keygen = angular.module('keygen', ['base58check'])
      * @return {
      *   {
      *     pub: {string} The base58check encoded public key,
-     *     sec: {string} The base58check encoded private key
+     *     sec: {string} The base58check encoded private key,
+     *     address: {string} The base58check encoded hash of the public key
      *   }
      * }
      */
@@ -92,7 +101,8 @@ var keygen = angular.module('keygen', ['base58check'])
 
       return {
         pub: base58check.encode(0, sjcl.codec.bytes.fromBits(pub.x.concat(pub.y))),
-        sec: base58check.encode(0x80, sjcl.codec.bytes.fromBits(sec))
+        sec: base58check.encode(33, sjcl.codec.bytes.fromBits(sec)),
+        address: KeyGen.getAddress(pub)
       };
     };
 
@@ -113,7 +123,7 @@ var keygen = angular.module('keygen', ['base58check'])
     KeyGen.unpack = function (keys) {
       var pub = sjcl.codec.bytes.toBits(base58check.decode(0, keys.pub));
       // Hack: sjcl.bn does not like initializing from a bit array, but works fine when hex is used.
-      var sec = new sjcl.bn(sjcl.codec.hex.fromBits(sjcl.codec.bytes.toBits(base58check.decode(0x80, keys.sec))));
+      var sec = new sjcl.bn(sjcl.codec.hex.fromBits(sjcl.codec.bytes.toBits(base58check.decode(33, keys.sec))));
 
       return {
         pub: new sjcl.ecc.ecdsa.publicKey(sjcl.ecc.curves.c256, pub),

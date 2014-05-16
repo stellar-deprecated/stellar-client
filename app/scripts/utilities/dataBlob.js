@@ -3,10 +3,13 @@ var dataBlob = angular.module('dataBlob', [])
     /**
      * Creates a data object that can be encrypted and decrypted using
      * 256bit AES in CBC mode with HMAC-SHA256 integrity checking.
+     *
+     * @param {Object} [blob] Another blob or object containing the data to use.
+     *
      * @constructor
      */
-    var DataBlob = function(){
-      this.data = {};
+    var DataBlob = function(blob){
+      this.data = (blob && blob.data) || {};
     };
 
     /**
@@ -32,6 +35,14 @@ var dataBlob = angular.module('dataBlob', [])
       var bytes = sjcl.codec.bytes.fromBits(bits);
       return String.fromCharCode.apply(null, bytes);
     }
+
+    DataBlob.prototype.get = function(name){
+      return this.data[name];
+    };
+
+    DataBlob.prototype.put = function(name, value){
+      return this.data[name] = value;
+    };
 
     /**
      * Encrypt the blob's data using 256bit AES in CBC mode with HMAC-SHA256 integrity checking.

@@ -2,19 +2,15 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('LoginCtrl', function($scope, $state, session, BLOB_LOCATION, DataBlob, storeCredentials) {
-  if(session.get('loggedIn')){
-    // Log out if the there is an active session.
-    session.removeAll();
-    session.put('loggedIn', false);
-  }
+sc.controller('LoginCtrl', function($scope, $state, session, BLOB_LOCATION, DataBlob) {
+  if(session.get('loggedIn')) session.logOut();
 
   $scope.username   = null;
   $scope.password   = null;
   $scope.loginError = null;
 
   $scope.attemptLogin = function() {
-    storeCredentials($scope.username, $scope.password);
+    session.storeCredentials($scope.username, $scope.password);
 
     $.ajax({
       method: 'GET',
@@ -28,7 +24,7 @@ sc.controller('LoginCtrl', function($scope, $state, session, BLOB_LOCATION, Data
               blob.decrypt(data.blob, session.get('blobKey'));
 
               session.put('blob', blob);
-              session.put('loggedIn', true);
+              session.start();
 
               $state.go('dashboard');
             } catch (err) {
