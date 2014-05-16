@@ -2,6 +2,8 @@
 
 var config = angular.module('config', []);
 
+// Persistent sessions should only be used for development.
+config.constant('PERSISTENT_SESSION', true);
 config.constant('API_LOCATION', 'http://localhost:80');
 config.constant('BLOB_LOCATION', 'http://localhost:80/blob');
 config.constant('BLOB_DEFAULTS', {
