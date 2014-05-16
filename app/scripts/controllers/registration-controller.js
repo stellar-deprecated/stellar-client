@@ -136,10 +136,10 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, API_LOCATION
     }
 
     if(validInput){
-      // TODO: Don't hard code the test keys.
-      var privateKey = 'snoPBgXtMeMyMHUVTrbuqAfr1SUTb';
-      var keys = KeyGen.generateKeys(privateKey);
+      var keys = KeyGen.generateKeys();
       var packedKeys = KeyGen.pack(keys);
+
+      // TODO: Don't spoof the address.
       packedKeys.address = 'gHb9CJAWyB4gj91VRWn96DkukG4bwdtyTh';
 
       var data = {
