@@ -5,10 +5,9 @@
     <div class="form-group">
         <label for="code">Alpha Code</label>
         <div class="input-icon-wrapper">
-
             <input id="code" type="text" class="form-control" ng-model="alphaCode" placeholder="Alpha Tester Code emailed to you" >
         </div>
-        <div class="alert alert-danger ng-hide" ng-show="alphaCodeErrors">
+        <div class="alert alert-danger ng-hide" ng-show="alphaCodeErrors.length">
             <ul>
                 <li ng-repeat="error in alphaCodeErrors">{{ error }}</li>
             </ul>

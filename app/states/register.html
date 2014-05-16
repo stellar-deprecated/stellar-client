@@ -6,7 +6,7 @@
             <i class="username-status glyphicon" ng-class="usernameClass()"></i>
             <input id="username" type="text" class="form-control" placeholder="Username" ng-model="username" ng-change="checkUsername()">
         </div>
-        <div class="alert alert-danger ng-hide" ng-show="usernameErrors">
+        <div class="alert alert-danger ng-hide" ng-show="usernameErrors.length">
             <ul>
                 <li ng-repeat="error in usernameErrors">{{ error }}</li>
             </ul>
@@ -20,7 +20,7 @@
         <label for="password">Password</label>
         <input id="password" type="password" class="form-control" placeholder="Password" ng-model="password" ng-change="checkPassword()">
         <div class="password-strength {{ password | passwordLevel:4 }}" ng-class="{hidden: password == ''}"></div>
-        <div class="alert alert-danger ng-hide" ng-show="passwordErrors">
+        <div class="alert alert-danger ng-hide" ng-show="passwordErrors.length">
             <ul>
                 <li ng-repeat="error in passwordErrors">{{ error }}</li>
             </ul>
@@ -30,7 +30,7 @@
         <label for="password-confirmation">Confirm Password</label>
         <input id="password-confirmation" type="password" class="form-control" placeholder="Confirm Password" ng-model="passwordConfirmation" ng-change="checkConfirmPassword()">
         <div class="password-strength" ng-class="passwordConfirmClass()"></div>
-        <div class="alert alert-danger ng-hide" ng-show="passwordConfirmErrors">
+        <div class="alert alert-danger ng-hide" ng-show="passwordConfirmErrors.length">
             <ul>
                 <li ng-repeat="error in passwordConfirmErrors">{{ error }}</li>
             </ul>

@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('RegistrationCtrl', function($scope, $state, session, startSession, API_LOCATION, BLOB_LOCATION, BLOB_DEFAULTS, bruteRequest, debounce, passwordStrengthComputations, KeyGen, DataBlob, storeCredentials, saveBlob) {
+sc.controller('RegistrationCtrl', function($scope, $state, session, API_LOCATION, BLOB_LOCATION, BLOB_DEFAULTS, bruteRequest, debounce, passwordStrengthComputations, KeyGen, DataBlob) {
   $scope.username             = '';
   $scope.email                = '';
   $scope.password             = '';
@@ -15,9 +15,6 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, startSession
   $scope.usernameErrors        = [];
   $scope.passwordErrors        = [];
   $scope.passwordConfirmErrors = [];
-
-    // make sure they went through the alpha page
-    if(!session.get('alpha')) $state.go('alpha');
 
   var requestUsernameStatus = new bruteRequest({
     url: API_LOCATION + '/validname',
@@ -139,10 +136,11 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, startSession
     }
 
     if(validInput){
-      // TODO: Store the keys in the blob.
+      // TODO: Don't hard code the test keys.
       var privateKey = 'snoPBgXtMeMyMHUVTrbuqAfr1SUTb';
       var keys = KeyGen.generateKeys(privateKey);
       var packedKeys = KeyGen.pack(keys);
+      packedKeys.address = 'gHb9CJAWyB4gj91VRWn96DkukG4bwdtyTh';
 
       var data = {
         alphaCode: session.get('alpha'),
@@ -175,14 +173,14 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, startSession
                 session.put('blob', blob);
 
                 // Store the credentials needed to encrypt and decrypt the blob.
-                storeCredentials($scope.username, $scope.password);
+                session.storeCredentials($scope.username, $scope.password);
 
                 // Initialize the session variables.
-                startSession();
+                session.start();
 
                 // Encrypt the blob and send it to the server.
                 // TODO: Handle failures when trying to save the blob.
-                saveBlob();
+                session.storeBlob();
 
                 // Take the user to the dashboard.
                 $state.go('dashboard');

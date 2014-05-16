@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.directive('transactionHistory', function(session, updateBalance, ngTableParams, $filter){
+sc.directive('transactionHistory', function(session, ngTableParams, $filter){
   return {
     restrict: 'E',
     replace: true,
@@ -16,13 +16,14 @@ sc.directive('transactionHistory', function(session, updateBalance, ngTableParam
         return JsonRewriter.processTxn(transaction.tx, transaction.meta, testData.result.account);
       });
 
+      session.connect();
       var network = session.get('network');
 
-      network.on('net_transaction', function(message){
+      network.remote.on('net_transaction', function(message){
         console.log('Transaction: "' + message + '"');
       });
 
-      network.request_subscribe('transactions')
+      network.remote.request_subscribe('transactions')
         .on('success', function(data){
           console.log('Transaction success: "' + JSON.stringify(data) + '"');
         })
@@ -31,7 +32,7 @@ sc.directive('transactionHistory', function(session, updateBalance, ngTableParam
         })
         .request();
 
-      updateBalance();
+      network.updateBalance();
 
       $scope.tableParams = new ngTableParams({
         page: 1,
