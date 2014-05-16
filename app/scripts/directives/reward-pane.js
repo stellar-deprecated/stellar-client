@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.directive('rewardPane', function(session, updateBalance, ngTableParams, $filter){
+sc.directive('rewardPane', function(session, ngTableParams, $filter){
     return {
         restrict: 'E',
         replace: true,

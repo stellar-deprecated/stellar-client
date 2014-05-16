@@ -2,11 +2,11 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('DashboardCtrl', function($rootScope, $scope, $state, session, connectToNetwork) {
+sc.controller('DashboardCtrl', function($rootScope, $scope, $state, session) {
   $scope.blob = session.get('blob');
     $rootScope.tab= 'none';
 
-  connectToNetwork();
+    session.connect();
 
 
     $scope.toggleSend = function() {
