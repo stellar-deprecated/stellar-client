@@ -1,0 +1,22 @@
+<div class="send-pane" ng-show="$root.tab==='send'">
+    <div class="row send-header">
+         <b>Send stellars</b>   <div class="send-close"><a ng-click="$root.tab='none'">close</a></div>
+    </div>
+    <form role="form" >
+        <div class="form-group">
+            <div class="input-icon-wrapper">
+                <input id="amount" type="text" class="form-control" ng-model="amount" placeholder="Amount of Stellars to send" >
+            </div>
+            <div class="input-icon-wrapper">
+                <input id="destination" type="text" class="form-control" ng-model="destination" placeholder="Where to send stellars" >
+            </div>
+            <div class="alert alert-danger ng-hide" ng-show="sendErrors">
+                <ul>
+                    <li ng-repeat="error in sendErrors">{{ error }}</li>
+                </ul>
+            </div>
+        </div>
+        <button class="btn btn-default" ng-click="cancelSend()">Cancel</button> <button type="submit" class="btn btn-default" ng-click="attemptSend()">Send</button>
+    </form>
+
+</div>

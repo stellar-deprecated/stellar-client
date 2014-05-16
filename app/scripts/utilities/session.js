@@ -39,7 +39,7 @@ sc.factory('startSession', function(session, KeyGen){
 
     // Set loggedIn to be true to signify that it is safe to use the session variables.
     session.put('loggedIn', true);
-  }
+  };
 });
 
 sc.factory('connectToNetwork', function($rootScope, session){
@@ -57,7 +57,7 @@ sc.factory('connectToNetwork', function($rootScope, session){
 
     // Store the network connection in the session.
     session.put('network', network);
-  }
+  };
 });
 
 sc.service('updateBalance', function($rootScope, session){
