@@ -6,14 +6,41 @@ $icon-font-path: "../bower_components/bootstrap-sass-official/vendor/assets/font
 
 @import "registration.scss";
 @import "transactionHistory.scss";
+@import "reward-pane.scss";
 
 body {
-    padding-top: 50px;
-    padding-bottom: 20px;
+  width: 66%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-top: 70px;
+  padding-bottom: 20px;
 }
 
 .ng-cloak, .ng-hide {
-    display: none;
+  display: none;
+}
+
+.client-nav {
+  width: 66%;
+  left: auto;
+  right: auto;
+
+  & > div {
+    padding: 10px 120px;
+    border-bottom: 1px solid #E7ECEE;
+    border-top: 3px solid #09B5E5;
+  }
+
+  .navbar-brand {
+    color: #09B5E5;
+    font-size: 24px;
+    font-weight: bold;
+  }
+}
+
+.dashboard {
+  background-color: #F4F5F7;
+  padding: 30px 120px;
 }
 
 .dash-title {

@@ -1,0 +1,23 @@
+.reward-pane {
+  background-color: #F4F5F7;
+  padding: 30px 120px;
+
+  .incomplete-rewards,
+  .complete-rewards {
+    padding-left: 0;
+
+    & li {
+      margin: 3px;
+      padding: 20px 20px 20px 50px;
+      list-style-type: none;
+    }
+  }
+
+  .incomplete-rewards li {
+    background-color: #FFFFFF;
+  }
+
+  .complete-rewards li {
+    background-color: #F9F9F9;
+  }
+}
