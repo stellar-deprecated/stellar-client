@@ -7,6 +7,7 @@ sc.factory('Network', function($rootScope){
     this.remote = new ripple.Remote(server, true);
     this.address = address;
     this.connected = false;
+    this.transactionListeners = [];
   };
 
   Network.prototype.connect = function(){
@@ -24,6 +25,21 @@ sc.factory('Network', function($rootScope){
     });
 
     this.remote.connect();
+  };
+
+  Network.prototype.onTransaction = function(callback){
+    // Subscribe to transactions.
+    this.remote.request_subscribe('transactions')
+      .on('success', function(data){
+        console.log('Transaction success: "' + JSON.stringify(data) + '"');
+      })
+      .on('error', function(data){
+        console.log('Transaction error: "' + JSON.stringify(data) + '"');
+      })
+      .request();
+
+    // Send transaction data to listener.
+    this.remote.on('net_transaction', callback);
   };
 
   Network.prototype.updateBalance = function(){
