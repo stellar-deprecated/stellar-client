@@ -2,22 +2,37 @@
   background-color: #F4F5F7;
   padding: 30px 120px;
 
-  .incomplete-rewards,
-  .complete-rewards {
+  .rewards {
     padding-left: 0;
 
     & li {
       margin: 3px;
-      padding: 20px 20px 20px 50px;
+      padding: 20px;
       list-style-type: none;
+      cursor: pointer;
+      border: 1px solid rgba($stellar-blue, 0);
+      @include transition(border-color 350ms ease-in-out);
+
+      &.incomplete,
+      &.pending {
+        background-color: white;
+
+        &:hover {
+          border: 1px solid rgba($stellar-blue, 1);
+        }
+      }
+
+      &.complete {
+        background-color: #F9F9F9;
+
+        &:hover {
+          border: 1px solid rgba($grey-border, 1);
+        }
+      }
+
+      i {
+        padding-right: 20px;
+      }
     }
-  }
-
-  .incomplete-rewards li {
-    background-color: #FFFFFF;
-  }
-
-  .complete-rewards li {
-    background-color: #F9F9F9;
   }
 }

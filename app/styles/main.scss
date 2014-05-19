@@ -4,6 +4,8 @@ $icon-font-path: "../bower_components/bootstrap-sass-official/vendor/assets/font
 @import "../bower_components/bootstrap-sass-official/vendor/assets/stylesheets/bootstrap.scss";
 // endbower
 
+@import "color-palette.scss";
+
 @import "registration.scss";
 @import "transactionHistory.scss";
 @import "reward-pane.scss";
@@ -27,8 +29,8 @@ body {
 
   & > div {
     padding: 10px 120px;
-    border-bottom: 1px solid #E7ECEE;
-    border-top: 3px solid #09B5E5;
+    border-top: 3px solid $stellar-blue;
+    border-bottom: 1px solid $grey-border;
   }
 
   .navbar-brand {

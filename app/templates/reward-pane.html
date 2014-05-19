@@ -1,9 +1,9 @@
-<div class="reward-pane">
+<div class="reward-pane ng-hide" ng-show="showRewards">
     <b>Reward Pane</b><br>
-    <ul class="incomplete-rewards ng-hide" ng-show="incompleteRewards.length">
-        <li ng-repeat="reward in incompleteRewards">{{ reward.message }}</li>
-    </ul>
-    <ul class="complete-rewards ng-hide" ng-show="completeRewards.length">
-        <li ng-repeat="reward in completeRewards">{{ reward.message }}</li>
+    <ul class="rewards">
+        <li ng-repeat="reward in rewards" ng-class="reward.status">
+            <i ng-class="rewardStatusIcons[reward.status]"></i>
+            {{ reward.message }}
+        </li>
     </ul>
 </div>
