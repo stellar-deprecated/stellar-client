@@ -13,11 +13,13 @@ sc.factory('Network', function($rootScope){
     var network = this;
     this.remote.on('connected', function () {
       network.connected = true;
+        $rootScope.connected = true;
       $rootScope.$broadcast('connected');
     });
 
     this.remote.on('disconnected', function () {
       network.connected = false;
+        $rootScope.connected = false;
       $rootScope.$broadcast('disconnected');
     });
 

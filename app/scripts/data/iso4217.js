@@ -1,4 +1,4 @@
-module.exports = {
+var iso4217 = {
     // Ripple Credits
     "XRP":[0, 0],
 

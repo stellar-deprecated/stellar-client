@@ -2,6 +2,7 @@
 
 var Amount = ripple.Amount;
 
+//var sc = angular.module('stellarClient',['filters']);
 var sc = angular.module('stellarClient');
 
 sc.directive('sendPane', function($rootScope,$filter){
@@ -13,6 +14,8 @@ sc.directive('sendPane', function($rootScope,$filter){
         templateUrl: '/templates/send.html',
         controller: function($rootScope,$scope, $element){
             //console.log('hello '+$rootScope.tab);
+
+            $scope.mode = "form";
 
             // XXX Most of these variables should be properties of $scope.send.
             //     The Angular devs recommend that models be objects due to the way
@@ -38,6 +41,7 @@ sc.directive('sendPane', function($rootScope,$filter){
                 $rootScope.tab='none';
                 $scope.destination='';
                 $scope.amount='';
+                $scope.mode = "form";
             }
 
             $scope.check_str_sufficiency = function () {
@@ -83,7 +87,7 @@ sc.directive('sendPane', function($rootScope,$filter){
 
                 if(!$scope.amount){
                     validInput = false;
-                    $scope.alphaCodeErrors.push('Must enter an amount.');
+                    $scope.sendErrors.push('Must enter an amount.');
                 }
 
                 if(validInput){
@@ -93,38 +97,6 @@ sc.directive('sendPane', function($rootScope,$filter){
 
                     //$scope.alphaCodeErrors.push('test1');
 
-                    // Submit the registration data to the server.
-                    requestAlpha.send(data,
-                        // Success
-                        function (response) {
-                            $scope.$apply(function () {
-                                //$scope.alphaCodeErrors.push('test');
-                                console.log(response.status);
-                                switch(response.status)
-                                {
-                                    case 'success':
-                                        // Save code for the registration page
-                                        session.put('alpha', $scope.alphaCode);
-                                        $state.go('register');
-                                        break;
-
-                                    case 'used':
-                                        $scope.alphaCodeErrors.push('Sorry this code has already been used.');
-                                        break;
-
-                                    default:
-                                        //console.log($scope.alphaCodeErrors[0]);
-                                        $scope.alphaCodeErrors.push('Sorry this code is invalid.');  // TODO: why is this not displaying?
-                                        //$scope.$apply();
-                                        break;
-                                }
-                            });
-                        },
-                        // Fail
-                        function(){
-                            $scope.alphaCodeErrors.push('Something is wrong?');
-                        }
-                    );
                 }
             };
         }
