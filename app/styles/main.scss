@@ -41,3 +41,10 @@ body {
     font-weight: bold;
   }
 }
+
+.client-container {
+  & > div {
+    padding: 15px 105px;
+    border-bottom: 1px solid $grey-border;
+  }
+}
