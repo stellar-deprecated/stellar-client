@@ -17,13 +17,13 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, bruteRequest
   $scope.passwordConfirmErrors = [];
 
   var requestUsernameStatus = new bruteRequest({
-    url: Options.API_LOCATION + '/validname',
+    url: Options.API_SERVER + '/validname',
     type: 'POST',
     dataType: 'json'
   });
 
   var requestRegistration = new bruteRequest({
-    url: API_LOCATION + '/register',
+    url: API_SERVER + '/register',
     type: 'POST',
     dataType: 'json'
   });

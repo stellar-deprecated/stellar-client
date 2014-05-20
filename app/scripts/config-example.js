@@ -14,8 +14,8 @@ var Options = {
 //    "websocket_port" : 5006,
 //    "websocket_ssl" : false
     },
-    API_LOCATION: 'http://localhost:80',
-    BLOB_LOCATION: 'http://localhost:80/blob,
+    API_SERVER: 'http://localhost:80',
+    WALLET_SERVER: 'http://localhost:80',
 
     // If set, login will persist across sessions (page reload). This is mostly
     // intended for developers, be careful about using this in a real setting.

@@ -2,12 +2,12 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('AlphaCtrl', function ($scope, $state, session, API_LOCATION, bruteRequest) {
+sc.controller('AlphaCtrl', function ($scope, $state, session,  bruteRequest) {
   $scope.alphaCode = '';
   $scope.alphaCodeErrors = [];
 
   var requestAlpha = new bruteRequest({
-    url: API_LOCATION + '/checkAlphaCode',
+    url: Options.API_SERVER + '/checkAlphaCode',
     type: 'POST',
     dataType: 'json'
   });
