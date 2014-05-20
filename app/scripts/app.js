@@ -36,7 +36,13 @@ stellarClient.config(function($stateProvider, $urlRouterProvider) {
 
 });
 
+<<<<<<< HEAD
 stellarClient.run(function($rootScope, $state, session){
+=======
+stellarClient.run(function($rootScope, $state, session, PERSISTENT_SESSION, ALPHA_PHASE){
+  $rootScope.balance = 'loading...';
+
+>>>>>>> 4d3712437dad4ef4f5f1410539d7a82a8b0dc410
   $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){
 
     switch(toState.url){

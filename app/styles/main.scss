@@ -6,15 +6,16 @@ $icon-font-path: "../bower_components/bootstrap-sass-official/vendor/assets/font
 
 @import "color-palette.scss";
 
+@import "dashboard.scss";
 @import "registration.scss";
 @import "transactionHistory.scss";
 @import "reward-pane.scss";
 
 body {
-  width: 66%;
+  width: 65%;
   margin-left: auto;
   margin-right: auto;
-  padding-top: 70px;
+  padding-top: 89px;
   padding-bottom: 20px;
 }
 
@@ -23,14 +24,15 @@ body {
 }
 
 .client-nav {
-  width: 66%;
+  width: 65%;
   left: auto;
   right: auto;
 
   & > div {
-    padding: 10px 120px;
+    padding: 20px 105px 15px 105px;
     border-top: 3px solid $stellar-blue;
     border-bottom: 1px solid $grey-border;
+    background-color: $grey-background;
   }
 
   .navbar-brand {
@@ -38,125 +40,4 @@ body {
     font-size: 24px;
     font-weight: bold;
   }
-}
-
-.dashboard {
-  background-color: #F4F5F7;
-  padding: 30px 120px;
-}
-
-.dash-title {
-
-}
-
-.dash-balance {
-
-}
-
-//////
-
-select,
-textarea,
-input[type="text"],
-input[type="password"],
-input[type="datetime"],
-input[type="datetime-local"],
-input[type="date"],
-input[type="month"],
-input[type="time"],
-input[type="week"],
-input[type="number"],
-input[type="email"],
-input[type="url"],
-input[type="search"],
-input[type="tel"],
-input[type="color"],
-.uneditable-input {
-  padding: 10px;
-  margin-bottom: 25px;
-  font-size: 16px;
-}
-select:focus,
-textarea:focus,
-input[type="text"]:focus,
-input[type="password"]:focus,
-input[type="datetime"]:focus,
-input[type="datetime-local"]:focus,
-input[type="date"]:focus,
-input[type="month"]:focus,
-input[type="time"]:focus,
-input[type="week"]:focus,
-input[type="number"]:focus,
-input[type="email"]:focus,
-input[type="url"]:focus,
-input[type="search"]:focus,
-input[type="tel"]:focus,
-input[type="color"]:focus,
-.uneditable-input:focus {
-  border-color: #999;
-}
-.input-append .add-on,
-.input-prepend .add-on {
-  padding: 10px;
-}
-select {
-  height: 33px;
-  padding: 4px;
-  font-size: 16px;
-}
-form .errorGroup {
-  position: relative;
-  z-index: 1;
-  height: 0;
-  overflow: visible;
-  top: -25px;
-  left: 0;
-}
-form .error,
-form err {
-  color: #DC4D38;
-  font-size: 13px;
-  height: 23px;
-}
-form .success {
-  color: green;
-  font-size: 13px;
-}
-form .amount input,
-form .amount select {
-  vertical-align: bottom;
-}
-form .amount .value {
-  margin-right: 10px;
-}
-form .amount .currency {
-  width: auto;
-}
-form .helperInput {
-  margin: -20px 0 15px 0;
-}
-form .helperInput input {
-  display: inline;
-  margin: 0 5px 0 0;
-}
-form .helperInput label {
-  display: inline;
-  font-size: 12px;
-}
-input.ng-invalid:focus:required:invalid,
-textarea.ng-invalid:focus:required:invalid,
-select.ng-invalid:focus:required:invalid {
-  color: #999;
-  border-color: #999;
-}
-input.ng-invalid.ng-dirty {
-  color: #B94A48;
-  border-color: #e9322d;
-}
-form.ng-invalid .btn-success {
-  background: #ccc;
-  border-color: #ccc;
-}
-button.submit {
-  width: 220px;
 }
