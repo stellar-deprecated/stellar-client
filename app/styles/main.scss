@@ -29,6 +29,19 @@ body {
   left: auto;
   right: auto;
 
+  ul {
+    font-size: 15px;
+
+    a {
+      margin-top: 3px;
+      padding: 7px 24px;
+    }
+
+    .sign-up {
+      border: 1px solid $grey-border;
+    }
+  }
+
   & > div {
     padding: 20px 105px 15px 105px;
     border-top: 3px solid $stellar-blue;
