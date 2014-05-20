@@ -1,6 +1,6 @@
 'use strict';
 
-var stellarClient = angular.module('stellarClient', ['config', 'bruteRequest', 'ui.router', 'rt.debounce', 'vr.passwordStrength', 'ngTable', 'keygen', 'dataBlob', 'angularMoment','filters']);
+var stellarClient = angular.module('stellarClient', ['bruteRequest', 'ui.router', 'rt.debounce', 'vr.passwordStrength', 'ngTable', 'keygen', 'dataBlob', 'angularMoment','filters']);
 
 stellarClient.config(function($stateProvider, $urlRouterProvider) {
 
@@ -36,15 +36,15 @@ stellarClient.config(function($stateProvider, $urlRouterProvider) {
 
 });
 
-stellarClient.run(function($rootScope, $state, session, PERSISTENT_SESSION, ALPHA_PHASE){
+stellarClient.run(function($rootScope, $state, session){
   $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){
 
     switch(toState.url){
 
       case '/login':
         // If the user has persistent login enabled, try to login from local storage.
-        if(PERSISTENT_SESSION && !session.get('loggedIn')){
-          session.loginFromStorage();
+        if(Options.PERSISTENT_SESSION && !session.get('loggedIn')){
+          session.loginFromStorage($rootScope);
 
           if(session.get('loggedIn')){
             $state.transitionTo('dashboard');
@@ -58,7 +58,7 @@ stellarClient.run(function($rootScope, $state, session, PERSISTENT_SESSION, ALPH
 
       case '/register':
         // If the user is trying to register, ensure they are an alpha tester.
-        if(ALPHA_PHASE && !session.get('alpha')){
+        if(Options.ALPHA_PHASE && !session.get('alpha')){
           $state.transitionTo('alpha');
 
           // Prevent the original destination state from loading.

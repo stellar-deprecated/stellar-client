@@ -1,22 +1,21 @@
-'use strict';
+var Options = {
+    server: {
+        "trusted" : true,
+        "websocket_ip" : "s1.stellar.org",
+        "websocket_port" : 51233,
+        "websocket_ssl" : true
+//    "websocket_ip" : "127.0.0.1",
+//    "websocket_port" : 5006,
+//    "websocket_ssl" : false
+    },
+    API_LOCATION: 'http://localhost:80',
+    BLOB_LOCATION: 'http://localhost:80/blob',
 
-var config = angular.module('config', []);
+    // If set, login will persist across sessions (page reload). This is mostly
+    // intended for developers, be careful about using this in a real setting.
+    PERSISTENT_SESSION : true,
+    ALPHA_PHASE: true,
 
-// Persistent sessions should only be used for development.
-config.constant('PERSISTENT_SESSION', true);
-config.constant('ALPHA_PHASE', true);
-config.constant('API_LOCATION', 'http://localhost:80');
-config.constant('BLOB_LOCATION', 'http://localhost:80/blob');
-config.constant('BLOB_DEFAULTS', {
-  server: {
-    trace :         true,
-    trusted:        true,
-    local_signing:  true,
-
-    servers: [
-      { host: '10.0.1.5', port: 6011, secure: false }
-    ],
-
-    connection_offset: 0
-  }
-});
+    // Number of transactions each page has in balance tab notifications
+    transactions_per_page: 50
+};

@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('LoginCtrl', function($scope, $state, session, BLOB_LOCATION, DataBlob) {
+sc.controller('LoginCtrl', function($scope, $state, session, DataBlob) {
   if(session.get('loggedIn')) session.logOut();
 
   $scope.username   = null;
@@ -14,7 +14,7 @@ sc.controller('LoginCtrl', function($scope, $state, session, BLOB_LOCATION, Data
 
     $.ajax({
       method: 'GET',
-      url: BLOB_LOCATION + '/' + session.get('blobID'),
+      url: Options.BLOB_LOCATION + '/' + session.get('blobID'),
       dataType: 'json',
       success: function(data, status, xhr){
         $scope.$apply(function() {
@@ -25,6 +25,8 @@ sc.controller('LoginCtrl', function($scope, $state, session, BLOB_LOCATION, Data
 
               session.put('blob', blob);
               session.start();
+
+              $scope.$broadcast('$idAccountLoad', {account: blob.get('packedKeys').address, secret: blob.get('packedKeys').secret});
 
               $state.go('dashboard');
             } catch (err) {

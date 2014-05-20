@@ -1,5 +1,5 @@
 var module = angular.module('filters', []);
-var Amount = ripple.Amount;
+var Amount = stellar.Amount;
 
 // TODO: var iso4217 = require('../data/iso4217');
 // TODO: var webutil = require('../utilities/web');

@@ -130,8 +130,8 @@ webutil.resolveContact = function (contacts, value)
         }
     }
 
-    if (ripple.UInt160.is_valid(value)) {
-        return ripple.UInt160.json_rewrite(value);
+    if (stellar.UInt160.is_valid(value)) {
+        return stellar.UInt160.json_rewrite(value);
     }
 
     return '';
