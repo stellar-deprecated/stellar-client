@@ -168,6 +168,26 @@ module.directive('rpErrorUnknown', [function() {
 }]);
 
 /**
+ * Tooltips
+ */
+// TODO: is this working?
+module.directive('rpTooltip', [function() {
+    return function(scope, element, attr) {
+        attr.$observe('rpTooltip', function(value) {
+            // Title
+            var options = {'title': value};
+
+            // Placement
+            if (attr.rpTooltipPlacement)
+                options.placement = attr.rpTooltipPlacement;
+
+            $(element).tooltip('destroy');
+            $(element).tooltip(options);
+        });
+    };
+}]);
+
+/**
  * Message for field valid.
  *
  * Use this directive within a rp-errors block to show a message if the field is

@@ -7,11 +7,12 @@ var sc = angular.module('stellarClient');
     waits for:
      $idAccountLoad
  */
-sc.controller('AppCtrl', ['$scope','stNetwork', function($scope, $network) {
+sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', function($scope, $rootScope, $network) {
 
 
     function reset()
     {
+        $rootScope.balance=0;
         /*
         $scope.account = {};
         $scope.lines = {};
@@ -149,6 +150,8 @@ sc.controller('AppCtrl', ['$scope','stNetwork', function($scope, $network) {
 
             // Maximum amount user can spend
             var bal = Amount.from_json(data.Balance);
+            $rootScope.balance=data.Balance;
+            $rootScope.reserve=$scope.account.reserve;
             $scope.account.max_spend = bal.subtract($scope.account.reserve);
         });
     }
