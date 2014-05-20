@@ -6,6 +6,7 @@ $icon-font-path: "../bower_components/bootstrap-sass-official/vendor/assets/font
 
 @import "color-palette.scss";
 
+@import "login.scss";
 @import "dashboard.scss";
 @import "registration.scss";
 @import "transactionHistory.scss";
@@ -43,7 +44,7 @@ body {
 }
 
 .client-container {
-  & > div {
+  & > div > * {
     padding: 15px 105px;
     border-bottom: 1px solid $grey-border;
   }
