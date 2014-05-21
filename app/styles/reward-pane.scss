@@ -1,38 +1,90 @@
 .reward-pane {
   background-color: #F4F5F7;
+  color: $dark-grey;
+
+  .title {
+    font-size: 19px;
+    padding: 24px 0;
+  }
+
+  .rewardProgress {
+    padding-left: 0;
+    display: table;
+    margin: 10px auto 30px auto;
+    border: 1px solid $stellar-blue;
+    background-color: white;
+    border-radius: 31px;
+
+    li {
+      list-style-type: none;
+      display: inline-block;
+      padding: 5px 70px;
+
+      &.complete {
+        background-color: #DBF2F8;
+      }
+
+      &:first-child {
+        border-top-left-radius: 31px;
+        border-bottom-left-radius: 31px;
+      }
+
+      &:last-child {
+        border-top-right-radius: 31px;
+        border-bottom-right-radius: 31px;
+      }
+
+      &:not(:last-child) {
+        border-right: 1px solid $light-grey;
+      }
+    }
+  }
 
   .rewards {
     padding-left: 0;
 
-    & li {
+    li {
       margin: 3px;
       padding: 28px 30px;
       font-size: 20px;
-      color: $dark-grey;
       list-style-type: none;
       cursor: pointer;
       border: 1px solid rgba($stellar-blue, 0);
       @include transition(border-color 350ms ease-in-out);
 
+      i {
+        padding-right: 20px;
+        @include transition(color 200ms ease-in-out);
+      }
+
       &.incomplete,
       &.pending {
         background-color: white;
 
+        i {
+          color: $grey;
+        }
+
         &:hover {
           border: 1px solid rgba($stellar-blue, 1);
+
+          i {
+            color: $stellar-blue;
+          }
         }
       }
 
       &.complete {
         background-color: #F9F9F9;
+        color: rgba($grey, 0.75);
+
+        i {
+          color: rgba($grey, 0.75);
+        }
 
         &:hover {
-          border: 1px solid rgba($grey-border, 1);
+          border: 1px solid rgba($grey, 0.5);
         }
-      }
-
-      i {
-        padding-right: 20px;
       }
     }
   }
