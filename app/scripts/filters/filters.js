@@ -1,8 +1,10 @@
 var module = angular.module('filters', []);
 var Amount = stellar.Amount;
+var Base = stellar.Base;
 
 // TODO: var iso4217 = require('../data/iso4217');
 // TODO: var webutil = require('../utilities/web');
+
 
 /**
  * Format a ripple.Amount.
@@ -10,7 +12,9 @@ var Amount = stellar.Amount;
  * If the parameter is a number, the number is treated the relative
  */
 module.filter('rpamount', function () {
-    return function (input, opts) {
+    return function (input, options) {
+        opts = jQuery.extend(true, {}, options);
+
         if ("number" === typeof opts) {
             opts = {
                 rel_min_precision: opts
@@ -45,7 +49,20 @@ module.filter('rpamount', function () {
             opts.precision = 16;
         }
 
+        // But we will cut off after five significant decimals
+        if ("number" !== typeof opts.max_sig_digits) {
+            opts.max_sig_digits = 5;
+        }
+
         var out = amount.to_human(opts);
+
+        // If amount is very small and only has zeros (ex. 0.0000), raise precision
+        // to make it useful.
+        if (out.length > 1 && 0 === +out && !opts.hard_precision) {
+            opts.precision = 20;
+
+            out = amount.to_human(opts);
+        }
 
         return out;
     };
@@ -83,7 +100,7 @@ module.filter('rpcurrencyfull', ['$rootScope', function ($scope) {
         if (!input) return "";
 
         var amount = Amount.from_json(input);
-        var currency = $.grep($scope.currencies, function(e){ return e.value == amount.currency().to_json(); })[0];
+        var currency = $.grep($scope.currencies_all, function(e){ return e.value == amount.currency().to_json(); })[0];
 
         if (currency) {
             return currency.name;
@@ -151,7 +168,7 @@ module.filter('rpcontactname', ['$rootScope', function ($scope) {
     return function (address) {
         address = address ? ""+address : "";
 
-        var contact = webutil.getContact($scope.userBlob.data.contacts, address);
+        var contact = null; // TODO: contacts later webutil.getContact($scope.userBlob.data.contacts, address);
 
         if (!contact) {
             return "" + address.substring(0,7) + "…";
@@ -292,5 +309,27 @@ module.filter('rprange', function() {
         for (var i = lowBound; i <= highBound; i++)
             result.push(i);
         return result;
+    };
+});
+
+module.filter('rpaddressorigin', function() {
+    return function(recipient) {
+        return !isNaN(Base.decode_check([0, 5], recipient, 'bitcoin')) ? 'bitcoin' : 'ripple';
+    };
+});
+
+module.filter('rpheavynormalize', function () {
+    return function (value, maxLength) {
+        return String(value)
+            // Remove non-printable and non-ASCII characters
+            .replace(/[^ -~]/g, '')
+            // Enforce character limit
+            .substr(0, maxLength || 160)
+            // Remove leading whitespace
+            .replace(/^\s+/g, '')
+            // Remove trailing whitespace
+            .replace(/\s+$/g, '')
+            // Normalize all other whitespace
+            .replace(/\s+/g, ' ');
     };
 });
