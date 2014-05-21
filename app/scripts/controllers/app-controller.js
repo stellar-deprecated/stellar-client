@@ -10,15 +10,17 @@ var sc = angular.module('stellarClient');
 sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', function($scope, $rootScope, $network) {
 
 
+    var account;
+
     function reset()
     {
         $rootScope.balance=0;
+        $scope.events = [];
+        $scope.history = [];
         /*
         $scope.account = {};
         $scope.lines = {};
         $scope.offers = {};
-        $scope.events = [];
-        $scope.history = [];
         $scope.balances = {};
         */
     }
@@ -28,6 +30,8 @@ sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', function($scope, $r
     function handleAccountLoad(e, data)
     {
         var remote = $network.remote;
+
+        account=data.account;
 
         reset();
 
@@ -75,7 +79,7 @@ sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', function($scope, $r
 
     $scope.$on('$idAccountLoad', function (e, data) {
         $rootScope.account=data.account;
-        
+
         // Server is connected
         if ($network.connected) {
             handleAccountLoad(e, data);
@@ -139,7 +143,7 @@ sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', function($scope, $r
     {
         var remote = $network.remote;
         $scope.$apply(function () {
-            $scope.account = data;
+            $rootScope.account = data;
 
             // As per json wire format convention, real ledger entries are CamelCase,
             // e.g. OwnerCount, additional convenience fields are lower case, e.g.
@@ -147,15 +151,15 @@ sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', function($scope, $r
             var reserve_base = Amount.from_json(""+remote._reserve_base),
                 reserve_inc  = Amount.from_json(""+remote._reserve_inc),
                 owner_count  = $scope.account.OwnerCount || "0";
-            $scope.account.reserve_base = reserve_base;
-            $scope.account.reserve = reserve_base.add(reserve_inc.product_human(owner_count));
-            $scope.account.reserve_to_add_trust = reserve_base.add(reserve_inc.product_human(owner_count+1));
+            $rootScope.account.reserve_base = reserve_base;
+            $rootScope.account.reserve = reserve_base.add(reserve_inc.product_human(owner_count));
+            $rootScope.account.reserve_to_add_trust = reserve_base.add(reserve_inc.product_human(owner_count+1));
 
             // Maximum amount user can spend
             var bal = Amount.from_json(data.Balance);
             $rootScope.balance=data.Balance;
             $rootScope.reserve=$scope.account.reserve;
-            $scope.account.max_spend = bal.subtract($scope.account.reserve);
+            $rootScope.account.max_spend = bal.subtract($scope.account.reserve);
         });
     }
 
@@ -188,7 +192,7 @@ sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', function($scope, $r
      */
     function processTxn(tx, meta, is_historic)
     {
-        var processedTxn = rewriter.processTxn(tx, meta, account);
+        var processedTxn = JsonRewriter.processTxn(tx, meta, account);
 
         if (processedTxn) {
             var transaction = processedTxn.transaction;
@@ -355,6 +359,10 @@ sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', function($scope, $r
 
 
     function handleFirstConnection() {
+        // TODO: need to figure out why this isn't being set when we connect to the stellard
+        $network.remote._reserve_base=50*1000000;
+        $network.remote._reserve_inc=10*1000000;
+
         removeFirstConnectionListener();
     }
 

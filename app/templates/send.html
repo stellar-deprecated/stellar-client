@@ -19,8 +19,7 @@
                 <div rp-error-valid ng-show="send.recipient != send.recipient_address" class="success">{{send.recipient_address}}</div>
                 <div rp-error-on="required" class="error">Please enter a recipient.</div>
                 <div rp-error-on="rpDestination" class="error">
-                    Recipient should be either a name from your contact list or Ripple
-                    address.
+                    Recipient should be either a valid username or a stellar address.
                 </div>
             </div><span ng-show="$routeParams.st">
       <label for="send_st">Source tag</label>
@@ -41,21 +40,21 @@
             <div rp-errors="send_amount" class="errorGroup">
                 <div rp-error-on="required" class="error">Please enter an amount.</div>
                 <div rp-error-on="rpAmount" class="error">Not a valid amount.</div>
-                <div rp-error-on="rpMaxAmount" class="error">This transaction exceeds your balance, you can send a max. of {{account.max_spend | rpamount:{rel_precision: 0} }} XRP</div>
+                <div rp-error-on="rpMaxAmount" class="error">This transaction exceeds your balance, you can send a max. of {{account.max_spend | rpamount:{rel_precision: 0} }} XST</div>
                 <div ng-show="send.type == 'native' && send.self" class="error">What's the point of sending to yourself?</div>
             </div>
             <div ng-show="send.type == 'native'" class="submitsection">
                 <button type="submit" ng-disabled="sendForm.$invalid || send.self" class="btn btn-success submit">Send Stellars</button>
             </div>
-            <p ng-show="send.fund_status == 'insufficient-xrp'" class="literal">Destination account is unfunded; send at least {{xrp_deficiency | rpamount}} STR to initialize it.&nbsp;<a href="https://ripple.com/wiki/Reserves" target="_blank">More information</a></p>
+            <p ng-show="send.fund_status == 'insufficient-xtr'" class="literal">Destination account is unfunded; send at least {{xtr_deficiency | rpamount}} XTR to initialize it.&nbsp;<a href="https://ripple.com/wiki/Reserves" target="_blank">More information</a></p>
             <p ng-show="send.path_status == 'waiting'" class="literal">Please enter the transaction details.</p>
-            <p ng-show="send.path_status == 'pending' && send.currency_code != 'XRP'" class="literal throbber">Calculating paths</p>
-            <p ng-show="send.path_status == 'pending' && send.currency_code == 'XRP'" class="literal throbber">Calculating alternatives</p>
-            <p ng-show="send.path_status == 'no-path' && send.currency_code != 'XRP'" class="literal">No path found!</p>
+            <p ng-show="send.path_status == 'pending' && send.currency_code != 'XTR'" class="literal throbber">Calculating paths</p>
+            <p ng-show="send.path_status == 'pending' && send.currency_code == 'XTR'" class="literal throbber">Calculating alternatives</p>
+            <p ng-show="send.path_status == 'no-path' && send.currency_code != 'XTR'" class="literal">No path found!</p>
             <p ng-show="send.path_status == 'error'" class="literal">Error while calculating path</p>
             <div rp-if="send.path_status == 'done'" class="currency_sets">
-                <div ng-show="send.currency_code != 'XRP'" class="label">You can send</div>
-                <div ng-show="send.currency_code == 'XRP'" class="label">Or you can send</div>
+                <div ng-show="send.currency_code != 'XTR'" class="label">You can send</div>
+                <div ng-show="send.currency_code == 'XTR'" class="label">Or you can send</div>
                 <ul>
                     <li ng-repeat="alt in send.alternatives">
                         <p><span class="amnt">{{alt.amount | rpamount:{rel_precision: 4, rel_min_precision: 2} }}</span><span class="currency">{{alt.amount | rpcurrency }}</span></p>
@@ -68,7 +67,8 @@
             <p class="throbber literal">Ripple is calculating a path for your payment.</p>
         </group>
         <group ng-show="mode=='confirm' && $root.balance" class="mode-confirm">
-            <p class="literal">You are sending {{ (send.alt.amount || send.currency) | rpcurrency}} to</p>
+            test: {{send.amount}}
+            <p class="literal">You are sending {{ (send.amount || send.currency) | rpcurrency}} to</p>
             <div class="dest_feedback">
                 <div ng-show="send.recipient_name" class="recipient">{{send.recipient_name}}</div>
                 <div ng-hide="send.recipient_name" class="recipient">{{send.recipient_address}}</div>
@@ -150,7 +150,7 @@
             </group>
             <group ng-show="tx_result=='claim'" class="result-malformed">
                 <h2 class="tx-status">Transaction failed!</h2>
-                <p ng-switch on="engine_result"><span ng-switch-when="tecNO_DST">The destination account does not exist.</span><span ng-switch-when="tecNO_DST_INSUF_XRP">The destination account does not exist. Too little XRP sent to create it.</span><span ng-switch-default="ng-switch-default">Error: {{engine_result_message}}</span></p>
+                <p ng-switch on="engine_result"><span ng-switch-when="tecNO_DST">The destination account does not exist.</span><span ng-switch-when="tecNO_DST_INSUF_XRP">The destination account does not exist. Too little XTR sent to create it.</span><span ng-switch-default="ng-switch-default">Error: {{engine_result_message}}</span></p>
             </group>
             <group ng-show="tx_result=='failed'" class="result-failed">
                 <h2 class="tx-status">Transaction failed!</h2>
@@ -158,7 +158,7 @@
             </group>
             <group class="actions">
                 <hr/>
-                <div ng-show="addressSaved" class="text-success actionLink">Contact saved!</div>
+                <!-- <div ng-show="addressSaved" class="text-success actionLink">Contact saved!</div>
                 <div ng-hide="contact" class="save-address-form actionLink"><a href="" ng-click="show_save_address_form = true">Add this address to contacts</a>
                     <form name="saveAddressForm" ng-class="{ show: show_save_address_form }" ng-submit="saveAddress()">
                         <div class="address">{{send.recipient_address}}</div>
@@ -170,9 +170,9 @@
                         </div>
                         <hr/>
                     </form>
-                </div>
+                </div> -->
                 <div class="actionLink"><a ng-click="reset()">Send another payment</a></div>
-                <div class="actionLink"><a ng-click="reset_goto('balance')">Back to balance</a></div>
+                <!-- <div class="actionLink"><a ng-click="reset_goto('balance')">Back to balance</a></div> -->
                 <hr/>
             </group>
         </group>

@@ -1,6 +1,6 @@
 var iso4217 = {
     // Ripple Credits
-    "XRP":[0, 0],
+    "XTR":[0, 0],
 
     // Official ISO-4217
     "AFN":[971, 2],

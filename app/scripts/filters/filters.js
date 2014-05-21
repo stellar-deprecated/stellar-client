@@ -21,7 +21,7 @@ module.filter('rpamount', function () {
 
         if (!input) return "n/a";
 
-        if (opts.xrp_human && input === ("" + parseInt(input, 10))) {
+        if (opts.xtr_human && input === ("" + parseInt(input, 10))) {
             input = input + ".0";
         }
 
