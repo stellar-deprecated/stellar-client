@@ -2,17 +2,23 @@
 // generated on 2014-04-24 using generator-gulp-webapp 0.0.8
 
 var gulp = require('gulp');
+var plumber = require('gulp-plumber');
 
 // load plugins
 var $ = require('gulp-load-plugins')();
 
+function logError(err) {
+  console.log(err.toString());
+  this.emit('end');
+}
+
 gulp.task('styles', function () {
     return gulp.src('app/styles/main.scss')
+        .pipe(plumber({errorHandler: console.log}))
         .pipe($.rubySass({style: 'expanded'}))
         .pipe($.autoprefixer('last 1 version'))
         .pipe(gulp.dest('.tmp/styles'))
-        .pipe($.size())
-        .on('error', console.log);
+        .pipe($.size());
 });
 
 gulp.task('scripts', function () {
