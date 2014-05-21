@@ -23,7 +23,7 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, bruteRequest
   });
 
   var requestRegistration = new bruteRequest({
-    url: API_SERVER + '/register',
+    url: Options.API_SERVER + '/register',
     type: 'POST',
     dataType: 'json'
   });
