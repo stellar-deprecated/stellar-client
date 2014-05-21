@@ -14,6 +14,13 @@ var Options = {
 //    "websocket_port" : 5006,
 //    "websocket_ssl" : false
     },
+
+    mixpanel: {
+        "token": '',
+        // Don't track events by default
+        "track": false
+    },
+
     API_SERVER: 'http://localhost:80',
     WALLET_SERVER: 'http://localhost:80',
 
