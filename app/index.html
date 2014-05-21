@@ -1,124 +1,133 @@
 <!doctype html>
 <html class="no-js" ng-app="stellarClient">
-    <head>
-        <meta charset="utf-8">
-        <title>stellar client</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+<head>
+    <meta charset="utf-8">
+    <title>stellar client</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
-        <!-- build:css styles/vendor.css -->
-        <link rel="stylesheet" href="bower_components/ng-table/ng-table.min.css">
-        <!-- endbuild -->
+    <!-- build:css styles/vendor.css -->
+    <link rel="stylesheet" href="bower_components/ng-table/ng-table.min.css">
+    <!-- endbuild -->
 
-        <!-- build:css({.tmp,app}) styles/main.css -->
-        <link rel="stylesheet" href="styles/main.css">
-        <!-- endbuild -->
+    <!-- build:css({.tmp,app}) styles/main.css -->
+    <link rel="stylesheet" href="styles/main.css">
+    <!-- endbuild -->
 
-        <!-- build:js scripts/vendor/modernizr.js -->
-        <script src="bower_components/modernizr/modernizr.js"></script>
-        <!-- endbuild -->
-    </head>
-    <body ng-controller="AppCtrl">
-        <nav class="client-nav container-fluid navbar navbar-fixed-top" role="navigation" ng-controller="NavCtrl">
-            <div class="container-fluid navbar-default">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <a class="navbar-brand" href="#/">STELLAR</a>
-                </div>
-                <div class="collapse navbar-collapse" id="navbar">
-                    <ul class="nav navbar-nav navbar-right" ng-hide="session.get('loggedIn')">
-                        <li><a href="#/login" ui-sref="login">Login</a></li>
-                        <li><a href="#/register" ui-sref="register">Register</a></li>
-                    </ul>
-
-                    <ul class="nav navbar-nav navbar-right ng-hide" ng-show="session.get('loggedIn')">
-                        <li><a href="#/settings">@{{ session.get('username') }}</a></li>
-                        <li><a href="#/login" ui-sref="login">Logout</a></li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-
-        <div class="container-fluid" ui-view>
-            <div class="page-header">
-                <h1>Loading...</h1>
-            </div>
+    <!-- build:js scripts/vendor/modernizr.js -->
+    <script src="bower_components/modernizr/modernizr.js"></script>
+    <!-- endbuild -->
+</head>
+<body ng-controller="AppCtrl">
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation" ng-controller="NavCtrl">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#/">Stellar</a>
         </div>
+        <div class="collapse navbar-collapse" id="navbar">
+            <ul class="nav navbar-nav navbar-right" ng-hide="session.get('loggedIn')">
+                <li><a href="#/login" ui-sref="login">Login</a></li>
+                <li><a href="#/register" ui-sref="register">Register</a></li>
+            </ul>
 
-        <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
-        <script>
-            (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+            <ul class="nav navbar-nav navbar-right ng-hide" ng-show="session.get('loggedIn')">
+                <li><a href="#/settings">@{{ session.get('username') }}</a></li>
+                <li><a href="#/login" ui-sref="login">Logout</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container client-container" ui-view>
+    <div class="page-header">
+        <h1>Loading...</h1>
+    </div>
+</div>
+
+<!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+<script>
+    (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
             function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
-            e=o.createElement(i);r=o.getElementsByTagName(i)[0];
-            e.src='//www.google-analytics.com/analytics.js';
-            r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
-            ga('create','UA-XXXXX-X');ga('send','pageview');
-        </script>
+        e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+        e.src='//www.google-analytics.com/analytics.js';
+        r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+    ga('create','UA-XXXXX-X');ga('send','pageview');
+</script>
 
-        <!-- build:js scripts/vendor.js -->
-        <script src="bower_components/jquery/dist/jquery.js"></script>
-        <script src="bower_components/angular/angular.js"></script>
-        <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
-        <script src="bower_components/angular-debounce/dist/angular-debounce.min.js"></script>
-        <script src="bower_components/angular-password-strength/build/angular-password-strength.min.js"></script>
-        <script src="bower_components/ng-table/ng-table.min.js"></script>
-        <script src="bower_components/crypto-js/components/core.js"></script>
-        <script src="bower_components/crypto-js/components/ripemd160.js"></script>
-        <script src="bower_components/crypto-js/rollups/hmac-sha256.js"></script>
-        <script src="bower_components/moment/moment.js"></script>
-        <script src="bower_components/angular-moment/angular-moment.js"></script>
-        <!-- endbuild -->
+<!-- build:js scripts/vendor.js -->
+<script src="bower_components/jquery/dist/jquery.js"></script>
+<script src="bower_components/angular/angular.js"></script>
+<script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+<script src="bower_components/angular-debounce/dist/angular-debounce.min.js"></script>
+<script src="bower_components/angular-password-strength/build/angular-password-strength.min.js"></script>
+<script src="bower_components/ng-table/ng-table.min.js"></script>
+<script src="bower_components/crypto-js/components/core.js"></script>
+<script src="bower_components/crypto-js/components/ripemd160.js"></script>
+<script src="bower_components/crypto-js/rollups/hmac-sha256.js"></script>
+<script src="bower_components/moment/moment.js"></script>
+<script src="bower_components/angular-moment/angular-moment.js"></script>
+<!-- endbuild -->
 
-        <!-- build:js scripts/plugins.js -->
-        <script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/affix.js"></script>
-        <script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/alert.js"></script>
-        <script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/dropdown.js"></script>
-        <script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/tooltip.js"></script>
-        <script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/modal.js"></script>
-        <script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/transition.js"></script>
-        <script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/button.js"></script>
-        <script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/popover.js"></script>
-        <script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/carousel.js"></script>
-        <script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/scrollspy.js"></script>
-        <script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/collapse.js"></script>
-        <script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/tab.js"></script>
-        <!-- endbuild -->
+<!-- build:js scripts/plugins.js -->
+<script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/affix.js"></script>
+<script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/alert.js"></script>
+<script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/dropdown.js"></script>
+<script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/tooltip.js"></script>
+<script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/modal.js"></script>
+<script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/transition.js"></script>
+<script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/button.js"></script>
+<script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/popover.js"></script>
+<script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/carousel.js"></script>
+<script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/scrollspy.js"></script>
+<script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/collapse.js"></script>
+<script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/tab.js"></script>
+<!-- endbuild -->
 
-        <!-- build:js scripts/app.js -->
-        <script src="scripts/libraries/base58.js"></script>
-        <script src="scripts/libraries/sjcl.js"></script>
-        <script src="scripts/libraries/ripple-0.7.35-min.js"></script>
+<!-- build:js scripts/app.js -->
+<script src="scripts/libraries/base58.js"></script>
+<script src="scripts/libraries/sjcl.js"></script>
+<script src="scripts/libraries/stellar-0.7.35-min.js"></script>
+<script src="scripts/data/iso4217.js"></script>
+<script src="scripts/data/currencies.js"></script>
+<script src="scripts/utilities/web.js"></script>
+<script src="scripts/libraries/underscore.js"></script>
 
-        <script src="scripts/app.js"></script>
-        <script src="scripts/config.js"></script>
+<script src="scripts/filters/filters.js"></script>
 
-        <script src="scripts/controllers/app-controller.js"></script>
-        <script src="scripts/controllers/nav-controller.js"></script>
-        <script src="scripts/controllers/login-controller.js"></script>
-        <script src="scripts/controllers/registration-controller.js"></script>
-        <script src="scripts/controllers/alpha-controller.js"></script>
-        <script src="scripts/controllers/dashboard-controller.js"></script>
-        <script src="scripts/controllers/settings-controller.js"></script>
+<script src="scripts/app.js"></script>
+<script src="scripts/config.js"></script>
 
-        <script src="scripts/directives/transaction-history.js"></script>
-        <script src="scripts/directives/reward-pane.js"></script>
-        <script src="scripts/directives/send-pane.js"></script>
+<script src="scripts/controllers/app-controller.js"></script>
+<script src="scripts/controllers/nav-controller.js"></script>
+<script src="scripts/controllers/login-controller.js"></script>
+<script src="scripts/controllers/registration-controller.js"></script>
+<script src="scripts/controllers/alpha-controller.js"></script>
+<script src="scripts/controllers/dashboard-controller.js"></script>
+<script src="scripts/controllers/settings-controller.js"></script>
 
-        <script src="scripts/filters/filters.js"></script>
+<script src="scripts/directives/transaction-history.js"></script>
+<script src="scripts/directives/reward-pane.js"></script>
+<script src="scripts/directives/send-pane.js"></script>
+<script src="scripts/directives/directives.js"></script>
+<script src="scripts/directives/validators.js"></script>
 
-        <script src="scripts/utilities/keygen.js"></script>
-        <script src="scripts/utilities/bruteRequest.js"></script>
-        <script src="scripts/utilities/base58check.js"></script>
-        <script src="scripts/utilities/dataBlob.js"></script>
-        <script src="scripts/utilities/jsonrewriter.js"></script>
-        <script src="scripts/utilities/session.js"></script>
-        <script src="scripts/utilities/network.js"></script>
-        <!-- endbuild -->
+
+
+<script src="scripts/utilities/keygen.js"></script>
+<script src="scripts/utilities/bruteRequest.js"></script>
+<script src="scripts/utilities/base58check.js"></script>
+<script src="scripts/utilities/dataBlob.js"></script>
+<script src="scripts/utilities/jsonrewriter.js"></script>
+<script src="scripts/utilities/session.js"></script>
+<script src="scripts/utilities/network.js"></script>
+
+<!-- endbuild -->
 </body>
 </html>

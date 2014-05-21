@@ -1,13 +1,13 @@
 <div class="dashboard" ng-controller="DashboardCtrl">
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-3">
             <a ng-click="toggleReceive()">Receive stellars</a>
         </div>
-        <div class="col-md-4">
-            <span class="dash-balance">{{ $root.balance }}</span><br>
-            Current Balance in <b>stellars</b>
+        <div class="col-md-6">
+            <span class="dash-balance" rp-tooltip="{{$root.balance  | rpamount}}  (reserve: {{ $root.reserve  | rpamount }} XTR)">{{$root.balance | rpamount:{rel_precision: 0} }}</span><br>
+            <span class="dash-balance-info">Current Balance <b>Stellars</b></span>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             <a ng-click="toggleSend()">Send stellars</a>
         </div>
     </div>
@@ -15,4 +15,4 @@
     <div ng-include="'templates/receive.html'"></div>
 </div>
 <reward-pane></reward-pane>
-<transaction-history></transaction-history>
+<div ng-include="'templates/transaction-history.html'"></div>

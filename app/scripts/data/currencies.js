@@ -6,10 +6,11 @@
  * * http://goldnews.bullionvault.com/all_the_money_in_the_world_102720093
  *   (A better source is welcome. Note: The US dollar was moved to the top.)
  *
- * Important: STR must be the first entry in this list.
+ * Important: XTR must be the first entry in this list.
  */
-module.exports = [
-    {value: 'STR', name: 'STR - Stellars', order: 4},
+var StellarDefaultCurrencyList=
+[
+    {value: 'XTR', name: 'XTR - Stellars', order: 4},
     {value: 'USD', name: 'USD - US Dollar', order: 3},
     {value: 'EUR', name: 'EUR - Euro', order: 2},
     {value: 'BTC', name: 'BTC - Bitcoin', order: 1},

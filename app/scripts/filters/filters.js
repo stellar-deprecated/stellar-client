@@ -1,5 +1,5 @@
 var module = angular.module('filters', []);
-var Amount = ripple.Amount;
+var Amount = stellar.Amount;
 
 // TODO: var iso4217 = require('../data/iso4217');
 // TODO: var webutil = require('../utilities/web');
@@ -21,7 +21,7 @@ module.filter('rpamount', function () {
 
         if (!input) return "n/a";
 
-        if (opts.xrp_human && input === ("" + parseInt(input, 10))) {
+        if (opts.xtr_human && input === ("" + parseInt(input, 10))) {
             input = input + ".0";
         }
 

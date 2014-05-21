@@ -4,20 +4,20 @@
  * Ripple trading default currency pairs.
  *
  * This list is a bit arbitrary, but it's basically the Majors [1] from forex
- * trading with some XRP pairs added.
+ * trading with some XTR pairs added.
  *
  * [1] http://en.wikipedia.org/wiki/Currency_pair#The_Majors
  */
 var pairs = [
-    {name: 'BTC/XRP', order: 1},
-    {name: 'XRP/USD', order: 1},
-    {name: 'XRP/EUR', order: 1},
-    {name: 'XRP/JPY', order: 0},
-    {name: 'XRP/GBP', order: 0},
-    {name: 'XRP/AUD', order: 0},
-    {name: 'XRP/CHF', order: 0},
-    {name: 'XRP/CAD', order: 0},
-    {name: 'XRP/CNY', order: 0},
+    {name: 'BTC/XTR', order: 1},
+    {name: 'XTR/USD', order: 1},
+    {name: 'XTR/EUR', order: 1},
+    {name: 'XTR/JPY', order: 0},
+    {name: 'XTR/GBP', order: 0},
+    {name: 'XTR/AUD', order: 0},
+    {name: 'XTR/CHF', order: 0},
+    {name: 'XTR/CAD', order: 0},
+    {name: 'XTR/CNY', order: 0},
     {name: 'BTC/USD', order: 0},
     {name: 'BTC/EUR', order: 0},
     {name: 'EUR/USD', order: 0},
@@ -203,12 +203,12 @@ JsonRewriter = {
       if ('tesSUCCESS' === meta.TransactionResult) {
         switch (tx.TransactionType) {
           case 'Payment':
-            var amount = ripple.Amount.from_json(tx.Amount);
+            var amount = stellar.Amount.from_json(tx.Amount);
 
             if (tx.Account === account) {
               if (tx.Destination === account) {
                 transaction.type = 'exchange';
-                transaction.spent = ripple.Amount.from_json(tx.SendMax);
+                transaction.spent = stellar.Amount.from_json(tx.SendMax);
               }
               else {
                 transaction.type = 'sent';
@@ -227,15 +227,15 @@ JsonRewriter = {
           case 'TrustSet':
             transaction.type = tx.Account === account ? 'trusting' : 'trusted';
             transaction.counterparty = tx.Account === account ? tx.LimitAmount.issuer : tx.Account;
-            transaction.amount = ripple.Amount.from_json(tx.LimitAmount);
+            transaction.amount = stellar.Amount.from_json(tx.LimitAmount);
             transaction.currency = tx.LimitAmount.currency;
             break;
 
           case 'OfferCreate':
             transaction.type = 'offernew';
-            transaction.pays = ripple.Amount.from_json(tx.TakerPays);
-            transaction.gets = ripple.Amount.from_json(tx.TakerGets);
-            transaction.sell = tx.Flags & ripple.Transaction.flags.OfferCreate.Sell;
+            transaction.pays = stellar.Amount.from_json(tx.TakerPays);
+            transaction.gets = stellar.Amount.from_json(tx.TakerGets);
+            transaction.sell = tx.Flags & stellar.Transaction.flags.OfferCreate.Sell;
             break;
 
           case 'OfferCancel':
@@ -278,18 +278,18 @@ JsonRewriter = {
           obj.accountRoot = node.fields;
 
           if (node.fieldsPrev.Balance) {
-            var balance = ripple.Amount.from_json(node.fields.Balance);
+            var balance = stellar.Amount.from_json(node.fields.Balance);
 
             // Fee
             if(tx.Account === account && tx.Fee) {
               feeEff = {
                 type: "fee",
-                amount: ripple.Amount.from_json(tx.Fee).negate(),
+                amount: stellar.Amount.from_json(tx.Fee).negate(),
                 balance: balance
               };
             }
 
-            // Updated XRP Balance
+            // Updated XTR Balance
             if (tx.Fee != node.fieldsPrev.Balance - node.fields.Balance) {
               if (feeEff)
                 balance = balance.subtract(feeEff.amount);
@@ -300,7 +300,7 @@ JsonRewriter = {
 
               // balance_changer is set to true if the transaction / effect has changed one of the account balances
               obj.balance_changer = effect.balance_changer = true;
-              affected_currencies.push('XRP');
+              affected_currencies.push('XTR');
             }
           }
         }
@@ -316,8 +316,8 @@ JsonRewriter = {
 
           // New trust line
           if (node.diffType === "CreatedNode") {
-            effect.limit = ripple.Amount.from_json(high.value > 0 ? high : low);
-            effect.limit_peer = ripple.Amount.from_json(high.value > 0 ? low : high);
+            effect.limit = stellar.Amount.from_json(high.value > 0 ? high : low);
+            effect.limit_peer = stellar.Amount.from_json(high.value > 0 ? low : high);
 
             if ((high.value > 0 && high.issuer === account)
               || (low.value > 0 && low.issuer === account)) {
@@ -340,11 +340,11 @@ JsonRewriter = {
                 ? high.issuer : low.issuer;
 
               effect.amount = high.issuer === account
-                ? effect.amount = ripple.Amount.from_json(
+                ? effect.amount = stellar.Amount.from_json(
                   node.fieldsPrev.Balance.value
                   + "/" + node.fieldsPrev.Balance.currency
                   + "/" + issuer).subtract(node.fields.Balance)
-                : effect.amount = ripple.Amount.from_json(
+                : effect.amount = stellar.Amount.from_json(
                   node.fields.Balance.value
                   + "/" + node.fields.Balance.currency
                   + "/" + issuer).subtract(node.fieldsPrev.Balance);
@@ -356,19 +356,19 @@ JsonRewriter = {
             // Trust Limit change
             else if (highPrev || lowPrev) {
               if (high.issuer === account) {
-                effect.limit = ripple.Amount.from_json(high);
-                effect.limit_peer = ripple.Amount.from_json(low);
+                effect.limit = stellar.Amount.from_json(high);
+                effect.limit_peer = stellar.Amount.from_json(low);
               } else {
-                effect.limit = ripple.Amount.from_json(low);
-                effect.limit_peer = ripple.Amount.from_json(high);
+                effect.limit = stellar.Amount.from_json(low);
+                effect.limit_peer = stellar.Amount.from_json(high);
               }
 
               if (highPrev) {
-                effect.prevLimit = ripple.Amount.from_json(highPrev);
+                effect.prevLimit = stellar.Amount.from_json(highPrev);
                 effect.type = high.issuer === account ? "trust_change_local" : "trust_change_remote";
               }
               else if (lowPrev) {
-                effect.prevLimit = ripple.Amount.from_json(lowPrev);
+                effect.prevLimit = stellar.Amount.from_json(lowPrev);
                 effect.type = high.issuer === account ? "trust_change_remote" : "trust_change_local";
               }
             }
@@ -376,14 +376,14 @@ JsonRewriter = {
             // Trust flag change (effect gets this type only if nothing else but flags has been changed)
             else if (node.fieldsPrev.Flags) {
               // Account set a noRipple flag
-              if (node.fields.Flags & ripple.Remote.flags.state[which] &&
-                !(node.fieldsPrev.Flags & ripple.Remote.flags.state[which])) {
+              if (node.fields.Flags & stellar.Remote.flags.state[which] &&
+                !(node.fieldsPrev.Flags & stellar.Remote.flags.state[which])) {
                 effect.type = "trust_change_no_ripple";
               }
 
               // Account removed the noRipple flag
-              else if (node.fieldsPrev.Flags & ripple.Remote.flags.state[which] &&
-                !(node.fields.Flags & ripple.Remote.flags.state[which])) {
+              else if (node.fieldsPrev.Flags & stellar.Remote.flags.state[which] &&
+                !(node.fields.Flags & stellar.Remote.flags.state[which])) {
                 effect.type = "trust_change_no_ripple";
               }
 
@@ -396,15 +396,15 @@ JsonRewriter = {
             effect.counterparty = high.issuer === account ? low.issuer : high.issuer;
             effect.currency = high.currency;
             effect.balance = high.issuer === account
-              ? ripple.Amount.from_json(node.fields.Balance).negate(true)
-              : ripple.Amount.from_json(node.fields.Balance);
+              ? stellar.Amount.from_json(node.fields.Balance).negate(true)
+              : stellar.Amount.from_json(node.fields.Balance);
 
             if (obj.transaction && obj.transaction.type === "trust_change_balance") {
               obj.transaction.balance = effect.balance;
             }
 
             // noRipple flag
-            if (node.fields.Flags & ripple.Remote.flags.state[which]) {
+            if (node.fields.Flags & stellar.Remote.flags.state[which]) {
               effect.noRipple = true;
             }
           }
@@ -425,11 +425,11 @@ JsonRewriter = {
             if (node.diffType === "ModifiedNode" ||
               (node.diffType === "DeletedNode"
                 && node.fieldsPrev.TakerGets
-                && !ripple.Amount.from_json(node.fieldsFinal.TakerGets).is_zero())) {
+                && !stellar.Amount.from_json(node.fieldsFinal.TakerGets).is_zero())) {
               effect.type = 'offer_partially_funded';
 
               if (node.diffType !== "DeletedNode") {
-                effect.remaining = ripple.Amount.from_json(node.fields.TakerGets);
+                effect.remaining = stellar.Amount.from_json(node.fields.TakerGets);
               }
               else {
                 effect.cancelled = true;
@@ -468,12 +468,12 @@ JsonRewriter = {
           }
 
           if (effect.type) {
-            effect.gets = ripple.Amount.from_json(fieldSet.TakerGets);
-            effect.pays = ripple.Amount.from_json(fieldSet.TakerPays);
+            effect.gets = stellar.Amount.from_json(fieldSet.TakerGets);
+            effect.pays = stellar.Amount.from_json(fieldSet.TakerPays);
 
             if ('offer_partially_funded' === effect.type || 'offer_bought' === effect.type) {
-              effect.got = ripple.Amount.from_json(node.fieldsPrev.TakerGets).subtract(node.fields.TakerGets);
-              effect.paid = ripple.Amount.from_json(node.fieldsPrev.TakerPays).subtract(node.fields.TakerPays);
+              effect.got = stellar.Amount.from_json(node.fieldsPrev.TakerGets).subtract(node.fields.TakerGets);
+              effect.paid = stellar.Amount.from_json(node.fieldsPrev.TakerPays).subtract(node.fields.TakerPays);
             }
           }
 
@@ -484,7 +484,7 @@ JsonRewriter = {
           // Flags
           if (node.fields.Flags) {
             effect.flags = node.fields.Flags;
-            effect.sell = node.fields.Flags & ripple.Remote.flags.offer.Sell;
+            effect.sell = node.fields.Flags & stellar.Remote.flags.offer.Sell;
           }
         }
 
@@ -507,7 +507,7 @@ JsonRewriter = {
 
     // Balance after the transaction
     if (obj.accountRoot && obj.transaction && "undefined" === typeof obj.transaction.balance) {
-      obj.transaction.balance = ripple.Amount.from_json(obj.accountRoot.Balance);
+      obj.transaction.balance = stellar.Amount.from_json(obj.accountRoot.Balance);
     }
 
     if ($.isEmptyObject(obj))
@@ -530,7 +530,7 @@ JsonRewriter = {
     obj.tx_type = tx.TransactionType;
     obj.tx_result = meta.TransactionResult;
     obj.fee = tx.Fee;
-    obj.date = ripple.utils.toTimestamp(tx.date);
+    obj.date = stellar.utils.toTimestamp(tx.date);
     obj.dateRaw = tx.date;
     obj.hash = tx.hash;
     obj.affected_currencies = affected_currencies ? affected_currencies : [];

@@ -1,8 +1,11 @@
 'use strict';
 
 var sc = angular.module('stellarClient');
-
-sc.service('session', function($cacheFactory, KeyGen, Network, DataBlob, PERSISTENT_SESSION, BLOB_LOCATION){
+/*
+Random variables that we are storing to be accessed by the rest of the app.
+Jed: Do we need this?
+ */
+sc.service('session', function($cacheFactory, KeyGen, stNetwork, DataBlob ){
   var cache = $cacheFactory('sessionCache');
 
   var Session = function() {};
@@ -30,11 +33,11 @@ sc.service('session', function($cacheFactory, KeyGen, Network, DataBlob, PERSIST
     // Get the blob from the session cache.
     var blob = this.get('blob');
 
-    if(PERSISTENT_SESSION) localStorage.blob = JSON.stringify(blob);
+    if(Options.PERSISTENT_SESSION) localStorage.blob = JSON.stringify(blob);
 
     // Encrypt the blob and upload it to the server.
     $.ajax({
-      url: BLOB_LOCATION + '/' + this.get('blobID'),
+      url: Options.WALLET_SERVER + '/updateBlob/' + this.get('blobID'),
       method: 'POST',
       data: {blob: blob.encrypt(this.get('blobKey'))},
       dataType: 'json'
@@ -54,6 +57,7 @@ sc.service('session', function($cacheFactory, KeyGen, Network, DataBlob, PERSIST
     this.put('loggedIn', true);
   };
 
+    /*
   Session.prototype.connect = function() {
     var server = this.get('blob').get('server');
     var address = this.get('address');
@@ -63,19 +67,21 @@ sc.service('session', function($cacheFactory, KeyGen, Network, DataBlob, PERSIST
     // Store the network connection in the session.
     this.put('network', network);
   };
+  */
 
-  Session.prototype.loginFromStorage = function(){
+  Session.prototype.loginFromStorage = function($scope){
     var blobData = localStorage.blob;
 
     if(blobData) {
       this.put('blob', new DataBlob(JSON.parse(blobData)));
       this.start();
+        $scope.$broadcast('$idAccountLoad', {account: this.get('blob').get('packedKeys').address, secret: this.get('blob').get('packedKeys').secret});
     }
   };
 
   Session.prototype.logOut = function(){
     cache.removeAll();
-    if(PERSISTENT_SESSION) delete localStorage.blob;
+    if(Options.PERSISTENT_SESSION) delete localStorage.blob;
     this.put('loggedIn', false);
   };
 

@@ -1,5 +1,7 @@
+var webutil={};
+
 // returns the raw address after removing any parameters
-exports.stripRippleAddress = function (addr)
+webutil.stripRippleAddress = function (addr)
 {
     if(typeof(addr)=='string')
     {
@@ -12,7 +14,7 @@ exports.stripRippleAddress = function (addr)
     return(addr);
 }
 //returns the destination tag of an address if there is one
-exports.getDestTagFromAddress = function (addr)
+webutil.getDestTagFromAddress = function (addr)
 {
     var index=addr.indexOf("?");
     if(index>=0)
@@ -38,7 +40,7 @@ exports.getDestTagFromAddress = function (addr)
     return(undefined);
 }
 
-exports.removeClassPrefix = function (el, group)
+webutil.removeClassPrefix = function (el, group)
 {
     var $el = $(el);
     var classes = $el.attr("class");
@@ -59,7 +61,7 @@ exports.removeClassPrefix = function (el, group)
  *    .success(...)
  *    .error(webutil.getAjaxErrorHandler(callback, "Acme GET"));
  */
-exports.getAjaxErrorHandler = function (callback, context)
+webutil.getAjaxErrorHandler = function (callback, context)
 {
     return function (request, type, errorThrown)
     {
@@ -80,12 +82,12 @@ exports.getAjaxErrorHandler = function (callback, context)
     };
 };
 
-exports.scrollToTop = function ()
+webutil.scrollToTop = function ()
 {
     $("html, body").animate({ scrollTop: 0 }, "fast");
 };
 
-exports.findIssuer= function(lines, currency)
+webutil.findIssuer= function(lines, currency)
 {
     var maxIssuer=null;
     var maxLimit=0;
@@ -104,7 +106,7 @@ exports.findIssuer= function(lines, currency)
     return maxIssuer;
 }
 
-exports.getContact = function (contacts,value)
+webutil.getContact = function (contacts,value)
 {
     for (var i=0;i<contacts.length;i++) {
         if (contacts[i].name == value || contacts[i].address == value) {
@@ -120,7 +122,7 @@ exports.getContact = function (contacts,value)
  *
  * Pass in an address or a contact name and get an address back.
  */
-exports.resolveContact = function (contacts, value)
+webutil.resolveContact = function (contacts, value)
 {
     for (var i = 0, l = contacts.length; i < l; i++) {
         if (contacts[i].name === value) {
@@ -128,8 +130,8 @@ exports.resolveContact = function (contacts, value)
         }
     }
 
-    if (ripple.UInt160.is_valid(value)) {
-        return ripple.UInt160.json_rewrite(value);
+    if (stellar.UInt160.is_valid(value)) {
+        return stellar.UInt160.json_rewrite(value);
     }
 
     return '';
@@ -141,7 +143,7 @@ exports.resolveContact = function (contacts, value)
  * If a contact is not found with the given address, simply return the address
  * again.
  */
-exports.unresolveContact = function (contacts, value)
+webutil.unresolveContact = function (contacts, value)
 {
     try {
         for (var i = 0, l = contacts.length; i < l; i++) {
@@ -160,7 +162,7 @@ exports.unresolveContact = function (contacts, value)
  *
  * @param options {array} An array of select options like {name: '', value: ''}.
  */
-exports.queryFromOptions = function (options)
+webutil.queryFromOptions = function (options)
 {
     var opts = options.map(function (entry) {
         return entry.name;
@@ -173,7 +175,7 @@ exports.queryFromOptions = function (options)
  *
  * @param options {array} An array of options, e.g. ['First choice', '2nd']
  */
-exports.queryFromArray = function (options)
+webutil.queryFromArray = function (options)
 {
     return function (match, re) {
         if (re instanceof RegExp) {
@@ -191,7 +193,7 @@ exports.queryFromArray = function (options)
  *
  * From: http://stackoverflow.com/questions/3446170
  */
-exports.escapeRegExp = function (str)
+webutil.escapeRegExp = function (str)
 {
     return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
 };

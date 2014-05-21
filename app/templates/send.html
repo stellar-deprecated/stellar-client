@@ -1,22 +1,184 @@
 <div class="send-pane" ng-show="$root.tab==='send'">
     <div class="row send-header">
-         <b>Send stellars</b>   <div class="send-close"><a ng-click="$root.tab='none'">close</a></div>
+        <b>Send stellars</b>   <div class="send-close"><a ng-click="$root.tab='none'">close</a></div>
     </div>
-    <form role="form" >
-        <div class="form-group">
-            <div class="input-icon-wrapper">
-                <input id="amount" type="text" class="form-control" ng-model="amount" placeholder="Amount of Stellars to send" >
+    <section id="t-send" class="single content">
+        <group ng-hide="$root.connected" class="disconnected">
+            <p class="literal">You have to be online to see this screen</p>
+        </group>
+        <div ng-hide="$root.balance || !$root.connected" class="unfunded">
+            <p class="literal">You have to be funded before you can send money</p>
+            <p><a href="#/balance" class="btn">Back to balance</a></p>
+        </div>
+        <form name="sendForm" id="sendForm" ng-show="mode=='form' && $root.balance" ng-submit="send_prepared()" class="mode-form">
+            <p class="literal">Send money to anyone with a stellar account.</p>
+            <hr/>
+            <label for="send_destination">Recipient</label>
+            <input id="send_destination" name="send_destination" type="text" rp-combobox="recipient_query" placeholder="Username or Stellar address" ng-model="send.recipient" rp-destination="rp-destination" required="required" rp-autofill="$routeParams.to" rp-focus="rp-focus"/>
+            <div rp-errors="send_destination" class="errorGroup">
+                <div rp-error-valid ng-show="send.recipient != send.recipient_address" class="success">{{send.recipient_address}}</div>
+                <div rp-error-on="required" class="error">Please enter a recipient.</div>
+                <div rp-error-on="rpDestination" class="error">
+                    Recipient should be either a valid username or a stellar address.
+                </div>
+            </div><span ng-show="$routeParams.st">
+      <label for="send_st">Source tag</label>
+      <input id="send_st" name="send_st" type="text" ng-model="send.st" rp-stdt="rp-stdt" rp-autofill="$routeParams.st"/>
+      <div rp-errors="send_st" class="errorGroup">
+          <div rp-error-on="rpStdt" class="error">Invalid source tag</div>
+      </div></span><span ng-show="$routeParams.dt || send.dt">
+      <label for="send_dt">Destination tag</label>
+      <input id="send_dt" name="send_dt" type="text" ng-model="send.dt" rp-stdt="rp-stdt" rp-autofill="$routeParams.dt"/>
+      <div rp-errors="send_dt" class="errorGroup">
+          <div rp-error-on="rpStdt" class="error">Invalid destination tag</div>
+      </div></span>
+            <label for="send_amount">Recipient will receive</label>
+            <div class="amount">
+                <input id="send_amount" name="send_amount" type="text" ng-model="send.amount" required="required" rp-autofill="$routeParams.amount" rp-autofill-amount="rp-autofill-amount" rp-max-amount="rp-max-amount" rp-max-amount-currency="{{send.currency}}" rp-positive-amount="rp-positive-amount" class="value"/>
+                <!-- <input id="send_amount_currency" name="send_amount_currency" type="text" rp-combobox="currency_query" rp-combobox-select="rp-combobox-select" ng-model="send.currency" rp-autofill="$routeParams.amount" rp-autofill-currency="rp-autofill-currency" class="currency"/> -->
             </div>
-            <div class="input-icon-wrapper">
-                <input id="destination" type="text" class="form-control" ng-model="destination" placeholder="Where to send stellars" >
+            <div rp-errors="send_amount" class="errorGroup">
+                <div rp-error-on="required" class="error">Please enter an amount.</div>
+                <div rp-error-on="rpAmount" class="error">Not a valid amount.</div>
+                <div rp-error-on="rpMaxAmount" class="error">This transaction exceeds your balance, you can send a max. of {{account.max_spend | rpamount:{rel_precision: 0} }} XST</div>
+                <div ng-show="send.type == 'native' && send.self" class="error">What's the point of sending to yourself?</div>
             </div>
-            <div class="alert alert-danger ng-hide" ng-show="sendErrors">
+            <div ng-show="send.type == 'native'" class="submitsection">
+                <button type="submit" ng-disabled="sendForm.$invalid || send.self" class="btn btn-success submit">Send Stellars</button>
+            </div>
+            <p ng-show="send.fund_status == 'insufficient-xtr'" class="literal">Destination account is unfunded; send at least {{xtr_deficiency | rpamount}} XTR to initialize it.&nbsp;<a href="https://ripple.com/wiki/Reserves" target="_blank">More information</a></p>
+            <p ng-show="send.path_status == 'waiting'" class="literal">Please enter the transaction details.</p>
+            <p ng-show="send.path_status == 'pending' && send.currency_code != 'XTR'" class="literal throbber">Calculating paths</p>
+            <p ng-show="send.path_status == 'pending' && send.currency_code == 'XTR'" class="literal throbber">Calculating alternatives</p>
+            <p ng-show="send.path_status == 'no-path' && send.currency_code != 'XTR'" class="literal">No path found!</p>
+            <p ng-show="send.path_status == 'error'" class="literal">Error while calculating path</p>
+            <div rp-if="send.path_status == 'done'" class="currency_sets">
+                <div ng-show="send.currency_code != 'XTR'" class="label">You can send</div>
+                <div ng-show="send.currency_code == 'XTR'" class="label">Or you can send</div>
                 <ul>
-                    <li ng-repeat="error in sendErrors">{{ error }}</li>
+                    <li ng-repeat="alt in send.alternatives">
+                        <p><span class="amnt">{{alt.amount | rpamount:{rel_precision: 4, rel_min_precision: 2} }}</span><span class="currency">{{alt.amount | rpcurrency }}</span></p>
+                        <button type="submit" ng-disabled="sendForm.$invalid" ng-click="send.alt = alt" class="btn btn-success">Send {{ alt.amount | rpcurrency }}</button>
+                    </li>
                 </ul>
             </div>
-        </div>
-        <button class="btn btn-default" ng-click="cancelSend()">Cancel</button> <button type="submit" class="btn btn-default" ng-click="attemptSend()">Send</button>
-    </form>
+        </form>
+        <group ng-show="mode=='wait_path' && $root.balance" class="mode-wait-path">
+            <p class="throbber literal">Ripple is calculating a path for your payment.</p>
+        </group>
+        <group ng-show="mode=='confirm' && $root.balance" class="mode-confirm">
+            test: {{send.amount}}
+            <p class="literal">You are sending {{ (send.amount || send.currency) | rpcurrency}} to</p>
+            <div class="dest_feedback">
+                <div ng-show="send.recipient_name" class="recipient">{{send.recipient_name}}</div>
+                <div ng-hide="send.recipient_name" class="recipient">{{send.recipient_address}}</div>
+                <div ng-show="send.recipient != send.recipient_address || send.recipient_name" class="extra">{{send.recipient_address}}</div>
+                <div ng-show="send.dt" class="dt">Destination tag: {{send.dt}}</div>
+            </div>
+            <p class="literal">They will receive</p>
+            <p class="amount_feedback"><span class="value">{{send.amount_feedback | rpamount}}&nbsp;</span><span class="currency">{{send.amount_feedback | rpcurrency}}</span></p>
+            <group ng-show="send.indirect">
+                <p class="literal">You will pay at most</p>
+                <p class="sendmax_feedback"><span class="value">{{send.alt.amount | rpamount}}&nbsp;</span><span class="currency">{{send.alt.amount | rpcurrency}} &nbsp;</span><span>&plusmn; 1%</span></p>
+            </group>
+            <p class="literal">Are you sure?</p>
+            <div>
+                <p class="submitsection">
+                    <button ng-click="cancelConfirm()" class="btn back">&laquo; Back</button>
+                    <button type="submit" ng-click="send_confirmed()" ng-disabled="confirm_wait" class="btn btn-success submit">Confirm</button>
+                </p>
+            </div>
+        </group>
+        <group ng-show="mode=='sending' && $root.balance" class="mode-sending">
+            <p class="throbber literal">Sending transaction to Ripple network</p>
+            <hr/>
+            <p>
+                <button ng-click="reset()" class="btn">Stop waiting</button>
+            </p>
+        </group>
+        <group ng-show="mode=='error' && $root.balance" class="mode-error">
+            <group ng-switch on="error_type">
+                <group ng-switch-when="noDest" class="result-error">
+                    <h2 class="tx-status">Destination does not exist</h2>
+                    <p>The wallet you&#39;re trying to send to does not exist.</p>
+                </group>
+                <group ng-switch-when="noPath" class="result-error">
+                    <h2 class="tx-status">No Path</h2>
+                    <p>Ripple was unable to find a path between you and the destination account.</p>
+                </group>
+                <group ng-switch-default="ng-switch-default">
+                    <p class="literal">
+                        Sorry, an error occurred while submitting your transaction.
+                        Make sure you are connected to the Internet and try again later.
+                    </p>
+                    <p class="literal">
+                        Before trying again, please ensure that the transaction has
+                        not been executed already.
+                    </p>
+                </group>
+            </group>
+            <p>
+                <button ng-click="cancelConfirm()" class="btn">&laquo; Back</button>
+            </p>
+        </group>
+        <group ng-show="mode=='status' && $root.balance" class="mode-status">
+            <group ng-show="tx_result=='pending'" class="pending">
+                <h2 class="tx-status">Your transaction has been submitted.</h2>
+                <p>Your account balance will update once the payment has cleared.</p>
+            </group>
+            <group ng-show="tx_result=='cleared'" class="result-success">
+                <h2 class="tx-status">Transaction cleared!</h2>
+            </group>
+            <group ng-show="tx_result=='partial'" class="result-partial">
+                <h2 class="tx-status">Transaction partially valid!</h2>
+                <p>Your transaction could only be partially applied.</p>
+            </group>
+            <group ng-show="tx_result=='error'" class="result-error">
+                <h2 class="tx-status">Transaction could not be submitted!</h2>
+                <p>
+                    We were unable to submit the transaction to the server.
+                    Please try again later.
+                </p>
+            </group>
+            <group ng-show="tx_result=='malformed'" class="result-malformed">
+                <h2 class="tx-status">Transaction malformed!</h2>
+                <p ng-switch on="engine_result"><span ng-switch-default="ng-switch-default">Your transaction is invalid, reason: {{engine_result}} - {{engine_result_message}}</span></p>
+            </group>
+            <group ng-show="tx_result=='failure'" class="result-malformed">
+                <h2 class="tx-status">Transaction malformed!</h2>
+                <p ng-switch on="engine_result"><span ng-switch-when="tefDST_TAG_NEEDED">Destination account requires destination tag to be specified when making payments.</span></p>
+            </group>
+            <group ng-show="tx_result=='claim'" class="result-malformed">
+                <h2 class="tx-status">Transaction failed!</h2>
+                <p ng-switch on="engine_result"><span ng-switch-when="tecNO_DST">The destination account does not exist.</span><span ng-switch-when="tecNO_DST_INSUF_XRP">The destination account does not exist. Too little XTR sent to create it.</span><span ng-switch-default="ng-switch-default">Error: {{engine_result_message}}</span></p>
+            </group>
+            <group ng-show="tx_result=='failed'" class="result-failed">
+                <h2 class="tx-status">Transaction failed!</h2>
+                <p ng-switch on="engine_result"><span ng-switch-when="terNO_LINE">You have no trust line in this currency.</span><span ng-switch-default="ng-switch-default">Your transaction failed to clear, reason: {{engine_result_message}}</span></p>
+            </group>
+            <group class="actions">
+                <hr/>
+                <!-- <div ng-show="addressSaved" class="text-success actionLink">Contact saved!</div>
+                <div ng-hide="contact" class="save-address-form actionLink"><a href="" ng-click="show_save_address_form = true">Add this address to contacts</a>
+                    <form name="saveAddressForm" ng-class="{ show: show_save_address_form }" ng-submit="saveAddress()">
+                        <div class="address">{{send.recipient_address}}</div>
+                        <label for="save_address_name">Name this user</label>
+                        <input id="contact_name" name="save_address_name" type="text" ng-model="saveAddressName" unique="unique" required="required" rp-autofill="$routeParams.name"/>
+                        <div ng-show="saveAddressForm.save_address_name.$error.unique" class="error">You already have a contact with the same name.</div>
+                        <div>
+                            <button type="submit" ng-disabled="addressSaving" class="btn btn-success"><span ng-show="addressSaving">Saving...</span><span ng-hide="addressSaving">Save</span></button><a href="" ng-click="show_save_address_form = false">Cancel</a>
+                        </div>
+                        <hr/>
+                    </form>
+                </div> -->
+                <div class="actionLink"><a ng-click="reset()">Send another payment</a></div>
+                <!-- <div class="actionLink"><a ng-click="reset_goto('balance')">Back to balance</a></div> -->
+                <hr/>
+            </group>
+        </group>
+    </section>
 
 </div>
+
+
+

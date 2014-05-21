@@ -1,13 +1,14 @@
 .reward-pane {
   background-color: #F4F5F7;
-  padding: 30px 120px;
 
   .rewards {
     padding-left: 0;
 
     & li {
       margin: 3px;
-      padding: 20px;
+      padding: 28px 30px;
+      font-size: 20px;
+      color: $grey-text;
       list-style-type: none;
       cursor: pointer;
       border: 1px solid rgba($stellar-blue, 0);
