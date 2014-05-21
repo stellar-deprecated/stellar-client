@@ -74,10 +74,13 @@ sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', function($scope, $r
     };
 
     $scope.$on('$idAccountLoad', function (e, data) {
+        $rootScope.account=data.account;
+        
         // Server is connected
         if ($network.connected) {
             handleAccountLoad(e, data);
         }
+
 
         // Server is not connected yet. Handle account load after server response
         $scope.$on('$netConnected', function(){

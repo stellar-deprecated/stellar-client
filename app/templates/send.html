@@ -47,7 +47,7 @@
             <div ng-show="send.type == 'native'" class="submitsection">
                 <button type="submit" ng-disabled="sendForm.$invalid || send.self" class="btn btn-success submit">Send Stellars</button>
             </div>
-            <p ng-show="send.fund_status == 'insufficient-xrp'" class="literal">Destination account is unfunded; send at least {{xrp_deficiency | rpamount}} XRP to initialize it.&nbsp;<a href="https://ripple.com/wiki/Reserves" target="_blank">More information</a></p>
+            <p ng-show="send.fund_status == 'insufficient-xrp'" class="literal">Destination account is unfunded; send at least {{xrp_deficiency | rpamount}} STR to initialize it.&nbsp;<a href="https://ripple.com/wiki/Reserves" target="_blank">More information</a></p>
             <p ng-show="send.path_status == 'waiting'" class="literal">Please enter the transaction details.</p>
             <p ng-show="send.path_status == 'pending' && send.currency_code != 'XRP'" class="literal throbber">Calculating paths</p>
             <p ng-show="send.path_status == 'pending' && send.currency_code == 'XRP'" class="literal throbber">Calculating alternatives</p>

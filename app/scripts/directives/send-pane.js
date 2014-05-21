@@ -12,7 +12,7 @@ sc.directive('sendPane', function($rootScope,$filter){
         transclude: false,
         scope: {},
         templateUrl: '/templates/send.html',
-        controller: function($rootScope, $scope, session, $element){
+        controller: function($rootScope, $scope, session, stNetwork, $element){
             //console.log('hello '+$rootScope.tab);
 
             $scope.mode = "form";
@@ -101,7 +101,7 @@ sc.directive('sendPane', function($rootScope,$filter){
 
                 amount.set_issuer(addr);
 
-                var tx = session.network.remote.transaction();
+                var tx = stNetwork.remote.transaction();
 
                 // Destination tag
                 tx.destination_tag(dt);
@@ -111,7 +111,7 @@ sc.directive('sendPane', function($rootScope,$filter){
                     tx.source_tag($scope.send.st);
                 }
 
-                tx.payment($id.account, addr, amount.to_json());
+                tx.payment($rootScope.account, addr, amount.to_json());
                 if ($scope.send.alt) {
                     tx.send_max($scope.send.alt.send_max);
                     tx.paths($scope.send.alt.paths);
