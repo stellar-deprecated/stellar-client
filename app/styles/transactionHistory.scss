@@ -1,5 +1,82 @@
 .transaction-history {
-  th {
-    text-align: left;
+  color: $dark-grey;
+
+  .title {
+    font-size: 20px;
+    margin-top: 35px;
+    margin-bottom: 25px;
+    display: inline-block;
+  }
+
+  .table {
+    th {
+      text-align: left;
+      padding: 24px 24px 24px 0;
+      margin-right: 3px;
+      border-bottom-width: 1px;
+
+      &.sort-desc,
+      &.sort-asc {
+        background-color: transparent;
+      }
+    }
+
+    tr.tx {
+      td {
+        line-height: 32px;
+        padding: 16px 8px;
+        font-size: 16px;
+
+        i {
+          font-size: 20px;
+          margin-right: 12px;
+          vertical-align: middle;
+          padding-bottom: 4px;
+
+          &.glyphicon-download {
+            color: $success;
+          }
+
+          &.glyphicon-upload {
+            color: $error;
+          }
+        }
+
+        .type {
+          text-transform: uppercase;
+          font-size: 11px;
+          letter-spacing: 4px;
+        }
+
+        &.direction {
+          color: $grey;
+        }
+
+        &.other-party {
+          padding: 13px 8px;
+
+          .avatar {
+            width: 40px;
+            height: 40px;
+            background-color: $grey;
+            border-radius: 40px;
+          }
+        }
+
+        &.view-link {
+          text-align: right;
+
+          a {
+            color: $dark-grey;
+            @include transition(color 200ms ease-in-out);
+
+            &:hover {
+              color: $stellar-blue;
+              text-decoration: none;
+            }
+          }
+        }
+      }
+    }
   }
 }

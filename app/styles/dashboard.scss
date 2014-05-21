@@ -1,20 +1,24 @@
 .dashboard {
   background-color: $grey-background;
   text-align: center;
-}
 
-.dash-title {
+  .row {
+    margin: 0;
+  }
 
-}
+  .dash-title {
 
-.dash-balance {
-  color: $dark-grey;
-  font-weight: bold;
-  font-size: 84px;
-  white-space: nowrap;
-}
+  }
 
-.dash-balance-info {
-  color: #929FA5;
-  font-size: 17px;
+  .dash-balance {
+    color: $dark-grey;
+    font-weight: bold;
+    font-size: 84px;
+    white-space: nowrap;
+  }
+
+  .dash-balance-info {
+    color: #929FA5;
+    font-size: 17px;
+  }
 }

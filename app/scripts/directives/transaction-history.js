@@ -42,6 +42,11 @@ sc.directive('transactionHistory', function(session, ngTableParams, $filter){
       // Get the user's account balance.
       network.updateBalance();
 
+      $scope.typeIcons = {
+        'sent': 'glyphicon glyphicon-upload',
+        'received': 'glyphicon glyphicon-download'
+      };
+
       $scope.tableParams = new ngTableParams({
         page: 1,
         count: 10,
