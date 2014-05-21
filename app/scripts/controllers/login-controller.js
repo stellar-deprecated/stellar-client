@@ -24,7 +24,7 @@ sc.controller('LoginCtrl', function($scope, $state, session, DataBlob, KeyGen) {
       var blob = new DataBlob();
       blob.put('username', $scope.username);
       blob.put('packedKeys', packedKeys);
-      blob.put('updateToken', 'temp');
+      blob.put('updateToken', '2');
       blob.put('walletAuthToken', 'temp');
 
       // Set the default client configuration
