@@ -64,6 +64,7 @@
 <!-- build:js scripts/vendor.js -->
 <script src="bower_components/jquery/dist/jquery.js"></script>
 <script src="bower_components/angular/angular.js"></script>
+<script src="bower_components/angular-route/angular-route.js"></script>
 <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
 <script src="bower_components/angular-debounce/dist/angular-debounce.min.js"></script>
 <script src="bower_components/angular-password-strength/build/angular-password-strength.min.js"></script>
@@ -111,13 +112,12 @@
 <script src="scripts/controllers/alpha-controller.js"></script>
 <script src="scripts/controllers/dashboard-controller.js"></script>
 <script src="scripts/controllers/settings-controller.js"></script>
+<script src="scripts/controllers/transaction-history.js"></script>
 
-<script src="scripts/directives/transaction-history.js"></script>
+<script src="scripts/controllers/send-pane.js"></script>
 <script src="scripts/directives/reward-pane.js"></script>
-<script src="scripts/directives/send-pane.js"></script>
 <script src="scripts/directives/directives.js"></script>
 <script src="scripts/directives/validators.js"></script>
-
 
 
 <script src="scripts/utilities/keygen.js"></script>
@@ -125,8 +125,11 @@
 <script src="scripts/utilities/base58check.js"></script>
 <script src="scripts/utilities/dataBlob.js"></script>
 <script src="scripts/utilities/jsonrewriter.js"></script>
-<script src="scripts/utilities/session.js"></script>
-<script src="scripts/utilities/network.js"></script>
+<script src="scripts/services/session.js"></script>
+<script src="scripts/services/network.js"></script>
+<script src="scripts/services/stellartxt.js"></script>
+<script src="scripts/services/federation.js"></script>
+<script src="scripts/services/tracker.js"></script>
 
 <!-- endbuild -->
 </body>
