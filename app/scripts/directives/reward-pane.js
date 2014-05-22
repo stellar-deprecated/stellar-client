@@ -10,7 +10,7 @@ sc.directive('rewardPane', function () {
     scope: {},
     templateUrl: '/templates/reward-pane.html',
 
-    controller: function ($scope, session, bruteRequest, API_LOCATION) {
+    controller: function ($scope, session, bruteRequest) {
       $scope.showRewards = false;
 
       var rewardStatusTypes = ['pending', 'complete'];
@@ -39,7 +39,7 @@ sc.directive('rewardPane', function () {
       computeRewardProgress();
 
       var rewardsRequest = new bruteRequest({
-          url: API_LOCATION + '/user/rewards',
+          url: Options.API_SERVER + '/user/rewards',
           type: 'GET',
           dataType: 'json'
       });

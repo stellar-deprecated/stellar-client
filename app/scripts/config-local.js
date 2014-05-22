@@ -7,19 +7,16 @@
 var Options = {
     server: {
         "trusted" : true,
-        "websocket_ip" : "s1.stellar.org",
-        "websocket_port" : 51233,
-        "websocket_ssl" : true
-//    "websocket_ip" : "127.0.0.1",
-//    "websocket_port" : 5006,
-//    "websocket_ssl" : false
+        "websocket_ip" : "10.0.1.5",
+        "websocket_port" : 6011,
+        "websocket_ssl" : false
     },
     API_SERVER: 'http://localhost:80',
     WALLET_SERVER: 'http://localhost:80',
 
     // If set, login will persist across sessions (page reload). This is mostly
     // intended for developers, be careful about using this in a real setting.
-    PERSISTENT_SESSION : false,
+    PERSISTENT_SESSION : true,
     ALPHA_PHASE : true,
 
     // Number of transactions each page has in balance tab notifications
@@ -36,7 +33,7 @@ if (store.enabled) {
 
 'use strict';
 
-var config = angular.module('config', []);
+var config = angular.module('config-example', []);
 
 config.constant('API_LOCATION', 'http://localhost:80');
 config.constant('BLOB_LOCATION', 'http://localhost:80/blob');

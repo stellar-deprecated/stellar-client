@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('RegistrationCtrl', function($scope, $state, session, API_LOCATION, BLOB_LOCATION, BLOB_DEFAULTS, bruteRequest, debounce, passwordStrengthComputations, KeyGen, DataBlob) {
+sc.controller('RegistrationCtrl', function($scope, $state, session, bruteRequest, debounce, passwordStrengthComputations, KeyGen, DataBlob) {
   $scope.username             = '';
   $scope.email                = '';
   $scope.password             = '';
@@ -17,13 +17,13 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, API_LOCATION
   $scope.passwordConfirmErrors = [];
 
   var requestUsernameStatus = new bruteRequest({
-    url: API_LOCATION + '/validname',
+    url: Options.API_SERVER + '/validname',
     type: 'POST',
     dataType: 'json'
   });
 
   var requestRegistration = new bruteRequest({
-    url: API_LOCATION + '/register',
+    url: Options.API_SERVER + '/register',
     type: 'POST',
     dataType: 'json'
   });
@@ -167,7 +167,7 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, API_LOCATION
                 blob.put('walletAuthToken', response.walletAuthToken);
 
                 // Set the default client configuration
-                blob.put('server', BLOB_DEFAULTS.server);
+                blob.put('server', Options.server);
 
                 // Save the new blob to the session
                 session.put('blob', blob);
