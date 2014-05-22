@@ -73,6 +73,10 @@ module.directive('rpErrors', [function() {
                     var field = formController[fieldName],
                         $error = field && field.$error;
 
+                    if(!field)
+                    {
+                        console.log('field null?: '+fieldName);
+                    }
                     if (selectedElement) {
                         selectedScope.$destroy();
                         selectedElement.remove();
