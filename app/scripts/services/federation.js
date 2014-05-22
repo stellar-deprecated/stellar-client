@@ -8,13 +8,17 @@
  * we have a network-internal nickname system.
  */
 
-var module = angular.module('federation', []);
+var module = angular.module('stellarClient');
 
-module.factory('rpFederation', ['$q', '$rootScope', 'rpRippleTxt',
+module.factory('rpFederation', ['$q', '$rootScope', 'rpStellarTxt',
     function ($q, $scope, $txt) {
         var txts = {};
 
         function check_email(email) {
+            if(email.indexOf('@') == -1) email=email+'@'+Options.DEFAULT_FEDERATION_DOMAIN;
+
+console.log("federation: "+email);
+
             var federationPromise = $q.defer();
 
             var tmp = email.split('@');

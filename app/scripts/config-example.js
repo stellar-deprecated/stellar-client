@@ -21,6 +21,7 @@ var Options = {
         "track": false
     },
 
+    DEFAULT_FEDERATION_DOMAIN: 'stellar.org',
     API_SERVER: 'http://localhost:80',
     WALLET_SERVER: 'http://localhost:80',
 
