@@ -45,11 +45,11 @@ sc.controller('AlphaCtrl', function ($scope, $state, session,  bruteRequest) {
                 break;
 
               case 'used':
-                $scope.alphaCodeErrors.push('Sorry this code has already been used.');
+                $scope.alphaCodeErrors.push('This Alpha Code is already taken.');
                 break;
 
               default:
-                $scope.alphaCodeErrors.push('Sorry this code is invalid.');
+                $scope.alphaCodeErrors.push('This Alpha Code is invalid.');
             }
           });
         },

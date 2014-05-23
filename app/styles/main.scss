@@ -6,6 +6,7 @@ $icon-font-path: "../bower_components/bootstrap-sass-official/vendor/assets/font
 
 @import "color-palette.scss";
 
+@import "alpha.scss";
 @import "login.scss";
 @import "dashboard.scss";
 @import "registration.scss";
@@ -18,6 +19,42 @@ body {
   margin-right: auto;
   padding-top: 89px;
   padding-bottom: 20px;
+}
+
+.stellar-form {
+  .form-group {
+    margin-top: 25px;
+    margin-bottom: 45px;
+
+    label {
+      font-size: 15px;
+      line-height: 42px;
+    }
+
+    input {
+      height: 42px;
+    }
+
+    .alert {
+      color: $error;
+      padding: 0;
+      margin-bottom: 0;
+      line-height: 42px;
+      height: 42px;
+
+      ul {
+        padding-left: 15px;
+
+        li {
+          list-style-type: none;
+        }
+      }
+    }
+
+    button {
+      width: 100%;
+    }
+  }
 }
 
 .stellar-button {
