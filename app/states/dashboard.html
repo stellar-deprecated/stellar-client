@@ -1,5 +1,5 @@
 <div class="dashboard" ng-controller="DashboardCtrl">
-    <div class="row">
+    <div class="row controls">
         <div class="col-md-3">
             <img src="images/wallet.png"><br>
             <button class="stellar-button btn btn-default" ng-click="toggleReceive()">
@@ -7,8 +7,8 @@
                 Receive stellars
             </button>
         </div>
-        <div class="col-md-6">
-            <span class="dash-balance" rp-tooltip="{{$root.balance  | rpamount}}  (reserve: {{ $root.reserve  | rpamount }} XTR)" ng-bind-html="$root.balance | rpamount:{rel_precision: 0} | shrinkText:84:10"></span><br>
+        <div class="col-md-6 dash-balance-container">
+            <span class="dash-balance" rp-tooltip="{{$root.balance  | rpamount}}  (reserve: {{ $root.reserve  | rpamount }} XTR)" ng-bind-html="$root.balance | rpamount:{rel_precision: 0} | shrinkText:84:12"></span><br>
             <span class="dash-balance-info">Current Balance <b>Stellars</b></span>
         </div>
         <div class="col-md-3">
@@ -19,8 +19,8 @@
             </button>
         </div>
     </div>
-    <div ng-include="'templates/send.html'"></div>
-    <div ng-include="'templates/receive.html'"></div>
+    <div class="send-container" ng-include="'templates/send.html'"></div>
+    <div class="receive-container" ng-include="'templates/receive.html'"></div>
 </div>
 <reward-pane></reward-pane>
 <div ng-include="'templates/transaction-history.html'"></div>

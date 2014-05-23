@@ -8,67 +8,23 @@
     <p><a href="#/balance" l10n="l10n" class="btn btn-default">Back to balance</a></p>
 </div>
 <form name="sendForm" id="sendForm" role="form" ng-show="mode=='form' && account.Balance" ng-submit="send_prepared()" class="row-padding-small mode-form">
-    <p l10n="l10n" class="literal">Send money.</p>
-    <hr/>
-    <div class="row form-group">
-        <div class="col-xs-12 col-sm-6 col-md-5">
-            <label for="send_destination" l10n="l10n">Recipient</label>
-            <input id="send_destination" name="send_destination" type="text" rp-combobox="recipient_query" placeholder="Contact name or Ripple address" ng-model="send.recipient" rp-dest="rp-dest" rp-dest-address="rp-dest-address" rp-dest-contact="rp-dest-contact" rp-dest-bitcoin="rp-dest-bitcoin" rp-dest-email="rp-dest-email" required="required" rp-autofill="$routeParams.to" rp-focus="rp-focus" class="form-control"/>
-            <div rp-errors="send_destination" class="errorGroup">
-                <div rp-error-valid ng-show="send.recipient != send.recipient_address" class="success">{{send.recipient_address}}</div>
-                <div rp-error-on="required" l10n="l10n" class="error">Please enter a recipient.</div>
-                <div rp-error-on="rpDest" l10n="l10n" class="error">Recipient should be either a name from your contact list or Ripple/Bitcoin address.</div>
-                <div rp-error-on="federation" l10n="l10n" class="error">This email address is not Ripple-enabled.</div>
-            </div>
-        </div>
+    <div class="close-send-tab" ng-click="closePane()">
+        <span>Close</span>
+        <i class="glyphicon glyphicon-remove-circle"></i>
     </div>
-    <div ng-show="send.show_dt_field" class="row form-group">
-        <div class="col-xs-12 col-sm-6 col-md-5">
-            <label for="send_dt" l10n="l10n">Destination tag</label>
-            <input id="send_dt" name="send_dt" type="text" ng-model="send.dt" rp-stdt="rp-stdt" rp-autofill="$routeParams.dt" ng-required="send.recipient_info.dest_tag_required" class="form-control"/>
-            <div rp-errors="send_dt" class="errorGroup">
-                <div rp-error-on="rpStdt" l10n="l10n" class="error">Invalid destination tag</div>
-                <div rp-error-on="required" l10n="l10n" class="error">Destination cannot be blank.</div>
-            </div>
-            <div ng-show="send.recipient_info.dest_tag_required" l10n="l10n">
-                Recipient requires a destination tag to be specified for the transaction. If you don't know the
-                destination tag, please contact them before doing a transaction.
-            </div>
-        </div>
-    </div>
-    <div ng-show="$routeParams.st || send.st" class="row form-group">
-        <div class="col-xs-12 col-sm-6 col-md-5">
-            <label for="send_st" l10n="l10n">Source tag</label>
-            <input id="send_st" name="send_st" type="text" ng-model="send.st" rp-stdt="rp-stdt" rp-autofill="$routeParams.st" class="form-control"/>
-            <div rp-errors="send_st" class="errorGroup">
-                <div rp-error-on="rpStdt" l10n="l10n" class="error">Invalid source tag</div>
-            </div>
-        </div>
-    </div>
-    <div ng-repeat="field in send.extra_fields" ng-switch="field.type" class="row form-group">
-        <div ng-switch-when="text" class="col-xs-12 col-sm-6 col-md-5">
-            <label ng-bind="field.label"></label>
-            <p ng-show="field.hint" ng-bind="field.hint" class="field-hint"></p>
-            <input type="text" ng-model="field.value" ng-required="{{field.required}}" class="form-control"/>
-        </div>
-        <div ng-switch-when="select" class="col-xs-12 col-sm-6 col-md-5">
-            <label ng-bind="field.label"></label>
-            <p ng-show="field.hint" ng-bind="field.hint" class="field-hint"></p>
-            <select type="text" ng-model="field.value" ng-required="{{field.required}}" class="form-control">
-                <option ng-repeat="option in field.options" ng-bind="option.label" value="{{option.value}}" ng-selected="option.selected" ng-disabled="option.disabled"></option>
-            </select>
-        </div>
-    </div>
+    <div l10n="l10n" class="literal title">Send Stellars</div>
     <div class="form-group">
-        <label for="send_amount" l10n="l10n">Recipient will receive</label>
+        <label for="send_amount" l10n="l10n" class="col-sm-3">AMOUNT</label>
         <div ng-if="!send.currency_force" class="row amount">
-            <div class="col-xs-12 col-sm-6 col-md-2">
-                <input id="send_amount" name="send_amount" type="text" ng-model="send.amount" required="required" rp-autofill="$routeParams.amount" rp-autofill-amount="rp-autofill-amount" rp-amount="rp-amount" rp-amount-positive="rp-amount-positive" rp-amount-xtr-limit="rp-amount-xtr-limit" rp-amount-xtr-limit-currency="{{send.currency}}" class="form-control"/>
+            <div class="col-sm-6 send-amount right-inner-addon">
+                <i>XTR</i>
+                <input id="send_amount" name="send_amount" type="text" ng-model="send.amount" required="required" rp-autofill="$routeParams.amount" rp-autofill-amount="rp-autofill-amount" rp-amount="rp-amount" rp-amount-positive="rp-amount-positive" rp-amount-xtr-limit="rp-amount-xtr-limit" rp-amount-xtr-limit-currency="{{send.currency}}" class="form-control stellar-input"/>
             </div>
-<!--
-            <div class="col-xs-12 col-sm-6 col-md-3">
-                <input id="send_amount_currency" name="send_amount_currency" type="text" rp-combobox="{{send.currency_choices}}" rp-combobox-select="rp-combobox-select" ng-model="send.currency" rp-autofill="$routeParams.amount" rp-autofill-currency="rp-autofill-currency" rp-restrict-currencies="{{send.restrict_currencies}}" class="form-control currency"/>
-            </div>  -->
+            <div class="col-sm-3 tip">Type in the address ot username.</div>
+            <!--
+                        <div class="col-xs-12 col-sm-6 col-md-3">
+                            <input id="send_amount_currency" name="send_amount_currency" type="text" rp-combobox="{{send.currency_choices}}" rp-combobox-select="rp-combobox-select" ng-model="send.currency" rp-autofill="$routeParams.amount" rp-autofill-currency="rp-autofill-currency" rp-restrict-currencies="{{send.restrict_currencies}}" class="form-control currency"/>
+                        </div>  -->
         </div>
         <!--
         <div ng-if="send.currency_force" class="row">
@@ -90,7 +46,62 @@
             <div ng-show="send.recipient_info.disallow_xtr && send.currency_code=='XTR'" l10n="l10n" class="error">Recipient does not allow XTR payments. Are you sure you want to send XTR anyway?</div>
             <div ng-show="send.trust_limit" l10n="l10n" class="notice">
                 {{send.recipient | rpcontactname}}
-                 trusts you for {{send.trust_limit | rpamount}} {{send.trust_limit | rpcurrency}}.
+                trusts you for {{send.trust_limit | rpamount}} {{send.trust_limit | rpcurrency}}.
+            </div>
+        </div>
+    </div>
+    <div class="row form-group">
+        <label for="send_destination" l10n="l10n" class="col-sm-3">ADDRESS</label>
+        <div class="col-sm-6 send-address right-inner-addon">
+            <i class="glyphicon glyphicon-globe"></i>
+            <input id="send_destination" name="send_destination" type="text" rp-combobox="recipient_query" ng-model="send.recipient" rp-dest="rp-dest" rp-dest-address="rp-dest-address" rp-dest-contact="rp-dest-contact" rp-dest-bitcoin="rp-dest-bitcoin" rp-dest-email="rp-dest-email" required="required" rp-autofill="$routeParams.to" rp-focus="rp-focus" class="form-control stellar-input"/>
+        </div>
+        <div class="col-sm-3 tip">Type in the address ot username.</div>
+        <div rp-errors="send_destination" class="errorGroup">
+            <div rp-error-valid ng-show="send.recipient != send.recipient_address" class="success">{{send.recipient_address}}</div>
+            <div rp-error-on="required" l10n="l10n" class="error">Please enter a recipient.</div>
+            <div rp-error-on="rpDest" l10n="l10n" class="error">Recipient should be either a name from your contact list or Ripple/Bitcoin address.</div>
+            <div rp-error-on="federation" l10n="l10n" class="error">This email address is not Ripple-enabled.</div>
+        </div>
+    </div>
+    <div ng-show="send.show_dt_field" class="row form-group">
+        <label for="send_dt" l10n="l10n" class="col-sm-3">Destination tag</label>
+        <div class="col-sm-6">
+            <input id="send_dt" name="send_dt" type="text" ng-model="send.dt" rp-stdt="rp-stdt" rp-autofill="$routeParams.dt" ng-required="send.recipient_info.dest_tag_required" class="form-control"/>
+        </div>
+        <div rp-errors="send_dt" class="errorGroup">
+            <div rp-error-on="rpStdt" l10n="l10n" class="error">Invalid destination tag</div>
+            <div rp-error-on="required" l10n="l10n" class="error">Destination cannot be blank.</div>
+        </div>
+        <div ng-show="send.recipient_info.dest_tag_required" l10n="l10n">
+            Recipient requires a destination tag to be specified for the transaction. If you don't know the
+            destination tag, please contact them before doing a transaction.
+        </div>
+    </div>
+    <div ng-show="$routeParams.st || send.st" class="row form-group">
+        <label for="send_st" l10n="l10n" class="col-sm-3">Source tag</label>
+        <div class="col-sm-6">
+            <input id="send_st" name="send_st" type="text" ng-model="send.st" rp-stdt="rp-stdt" rp-autofill="$routeParams.st" class="form-control"/>
+        </div>
+        <div rp-errors="send_st" class="errorGroup">
+            <div rp-error-on="rpStdt" l10n="l10n" class="error">Invalid source tag</div>
+        </div>
+    </div>
+    <div ng-repeat="field in send.extra_fields" ng-switch="field.type" class="row form-group">
+        <div ng-switch-when="text">
+            <label ng-bind="field.label" class="col-sm-3"></label>
+            <p ng-show="field.hint" ng-bind="field.hint" class="field-hint"></p>
+            <div class="col-sm-6">
+                <input type="text" ng-model="field.value" ng-required="{{field.required}}" class="form-control"/>
+            </div>
+        </div>
+        <div ng-switch-when="select">
+            <label ng-bind="field.label" class="col-sm-3"></label>
+            <p ng-show="field.hint" ng-bind="field.hint" class="field-hint"></p>
+            <div class="col-sm-6">
+                <select type="text" ng-model="field.value" ng-required="{{field.required}}" class="form-control">
+                    <option ng-repeat="option in field.options" ng-bind="option.label" value="{{option.value}}" ng-selected="option.selected" ng-disabled="option.disabled"></option>
+                </select>
             </div>
         </div>
     </div>
@@ -99,8 +110,8 @@
         <li><a href="" ng-click="send.show_dt_field = true" ng-hide="send.show_dt_field || send.bitcoin || send.federation" l10n="l10n">Add Destination tag</a></li>
     </ul>  -->
     <div class="row">
-        <div ng-show="send.currency_code == 'XTR'" class="col-xs-12 col-sm-6 col-md-5">
-            <button type="submit" ng-disabled="sendForm.$invalid || send.self || !send.recipient_resolved || account.max_spend.to_number() < send.amount * 1000000" l10n="l10n" class="btn btn-block btn-success submit">Send Stellars</button>
+        <div ng-show="send.currency_code == 'XTR'">
+            <button type="submit" ng-disabled="sendForm.$invalid || send.self || !send.recipient_resolved || account.max_spend.to_number() < send.amount * 1000000" l10n="l10n" class="btn btn-default submit col-sm-offset-3 col-sm-6 stellar-button">Send</button>
         </div>
     </div>
     <div class="remote">

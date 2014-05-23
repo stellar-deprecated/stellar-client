@@ -10,6 +10,11 @@ sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout'
             //console.log('hello '+$rootScope.tab);
      var timer;
 
+            $scope.closePane = function(){
+              $scope.reset();
+              $rootScope.tab = 'none';
+            };
+
             $scope.currencies_all = StellarDefaultCurrencyList;
             // XRP currency object.
             // {name: "XRP - Ripples", order: 146, value: "XRP"}

@@ -1,10 +1,24 @@
 .dashboard {
-  background-color: $grey-background;
-  text-align: center;
-
   .row {
     margin: 0;
-    padding-bottom: 30px;
+  }
+
+  .controls {
+    background-color: $grey-background;
+    padding-bottom: 25px;
+    text-align: center;
+    display: flex;
+
+    > div {
+      padding-left: 0;
+      padding-right: 0;
+      width: auto;
+
+      &.dash-balance-container {
+        margin-left: auto;
+        margin-right: auto;
+      }
+    }
 
     .dash-title {
 
@@ -24,6 +38,7 @@
 
     img {
       margin-top: 25px;
+      margin-bottom: 10px;
     }
 
     button {
@@ -31,6 +46,100 @@
 
       i {
         margin-right: 6px;
+      }
+    }
+  }
+
+  .send-container {
+    .send-pane {
+      background-color: transparent;
+      color: $dark-grey;
+
+      form > div {
+        margin: 45px 0;
+
+        label {
+          padding-left: 0;
+          font-size: 14px;
+          line-height: 36px;
+        }
+
+        .send-amount {
+          padding: 0;
+
+          i {
+            font-size: 12px;
+            font-style: normal;
+            top: 21px;
+          }
+
+          input {
+            font-size: 48px;
+            height: auto;
+            padding-right: 50px;
+          }
+
+          + .tip {
+            line-height: 82px
+          }
+        }
+
+        .send-address {
+          padding: 0;
+
+          i {
+            top: 5px;
+          }
+
+          input {
+            font-size: 22px;
+            height: auto;
+            padding-right: 36px;
+          }
+
+          + .tip {
+            line-height: 45px
+          }
+        }
+      }
+
+      .tip {
+        color: rgba($grey, 0.5);
+      }
+      
+      .close-send-tab {
+        float: right;
+        font-size: 16px;
+        margin: 5px 0;
+        cursor: pointer;
+        color: rgba($grey, 0.75);
+        @include transition(color 200ms ease-in-out);
+
+        &:hover {
+          color: $error;
+        }
+
+        i {
+          font-size: 26px;
+          vertical-align: middle;
+          margin-left: 10px;
+        }
+      }
+
+      .title {
+        font-size: 20px;
+        margin: 20px 0;
+        border-bottom: $grey-border-bottom;
+        padding-bottom: 20px;
+      }
+
+      group p {
+        padding: 20px;
+        margin-top: 10px;
+        text-align: center;
+        border: 1px solid $error;
+        color: $error;
+        border-radius: 3px;
       }
     }
   }

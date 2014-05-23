@@ -37,6 +37,35 @@ body {
     background-color: $white-grey;
     color: $stellar-blue;
   }
+
+  &:focus {
+    outline: none;
+    background-color: $white-grey;
+    color: $dark-grey;
+
+    &:hover {
+      color: $stellar-blue;
+    }
+  }
+}
+
+.stellar-input {
+  border-radius: 3px;
+}
+
+.right-inner-addon {
+  position: relative;
+}
+.right-inner-addon input {
+  padding-right: 30px;
+}
+.right-inner-addon i {
+  position: absolute;
+  right: 2px;
+  padding: 10px 12px;
+  pointer-events: none;
+  font-size: 17px;
+  color: rgba($grey, 0.5);
 }
 
 .ng-cloak, .ng-hide {
@@ -79,7 +108,7 @@ body {
   & > div {
     & > * {
       padding: 0 105px;
-      border-bottom: 1px solid $grey-border;
+      border-bottom: $grey-border-bottom;
     }
   }
 }
