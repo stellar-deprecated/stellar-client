@@ -18,7 +18,7 @@ body {
   margin-left: auto;
   margin-right: auto;
   padding-top: 89px;
-  padding-bottom: 20px;
+  padding-bottom: 70px;
   color: $dark-grey;
 }
 
@@ -207,5 +207,44 @@ body {
 
   input {
     padding-right: 30px;
+  }
+}
+
+.footer {
+  height: 70px;
+  background-color: $white-grey;
+  background-image: url(../images/rainbow.png);
+  background-repeat: repeat-x;
+  margin: 0 15px;
+  padding: 25px 105px;
+
+  .info {
+    color: rgba($grey, 0.75);
+    font-size: 14px;
+    display: inline-block;
+
+    i {
+      font-size: 24px;
+      vertical-align: middle;
+      margin-top: -6px;
+      margin-right: 6px;
+    }
+  }
+
+  .links {
+    display: inline-block;
+    float: right;
+
+    a {
+      margin-right: 20px;
+      font-size: 13px;
+      color: rgba($grey, 0.75);
+      @include transition(color 200ms ease-in-out);
+
+      &:hover {
+        color: $stellar-blue;
+        text-decoration: none;
+      }
+    }
   }
 }
