@@ -88,6 +88,10 @@ body {
     border-color: $stellar-blue;
     background-color: $white-grey;
     color: $stellar-blue;
+
+    i {
+      color: $stellar-blue;
+    }
   }
 
   &:focus {
