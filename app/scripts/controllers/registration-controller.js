@@ -65,9 +65,8 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, bruteRequest
   };
 
   $scope.checkPassword = function(){
-    //TODO: $scope.passwordValid = (passwordStrengthComputations.getStrength($scope.password) > 50);
-      $scope.passwordValid=true;
-    if($scope.passwordValid) $scope.passwordErrors = [];
+    $scope.passwordErrors = [];
+    $scope.passwordValid = (passwordStrengthComputations.getStrength($scope.password) > 50);
 
     $scope.checkConfirmPassword();
   };
@@ -81,26 +80,36 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, bruteRequest
   // The following functions calculate the classes to be applied to the form.
 
   $scope.usernameClass = function(){
-    var classes = [];
-
     if($scope.usernameAvailable === null){
-      if($scope.username !== '') classes.push('glyphicon-refresh spin');
-    }
-    else
-    {
-      classes.push($scope.usernameAvailable ? 'glyphicon-ok' : 'glyphicon-remove');
+      if($scope.username !== '') return 'glyphicon-refresh spin';
+      else return 'glyphicon-none';
     }
 
-    return classes.join(' ');
+    else return $scope.usernameAvailable ? 'glyphicon-ok' : 'glyphicon-remove';
   };
 
-  $scope.passwordConfirmClass = function(){
-    var classes = [];
+  $scope.passwordClass = function(){
+    if($scope.passwordValid) return 'glyphicon-ok';
+    else return 'glyphicon-none';
+  };
 
-    if($scope.passwordConfirmation == '') classes.push('hidden');
-    classes.push($scope.passwordConfirmValid ? 'level4' : 'level1');
+  $scope.confirmPasswordClass = function(){
+    if($scope.passwordConfirmValid) return 'glyphicon-ok';
+    else {
+      var passwordPrefix = $scope.password.slice(0, $scope.passwordConfirmation.length);
+      if ($scope.passwordConfirmation != passwordPrefix) return 'glyphicon-remove';
+      else return 'glyphicon-none';
+    }
+  };
 
-    return classes.join(' ');
+  $scope.passwordStrength = function(){
+    if(!$scope.password) return '';
+
+    var strength = passwordStrengthComputations.getStrength($scope.password);
+    if(strength <= 25) return 'WEAK';
+    if(strength <= 50) return 'OK';
+    if(strength <= 75) return 'GOOD';
+    return 'STRONG';
   };
 
   // Validate the input before submitting the registration form.

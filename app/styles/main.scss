@@ -19,9 +19,12 @@ body {
   margin-right: auto;
   padding-top: 89px;
   padding-bottom: 20px;
+  color: $dark-grey;
 }
 
 .stellar-form {
+  margin-top: 50px;
+
   .form-group {
     margin-top: 25px;
     margin-bottom: 45px;
@@ -33,6 +36,17 @@ body {
 
     input {
       height: 42px;
+      border-radius: 3px;
+      color: $dark-grey;
+
+      &:focus {
+        box-shadow: none;
+        border-color: $stellar-blue;
+
+        + i {
+          color: $stellar-blue;
+        }
+      }
     }
 
     .alert {
@@ -84,10 +98,6 @@ body {
       color: $stellar-blue;
     }
   }
-}
-
-.stellar-input {
-  border-radius: 3px;
 }
 
 .right-inner-addon {
@@ -142,10 +152,61 @@ body {
 }
 
 .client-container {
-  & > div {
-    & > * {
+  > div {
+    > .title {
+      font-size: 20px;
+      padding-top: 15px;
+      padding-bottom: 20px;
+      margin-top: 5px;
+    }
+
+    > * {
       padding: 0 105px;
       border-bottom: $grey-border-bottom;
     }
+  }
+}
+
+.glyphicon {
+  font-size: 12pt;
+  padding: 12px 12px;
+  color: rgba($grey, 0.5);
+  @include transition(color 200ms ease-in-out);
+
+  &.glyphicon-remove {
+    color: red;
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spin {
+  @include transform-origin(51% 48%);
+  animation-duration: 500ms;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  animation-name: spin;
+}
+
+.input-icon-wrapper {
+  position: relative;
+
+  .glyphicon {
+    font-size: 10pt;
+    padding: 14px 12px;
+    position: absolute;
+    right: 0px;
+  }
+
+  input {
+    padding-right: 30px;
   }
 }
