@@ -38,6 +38,10 @@
       &:not(:last-child) {
         border-right: 1px solid $light-grey;
       }
+
+      .glyphicon {
+        top: 3px;
+      }
     }
   }
 

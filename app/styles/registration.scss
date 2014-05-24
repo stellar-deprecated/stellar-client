@@ -14,6 +14,10 @@ $input-border-focus-color: #66afe9;
       width: 40px;
       height: 40px;
 
+      &.glyphicon {
+        padding: 12px 12px;
+      }
+
       &.glyphicon-none:before {
         content: "\e013";
         opacity: 0;
