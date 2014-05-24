@@ -19,8 +19,8 @@
             </button>
         </div>
     </div>
-    <div class="send-container" ng-include="'templates/send.html'"></div>
-    <div class="receive-container" ng-include="'templates/receive.html'"></div>
+    <div class="send-container" ng-include="'templates/send.html'" ng-show="tab==='send'"></div>
+    <div class="receive-container" ng-include="'templates/receive.html'" ng-show="$root.tab==='receive'"></div>
 </div>
 <reward-pane></reward-pane>
 <div ng-include="'templates/transaction-history.html'"></div>
