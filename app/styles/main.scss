@@ -14,6 +14,7 @@ $icon-font-path: "../bower_components/bootstrap-sass-official/vendor/assets/font
 @import "reward-pane.scss";
 
 body {
+  height: 100%;
   width: 65%;
   margin-left: auto;
   margin-right: auto;
@@ -162,7 +163,10 @@ body {
 
     > * {
       padding: 0 105px;
-      border-bottom: $grey-border-bottom;
+
+      &:not(:last-child){
+        border-bottom: $grey-border-bottom;
+      }
     }
   }
 }
@@ -210,7 +214,16 @@ body {
   }
 }
 
+.wrapper {
+  min-height: 100%;
+  height: auto !important;
+  height: 100%;
+  margin: 0 auto -70px;
+}
+
 .footer {
+  left: auto;
+  right: auto;
   height: 70px;
   background-color: $white-grey;
   background-image: url(../images/rainbow.png);
@@ -236,7 +249,7 @@ body {
     float: right;
 
     a {
-      margin-right: 20px;
+      margin-left: 20px;
       font-size: 13px;
       color: rgba($grey, 0.75);
       @include transition(color 200ms ease-in-out);
