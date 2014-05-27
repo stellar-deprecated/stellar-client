@@ -26,14 +26,19 @@
 
     .dash-balance {
       color: $dark-grey;
-      font-weight: bold;
+      font-family: $avenir-black;
       font-size: 84px;
       white-space: nowrap;
     }
 
     .dash-balance-info {
-      color: #929FA5;
+      color: $info-grey;
+      font-family: $avenir-book;
       font-size: 17px;
+
+      b {
+        font-family: $avenir-heavy;
+      }
     }
 
     img {
@@ -105,17 +110,13 @@
           }
         }
       }
-
-      .tip {
-        color: rgba($grey, 0.5);
-      }
       
       .close-send-tab {
         float: right;
         font-size: 16px;
         margin: 5px 0;
         cursor: pointer;
-        color: rgba($grey, 0.75);
+        color: $info-grey;
         @include transition(color 200ms ease-in-out);
 
         &:hover {
@@ -160,7 +161,7 @@
 
         .info {
           font-size: 20px;
-          color: rgba($grey, 0.5);
+          color: $info-grey;
         }
 
         .amount_feedback {

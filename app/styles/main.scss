@@ -5,6 +5,7 @@ $icon-font-path: "../bower_components/bootstrap-sass-official/vendor/assets/font
 // endbower
 
 @import "color-palette.scss";
+@import "fonts.scss";
 
 @import "alpha.scss";
 @import "login.scss";
@@ -34,6 +35,8 @@ body {
       height: 40px;
 
       .tip {
+        font-family: $avenir-heavy;
+        font-size: 14px;
         background-color: $error;
         color: white;
         top: -5px;
@@ -71,6 +74,8 @@ body {
     }
 
     label {
+      font-family: $avenir-heavy;
+      font-weight: normal;
       font-size: 15px;
       line-height: 42px;
     }
@@ -103,8 +108,10 @@ body {
     }
 
     .tip {
+      font-family: $avenir-book;
+      font-size: 14px;
       font-weight: normal;
-      color: rgba($grey, 0.75);
+      color: $info-grey;
       line-height: 42px;
     }
 
@@ -112,15 +119,17 @@ body {
       width: 100%;
       margin-top: 30px;
       margin-bottom: 50px;
+      font-family: $avenir-heavy;
+      font-size: 17px;
     }
   }
 }
 
 .stellar-button {
   height: 45px;
-  font-weight: bold;
-  font-size: 16px;
-  color: $dark-grey;
+  font-family: $avenir-heavy;
+  font-size: 17px;
+  color: $info-grey;
   background-color: $white-grey;
   border-bottom-color: $grey;
   border-radius: 2px;
@@ -162,7 +171,7 @@ body {
   padding: 10px 12px;
   pointer-events: none;
   font-size: 17px;
-  color: rgba($grey, 0.5);
+  color: $info-grey;
 }
 
 .ng-cloak, .ng-hide {
@@ -175,11 +184,17 @@ body {
   right: auto;
 
   ul {
+    font-family: $avenir-medium;
     font-size: 15px;
 
     a {
       margin-top: 3px;
       padding: 7px 24px;
+      @include transition(color 200ms ease-in-out);
+
+      &:hover {
+        color: $stellar-blue !important;
+      }
     }
 
     .sign-up {
@@ -196,15 +211,19 @@ body {
 
   .navbar-brand {
     color: #09B5E5;
-    font-size: 24px;
-    font-weight: bold;
+    font-family: $avenir-black;
+    font-size: 26px;
+
+    &:hover {
+      color: #09B5E5;
+    }
   }
 }
 
 .client-container {
   > div {
     > .title {
-      font-size: 20px;
+      font-size: 21px;
       padding-top: 15px;
       padding-bottom: 20px;
       margin-top: 5px;
@@ -222,7 +241,7 @@ body {
 
 .glyphicon {
   font-size: 12pt;
-  color: rgba($grey, 0.5);
+  color: $info-grey;
   @include transition(color 200ms ease-in-out);
 
   &.glyphicon-remove {
@@ -280,8 +299,8 @@ body {
   margin: 0 15px;
   padding: 25px 105px;
 
-  .info {
-    color: rgba($grey, 0.75);
+  .summary {
+    color: $info-grey;
     font-size: 14px;
     display: inline-block;
 
@@ -300,7 +319,7 @@ body {
     a {
       margin-left: 20px;
       font-size: 13px;
-      color: rgba($grey, 0.75);
+      color: $info-grey;
       @include transition(color 200ms ease-in-out);
 
       &:hover {

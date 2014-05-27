@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="bower_components/ng-table/ng-table.min.css">
     <!-- endbuild -->
 
+    <link type="text/css" rel="stylesheet" href="http://fast.fonts.net/cssapi/d96d4bc8-5740-4ee1-b1ab-eafb3bdf7f1e.css"/>
+
     <!-- build:css({.tmp,app}) styles/main.css -->
     <link rel="stylesheet" href="styles/main.css">
     <!-- endbuild -->
@@ -40,7 +42,7 @@
 
                 <ul class="nav navbar-nav navbar-right ng-hide" ng-show="session.get('loggedIn')">
                     <li><a href="#/settings">@{{ session.get('username') }}</a></li>
-                    <li><a href="#/login" ui-sref="login">Logout</a></li>
+                    <li><a href="#/login" ui-sref="login">LOG OUT</a></li>
                 </ul>
             </div>
         </div>
@@ -53,11 +55,11 @@
     </div>
 
     <div class="container-fluid footer">
-        <div class="info">
+        <div class="summary info">
             <i class="glyphicon glyphicon-heart"></i>
             Stellar is a not-for-profit foundation
         </div>
-        <div class="links">
+        <div class="links info">
             <a href="#/about">About</a>
             <a href="#/wiki">Wiki</a>
             <a href="#/faq">FAQ</a>
@@ -152,4 +154,4 @@
 
 <!-- endbuild -->
 </body>
-</html>
+</htm

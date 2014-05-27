@@ -5,7 +5,7 @@
 
   .title {
     margin-top: 0;
-    font-size: 19px;
+    font-size: 20px;
     padding: 24px 0;
   }
 
@@ -52,6 +52,7 @@
     li {
       margin: 3px;
       padding: 28px 30px;
+      font-family: $avenir-medium;
       font-size: 20px;
       list-style-type: none;
       cursor: pointer;
@@ -83,10 +84,10 @@
 
       &.complete {
         background-color: #F9F9F9;
-        color: rgba($grey, 0.75);
+        color: $info-grey;
 
         i {
-          color: rgba($grey, 0.75);
+          color: $info-grey;
         }
 
         &:hover {
