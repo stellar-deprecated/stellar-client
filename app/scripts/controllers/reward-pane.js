@@ -45,14 +45,16 @@ sc.controller('RewardPaneCtrl', ['$scope','session','bruteRequest',  function ( 
         {
             $.post(Options.API_SERVER +"/claim/claim", {  username: session.get('username'),
                                 updateToken: session.get('blob').get('updateToken'),
-                                email: session.get('blob').get('email'),
                                 fbAccessToken: $scope.FBAccessToken,
-                                fbID: $scope.FBID }, null, "json").done(function (response) {
+                                fbID: $scope.FBID },
+                    null, "json").done(function (response) {
+                $scope.$apply(function () {
                 console.log(response.status);
                 // error, nameTaken, alreadyClaimed, newFB, queued, success
                 switch(response.status)
                 {
                     case 'alreadyClaimed':
+                        $scope.rewards[0].status="complete";
                         break;
                     case 'newFB':  // user is too new to FB
                         //console.log("New to FB"); // TODO
@@ -60,11 +62,13 @@ sc.controller('RewardPaneCtrl', ['$scope','session','bruteRequest',  function ( 
                     case 'queued':
                         break;
                     case 'success':
+                        $scope.rewards[0].status="complete";
                         break;
                     case 'error':
                     default:
                         break;
                 }
+            });
             });
         }
 
@@ -76,16 +80,6 @@ sc.controller('RewardPaneCtrl', ['$scope','session','bruteRequest',  function ( 
         function sendStellars()
         {
 
-        }
-
-        $scope.hello=function()
-        {
-            console.log("hi");
-        }
-
-        function hello()
-        {
-            console.log("kas");
         }
 
         function getPlaceInLine()
@@ -101,12 +95,15 @@ sc.controller('RewardPaneCtrl', ['$scope','session','bruteRequest',  function ( 
                     username: session.get('username')
                 },
                 //Success
-                function(place){
-                    if(place>1)
-                        $scope.rewards[0].message="You are on the waiting list. You will get your stellars in about "+place+" days.";
-                    else $scope.rewards[0].message="You are on the waiting list. You should get your stellars tomorrow.";
+                function(result) {
+                    $scope.$apply(function () {
+                        if (result.days > 1)
+                            $scope.rewards[0].message = "You are on the waiting list. You will get your stellars in about " + result.days + " days.";
+                        else $scope.rewards[0].message = "You are on the waiting list. You should get your stellars tomorrow.";
 
-                    $scope.rewards[0].action=function(){};
+                        $scope.rewards[0].action = function () {
+                        };
+                    });
                 }
             );
         }
