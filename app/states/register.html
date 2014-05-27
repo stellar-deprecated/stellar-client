@@ -3,10 +3,13 @@
 
     <form role="form" class="form-horizontal stellar-form" ng-controller="RegistrationCtrl">
         <div class="form-group">
+            <div class="errors col-sm-12">
+                <div class="tip col-sm-offset-6 col-sm-3">{{ usernameErrors.join('\n') }}</div>
+            </div>
             <label for="username" class="col-sm-3">USERNAME</label>
             <div class="col-sm-6">
                 <div class="input-icon-wrapper">
-                    <input id="username" type="text" class="form-control" ng-model="username" ng-change="checkUsername()">
+                    <input id="username" type="text" class="form-control" ng-class="{error: usernameErrors.length}" ng-model="username" ng-change="checkUsername()">
                     <i class="glyphicon glyphicon-user"></i>
                 </div>
             </div>
@@ -14,13 +17,9 @@
                 <i class="username-status status glyphicon" ng-class="usernameClass()"></i>
                 <span class="tip">Make it memorable.</span>
             </div>
-            <!--div class="alert alert-danger ng-hide col-sm-3" ng-show="usernameErrors.length">
-                <ul>
-                    <li ng-repeat="error in usernameErrors">{{ error }}</li>
-                </ul>
-            </div-->
         </div>
         <div class="form-group">
+            <div class="errors col-sm-12"></div>
             <label for="email" class="col-sm-3">
                 EMAIL
                 <span class="tip">(optional)</span>
@@ -37,10 +36,13 @@
             </div>
         </div>
         <div class="form-group">
+            <div class="errors col-sm-12">
+                <div class="tip col-sm-offset-6 col-sm-3">{{ passwordErrors.join('\n') }}</div>
+            </div>
             <label for="password" class="col-sm-3">PASSWORD</label>
             <div class="col-sm-6">
                 <div class="input-icon-wrapper">
-                    <input id="password" type="password" class="form-control" ng-model="password" ng-change="checkPassword()">
+                    <input id="password" type="password" class="form-control" ng-class="{error: passwordErrors.length}" ng-model="password" ng-change="checkPassword()">
                     <i class="glyphicon glyphicon-lock"></i>
                     <div class="password-strength {{ password | passwordLevel:4 }}" ng-class="{null: password == ''}">
                         <div class="block1"></div><div class="block2"></div><div class="block3"></div><div class="block4"></div>
@@ -52,28 +54,21 @@
                 <i class="username-status status glyphicon glyphicon-none" ng-class="passwordClass()"></i>
                 <span class="tip">Min of 8 characters.</span>
             </div>
-            <!--div class="alert alert-danger ng-hide col-sm-3" ng-show="passwordErrors.length">
-                <ul>
-                    <li ng-repeat="error in passwordErrors">{{ error }}</li>
-                </ul>
-            </div-->
         </div>
         <div class="form-group">
+            <div class="errors col-sm-12">
+                <div class="tip col-sm-offset-6 col-sm-3">{{ passwordConfirmErrors.join('\n') }}</div>
+            </div>
             <label for="password-confirmation" class="col-sm-3">CONFIRM PASSWORD</label>
             <div class="col-sm-6">
                 <div class="input-icon-wrapper">
-                    <input id="password-confirmation" type="password" class="form-control" ng-model="passwordConfirmation" ng-change="checkConfirmPassword()">
+                    <input id="password-confirmation" type="password" class="form-control" ng-class="{error: passwordConfirmErrors.length}" ng-model="passwordConfirmation" ng-change="checkConfirmPassword()">
                     <i class="glyphicon glyphicon-lock"></i>
                 </div>
             </div>
             <div class="col-sm-3 info">
                 <i class="username-status status glyphicon glyphicon-none" ng-class="confirmPasswordClass()"></i>
             </div>
-            <!--div class="alert alert-danger ng-hide col-sm-3" ng-show="passwordConfirmErrors.length">
-                <ul>
-                    <li ng-repeat="error in passwordConfirmErrors">{{ error }}</li>
-                </ul>
-            </div-->
         </div>
         <div class="form-group terms">
             <div class="col-sm-offset-3 col-sm-6 tip">

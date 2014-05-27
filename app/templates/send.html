@@ -1,24 +1,24 @@
 
 <div class="send-pane" ng-controller="SendPaneCtrl">
-<group ng-hide="connected" class="disconnected">
+<group ng-hide="connected" class="send-error disconnected">
     <p l10n="l10n" class="literal">You have to be online to see this screen</p>
 </group>
-<div ng-hide="account.Balance || !connected" class="unfunded">
+<div ng-hide="account.Balance || !connected" class="send-error unfunded">
     <p l10n="l10n" class="literal">You have to be funded before you can send money</p>
     <p><a href="#/balance" l10n="l10n" class="btn btn-default">Back to balance</a></p>
 </div>
-<form name="sendForm" id="sendForm" role="form" ng-show="mode=='form' && account.Balance" ng-submit="send_prepared()" class="row-padding-small mode-form">
-    <div class="close-send-tab" ng-click="closePane()">
-        <span>Close</span>
-        <i class="glyphicon glyphicon-remove-circle"></i>
-    </div>
-    <div l10n="l10n" class="literal title">Send Stellars</div>
+<div class="close-send-tab" ng-click="closePane()">
+    <span>Close</span>
+    <i class="glyphicon glyphicon-remove-circle"></i>
+</div>
+<div l10n="l10n" class="literal title">Send Stellars</div>
+<form name="sendForm" id="sendForm" role="form" ng-show="mode=='form' && account.Balance" ng-submit="send_prepared()" class="row-padding-small mode-form stellar-form">
     <div class="form-group">
         <label for="send_amount" l10n="l10n" class="col-sm-3">AMOUNT</label>
         <div ng-if="!send.currency_force" class="row amount">
             <div class="col-sm-6 send-amount right-inner-addon">
-                <i>XTR</i>
                 <input id="send_amount" name="send_amount" type="text" ng-model="send.amount" required="required" rp-autofill="$routeParams.amount" rp-autofill-amount="rp-autofill-amount" rp-amount="rp-amount" rp-amount-positive="rp-amount-positive" rp-amount-xtr-limit="rp-amount-xtr-limit" rp-amount-xtr-limit-currency="{{send.currency}}" class="form-control stellar-input"/>
+                <i>XTR</i>
             </div>
             <div class="col-sm-3 tip">Type in the amount to send.</div>
             <!--
@@ -53,8 +53,8 @@
     <div class="row form-group">
         <label for="send_destination" l10n="l10n" class="col-sm-3">ADDRESS</label>
         <div class="col-sm-6 send-address right-inner-addon">
-            <i class="glyphicon glyphicon-globe"></i>
             <input id="send_destination" name="send_destination" type="text" rp-combobox="recipient_query" ng-model="send.recipient" rp-dest="rp-dest" rp-dest-address="rp-dest-address" rp-dest-contact="rp-dest-contact" rp-dest-bitcoin="rp-dest-bitcoin" rp-dest-email="rp-dest-email" required="required" rp-autofill="$routeParams.to" rp-focus="rp-focus" class="form-control stellar-input"/>
+            <i class="glyphicon glyphicon-globe"></i>
         </div>
         <div class="col-sm-3 tip">Type in the address ot username.</div>
         <div rp-errors="send_destination" class="errorGroup">
@@ -159,30 +159,32 @@
     <p rp-spinner="4" l10n="l10n" class="literal">Ripple is calculating a path for your payment.</p>
 </group>
 <group ng-show="mode=='confirm' && account.Balance" class="mode-confirm">
-    <p l10n="l10n" class="literal">You are sending {{ (send.alt.amount || send.currency) | rpcurrency}} to</p>
-    <div class="dest_feedback">
-        <div ng-show="send.recipient_name" class="recipient">{{send.recipient_name}}</div>
-        <div ng-hide="send.recipient_name" class="recipient">{{send.recipient_address}}</div>
-        <div href="" ng-show="send.recipient != send.recipient_address || send.recipient_name" class="extra"> {{send.recipient_address}}</div>
-        <div ng-show="send.dt" l10n="l10n" class="dt">Destination tag: {{send.dt}}</div>
-    </div>
-    <p l10n="l10n" class="literal">They will receive</p>
-    <p class="amount_feedback"><span class="value">{{send.amount_feedback | rpamount}}&#32;</span><span class="currency">{{send.amount_feedback | rpcurrency}}</span></p>
-    <group ng-show="send.indirect">
-        <p l10n="l10n" class="literal">You will pay at most</p>
-        <p class="sendmax_feedback"><span class="value">{{send.alt.amount | rpamount}}&#32;</span><span class="currency">{{send.alt.amount | rpcurrency}} &#32;</span><span>&plusmn; 1%</span></p>
-    </group>
-    <div class="call-to-action">
-        <p l10n="l10n" class="literal">Are you sure?</p>
-        <div class="row row-padding-small">
-            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
-                <button ng-click="cancelConfirm()" l10n="l10n" class="btn btn-block btn-default back">&laquo; Back</button>
+    <div>
+        <p l10n="l10n" class="literal info">You are sending</p>
+        <p class="amount_feedback"><span class="value">{{send.amount_feedback | rpamount}}&#32;</span><span class="currency">{{send.amount_feedback | rpcurrency}}</span></p>
+        <p l10n="l10n" class="literal info">to this address</p>
+        <div class="dest_feedback">
+            <div ng-show="send.recipient_name" class="recipient">{{send.recipient_name}}</div>
+            <div class="input-icon-wrapper">
+                <input ng-hide="send.recipient_name" class="recipient" value="{{send.recipient_address}}" disabled>
+                <i class="glyphicon glyphicon-globe"></i>
             </div>
-            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
-                <button type="submit" ng-click="send_confirmed()" ng-disabled="confirm_wait" l10n="l10n" class="btn btn-block btn-success submit">Confirm</button>
+            <div href="" ng-show="send.recipient != send.recipient_address || send.recipient_name" class="extra"> {{send.recipient_address}}</div>
+            <div ng-show="send.dt" l10n="l10n" class="dt">Destination tag: {{send.dt}}</div>
+        </div>
+        <group ng-show="send.indirect">
+            <p l10n="l10n" class="literal">You will pay at most</p>
+            <p class="sendmax_feedback"><span class="value">{{send.alt.amount | rpamount}}&#32;</span><span class="currency">{{send.alt.amount | rpcurrency}} &#32;</span><span>&plusmn; 1%</span></p>
+        </group>
+        <div class="call-to-action">
+            <div class="row row-padding-small">
+                <div class="">
+                    <button type="submit" ng-click="send_confirmed()" ng-disabled="confirm_wait" l10n="l10n" class="btn btn-default stellar-button">Confirm transaction</button>
+                </div>
             </div>
         </div>
     </div>
+    <button ng-click="cancelConfirm()" l10n="l10n" class="btn btn-block btn-default stellar-button change-button">Change</button>
 </group>
 <group ng-show="mode=='sending' && account.Balance" class="mode-sending">
     <p rp-spinner="4" l10n="l10n" class="literal">Sending transaction to Ripple network</p>

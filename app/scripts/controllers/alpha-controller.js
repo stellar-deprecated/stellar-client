@@ -12,6 +12,11 @@ sc.controller('AlphaCtrl', function ($scope, $state, session,  bruteRequest) {
     dataType: 'json'
   });
 
+  // Remove errors now that the code has changed.
+  $scope.clearErrors = function(){
+    $scope.alphaCodeErrors = [];
+  };
+
   // Validate the input before submitting the registration form.
   // This generates messages that help the user resolve their errors.
   $scope.attemptAlpha = function () {
@@ -52,10 +57,6 @@ sc.controller('AlphaCtrl', function ($scope, $state, session,  bruteRequest) {
                 $scope.alphaCodeErrors.push('This Alpha Code is invalid.');
             }
           });
-        },
-        // Fail
-        function () {
-          $scope.alphaCodeErrors.push('Something is wrong?');
         }
       );
     }

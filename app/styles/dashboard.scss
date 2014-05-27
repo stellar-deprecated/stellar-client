@@ -120,6 +120,10 @@
 
         &:hover {
           color: $error;
+
+          i {
+            color: $error;
+          }
         }
 
         i {
@@ -137,13 +141,65 @@
         padding-bottom: 20px;
       }
 
-      group p {
+      group.send-error p {
         padding: 20px;
         margin-top: 10px;
         text-align: center;
         border: 1px solid $error;
         color: $error;
-        border-radius: 3px;
+        border-radius: 2px;
+      }
+
+      .mode-confirm > div {
+        text-align: center;
+        border: 1px solid $grey-border;
+        border-radius: 2px;
+        margin: 40px auto 30px auto;
+        width: 540px;
+        padding: 30px 36px;
+
+        .info {
+          font-size: 20px;
+          color: rgba($grey, 0.5);
+        }
+
+        .amount_feedback {
+          font-size: 46px;
+        }
+
+        input {
+          width: 100%;
+          padding: 10px 15px;
+          margin-top: 15px;
+          margin-bottom: 40px;
+          border-radius: 2px;
+          border: 1px solid rgba($grey, 0.3);
+          background-color: rgba($light-grey, 0.4);
+
+          + i {
+            font-size: 16px;
+            margin-top: 14px;
+          }
+        }
+
+        button {
+          height: 60px;
+          width: 100%;
+          color: white;
+          background-color: #80D8BF;
+          font-size: 25px;
+          box-shadow: none;
+          border-bottom-color: $stellar-blue;
+
+          &:hover {
+            background-color: $stellar-blue;
+          }
+        }
+      }
+
+      .change-button {
+        width: 220px;
+        margin: 0 auto 40px auto;
       }
     }
   }

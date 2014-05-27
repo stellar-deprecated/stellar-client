@@ -39,11 +39,11 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, bruteRequest
           $scope.$apply(function(){
             console.log(response.status);
             if(response.status === 'usernameAvailable') {
-              $scope.usernameErrors = [];
               $scope.usernameAvailable = true;
             }
             else
             {
+              $scope.usernameErrors.push('This username is taken.');
               $scope.usernameAvailable = false;
             }
           });
@@ -57,10 +57,12 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, bruteRequest
   });
 
   // The following functions validate user input on the fly.
-  // This does not generate error messages, but will clear them once the input is valid.
+  // This will clear error messages once the input is valid.
 
   $scope.checkUsername = function(){
+    $scope.usernameErrors = [];
     $scope.usernameAvailable = null;
+
     if($scope.username !== '') checkUsername();
   };
 
@@ -128,7 +130,7 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, bruteRequest
     }
     else if($scope.usernameAvailable === false){
       validInput = false;
-      $scope.usernameErrors.push('The username "' + $scope.username + '" is taken.');
+      $scope.usernameErrors.push('This username is taken.');
     }
 
     if(!$scope.password){

@@ -25,10 +25,9 @@ $input-border-focus-color: #66afe9;
     }
   }
 
-  .tip {
-    font-weight: normal;
-    color: rgba($grey, 0.75);
-    line-height: 42px;
+  .terms .tip {
+    margin-top: 20px;
+    margin-bottom: 10px;
 
     a {
       color: $stellar-blue;
