@@ -1,5 +1,18 @@
-$stellar-blue: #09B5E5;
-$grey-text: #5B6972;
-$light-grey: #96A0A9;
+// Primary colors
+$stellar-blue: #08B5E5;
+$dark-grey: #5B6A72;
+$info-grey: #878787;
+$light-grey: #ECEFF0;
+
+// Secondary colors
+$success: #7ED321;
+$error: #D41B32;
+
+// Colors sampled from mocks
+$grey: #96A0A9;
 $grey-border: #E3E3E1;
 $grey-background: #F4F5F7;
+$white-grey: #FCFCFC;
+
+// Common borders
+$grey-border-bottom: 1px solid $grey-border;

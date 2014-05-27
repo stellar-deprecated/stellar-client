@@ -1,15 +1,27 @@
 <div class="transaction-history" ng-controller="TransactionHistoryCtrl">
-    <b>My Transactions</b><br>
-    <div style="float: right;">
-        Current balance <b>Stellars</b><br>
-        <b>{{ $root.balance }}</b>
+    <div>
+        <span class="title">My transactions</span><br>
+        <table ng-table="tableParams" class="table">
+            <colgroup>
+                <col width="250px">
+                <col width="225px">
+                <col width="150px">
+                <col width="125px">
+                <col width="400px">
+            </colgroup>
+            <tr class="tx" ng-repeat="tx in $data">
+                <td data-title="'Type'">
+                    <i ng-class="typeIcons[tx.transaction.type]"></i>
+                    <span class="type">{{ tx.transaction.type }}</span>
+                </td>
+                <td data-title="'Date'" sortable="'date'" am-time-ago="tx.date"></td>
+                <td data-title="'Amount'" sortable="'transaction.amount'">{{ tx.transaction.amount.to_human() }} Stellars</td>
+                <td class="direction">{{ tx.transaction.type === 'sent' ? 'to' : 'from' }}</td>
+                <td class="other-party">
+                    <div class="avatar"></div>
+                    <span class="address">{{ tx.transaction.counterparty }}</span>
+                </td>
+            </tr>
+        </table>
     </div>
-    <table ng-table="tableParams" class="table">
-        <tr ng-repeat="tx in $data">
-            <td data-title="'Type'">{{ tx.transaction.type }}</td>
-            <td data-title="'Date'" sortable="'date'" am-time-ago="tx.date"></td>
-            <td data-title="'Amount'" sortable="'transaction.amount'">{{ tx.transaction.amount.to_human() }}</td>
-            <td data-title="'Destination'" sortable="'transaction.counterparty'">{{ tx.transaction.counterparty }}</td>
-        </tr>
-    </table>
 </div>

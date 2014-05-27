@@ -333,3 +333,23 @@ module.filter('rpheavynormalize', function () {
             .replace(/\s+/g, ' ');
     };
 });
+
+module.filter('shrinkText', function($sce){
+  /**
+   * Shrink the font size of a piece of text if it is longer than the maximum allowed length.
+   *
+   * @param {string} text The text to shrink.
+   * @param {number} fontSize The original font size in pixels.
+   * @param {number} max The maximum number of characters allowed before shrinking the text.
+   *
+   * @return {$sce.trustedHTML} The original text or a span tag containing the shrunken the text.
+   */
+  return function(text, fontSize, max){
+    if(text.length > max){
+      var ratio = max / text.length;
+      var newFontSize = Math.floor(fontSize * ratio);
+      return $sce.trustAsHtml('<span style="font-size:' + newFontSize + 'px;">' + text + '</span>');
+    }
+    else return $sce.trustAsHtml(text);
+  }
+});

@@ -22,6 +22,7 @@
     "gulp-uglify": "^0.2.1",
     "gulp-useref": "^0.3.1",
     "gulp-ngmin": "^0.2.0",
+    "gulp-plumber": "^0.6.1",
     "jshint-stylish": "^0.1.5",
     "opn": "^0.1.1",
     "wiredep": "^1.4.3"

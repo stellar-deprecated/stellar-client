@@ -124,7 +124,15 @@ sc.controller('RewardPaneCtrl', ['$scope','session','bruteRequest',  function ( 
         {message: 'Create a new wallet', status: 'complete', action: function(){ } }
       ];
 
+    function computeRewardProgress(){
+        var statuses = $scope.rewards.map(function(reward){ return reward.status; })
+        $scope.rewardProgress = statuses.sort(function(a, b){
+            var order = ['complete', 'pending', 'incomplete'];
+            return order.indexOf(a) - order.indexOf(b);
+        });
+    }
 
+    computeRewardProgress();
 
       var rewardsRequest = new bruteRequest({
           url: Options.API_SERVER + '/claim/rewards',
@@ -151,6 +159,7 @@ sc.controller('RewardPaneCtrl', ['$scope','session','bruteRequest',  function ( 
                 if(reward.status == 0 && reward.rewardType==1) // this guy is on the waiting list
                     getPlaceInLine();
               });
+            computeRewardProgress();
             $scope.showRewards=(count<3);
         }
       );
