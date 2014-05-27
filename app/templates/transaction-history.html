@@ -7,8 +7,7 @@
                 <col width="225px">
                 <col width="150px">
                 <col width="125px">
-                <col width="200px">
-                <col width="200px">
+                <col width="400px">
             </colgroup>
             <tr class="tx" ng-repeat="tx in $data">
                 <td data-title="'Type'">
@@ -18,10 +17,10 @@
                 <td data-title="'Date'" sortable="'date'" am-time-ago="tx.date"></td>
                 <td data-title="'Amount'" sortable="'transaction.amount'">{{ tx.transaction.amount.to_human() }} Stellars</td>
                 <td class="direction">{{ tx.transaction.type === 'sent' ? 'to' : 'from' }}</td>
-                <td class="other-party" alt="{{ tx.transaction.counterparty }}">
+                <td class="other-party">
                     <div class="avatar"></div>
+                    <span class="address">{{ tx.transaction.counterparty }}</span>
                 </td>
-                <td class="view-link"><a href="#">View transaction</a></td>
             </tr>
         </table>
     </div>
