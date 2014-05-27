@@ -50,6 +50,7 @@ sc.controller('RewardPaneCtrl', ['$scope','session','bruteRequest',  function ( 
                     null, "json").done(function (response) {
                 $scope.$apply(function () {
                 console.log(response.status);
+                if(response.error)response.status='error';
                 // error, nameTaken, alreadyClaimed, newFB, queued, success
                 switch(response.status)
                 {
@@ -144,10 +145,10 @@ sc.controller('RewardPaneCtrl', ['$scope','session','bruteRequest',  function ( 
             var count=0;
               // Update the status of the user's rewards.
               rewardsGiven.forEach(function(reward){
-                // Rewards are 1-based indexed in the server.
-                $scope.rewards[reward.rewardID - 1].status = rewardStatusTypes[reward.status];
+                // RewardTypes are 1-based indexed in the server.
+                $scope.rewards[reward.rewardType - 1].status = rewardStatusTypes[reward.status];
                 if(reward.status == 1) count++;
-                if(reward.status == 0 && reward.rewardID==1) // this guy is on the waiting list
+                if(reward.status == 0 && reward.rewardType==1) // this guy is on the waiting list
                     getPlaceInLine();
               });
             $scope.showRewards=(count<3);
