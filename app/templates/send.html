@@ -14,6 +14,20 @@
 <div l10n="l10n" class="literal title">Send Stellars</div>
 <form name="sendForm" id="sendForm" role="form" ng-show="mode=='form' && account.Balance" ng-submit="send_prepared()" class="row-padding-small mode-form stellar-form">
     <div class="form-group">
+        <div rp-errors="send_amount" class="errors col-sm-12">
+            <div rp-error-on="required" l10n="l10n" class="tip col-sm-offset-6 col-sm-3">Please enter an amount.</div>
+            <div rp-error-on="rpAmount" l10n="l10n" class="tip col-sm-offset-6 col-sm-3">Not a valid amount.</div>
+            <div rp-error-on="rpAmountPositive" l10n="l10n" class="tip col-sm-offset-6 col-sm-3">Amount must be greater than zero.</div>
+            <div rp-error-on="rpMaxAmount" l10n="l10n" class="tip col-sm-offset-6 col-sm-3">
+                This transaction exceeds your balance, you can send
+                a max. of {{account.max_spend | rpamount:{rel_precision: 0} }} XTR
+            </div>
+            <div ng-show="send.recipient_info.disallow_xtr && send.currency_code=='XTR'" l10n="l10n" class="tip col-sm-offset-6 col-sm-3">Recipient does not allow XTR payments. Are you sure you want to send XTR anyway?</div>
+            <div ng-show="send.trust_limit" l10n="l10n" class="success tip col-sm-offset-6 col-sm-3">
+                {{send.recipient | rpcontactname}}
+                trusts you for {{send.trust_limit | rpamount}} {{send.trust_limit | rpcurrency}}.
+            </div>
+        </div>
         <label for="send_amount" l10n="l10n" class="col-sm-3">AMOUNT</label>
         <div ng-if="!send.currency_force" class="row amount">
             <div class="col-sm-6 send-amount right-inner-addon">
@@ -35,34 +49,20 @@
         <div rp-errors="send_amount_currency" class="errorGroup">
             <div rp-error-on="rpRestrictCurrencies" l10n="l10n" class="error">{{send.recipient | rpcontactname}} can't receive this currency.</div>
         </div>  -->
-        <div rp-errors="send_amount" class="errorGroup">
-            <div rp-error-on="required" l10n="l10n" class="error">Please enter an amount.</div>
-            <div rp-error-on="rpAmount" l10n="l10n" class="error">Not a valid amount.</div>
-            <div rp-error-on="rpAmountPositive" l10n="l10n" class="error">Amount must be greater than zero.</div>
-            <div rp-error-on="rpMaxAmount" l10n="l10n" class="error">
-                This transaction exceeds your balance, you can send
-                a max. of {{account.max_spend | rpamount:{rel_precision: 0} }} XTR
-            </div>
-            <div ng-show="send.recipient_info.disallow_xtr && send.currency_code=='XTR'" l10n="l10n" class="error">Recipient does not allow XTR payments. Are you sure you want to send XTR anyway?</div>
-            <div ng-show="send.trust_limit" l10n="l10n" class="notice">
-                {{send.recipient | rpcontactname}}
-                trusts you for {{send.trust_limit | rpamount}} {{send.trust_limit | rpcurrency}}.
-            </div>
-        </div>
     </div>
     <div class="row form-group">
+        <div rp-errors="send_destination" class="errors col-sm-12">
+            <div rp-error-valid ng-show="send.recipient != send.recipient_address" class="success tip col-sm-offset-6 col-sm-3">{{send.recipient_address}}</div>
+            <div rp-error-on="required" l10n="l10n" class="tip col-sm-offset-6 col-sm-3">Please enter a recipient.</div>
+            <div rp-error-on="rpDest" l10n="l10n" class="tip col-sm-offset-6 col-sm-3">Recipient should be either a name from your contact list or Ripple/Bitcoin address.</div>
+            <div rp-error-on="federation" l10n="l10n" class="tip col-sm-offset-6 col-sm-3">This email address is not Ripple-enabled.</div>
+        </div>
         <label for="send_destination" l10n="l10n" class="col-sm-3">ADDRESS</label>
         <div class="col-sm-6 send-address right-inner-addon">
-            <input id="send_destination" name="send_destination" type="text" rp-combobox="recipient_query" ng-model="send.recipient" rp-dest="rp-dest" rp-dest-address="rp-dest-address" rp-dest-contact="rp-dest-contact" rp-dest-bitcoin="rp-dest-bitcoin" rp-dest-email="rp-dest-email" required="required" rp-autofill="$routeParams.to" rp-focus="rp-focus" class="form-control stellar-input"/>
+            <input id="send_destination" name="send_destination" type="text" rp-combobox="recipient_query" ng-class="{error: required || rpDest || federation}" ng-model="send.recipient" rp-dest="rp-dest" rp-dest-address="rp-dest-address" rp-dest-contact="rp-dest-contact" rp-dest-bitcoin="rp-dest-bitcoin" rp-dest-email="rp-dest-email" required="required" rp-autofill="$routeParams.to" rp-focus="rp-focus" class="form-control stellar-input"/>
             <i class="glyphicon glyphicon-globe"></i>
         </div>
-        <div class="col-sm-3 tip">Type in the address ot username.</div>
-        <div rp-errors="send_destination" class="errorGroup">
-            <div rp-error-valid ng-show="send.recipient != send.recipient_address" class="success">{{send.recipient_address}}</div>
-            <div rp-error-on="required" l10n="l10n" class="error">Please enter a recipient.</div>
-            <div rp-error-on="rpDest" l10n="l10n" class="error">Recipient should be either a name from your contact list or Ripple/Bitcoin address.</div>
-            <div rp-error-on="federation" l10n="l10n" class="error">This email address is not Ripple-enabled.</div>
-        </div>
+        <div class="col-sm-3 tip">Type in the address or username.</div>
     </div>
     <div ng-show="send.show_dt_field" class="row form-group">
         <label for="send_dt" l10n="l10n" class="col-sm-3">Destination tag</label>

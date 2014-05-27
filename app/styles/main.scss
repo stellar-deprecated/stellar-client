@@ -59,6 +59,14 @@ body {
           left: 26px;
           position: absolute;
         }
+
+        &.success {
+          background-color: $success;
+
+          &:before {
+            border-color: $success transparent;
+          }
+        }
       }
     }
 
