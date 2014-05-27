@@ -8,7 +8,7 @@
  * we have a network-internal nickname system.
  */
 
-var module = angular.module('rippletxt', []);
+var module = angular.module('stellarClient');
 
 module.factory('rpStellarTxt', ['$q', '$rootScope',
     function ($q, $scope) {
@@ -22,15 +22,16 @@ module.factory('rpStellarTxt', ['$q', '$rootScope',
 
                 txts[domain] = txtPromise;
 
+                // TODO: change these back to https
                 var urls = [
-                        'https://ripple.'+domain+'/ripple.txt',
-                        'https://www.'+domain+'/ripple.txt',
-                        'https://'+domain+'/ripple.txt'
-                ].reverse();
+                        'http://stellar.'+domain+'/stellar.txt',
+                        'http://www.'+domain+'/stellar.txt',
+                        'http://'+domain+'/stellar.txt'
+                ];
                 var next = function (xhr, status) {
                     if (!urls.length) {
                         txts[domain] = {};
-                        txtPromise.reject(new Error("No ripple.txt found"));
+                        txtPromise.reject(new Error("No stellar.txt found"));
                         return;
                     }
                     var url = urls.pop();

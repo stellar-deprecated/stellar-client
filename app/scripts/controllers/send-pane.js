@@ -5,7 +5,7 @@ var Amount = stellar.Amount;
 //var sc = angular.module('stellarClient',['filters']);
 var sc = angular.module('stellarClient');
 
-sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout','session','stNetwork', 'rpTracker', function($rootScope, $scope, $routeParams, $timeout, session, $network, $rpTracker )
+sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout','session','stNetwork', 'rpFederation', 'rpTracker', function($rootScope, $scope, $routeParams, $timeout, session, $network, $federation, $rpTracker )
  {
             //console.log('hello '+$rootScope.tab);
      var timer;
@@ -116,7 +116,8 @@ sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout'
                 send.bitcoin = !isNaN(Base.decode_check([0, 5], recipient, 'bitcoin'));
 
                 // Trying to send to an email/federation address
-                send.federation = ("string" === typeof recipient) && ~recipient.indexOf('@');
+                // Non-defaulting version: send.federation = ("string" === typeof recipient) && ~recipient.indexOf('@');
+                send.federation = ("string" === typeof recipient) && recipient.length>1 && !send.bitcoin && !stellar.UInt160.is_valid(recipient);
 
                 // Check destination tag visibility
                 $scope.check_dt_visibility();
