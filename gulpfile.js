@@ -7,11 +7,6 @@ var plumber = require('gulp-plumber');
 // load plugins
 var $ = require('gulp-load-plugins')();
 
-function logError(err) {
-  console.log(err.toString());
-  this.emit('end');
-}
-
 gulp.task('styles', function () {
     return gulp.src('app/styles/main.scss')
         .pipe(plumber({errorHandler: console.log}))
