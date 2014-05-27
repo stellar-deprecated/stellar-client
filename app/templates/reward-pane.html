@@ -1,8 +1,10 @@
-<div class="reward-pane ng-hide" ng-show="showRewards">
+  <div class="reward-pane ng-hide" ng-show="showRewards" ng-controller="RewardPaneCtrl">
     <ul class="rewards">
-        <li ng-repeat="reward in rewards" ng-class="reward.status">
-            <i ng-class="rewardStatusIcons[reward.status]"></i>
-            {{ reward.message }}
+        <li ng-repeat="reward in rewards" ng-class="reward.status" ng-click="reward.action()">
+
+                <i ng-class="rewardStatusIcons[reward.status]"></i>
+                {{ reward.message }}
+
         </li>
     </ul>
 </div>
