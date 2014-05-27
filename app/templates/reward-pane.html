@@ -1,14 +1,14 @@
-<div class="reward-pane ng-hide" ng-show="showRewards">
+<div class="reward-pane ng-hide" ng-show="showRewards" ng-controller="RewardPaneCtrl">
     <div>
         <div>
             <div class="title">Receive new Stellars</div>
             <ul class="rewardProgress">
-                <li ng-repeat="item in rewardProgress track by $index" ng-class="item">
+                <li ng-repeat="item in rewardProgress track by $index" ng-class="item" >
                     <i ng-class="rewardStatusIcons[item]"></i>
                 </li>
             </ul>
             <ul class="rewards">
-                <li ng-repeat="reward in rewards" ng-class="reward.status">
+                <li ng-repeat="reward in rewards" ng-class="reward.status"  ng-click="reward.action()">
                     <i ng-class="rewardStatusIcons[reward.status]"></i>
                     {{ reward.message }}
                 </li>
