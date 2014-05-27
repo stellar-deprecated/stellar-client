@@ -28,6 +28,16 @@ sc.directive('rewardPane', function () {
         {message: 'Create a new wallet', status: 'complete'}
       ];
 
+      function computeRewardProgress(){
+        var statuses = $scope.rewards.map(function(reward){ return reward.status; })
+        $scope.rewardProgress = statuses.sort(function(a, b){
+          var order = ['complete', 'pending', 'incomplete'];
+          return order.indexOf(a) - order.indexOf(b);
+        });
+      }
+
+      computeRewardProgress();
+
       var rewardsRequest = new bruteRequest({
           url: Options.API_SERVER + '/user/rewards',
           type: 'GET',
@@ -42,17 +52,21 @@ sc.directive('rewardPane', function () {
         },
         //Success
         function(rewardsGiven){
-          var rewardsComplete = 0;
+          $scope.$apply(function(){
+            var rewardsComplete = 1;
 
-          // Update the status of the user's rewards.
-          rewardsGiven.forEach(function(reward){
-            // Rewards are 1-based indexed in the server.
-            $scope.rewards[reward.rewardID - 1].status = rewardStatusTypes[reward.status];
-            if(reward.status === 1) rewardsComplete++;
+            // Update the status of the user's rewards.
+            rewardsGiven.forEach(function(reward){
+              // Rewards are 1-based indexed in the server.
+              $scope.rewards[reward.rewardID - 1].status = rewardStatusTypes[reward.status];
+              if(reward.status === 1) rewardsComplete++;
+            });
+
+            computeRewardProgress();
+
+            // Only show the rewards pane if there are rewards left to complete.
+            if(rewardsComplete != 4) $scope.showRewards = true;
           });
-
-          // Only show the rewards pane if there are rewards left to complete.
-          if(rewardsComplete != 3) $scope.showRewards = true;
         }
       );
     }

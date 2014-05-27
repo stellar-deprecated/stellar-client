@@ -5,18 +5,173 @@ $icon-font-path: "../bower_components/bootstrap-sass-official/vendor/assets/font
 // endbower
 
 @import "color-palette.scss";
+@import "fonts.scss";
 
+@import "alpha.scss";
+@import "login.scss";
 @import "dashboard.scss";
 @import "registration.scss";
 @import "transactionHistory.scss";
 @import "reward-pane.scss";
 
 body {
+  height: 100%;
   width: 65%;
   margin-left: auto;
   margin-right: auto;
   padding-top: 89px;
-  padding-bottom: 20px;
+  padding-bottom: 70px;
+  color: $dark-grey;
+}
+
+.stellar-form {
+  margin-top: 0;
+
+  .form-group {
+    margin-top: 0;
+    margin-bottom: 5px;
+
+    .errors {
+      height: 40px;
+
+      .tip {
+        font-family: $avenir-heavy;
+        font-size: 14px;
+        background-color: $error;
+        color: white;
+        top: -5px;
+        right: 7px;
+        line-height: 32px;
+        height: 32px;
+        padding: 0 12px;
+        text-align: center;
+        margin-right: 15px;
+        border-radius: 2px;
+        @include transition(opacity 200ms ease-in-out);
+
+        &:empty {
+          opacity: 0;
+        }
+
+        &:before {
+          border: solid;
+          border-color: $error transparent;
+          border-width: 6px 6px 0 6px;
+          bottom: -6px;
+          content: "";
+          left: 26px;
+          position: absolute;
+        }
+
+        &.success {
+          background-color: $success;
+
+          &:before {
+            border-color: $success transparent;
+          }
+        }
+      }
+    }
+
+    label {
+      font-family: $avenir-heavy;
+      font-weight: normal;
+      font-size: 15px;
+      line-height: 42px;
+    }
+
+    input {
+      height: 42px;
+      border-radius: 2px;
+      color: $dark-grey;
+
+      &:focus {
+        box-shadow: none;
+        border-color: $stellar-blue;
+
+        + i {
+          color: $stellar-blue;
+        }
+      }
+
+      &.error {
+        border-color: $error;
+
+        &:focus {
+          border-color: $error;
+
+          + i {
+            color: $error;
+          }
+        }
+      }
+    }
+
+    .tip {
+      font-family: $avenir-book;
+      font-size: 14px;
+      font-weight: normal;
+      color: $info-grey;
+      line-height: 42px;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 30px;
+      margin-bottom: 50px;
+      font-family: $avenir-heavy;
+      font-size: 17px;
+    }
+  }
+}
+
+.stellar-button {
+  height: 45px;
+  font-family: $avenir-heavy;
+  font-size: 17px;
+  color: $info-grey;
+  background-color: $white-grey;
+  border-bottom-color: $grey;
+  border-radius: 2px;
+  box-shadow: 0 -1px 0 0 $light-grey inset;
+  @include transition(border-color 200ms ease-in-out,
+                      background-color 200ms ease-in-out,
+                      color 200ms ease-in-out);
+
+  &:hover {
+    border-color: $stellar-blue;
+    background-color: $white-grey;
+    color: $stellar-blue;
+
+    i {
+      color: $stellar-blue;
+    }
+  }
+
+  &:focus {
+    outline: none;
+    background-color: $white-grey;
+    color: $dark-grey;
+
+    &:hover {
+      color: $stellar-blue;
+    }
+  }
+}
+
+.right-inner-addon {
+  position: relative;
+}
+.right-inner-addon input {
+  padding-right: 30px;
+}
+.right-inner-addon i {
+  position: absolute;
+  right: 2px;
+  padding: 10px 12px;
+  pointer-events: none;
+  font-size: 17px;
+  color: $info-grey;
 }
 
 .ng-cloak, .ng-hide {
@@ -28,6 +183,25 @@ body {
   left: auto;
   right: auto;
 
+  ul {
+    font-family: $avenir-medium;
+    font-size: 15px;
+
+    a {
+      margin-top: 3px;
+      padding: 7px 24px;
+      @include transition(color 200ms ease-in-out);
+
+      &:hover {
+        color: $stellar-blue !important;
+      }
+    }
+
+    .sign-up {
+      border: 1px solid $grey-border;
+    }
+  }
+
   & > div {
     padding: 20px 105px 15px 105px;
     border-top: 3px solid $stellar-blue;
@@ -37,14 +211,121 @@ body {
 
   .navbar-brand {
     color: #09B5E5;
-    font-size: 24px;
-    font-weight: bold;
+    font-family: $avenir-black;
+    font-size: 26px;
+
+    &:hover {
+      color: #09B5E5;
+    }
   }
 }
 
 .client-container {
-  & > div {
-    padding: 15px 105px;
-    border-bottom: 1px solid $grey-border;
+  > div {
+    > .title {
+      font-size: 21px;
+      padding-top: 15px;
+      padding-bottom: 20px;
+      margin-top: 5px;
+    }
+
+    > * {
+      padding: 0 105px;
+
+      &:not(:last-child){
+        border-bottom: $grey-border-bottom;
+      }
+    }
+  }
+}
+
+.glyphicon {
+  font-size: 12pt;
+  color: $info-grey;
+  @include transition(color 200ms ease-in-out);
+
+  &.glyphicon-remove {
+    color: $error;
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spin {
+  @include transform-origin(51% 48%);
+  animation-duration: 500ms;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  animation-name: spin;
+}
+
+.input-icon-wrapper {
+  position: relative;
+
+  .glyphicon {
+    font-size: 10pt;
+    padding: 14px 12px;
+    position: absolute;
+    right: 0px;
+  }
+
+  input {
+    padding-right: 30px;
+  }
+}
+
+.wrapper {
+  min-height: 100%;
+  height: auto !important;
+  height: 100%;
+  margin: 0 auto -70px;
+}
+
+.footer {
+  left: auto;
+  right: auto;
+  height: 70px;
+  background-color: $white-grey;
+  background-image: url(../images/rainbow.png);
+  background-repeat: repeat-x;
+  margin: 0 15px;
+  padding: 25px 105px;
+
+  .summary {
+    color: $info-grey;
+    font-size: 14px;
+    display: inline-block;
+
+    i {
+      font-size: 24px;
+      vertical-align: middle;
+      margin-top: -6px;
+      margin-right: 6px;
+    }
+  }
+
+  .links {
+    display: inline-block;
+    float: right;
+
+    a {
+      margin-left: 20px;
+      font-size: 13px;
+      color: $info-grey;
+      @include transition(color 200ms ease-in-out);
+
+      &:hover {
+        color: $stellar-blue;
+        text-decoration: none;
+      }
+    }
   }
 }

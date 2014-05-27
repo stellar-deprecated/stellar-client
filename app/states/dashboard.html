@@ -1,18 +1,26 @@
 <div class="dashboard" ng-controller="DashboardCtrl">
-    <div class="row">
+    <div class="row controls">
         <div class="col-md-3">
-            <a ng-click="toggleReceive()">Receive stellars</a>
+            <img src="images/wallet.png"><br>
+            <button class="stellar-button btn btn-default" ng-click="toggleReceive()">
+                <i class="glyphicon glyphicon-download"></i>
+                Receive stellars
+            </button>
         </div>
-        <div class="col-md-6">
-            <span class="dash-balance" rp-tooltip="{{$root.balance  | rpamount}}  (reserve: {{ $root.reserve  | rpamount }} XTR)">{{$root.balance | rpamount:{rel_precision: 0} }}</span><br>
+        <div class="col-md-6 dash-balance-container">
+            <span class="dash-balance" rp-tooltip="{{$root.balance  | rpamount}}  (reserve: {{ $root.reserve  | rpamount }} XTR)" ng-bind-html="$root.balance | rpamount:{rel_precision: 0} | shrinkText:84:12"></span><br>
             <span class="dash-balance-info">Current Balance <b>Stellars</b></span>
         </div>
         <div class="col-md-3">
-            <a ng-click="toggleSend()">Send stellars</a>
+            <img src="images/rocket.png"><br>
+            <button class="stellar-button btn btn-default" ng-click="toggleSend()">
+                <i class="glyphicon glyphicon-upload"></i>
+                Send stellars
+            </button>
         </div>
     </div>
-    <div ng-include="'templates/send.html'"></div>
-    <div ng-include="'templates/receive.html'"></div>
+    <div class="send-container" ng-include="'templates/send.html'" ng-show="tab==='send'"></div>
+    <div class="receive-container" ng-include="'templates/receive.html'" ng-show="$root.tab==='receive'"></div>
 </div>
 <reward-pane></reward-pane>
 <div ng-include="'templates/transaction-history.html'"></div>
