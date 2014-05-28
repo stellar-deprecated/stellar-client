@@ -16,11 +16,14 @@ sc.controller('TransactionHistoryCtrl', ['$scope', 'stNetwork', 'ngTableParams',
       date: 'asc'
     }
   }, {
-    total: ($scope.history || []).length,
+    total: $scope.history.length,
     getData: function($defer, params) {
-      var transactions = ($scope.history || []);
-      var data = params.sorting() ? $filter('orderBy')(transactions, params.orderBy()) : transactions;
+      var data = params.sorting() ? $filter('orderBy')($scope.history, params.orderBy()) : $scope.history;
       $defer.resolve(data.slice((params.page() - 1) * params.count(), params.page() * params.count()));
     }
+  });
+
+  $scope.$on('$paymentNotification', function(){
+    $scope.tableParams.reload();
   });
 }]);

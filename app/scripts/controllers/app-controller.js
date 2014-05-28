@@ -9,6 +9,9 @@ var sc = angular.module('stellarClient');
  */
 sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', function($scope, $rootScope, $network) {
 
+    $rootScope.balance=0;
+    $scope.events = [];
+    $scope.history = [];
 
     var account;
 
@@ -214,6 +217,7 @@ sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', function($scope, $r
                 processedTxn.tx_result === "tesSUCCESS" &&
                 processedTxn.transaction) {
                 $scope.history.unshift(processedTxn);
+                $scope.$broadcast('$paymentNotification', transaction);
             }
 
             // Update Ripple lines
