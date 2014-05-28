@@ -22,10 +22,13 @@
     }
 
     tr.tx {
+      font-family: $avenir-medium;
+
       td {
         line-height: 32px;
         padding: 16px 8px;
         font-size: 16px;
+        white-space: nowrap;
 
         i {
           font-size: 20px;
@@ -44,12 +47,13 @@
 
         .type {
           text-transform: uppercase;
-          font-size: 11px;
-          letter-spacing: 4px;
+          font-size: 13px;
+          letter-spacing: 3px;
         }
 
         &.direction {
           color: $grey;
+          text-align: center;
         }
 
         &.other-party {
@@ -58,21 +62,16 @@
           .avatar {
             width: 40px;
             height: 40px;
+            display: inline-block;
+            vertical-align: middle;
             background-color: $grey;
             border-radius: 40px;
-          }
-        }
+            overflow: hidden;
+            margin-right: 10px;
 
-        &.view-link {
-          text-align: right;
-
-          a {
-            color: $dark-grey;
-            @include transition(color 200ms ease-in-out);
-
-            &:hover {
-              color: $stellar-blue;
-              text-decoration: none;
+            img {
+              width: 40px;
+              height: 40px;
             }
           }
         }

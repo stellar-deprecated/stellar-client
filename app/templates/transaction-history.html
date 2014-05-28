@@ -5,9 +5,9 @@
             <colgroup>
                 <col width="250px">
                 <col width="225px">
-                <col width="150px">
-                <col width="125px">
-                <col width="400px">
+                <col width="200px">
+                <col width="100px">
+                <col width="450px">
             </colgroup>
             <tr class="tx" ng-repeat="tx in $data">
                 <td data-title="'Type'">
@@ -15,10 +15,12 @@
                     <span class="type">{{ tx.transaction.type }}</span>
                 </td>
                 <td data-title="'Date'" sortable="'date'" am-time-ago="tx.date"></td>
-                <td data-title="'Amount'" sortable="'transaction.amount'">{{ tx.transaction.amount.to_human() }} Stellars</td>
+                <td data-title="'Amount'" sortable="'transaction.amount'">{{ tx.transaction.amount.to_human() }} STX</td>
                 <td class="direction">{{ tx.transaction.type === 'sent' ? 'to' : 'from' }}</td>
                 <td class="other-party">
-                    <div class="avatar"></div>
+                    <div class="avatar">
+                        <img src="http://www.gravatar.com/avatar/" />
+                    </div>
                     <span class="address">{{ tx.transaction.counterparty }}</span>
                 </td>
             </tr>
