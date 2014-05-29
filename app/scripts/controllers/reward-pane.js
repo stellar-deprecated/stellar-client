@@ -20,16 +20,15 @@ sc.controller('RewardPaneCtrl', ['$scope', 'session', 'bruteRequest', function (
     title: 'Authenticate with Facebook',
     message: 'Earn a reward by verifying your Stellar account with Facebook.',
     info: 'You will unlock...',
-    start: function() {
-      console.log("fbAuth");
-      FB.getLoginStatus(function (response) {
-        if (response.status === 'connected') {
-          $scope.FBID = response.authResponse.userID;
-          $scope.FBAccessToken = response.authResponse.accessToken;
-          claim();
-        } else FB.login(handleFBSessionResponse, {scope: 'read_stream'});
-      });
-    }
+    start: function(){
+      var username = session.get('username');
+      var updateToken = session.get('blob').get('updateToken');
+      fbLoginStart(username, updateToken, fbAction.success, fbAction.error);
+    },
+    success: function(){
+      $scope.$apply(function(){ $scope.rewards[0].status = "complete"; });
+    },
+    error: function(){}
   };
 
   var emailAction = {
@@ -52,69 +51,6 @@ sc.controller('RewardPaneCtrl', ['$scope', 'session', 'bruteRequest', function (
     info: 'You have unlocked rewards...',
     start: function() {}
   };
-
-
-  // handle a session response from any of the auth related calls
-  function handleFBSessionResponse() {
-
-    FB.getLoginStatus(function (response) {
-      if (response.status === 'connected') {
-        // the user is logged in and has authenticated your
-        // app, and response.authResponse supplies
-        // the user's ID, a valid access token, a signed
-        // request, and the time the access token
-        // and signed request each expire
-        $scope.FBID = response.authResponse.userID;
-        $scope.FBAccessToken = response.authResponse.accessToken;
-        claim();
-
-      } else if (response.status === 'not_authorized') {
-        // the user is logged in to Facebook,
-        // but has not authenticated your app
-      } else {
-        // the user isn't logged in to Facebook.
-      }
-    });
-
-  }
-
-  function claim() {
-    $.post(Options.API_SERVER + "/claim/claim", {  username: session.get('username'),
-        updateToken: session.get('blob').get('updateToken'),
-        fbAccessToken: $scope.FBAccessToken,
-        fbID: $scope.FBID },
-      null, "json").done(function (response) {
-        $scope.$apply(function () {
-          console.log(response.status);
-          if (response.error)response.status = 'error';
-          // error, nameTaken, alreadyClaimed, newFB, queued, success
-          switch (response.status) {
-            case 'alreadyClaimed':
-              $scope.rewards[0].status = "complete";
-              break;
-            case 'newFB':  // user is too new to FB
-              //console.log("New to FB"); // TODO
-              break;
-            case 'queued':
-              break;
-            case 'success':
-              $scope.rewards[0].status = "complete";
-              break;
-            case 'error':
-            default:
-              break;
-          }
-        });
-      });
-  }
-
-  function verifyEmail() {
-
-  }
-
-  function sendStellars() {
-
-  }
 
   function getPlaceInLine() {
     var placeInLineRequest = new bruteRequest({
@@ -157,9 +93,7 @@ sc.controller('RewardPaneCtrl', ['$scope', 'session', 'bruteRequest', function (
   ];
 
   function computeRewardProgress() {
-    var statuses = $scope.rewards.map(function (reward) {
-      return reward.status;
-    })
+    var statuses = $scope.rewards.map(function (reward) { return reward.status; });
     $scope.rewardProgress = statuses.sort(function (a, b) {
       var order = ['complete', 'pending', 'incomplete'];
       return order.indexOf(a) - order.indexOf(b);

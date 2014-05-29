@@ -59,7 +59,9 @@
       border: 1px solid rgba($stellar-blue, 0);
       position: relative;
       overflow: visible;
-      @include transition(border-color 350ms ease-in-out);
+      @include transition(border-color 350ms ease-in-out,
+                          color 350ms ease-in-out,
+                          background-color 350ms ease-in-out);
 
       i {
         padding-right: 20px;
