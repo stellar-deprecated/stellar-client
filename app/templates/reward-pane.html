@@ -8,9 +8,23 @@
                 </li>
             </ul>
             <ul class="rewards">
-                <li ng-repeat="reward in rewards" ng-class="reward.status"  ng-click="reward.action()">
-                    <i ng-class="rewardStatusIcons[reward.status]"></i>
-                    {{ reward.message }}
+                <li ng-repeat="reward in rewards" ng-class="reward.status" click-outside="closeReward()" selected-index="selectedReward" index="{{ $index }}">
+                    <div class="reward-body" ng-click="toggleReward($index)">
+                        <i ng-class="rewardStatusIcons[reward.status]"></i>
+                        <span>{{ reward.message }}</span>
+                    </div>
+                    <div class="pop-action" ng-class="{hide: selectedReward !== $index}">
+                        <div class="pop-top">
+                            <p class="title">{{ reward.action.title }}</p>
+                            <p class="message">{{ reward.action.message }}</p>
+                        </div>
+                        <div class="pop-bottom">
+                            <div class="switch" ng-click="reward.action.start()">
+                                <div class="knob"></div>
+                            </div>
+                            <span class="info">{{ reward.action.info }}</span>
+                        </div>
+                    </div>
                 </li>
             </ul>
         </div>
