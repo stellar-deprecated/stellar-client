@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('RewardPaneCtrl', ['$scope', 'session', 'bruteRequest', function ($scope, session, bruteRequest) {
+sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteRequest', function ($scope, $rootScope, session, bruteRequest) {
   $scope.showRewards = false;
 
   $scope.selectedReward = null;
@@ -35,8 +35,20 @@ sc.controller('RewardPaneCtrl', ['$scope', 'session', 'bruteRequest', function (
     title: 'Setup account recovery',
     message: 'Earn a reward by verifying an email address you can use to recover your account.',
     info: 'You will unlock...',
-    start: function() {}
+    start: function() {
+      var email = session.get('blob').get('email');
+      if(!email) addEmailPrompt();
+      else verifyEmailPrompt();
+    }
   };
+
+  function addEmailPrompt(){
+    $rootScope.overlay = 'addEmail';
+  }
+
+  function verifyEmailPrompt(){
+    $rootScope.overlay = 'verifyEmail';
+  }
 
   var sendAction = {
     title: 'Send some STX',

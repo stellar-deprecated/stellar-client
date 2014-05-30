@@ -209,10 +209,12 @@ module.directive('rpErrorValid', [function() {
     };
 }]);
 
-module.directive('clickOutside', ['$document', function ($document) {
+module.directive('clickOutside', ['$rootScope', '$document', function ($rootScope, $document) {
   return {
     link: function postLink(scope, element, attrs) {
       var onClick = function (event) {
+        if($rootScope.overlay) return;
+
         var isChild = element.has(event.target).length > 0;
         var isSelf = element[0] == event.target;
         var isInside = isChild || isSelf;

@@ -13,6 +13,7 @@ $icon-font-path: "../bower_components/bootstrap-sass-official/vendor/assets/font
 @import "registration.scss";
 @import "transactionHistory.scss";
 @import "reward-pane.scss";
+@import "overlays.scss";
 
 body {
   height: 100%;
@@ -155,6 +156,27 @@ body {
 
     &:hover {
       color: $stellar-blue;
+    }
+  }
+
+  &.cancel {
+    background-color: $light-grey;
+
+    &:hover {
+      border-color: $error;
+      color: $error;
+
+      i {
+        color: $error;
+      }
+    }
+
+    &:focus {
+      outline: none;
+
+      &:hover {
+        color: $error;
+      }
     }
   }
 }
