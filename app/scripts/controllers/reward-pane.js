@@ -4,6 +4,8 @@ var sc = angular.module('stellarClient');
 
 sc.controller('RewardPaneCtrl', ['$scope','session','bruteRequest',  function ( $scope, session, bruteRequest) {
       $scope.showRewards = false;
+    $scope.showEmailVerify=false;
+
 
         function fbAuth()
         {
@@ -73,9 +75,35 @@ sc.controller('RewardPaneCtrl', ['$scope','session','bruteRequest',  function ( 
             });
         }
 
+        function toggleEmailVerify()
+        {
+            $scope.showEmailVerify = !$scope.showEmailVerify;
+        }
+
         function verifyEmail()
         {
+            var placeInLineRequest = new bruteRequest({
+                url: Options.API_SERVER + '/claim/placeInLine',
+                type: 'GET',
+                dataType: 'json'
+            });
+            // Load the status of the user's rewards.
+            placeInLineRequest.send(
+                {
+                    username: session.get('username')
+                },
+                //Success
+                function(result) {
+                    $scope.$apply(function () {
+                        if (result.days > 1)
+                            $scope.rewards[0].message = "You are on the waiting list. You will get your stellars in about " + result.days + " days.";
+                        else $scope.rewards[0].message = "You are on the waiting list. You should get your stellars tomorrow.";
 
+                        $scope.rewards[0].action = function () {
+                        };
+                    });
+                }
+            );
         }
 
         function sendStellars()
@@ -119,7 +147,7 @@ sc.controller('RewardPaneCtrl', ['$scope','session','bruteRequest',  function ( 
 
       $scope.rewards = [
         {message: 'Verify your identity by connecting with Facebook', status: 'incomplete', action: fbAuth},
-        {message: 'Enable account recovery by verifying your email address', status: 'incomplete', action: verifyEmail},
+        {message: 'Enable account recovery by verifying your email address', status: 'incomplete', action: toggleEmailVerify},
         {message: 'Send stellars to someone', status: 'incomplete', action: sendStellars},
         {message: 'Create a new wallet', status: 'complete', action: function(){ } }
       ];
