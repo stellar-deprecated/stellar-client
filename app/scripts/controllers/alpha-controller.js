@@ -7,7 +7,7 @@ sc.controller('AlphaCtrl', function ($scope, $state, session,  bruteRequest) {
   $scope.alphaCodeErrors = [];
 
   var requestAlpha = new bruteRequest({
-    url: Options.API_SERVER + '/checkAlphaCode',
+    url: Options.API_SERVER + '/user/checkAlphaCode',
     type: 'POST',
     dataType: 'json'
   });

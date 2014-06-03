@@ -76,6 +76,7 @@ module.directive('rpErrors', [function() {
                     if(!field)
                     {
                         console.log('field null?: '+fieldName);
+                        return;
                     }
                     if (selectedElement) {
                         selectedScope.$destroy();
