@@ -13,7 +13,7 @@
                         <i ng-class="rewardStatusIcons[reward.status]"></i>
                         <span>{{ reward.message }}</span>
                     </div>
-                    <div class="pop-action" ng-if="reward.status !== 'complete'" ng-class="{hide: selectedReward !== $index}">
+                    <div class="pop-action" ng-if="reward.status == 'incomplete'" ng-class="{hide: selectedReward !== $index}">
                         <div class="pop-top">
                             <p class="title">{{ reward.action.title }}</p>
                             <p class="message">{{ reward.action.message }}</p>

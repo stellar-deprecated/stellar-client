@@ -22,7 +22,8 @@
       display: inline-block;
       padding: 5px 70px;
 
-      &.complete {
+      &.complete,
+      &.pending {
         background-color: #DBF2F8;
       }
 
@@ -69,8 +70,7 @@
         @include transition(color 200ms ease-in-out);
       }
 
-      &.incomplete,
-      &.pending {
+      &.incomplete {
         background-color: white;
 
         i {
@@ -86,7 +86,8 @@
         }
       }
 
-      &.complete {
+      &.complete,
+      &.pending {
         background-color: #F9F9F9;
         color: $info-grey;
 

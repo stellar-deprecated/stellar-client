@@ -15,7 +15,7 @@
 
   .prompt {
     $width: 540px;
-    $height: 300px;
+    $height: 330px;
     width: $width;
     height: $height;
     background-color: $white-grey;
@@ -61,6 +61,13 @@
           width: 270px;
           float: right;
         }
+      }
+
+      .loading {
+        display: inline-block;
+        text-align: center;
+        width: 270px;
+        float: right;
       }
     }
   }

@@ -37,18 +37,13 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
     info: 'You will unlock...',
     start: function() {
       var email = session.get('blob').get('email');
-      if(!email) addEmailPrompt();
-      else verifyEmailPrompt();
+      $rootScope.overlay = email ? 'verifyEmail' : 'addEmail';
+      $rootScope.$on('emailVerified', emailAction.success);
+    },
+    success: function(){
+      $scope.rewards[1].status = "complete";
     }
   };
-
-  function addEmailPrompt(){
-    $rootScope.overlay = 'addEmail';
-  }
-
-  function verifyEmailPrompt(){
-    $rootScope.overlay = 'verifyEmail';
-  }
 
   var sendAction = {
     title: 'Send some STX',

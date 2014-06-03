@@ -6,11 +6,15 @@
         <p class="message">This email address with be used to recover your account if you ever forget your password</p>
         <form role="form" class="stellar-form" ng-controller="AddEmailCtrl">
             <div class="form-group">
-                <input id="email" type="text" class="form-control" placeholder="Email Address" ng-model="email">
+                <div class="errors col-sm-12">
+                    <div class="tip col-sm-offset-6 col-sm-6">{{ errors.join('\n') }}</div>
+                </div>
+                <input id="email" type="text" class="form-control" ng-class="{error: errors.length}" placeholder="Email Address" ng-model="email">
             </div>
             <div class="form-group">
                 <button class="cancel stellar-button btn btn-default" ng-click="close()">Cancel</button>
-                <button type="submit" class="submit stellar-button btn btn-default" ng-click="addEmail()">Submit</button>
+                <button type="submit" class="submit stellar-button btn btn-default" ng-hide="loading" ng-click="addEmail()">Submit</button>
+                <button class="loading submit stellar-button btn btn-default ng-hide" ng-show="loading" disabled>Loading...</button>
             </div>
         </form>
     </div>
@@ -21,11 +25,15 @@
         </p>
         <form role="form" class="stellar-form" ng-controller="VerifyEmailCtrl">
             <div class="form-group">
-                <input id="emailActivationCode" type="text" class="form-control" placeholder="Email Activation Code" ng-model="emailActivationCode">
+                <div class="errors col-sm-12">
+                    <div class="tip col-sm-offset-6 col-sm-6">{{ errors.join('\n') }}</div>
+                </div>
+                <input id="emailActivationCode" type="text" class="form-control" ng-class="{error: errors.length}" placeholder="Email Activation Code" ng-model="emailActivationCode">
             </div>
             <div class="form-group">
                 <button class="cancel stellar-button btn btn-default" ng-click="close()">Cancel</button>
-                <button type="submit" class="submit stellar-button btn btn-default" ng-click="verifyEmail()">Submit</button>
+                <button type="submit" class="submit stellar-button btn btn-default" ng-hide="loading" ng-click="verifyEmail()">Submit</button>
+                <button class="loading submit stellar-button btn btn-default ng-hide" ng-show="loading" disabled>Loading...</button>
             </div>
         </form>
     </div>
