@@ -33,7 +33,11 @@ sc.service('session', function($cacheFactory, KeyGen, stNetwork, DataBlob ){
     // Get the blob from the session cache.
     var blob = this.get('blob');
 
-    if(Options.PERSISTENT_SESSION) localStorage.blob = JSON.stringify(blob);
+    if(Options.PERSISTENT_SESSION){
+      localStorage.blob = JSON.stringify(blob);
+      localStorage.blobKey = JSON.stringify(this.get('blobKey'));
+      localStorage.blobID = JSON.stringify(this.get('blobID'));
+    }
 
     // Encrypt the blob and upload it to the server.
     $.ajax({
@@ -71,11 +75,18 @@ sc.service('session', function($cacheFactory, KeyGen, stNetwork, DataBlob ){
 
   Session.prototype.loginFromStorage = function($scope){
     var blobData = localStorage.blob;
+    var blobKey = localStorage.blobKey;
+    var blobID = localStorage.blobID;
 
-    if(blobData) {
+    if(blobData && blobKey && blobID) {
       this.put('blob', new DataBlob(JSON.parse(blobData)));
+      this.put('blobKey', JSON.parse(blobKey));
+      this.put('blobID', JSON.parse(blobID));
       this.start();
-        $scope.$broadcast('$idAccountLoad', {account: this.get('blob').get('packedKeys').address, secret: this.get('blob').get('packedKeys').secret});
+
+      var account = this.get('blob').get('packedKeys').address;
+      var secret = this.get('blob').get('packedKeys').secret;
+      $scope.$broadcast('$idAccountLoad', {account: account, secret: secret});
     }
   };
 
