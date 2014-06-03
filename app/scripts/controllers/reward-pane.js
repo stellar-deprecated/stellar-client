@@ -49,7 +49,12 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
     title: 'Send some STX',
     message: 'Earn a reward by sending STX to someone.',
     info: 'You will unlock...',
-    start: function() {}
+    start: function() {
+      $rootScope.tab = 'send';
+      scrollTo(scrollX, 188);
+
+      // TODO: Claim the reward once the user has sent STX.
+    }
   };
 
   var createAction = {
