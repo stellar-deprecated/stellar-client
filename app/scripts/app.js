@@ -48,7 +48,6 @@ stellarClient.run(function($rootScope, $state, session){
         // If the user has persistent login enabled, try to login from local storage.
         if(Options.PERSISTENT_SESSION && !session.get('loggedIn')){
           session.loginFromStorage($rootScope);
-          session.start();
 
           if(session.get('loggedIn')){
             $state.transitionTo('dashboard');

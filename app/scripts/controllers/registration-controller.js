@@ -168,7 +168,7 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, bruteRequest
             console.log(response.status);
             switch(response.status)
             {
-              case 'success':
+                case 'success':
                 // Create the initial blob and insert the user's data.
                 var blob = new DataBlob();
                 blob.put('username', $scope.username);
@@ -192,6 +192,9 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, bruteRequest
                 // Encrypt the blob and send it to the server.
                 // TODO: Handle failures when trying to save the blob.
                 session.storeBlob();
+
+                // Connect to the websocket server.
+                $scope.$broadcast('$idAccountLoad', {account: packedKeys.address, secret: packedKeys.sec});
 
                 // Take the user to the dashboard.
                 $state.go('dashboard');
