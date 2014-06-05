@@ -3,7 +3,7 @@
 var sc = angular.module('stellarClient');
 
 sc.controller('RewardPaneCtrl', ['$scope','session','bruteRequest',  function ( $scope, session, bruteRequest) {
-      $scope.showRewards = false;
+    $scope.showRewards = false;
     $scope.showEmailVerify=false;
 
 
@@ -163,7 +163,7 @@ sc.controller('RewardPaneCtrl', ['$scope','session','bruteRequest',  function ( 
     computeRewardProgress();
 
       var rewardsRequest = new bruteRequest({
-          url: Options.API_SERVER + '/claim/rewards',
+          url: Options.API_SERVER + '/user/rewards',
           type: 'GET',
           dataType: 'json'
       });
@@ -175,10 +175,11 @@ sc.controller('RewardPaneCtrl', ['$scope','session','bruteRequest',  function ( 
           updateToken: session.get('blob').get('updateToken')
         },
         //Success
-        function(rewardsGiven){
+        function(results){
             // Only show the rewards pane if there are rewards left to complete.
             //$scope.showRewards = true;
             var count=0;
+            var rewardsGiven = results.rewards || [];
               // Update the status of the user's rewards.
               rewardsGiven.forEach(function(reward){
                 // RewardTypes are 1-based indexed in the server.
