@@ -58,6 +58,96 @@
     }
   }
 
+  .tx-tip-container {
+    border-bottom: none !important;
+    white-space: nowrap;
+
+    > div {
+      margin-top: -36px;
+      text-align: center;
+      position: relative;
+      height: 0;
+    }
+
+    .tx-tip {
+      font-family: $avenir-medium;
+      font-size: 20px;
+      color: $dark-grey;
+      background-color: white;
+      right: 7px;
+      line-height: 32px;
+      display: inline-block;
+      margin: 6px auto 0 auto;
+      border-radius: 4px;
+      border: 1px solid $grey-border;
+      cursor: default;
+
+      &:before {
+        border: solid;
+        border-color: $grey-border transparent;
+        border-width: 0 10px 10px 10px;
+        bottom: -7px;
+        content: "";
+        position: absolute;
+        left: calc(50% - 5px);
+      }
+
+      &:after {
+        border: solid;
+        border-color: white transparent;
+        border-width: 0 10px 10px 10px;
+        bottom: -8px;
+        content: "";
+        position: absolute;
+        left: calc(50% - 5px);
+      }
+
+      div {
+        display: inline-block;
+        line-height: 60px;
+      }
+
+      .tx-type {
+        background-color: $success;
+        border: 1px solid $success;
+
+        i {
+          font-size: 28px;
+          vertical-align: middle;
+          padding: 0 10px;
+          color: white;
+        }
+      }
+
+      .tx-message {
+        padding: 0 20px;
+        background-color: white;
+
+        .amount {
+          font-family: $avenir-black;
+        }
+      }
+    }
+  }
+
+  .tx-popup-container {
+    text-align: center;
+    border-bottom: none ;
+
+    .tx-popup {
+      background-color: white;
+      text-align: left;
+      display: inline-block;
+      position: absolute;
+      border-radius: 4px;
+      overflow: hidden;
+      border: 1px solid $grey-border;
+      margin: 0 auto;
+
+
+    }
+  }
+
   .send-container {
     .send-pane {
       background-color: transparent;
