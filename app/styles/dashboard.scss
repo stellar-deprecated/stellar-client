@@ -12,7 +12,6 @@
     > div {
       padding-left: 0;
       padding-right: 0;
-      width: auto;
 
       &.dash-balance-container {
         margin-left: auto;
@@ -48,6 +47,7 @@
 
     button {
       padding: 6px 24px;
+      width: 100%;
 
       i {
         margin-right: 6px;

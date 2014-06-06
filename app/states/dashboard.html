@@ -4,18 +4,18 @@
             <img src="images/wallet.png"><br>
             <button class="stellar-button btn btn-default" ng-click="toggleReceive()">
                 <i class="glyphicon glyphicon-download"></i>
-                Receive stellars
+                Receive
             </button>
         </div>
         <div class="col-md-6 dash-balance-container">
-            <span class="dash-balance" rp-tooltip="{{$root.balance  | rpamount}}  (reserve: {{ $root.reserve  | rpamount }} XTR)" ng-bind-html="$root.balance | rpamount:{rel_precision: 0} | shrinkText:84:12"></span><br>
+            <span class="dash-balance" rp-tooltip="{{$root.balance  | rpamount}}  (reserve: {{ $root.reserve  | rpamount }} XTR)" ng-bind-html="$root.balance | rpamount:{rel_precision: 0} | shrinkText:84:8"></span><br>
             <span class="dash-balance-info">Current Balance <b>Stellars</b></span>
         </div>
         <div class="col-md-3">
             <img src="images/rocket.png"><br>
             <button class="stellar-button btn btn-default" ng-click="toggleSend()">
                 <i class="glyphicon glyphicon-upload"></i>
-                Send stellars
+                Send
             </button>
         </div>
     </div>
