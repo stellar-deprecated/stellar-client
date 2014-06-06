@@ -130,24 +130,6 @@
     }
   }
 
-  .tx-popup-container {
-    text-align: center;
-    border-bottom: none ;
-
-    .tx-popup {
-      background-color: white;
-      text-align: left;
-      display: inline-block;
-      position: absolute;
-      border-radius: 4px;
-      overflow: hidden;
-      border: 1px solid $grey-border;
-      margin: 0 auto;
-
-
-    }
-  }
-
   .send-container {
     .send-pane {
       background-color: transparent;
