@@ -2,25 +2,55 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('DashboardCtrl', function($rootScope, $scope, $state, session, stNetwork) {
+sc.controller('DashboardCtrl', function($rootScope, $scope, $timeout, $state, session, stNetwork) {
   $scope.blob = session.get('blob');
-    $rootScope.tab= 'none';
+    $rootScope.tab = 'none';
+
+    $scope.newTransaction = false;
+    $scope.newTransactionAmount = null;
 
     stNetwork.init();
 
-
-
-
     $scope.toggleSend = function() {
-        //console.log("send");
-        if($rootScope.tab!='send') $rootScope.tab='send';
-        else $rootScope.tab='none';
-    }
+        if ($rootScope.tab!='send') {
+            $rootScope.tab='send';
+        } else {
+            $rootScope.tab='none';
+        }
+    };
 
     $scope.toggleReceive = function() {
-        if($rootScope.tab!='receive') $rootScope.tab='receive';
-        else $rootScope.tab='none';
-    }
+        if ($rootScope.tab!='receive') {
+            $rootScope.tab='receive';
+        } else {
+            $rootScope.tab='none';
+        }
+    };
+
+    var cleanupTimer = null;
+
+    // Show a notification when new transactions are received.
+    $scope.$on('$appTxNotification', function(event, tx){
+        if (tx.type == 'received') {
+            $scope.showTransaction = true;
+            $scope.newTransaction = tx;
+
+            if (cleanupTimer) {
+                $timeout.cancel(cleanupTimer);
+            }
+
+            cleanupTimer = $timeout(function () {
+                $scope.newTransaction = false;
+                cleanupTimer = null;
+            }, 10000);
+        }
+    });
+
+    // Dismiss the transaction notification.
+    $scope.clearNotification = function() {
+        $timeout.cancel(cleanupTimer);
+        $scope.showTransaction = false;
+    };
 });
 
 

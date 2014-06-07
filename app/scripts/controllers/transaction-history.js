@@ -13,7 +13,7 @@ sc.controller('TransactionHistoryCtrl', ['$scope', 'stNetwork', 'ngTableParams',
     page: 1,
     count: 10,
     sorting: {
-      date: 'asc'
+      date: 'desc'
     }
   }, {
     total: $scope.history.length,
