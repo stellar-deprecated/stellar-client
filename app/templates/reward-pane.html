@@ -29,4 +29,10 @@
             </ul>
         </div>
     </div>
+    <div ng-show="showEmailVerify">
+        Enter in the recovery code that was emailed to you:
+        <input type="text" ng-model="recoveryCode" required="required"  />
+        <button  ng-disabled="recoverCode == ''" class="btn btn-default stellar-button" ng-click="verifyEmail()">Verify</button>
+
+    </div>
 </div>

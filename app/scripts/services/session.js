@@ -41,7 +41,7 @@ sc.service('session', function($cacheFactory, KeyGen, stNetwork, DataBlob ){
 
     // Encrypt the blob and upload it to the server.
     $.ajax({
-      url: Options.WALLET_SERVER + '/updateBlob/' + this.get('blobID'),
+      url: Options.WALLET_SERVER + '/wallets/' + this.get('blobID'),
       method: 'POST',
       data: {blob: blob.encrypt(this.get('blobKey'))},
       dataType: 'json'
