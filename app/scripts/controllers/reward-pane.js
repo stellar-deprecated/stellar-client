@@ -45,33 +45,26 @@ sc.controller('RewardPaneCtrl', ['$scope','session','bruteRequest',  function ( 
 
         function claim()
         {
-            $.post(Options.API_SERVER +"/claim/claim", {  username: session.get('username'),
-                                updateToken: session.get('blob').get('updateToken'),
-                                fbAccessToken: $scope.FBAccessToken,
-                                fbID: $scope.FBID },
-                    null, "json").done(function (response) {
+            $.post(Options.API_SERVER +"/claim/facebook", {
+                username: session.get('username'),
+                updateToken: session.get('blob').get('updateToken'),
+                fbAccessToken: $scope.FBAccessToken,
+                fbID: $scope.FBID },
+                null, "json")
+            .done(function (response) {
                 $scope.$apply(function () {
-                console.log(response.status);
-                if(response.error)response.status='error';
-                // error, nameTaken, alreadyClaimed, newFB, queued, success
-                switch(response.status)
-                {
-                    case 'alreadyClaimed':
+                    console.log(response.status);
+                    if (response.status == 'fail') {
+                        if (response.message == 'already claimed') {
+                            $scope.rewards[0].status="complete";
+                        }
+                    } else if (response.status == 'error') {
+                        // internal error
+                    } else {
+                        // success
                         $scope.rewards[0].status="complete";
-                        break;
-                    case 'newFB':  // user is too new to FB
-                        //console.log("New to FB"); // TODO
-                        break;
-                    case 'queued':
-                        break;
-                    case 'success':
-                        $scope.rewards[0].status="complete";
-                        break;
-                    case 'error':
-                    default:
-                        break;
-                }
-            });
+                    }
+                });
             });
         }
 
