@@ -5,6 +5,7 @@ var sc = angular.module('stellarClient');
 sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteRequest', function ($scope, $rootScope, session, bruteRequest) {
   $scope.showRewards = false;
   $scope.selectedReward = null;
+  $rootScope.emailToVerify = session.get('blob').get('email');
 
   $scope.toggleReward = function(index, status){
     if(status !== 'incomplete') return;
@@ -28,7 +29,7 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
     },
     success: function(){
       $scope.$apply(function(){
-          $scope.rewards[0].status = "complete";
+          $scope.rewards[1].status = "complete";
           computeRewardProgress();
           $scope.closeReward();
       });
@@ -40,14 +41,13 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
     message: 'Earn a reward by verifying an email address you can use to recover your account.',
     info: 'You will unlock...',
     template: 'templates/verify-email.html',
-    start: function() {
-    },
     success: function(){
-      $scope.rewards[1].status = "complete";
+      $scope.rewards[2].status = "complete";
       computeRewardProgress();
       $scope.closeReward();
     }
   };
+  $rootScope.$on('emailVerified', emailAction.success);
 
   var sendAction = {
     message: 'Earn a reward by sending STX to someone.',
@@ -100,10 +100,10 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
   };
 
   $scope.rewards = [
+    {title: 'Create a new wallet', status: 'complete', action: createAction},
     {title: 'Get you first stellars.', status: 'incomplete', action: fbAction},
     {title: 'Confirm your email.', status: 'incomplete', action: emailAction},
-    {title: 'Learn to send stellars.', status: 'incomplete', action: sendAction},
-    {title: 'Create a new wallet', status: 'complete', action: createAction}
+    {title: 'Learn to send stellars.', status: 'incomplete', action: sendAction}
   ];
 
   function computeRewardProgress() {
@@ -136,8 +136,7 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
       // Update the status of the user's rewards.
       var rewardsGiven = result.rewards;
       rewardsGiven.forEach(function (reward) {
-        // RewardTypes are 1-based indexed in the server.
-        $scope.rewards[reward.rewardType - 1].status = rewardStatusTypes[reward.status];
+        $scope.rewards[reward.rewardType].status = rewardStatusTypes[reward.status];
         if (reward.status == 1) count++;
         if (reward.status == 0 && reward.rewardType == 1) // this guy is on the waiting list
           getPlaceInLine();

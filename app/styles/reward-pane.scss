@@ -247,6 +247,62 @@
             }
           }
         }
+
+        .verify-email {
+          position: relative;
+          overflow: hidden;
+          height: 152px;
+
+          .add-email-item {
+            left: -110%;
+          }
+
+          .verify-email-item {
+            left: 110%;
+          }
+
+          .add-email-item,
+          .verify-email-item {
+            position: absolute;
+            width: 100%;
+            top: 5px;
+            @include transition(left 350ms ease-in-out);
+
+            &.active {
+              left: 0%;
+            }
+
+            form .form-group {
+              input {
+                margin-bottom: 20px;
+              }
+
+              button {
+                margin: 0 0;
+
+                &:not(:hover) {
+                  color: #474747;
+                }
+
+                &.cancel {
+                  width: 25%;
+                }
+
+                &.submit {
+                  width: calc(75% - 20px);
+                  float: right;
+                }
+              }
+
+              .loading {
+                display: inline-block;
+                text-align: center;
+                width: calc(75% - 20px);
+                float: right;
+              }
+            }
+          }
+        }
       }
 
       .close-reward {
