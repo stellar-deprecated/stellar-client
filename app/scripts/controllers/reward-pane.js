@@ -4,10 +4,11 @@ var sc = angular.module('stellarClient');
 
 sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteRequest', function ($scope, $rootScope, session, bruteRequest) {
   $scope.showRewards = false;
-
   $scope.selectedReward = null;
 
-  $scope.toggleReward = function(index){
+  $scope.toggleReward = function(index, status){
+    if(status !== 'incomplete') return;
+
     if($scope.selectedReward === index) $scope.selectedReward = null;
     else $scope.selectedReward = index;
   };
@@ -17,36 +18,38 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
   };
 
   var fbAction = {
-    title: 'Authenticate with Facebook',
     message: 'Earn a reward by verifying your Stellar account with Facebook.',
     info: 'You will unlock...',
+    template: 'templates/facebook-button.html',
     start: function(){
       var username = session.get('username');
       var updateToken = session.get('blob').get('updateToken');
       fbLoginStart(username, updateToken, fbAction.success, fbAction.error);
     },
     success: function(){
-      $scope.$apply(function(){ $scope.rewards[0].status = "complete"; });
+      $scope.$apply(function(){
+          $scope.rewards[0].status = "complete";
+          computeRewardProgress();
+          $scope.closeReward();
+      });
     },
     error: function(){}
   };
 
   var emailAction = {
-    title: 'Setup account recovery',
     message: 'Earn a reward by verifying an email address you can use to recover your account.',
     info: 'You will unlock...',
+    template: 'templates/verify-email.html',
     start: function() {
-      var email = session.get('blob').get('email');
-      $rootScope.overlay = email ? 'verifyEmail' : 'addEmail';
-      $rootScope.$on('emailVerified', emailAction.success);
     },
     success: function(){
       $scope.rewards[1].status = "complete";
+      computeRewardProgress();
+      $scope.closeReward();
     }
   };
 
   var sendAction = {
-    title: 'Send some STX',
     message: 'Earn a reward by sending STX to someone.',
     info: 'You will unlock...',
     start: function() {
@@ -58,7 +61,6 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
   };
 
   var createAction = {
-    title: 'Create a Stellar account',
     message: 'Enable rewards by registering for a Stellar account',
     info: 'You have unlocked rewards...',
     start: function() {}
@@ -98,10 +100,10 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
   };
 
   $scope.rewards = [
-    {message: 'Verify your identity by connecting with Facebook', status: 'incomplete', action: fbAction},
-    {message: 'Enable account recovery by verifying your email address', status: 'incomplete', action: emailAction},
-    {message: 'Send stellars to someone', status: 'incomplete', action: sendAction},
-    {message: 'Create a new wallet', status: 'complete', action: createAction}
+    {title: 'Get you first stellars.', status: 'incomplete', action: fbAction},
+    {title: 'Confirm your email.', status: 'incomplete', action: emailAction},
+    {title: 'Learn to send stellars.', status: 'incomplete', action: sendAction},
+    {title: 'Create a new wallet', status: 'complete', action: createAction}
   ];
 
   function computeRewardProgress() {
@@ -115,7 +117,7 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
   computeRewardProgress();
 
   var rewardsRequest = new bruteRequest({
-    url: Options.API_SERVER + '/claim/rewards',
+    url: Options.API_SERVER + '/user/rewards',
     type: 'GET',
     dataType: 'json'
   });
@@ -127,11 +129,12 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
       updateToken: session.get('blob').get('updateToken')
     },
     //Success
-    function (rewardsGiven) {
+    function (result) {
       // Only show the rewards pane if there are rewards left to complete.
-      //$scope.showRewards = true;
       var count = 0;
+
       // Update the status of the user's rewards.
+      var rewardsGiven = result.rewards;
       rewardsGiven.forEach(function (reward) {
         // RewardTypes are 1-based indexed in the server.
         $scope.rewards[reward.rewardType - 1].status = rewardStatusTypes[reward.status];

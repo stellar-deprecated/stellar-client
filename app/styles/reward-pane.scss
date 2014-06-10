@@ -11,6 +11,7 @@
 
   .rewardProgress {
     padding-left: 0;
+    width: 100%;
     display: table;
     margin: 10px auto 30px auto;
     border: 1px solid $stellar-blue;
@@ -20,7 +21,9 @@
     li {
       list-style-type: none;
       display: inline-block;
-      padding: 5px 70px;
+      width: 25%;
+      text-align: center;
+      padding: 5px 0;
 
       &.complete,
       &.pending {
@@ -47,156 +50,227 @@
     }
   }
 
-  .rewards {
-    padding-left: 0;
+  .slider-pane {
+    position: relative;
+    overflow: hidden;
+    padding: 1px;
 
-    li {
-      margin: 3px;
-      padding: 0 0;
-      font-family: $avenir-medium;
-      font-size: 20px;
-      list-style-type: none;
-      cursor: pointer;
-      border: 1px solid rgba($stellar-blue, 0);
-      position: relative;
-      overflow: visible;
-      @include transition(border-color 350ms ease-in-out,
-                          color 350ms ease-in-out,
-                          background-color 350ms ease-in-out);
+    .rewards {
+      padding-left: 0;
+      margin-left: -110%;
+      @include transition(margin-left 350ms ease-in-out);
 
-      i {
-        padding-right: 20px;
-        font-size: 20px;
-        @include transition(color 200ms ease-in-out);
+      &.active {
+        margin-left: 0%;
       }
 
-      &.incomplete {
-        background-color: white;
+      li {
+        margin: 3px 0;
+        padding: 0 0;
+        font-family: $avenir-medium;
+        font-size: 20px;
+        list-style-type: none;
+        cursor: pointer;
+        border: 1px solid rgba($stellar-blue, 0);
+        position: relative;
+        overflow: visible;
+        white-space: nowrap;
+        @include transition(border-color 350ms ease-in-out,
+                color 350ms ease-in-out,
+                background-color 350ms ease-in-out);
 
         i {
-          color: $grey;
+          padding-right: 20px;
+          font-size: 20px;
+          @include transition(color 200ms ease-in-out);
         }
 
-        &:hover {
-          border: 1px solid rgba($stellar-blue, 1);
+        &.incomplete {
+          background-color: white;
 
           i {
-            color: $stellar-blue;
-          }
-        }
-      }
-
-      &.complete,
-      &.pending {
-        background-color: #F9F9F9;
-        color: $info-grey;
-
-        i {
-          color: $info-grey;
-        }
-
-        &:hover {
-          border: 1px solid rgba($grey, 0.5);
-        }
-      }
-
-      .reward-body {
-        padding: 28px 30px;
-      }
-
-      .pop-action {
-        border: 1px solid #D0D0D0;
-        border-radius: 3px;
-        width: 450px;
-        position: absolute;
-        right: 50px;
-        top: -10px;
-        z-index: 99;
-        cursor: default;
-        box-shadow: 0 0 5px 2px rgba($grey, 0.2);
-        @include transition(opacity 200ms ease-in-out);
-
-        & > div {
-          padding: 15px 35px;
-        }
-
-        &:before,
-        &:after {
-          content: "";
-          position: absolute;
-          border-top: 10px solid transparent;
-          border-bottom: 10px solid transparent;
-          top: 42px;
-          left: 0;
-          margin-left: -10px;
-        }
-
-        &:before {
-          border-right: 10px solid #D0D0D0;
-        }
-
-        &:after {
-          border-right: 10px solid #FFF6D5;
-          padding-left: 2px;
-          z-index: 1;
-        }
-
-        .pop-top {
-          background-color: #FFF6D5;
-          border-top-left-radius: 3px;
-          border-top-right-radius: 3px;
-
-          .title {
-            font-family: $avenir-heavy;
-            padding-top: 10px;
-            padding-bottom: 10px;
-            font-size: 16px;
+            color: $grey;
           }
 
-          .message {
-            font-family: $avenir-medium;
-            font-size: 16px;
-          }
-        }
+          &:hover {
+            border: 1px solid rgba($stellar-blue, 1);
 
-        .pop-bottom {
-          background-color: white;
-          border-bottom-left-radius: 3px;
-          border-bottom-right-radius: 3px;
+            i {
+              color: $stellar-blue;
+            }
 
-          .switch {
-            display: inline-block;
-            vertical-align: middle;
-            margin-right: 16px;
-            width: 66px;
-            height: 16px;
-            background-color: $light-grey;
-            border: 1px solid $stellar-blue;
-            border-radius: 50px;
-            overflow: hidden;
-            position: relative;
-            cursor: pointer;
-
-            .knob {
-              width: 32px;
-              top: -2px;
-              left: 50%;
-              height: 18px;
-              background-color: white;
-              position: absolute;
-
-              &:before {
-                content: "";
-                border-left: 2px solid #FFF6D5;
-                margin-left: 15px;
-              }
+            .pop-action {
+              //display: block;
             }
           }
+        }
 
-          .info {
-            font-size: 14px;
+        &.complete,
+        &.pending {
+          background-color: #F9F9F9;
+          color: $info-grey;
+
+          i {
             color: $info-grey;
           }
+
+          &:hover {
+            border: 1px solid rgba($grey, 0.5);
+          }
+        }
+
+        .reward-body {
+          padding: 28px 30px;
+        }
+
+        .pop-action {
+          border: 1px solid #D0D0D0;
+          border-radius: 3px;
+          width: 450px;
+          position: absolute;
+          right: 50px;
+          top: -10px;
+          z-index: 99;
+          cursor: default;
+          box-shadow: 0 0 5px 2px rgba($grey, 0.2);
+          display: none;
+          @include transition(opacity 200ms ease-in-out);
+
+          & > div {
+            padding: 15px 35px;
+          }
+
+          &:before,
+          &:after {
+            content: "";
+            position: absolute;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+            top: 42px;
+            left: 0;
+            margin-left: -10px;
+          }
+
+          &:before {
+            border-right: 10px solid #D0D0D0;
+          }
+
+          &:after {
+            border-right: 10px solid #FFF6D5;
+            padding-left: 2px;
+            z-index: 1;
+          }
+
+          .pop-top {
+            background-color: #FFF6D5;
+            border-top-left-radius: 3px;
+            border-top-right-radius: 3px;
+
+            .title {
+              font-family: $avenir-heavy;
+              padding-top: 10px;
+              padding-bottom: 10px;
+              font-size: 16px;
+            }
+
+            .message {
+              font-family: $avenir-medium;
+              font-size: 16px;
+            }
+          }
+        }
+      }
+    }
+
+    .reward-page {
+      height: 353px;
+      width: 100%;
+      background-color: white;
+      position: absolute;
+      padding: 20px 20px;
+      top: 4px;
+      left: 110%;
+      @include transition(left 350ms ease-in-out);
+
+      &.active {
+        left: 0%;
+      }
+
+      .title {
+        font-family: $avenir-heavy;
+        padding-top: 10px;
+
+        i {
+          margin: 0 15px;
+          font-size: 20px;
+        }
+      }
+
+      .content {
+        margin: 0 57px;
+
+        .body,
+        .info {
+          font-family: $avenir-medium;
+          font-size: 20px;
+        }
+
+        .fbconnect {
+          margin-top: 30px;
+          text-align: center;
+
+          .fbbutton {
+            width: 270px;
+            line-height: 24px;
+            color: white;
+            background-color: #3C569B;
+            cursor: pointer;
+            padding: 10px 20px;
+            border-radius: 2px;
+            border: none;
+            font-family: "lucida grande","tahoma","verdana","arial","sans-serif";
+
+            .fblogo {
+              font-size: 26px;
+              font-weight: bold;
+              display: inline-block;
+              margin-left: 6px;
+              margin-right: 18px;
+              vertical-align: middle;
+            }
+
+            .fblabel {
+              font-size: 16px;
+              display: inline-block;
+              vertical-align: middle;
+              text-align: center;
+            }
+          }
+        }
+      }
+
+      .close-reward {
+        float: right;
+        font-size: 16px;
+        margin: 5px 0;
+        cursor: pointer;
+        font-family: $avenir-medium;
+        color: $info-grey;
+        @include transition(color 200ms ease-in-out);
+
+        &:hover {
+          color: $error;
+
+          i {
+            color: $error;
+          }
+        }
+
+        i {
+          font-size: 26px;
+          vertical-align: middle;
+          margin-left: 10px;
+          margin-top: -4px;
         }
       }
     }
