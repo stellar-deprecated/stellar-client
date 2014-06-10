@@ -50,13 +50,18 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
   $rootScope.$on('emailVerified', emailAction.success);
 
   var sendAction = {
-    message: 'Earn a reward by sending STX to someone.',
-    info: 'You will unlock...',
+    message: 'Learn how to send digital money.',
+    info: 'Send 100 stellars to a friend and get 100 stellars for learning.',
+    template: 'templates/send-stellar.html',
     start: function() {
       $rootScope.tab = 'send';
       scrollTo(scrollX, 188);
-
-      // TODO: Claim the reward once the user has sent STX.
+      // TODO: Show send tutorial.
+    },
+    success: function(){
+      $scope.rewards[3].status = "complete";
+      computeRewardProgress();
+      $scope.closeReward();
     }
   };
 

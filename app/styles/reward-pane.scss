@@ -303,6 +303,15 @@
             }
           }
         }
+
+        .send-stellar {
+          margin-top: 40px;
+          text-align: center;
+
+          .stellar-button {
+            width: 300px;
+          }
+        }
       }
 
       .close-reward {
