@@ -23,10 +23,6 @@ sc.controller('AddEmailCtrl', function ($scope, $rootScope, session) {
         .error($scope.$apply(addEmailError));
 
       function addEmailSuccess(response) {
-        if (response.error) {
-          response.status = 'error';
-        }
-
         switch (response.status) {
           case 'success':
             // Store the email address in the blob.
@@ -36,6 +32,30 @@ sc.controller('AddEmailCtrl', function ($scope, $rootScope, session) {
             // Switch to the verify overlay.
             $rootScope.emailToVerify = $scope.email;
             break;
+          case 'fail':
+            switch (response.code) {
+              case 'validation_error':
+                var error = response.data;
+                if (error.field == "update_token" && error.code == "invalid") {
+                    // TODO: invalid update token error
+                    addEmailError();
+                }
+                break;
+            }
+            break;
+          case 'error':
+            addEmailError();
+        }
+
+
+
+        if (response.error) {
+          response.status = 'error';
+        }
+
+        switch (response.status) {
+          case 'success':
+
           case 'error':
             $scope.errors.push('Invalid email address');
           case 'default':

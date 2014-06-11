@@ -26,18 +26,23 @@ sc.controller('VerifyEmailCtrl', function ($scope, $rootScope, session) {
       .error($scope.$apply(verifyEmailError));
 
     function verifyEmailSuccess(response) {
-      if (response.error) {
-        response.status = 'error';
-      }
-
-      switch(response.status) {
+      switch (response.status) {
         case 'success':
           $rootScope.$broadcast('emailVerified');
           break;
-        case 'error':
-          $scope.errors.push('Invalid verification code.');
+        case 'fail':
+          switch (response.code) {
+            case 'validation_error':
+              // TODO: invalid credentials, send to login page?
+              verifyEmailError();
+              break;
+            case 'facebook_auth':
+              // TODO: let the user know their reward is waiting, but they need to facebook auth first
+              break;
+          }
           break;
-        case 'default':
+        case 'error':
+          verifyEmailError();
           break;
       }
     }

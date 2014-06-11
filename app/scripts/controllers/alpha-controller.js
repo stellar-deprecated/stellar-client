@@ -49,12 +49,22 @@ sc.controller('AlphaCtrl', function ($scope, $state, session,  bruteRequest) {
                 $state.go('register');
                 break;
 
-              case 'used':
-                $scope.alphaCodeErrors.push('This Alpha Code is already taken.');
+              case 'fail':
+                switch (response.code) {
+                  case 'validation_error':
+                  var error = response.data;
+                  if (error.code == "already_taken") {
+                    $scope.alphaCodeErrors.push('This Alpha Code is already taken.');
+                  } else {
+                    $scope.alphaCodeErrors.push('This Alpha Code is invalid.');
+                  }
+                  break;
+                }
                 break;
-
+              case 'error':
               default:
-                $scope.alphaCodeErrors.push('This Alpha Code is invalid.');
+                // TODO: internal error
+                $scope.alphaCodeErrors.push('An error occured.');
             }
           });
         }

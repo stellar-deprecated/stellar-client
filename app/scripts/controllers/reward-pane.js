@@ -141,24 +141,39 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
       updateToken: session.get('blob').get('updateToken')
     },
     //Success
-    function (result) {
-      // Only show the rewards pane if there are rewards left to complete.
-      var count = 0;
+    function (response) {
+        switch (response.status) {
+            case 'success':
+                // Only show the rewards pane if there are rewards left to complete.
+                var count = 0;
 
-      // Update the status of the user's rewards.
-      var rewardsGiven = result.rewards;
-      rewardsGiven.forEach(function (reward) {
-        $scope.rewards[reward.rewardType].status = rewardStatusTypes[reward.status];
-        if (reward.status == 1) {
-          count++;
+                // Update the status of the user's rewards.
+                var rewardsGiven = response.data.rewards;
+                rewardsGiven.forEach(function (reward) {
+                    $scope.rewards[reward.rewardType].status = rewardStatusTypes[reward.status];
+                    if (reward.status == 1) {
+                        count++;
+                    }
+                    if (reward.status == 0 && reward.rewardType == 1) {
+                        // this guy is on the waiting list
+                        getPlaceInLine();
+                    }
+                });
+                computeRewardProgress();
+                $scope.showRewards = (count < 3);
+            case 'fail':
+                switch (response.code) {
+                    case 'validation_error':
+                        var error = response.data;
+                        if (error.field == "update_token" && error.code == "invalid") {
+                            // TODO: invalid update token error
+                        }
+                }
+                break;
+            case 'error':
+            default:
+                // TODO: internal error
         }
-        if (reward.status == 0 && reward.rewardType == 1) {
-          // this guy is on the waiting list
-          getPlaceInLine();
-        }
-      });
-      computeRewardProgress();
-      $scope.showRewards = (count < 3);
     }
   );
 }]);

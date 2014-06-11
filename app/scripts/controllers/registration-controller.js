@@ -38,13 +38,18 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, bruteRequest
         function (response) {
           $scope.$apply(function(){
             console.log(response.status);
-            if(response.status === 'usernameAvailable') {
-              $scope.usernameAvailable = true;
-            }
-            else
-            {
-              $scope.usernameErrors.push('This username is taken.');
-              $scope.usernameAvailable = false;
+            switch (response.status) {
+              case "success":
+                $scope.usernameAvailable = true;
+                break;
+              case "fail":
+                if (response.code == "already_taken") {
+                  $scope.usernameErrors.push('This username is taken.');
+                  $scope.usernameAvailable = false;
+                  break;
+                }
+              case "error":
+                // TODO: show an error
             }
           });
         },
@@ -174,8 +179,8 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, bruteRequest
                 blob.put('username', $scope.username);
                 blob.put('email', $scope.email);
                 blob.put('packedKeys', packedKeys);
-                blob.put('updateToken', response.updateToken);
-                blob.put('walletAuthToken', response.walletAuthToken);
+                blob.put('updateToken', response.data.updateToken);
+                blob.put('walletAuthToken', response.data.walletAuthToken);
 
                 // Set the default client configuration
                 blob.put('server', Options.server);
@@ -200,12 +205,25 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, bruteRequest
                 $state.go('dashboard');
                 break;
 
-              case 'nameTaken':
-                // Show an error stating the username is already taken.
-                $scope.usernameAvailable = false;
-                $scope.usernameErrors.push('The username "' + $scope.username + '" is taken.');
+              case 'fail':
+                switch (response.code) {
+                  case 'validation_error':
+                    // TODO: iterate through the validation errors when we add server side validation
+                    var error = response.data;
+                    if (error.field == "username" && error.code == "already_taken") {
+                      // Show an error stating the username is already taken.
+                      $scope.usernameAvailable = false;
+                      $scope.usernameErrors.push('The username "' + $scope.username + '" is taken.');
+                    } else if (error.field == "alpha_code" && error.code == "already_taken") {
+                      // TODO: ux for alpha code has already been used
+                    } else if (error.field == "alpha_code" && error.code == "invalid") {
+                      // TODO: ux for alpha code is invalid
+                    }
+                    break;
+                  default:
+                    break;
+                }
                 break;
-
               case 'error':
                   $scope.usernameErrors.push('Registration error?');
                 break;
