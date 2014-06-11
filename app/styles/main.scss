@@ -157,6 +157,27 @@ body {
       color: $stellar-blue;
     }
   }
+
+  &.cancel {
+    background-color: $light-grey;
+
+    &:hover {
+      border-color: $error;
+      color: $error;
+
+      i {
+        color: $error;
+      }
+    }
+
+    &:focus {
+      outline: none;
+
+      &:hover {
+        color: $error;
+      }
+    }
+  }
 }
 
 .right-inner-addon {

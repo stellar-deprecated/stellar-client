@@ -2,187 +2,163 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('RewardPaneCtrl', ['$scope','session','bruteRequest',  function ( $scope, session, bruteRequest) {
-    $scope.showRewards = false;
-    $scope.showEmailVerify=false;
+sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteRequest', function ($scope, $rootScope, session, bruteRequest) {
+  $scope.showRewards = false;
+  $scope.selectedReward = null;
+  $rootScope.emailToVerify = session.get('blob').get('email');
 
-
-        function fbAuth()
-        {
-            console.log("fbAuth");
-            FB.getLoginStatus(function(response) {
-                if (response.status === 'connected') {
-                    $scope.FBID = response.authResponse.userID;
-                    $scope.FBAccessToken = response.authResponse.accessToken;
-                    claim();
-                }else FB.login(handleFBSessionResponse, {scope: 'read_stream'});
-            });
-        }
-
-        // handle a session response from any of the auth related calls
-        function handleFBSessionResponse() {
-
-            FB.getLoginStatus(function(response) {
-                if (response.status === 'connected') {
-                    // the user is logged in and has authenticated your
-                    // app, and response.authResponse supplies
-                    // the user's ID, a valid access token, a signed
-                    // request, and the time the access token
-                    // and signed request each expire
-                    $scope.FBID = response.authResponse.userID;
-                    $scope.FBAccessToken = response.authResponse.accessToken;
-                    claim();
-
-                } else if (response.status === 'not_authorized') {
-                    // the user is logged in to Facebook,
-                    // but has not authenticated your app
-                } else {
-                    // the user isn't logged in to Facebook.
-                }
-            });
-
-        }
-
-        function claim()
-        {
-            $.post(Options.API_SERVER +"/claim/facebook", {
-                username: session.get('username'),
-                updateToken: session.get('blob').get('updateToken'),
-                fbAccessToken: $scope.FBAccessToken,
-                fbID: $scope.FBID },
-                null, "json")
-            .done(function (response) {
-                $scope.$apply(function () {
-                    console.log(response.status);
-                    if (response.status == 'fail') {
-                        if (response.message == 'already claimed') {
-                            $scope.rewards[0].status="complete";
-                        }
-                    } else if (response.status == 'error') {
-                        // internal error
-                    } else {
-                        // success
-                        $scope.rewards[0].status="complete";
-                    }
-                });
-            });
-        }
-
-        function toggleEmailVerify()
-        {
-            $scope.showEmailVerify = !$scope.showEmailVerify;
-        }
-
-        function verifyEmail()
-        {
-            var placeInLineRequest = new bruteRequest({
-                url: Options.API_SERVER + '/claim/placeInLine',
-                type: 'GET',
-                dataType: 'json'
-            });
-            // Load the status of the user's rewards.
-            placeInLineRequest.send(
-                {
-                    username: session.get('username')
-                },
-                //Success
-                function(result) {
-                    $scope.$apply(function () {
-                        if (result.days > 1)
-                            $scope.rewards[0].message = "You are on the waiting list. You will get your stellars in about " + result.days + " days.";
-                        else $scope.rewards[0].message = "You are on the waiting list. You should get your stellars tomorrow.";
-
-                        $scope.rewards[0].action = function () {
-                        };
-                    });
-                }
-            );
-        }
-
-        function sendStellars()
-        {
-
-        }
-
-        function getPlaceInLine()
-        {
-            var placeInLineRequest = new bruteRequest({
-                url: Options.API_SERVER + '/claim/placeInLine',
-                type: 'GET',
-                dataType: 'json'
-            });
-            // Load the status of the user's rewards.
-            placeInLineRequest.send(
-                {
-                    username: session.get('username')
-                },
-                //Success
-                function(result) {
-                    $scope.$apply(function () {
-                        if (result.days > 1)
-                            $scope.rewards[0].message = "You are on the waiting list. You will get your stellars in about " + result.days + " days.";
-                        else $scope.rewards[0].message = "You are on the waiting list. You should get your stellars tomorrow.";
-
-                        $scope.rewards[0].action = function () {
-                        };
-                    });
-                }
-            );
-        }
-
-      var rewardStatusTypes = ['pending', 'complete' ];
-
-      $scope.rewardStatusIcons = {
-        'incomplete': 'glyphicon glyphicon-lock',
-        'pending': 'glyphicon glyphicon-time',
-        'complete': 'glyphicon glyphicon-ok-circle'
-      };
-
-      $scope.rewards = [
-        {message: 'Verify your identity by connecting with Facebook', status: 'incomplete', action: fbAuth},
-        {message: 'Enable account recovery by verifying your email address', status: 'incomplete', action: toggleEmailVerify},
-        {message: 'Send stellars to someone', status: 'incomplete', action: sendStellars},
-        {message: 'Create a new wallet', status: 'complete', action: function(){ } }
-      ];
-
-    function computeRewardProgress(){
-        var statuses = $scope.rewards.map(function(reward){ return reward.status; })
-        $scope.rewardProgress = statuses.sort(function(a, b){
-            var order = ['complete', 'pending', 'incomplete'];
-            return order.indexOf(a) - order.indexOf(b);
-        });
+  $scope.toggleReward = function(index, status) {
+    if (status !== 'incomplete') {
+      return;
     }
 
-    computeRewardProgress();
+    if ($scope.selectedReward === index) {
+      $scope.selectedReward = null;
+    } else {
+      $scope.selectedReward = index;
+    }
+  };
 
-      var rewardsRequest = new bruteRequest({
-          url: Options.API_SERVER + '/user/rewards',
-          type: 'GET',
-          dataType: 'json'
+  $scope.closeReward = function() {
+    $scope.selectedReward = null;
+  };
+
+  var fbAction = {
+    message: 'Earn a reward by verifying your Stellar account with Facebook.',
+    info: 'You will unlock...',
+    template: 'templates/facebook-button.html',
+    start: function(){
+      var username = session.get('username');
+      var updateToken = session.get('blob').get('updateToken');
+      fbLoginStart(username, updateToken, fbAction.success, fbAction.error);
+    },
+    success: function() {
+      $scope.$apply(function(){
+        $scope.rewards[1].status = "complete";
+        computeRewardProgress();
+        $scope.closeReward();
       });
+    },
+    error: function(){}
+  };
 
-      // Load the status of the user's rewards.
-      rewardsRequest.send(
-        {
-          username: session.get('username'),
-          updateToken: session.get('blob').get('updateToken')
-        },
-        //Success
-        function(results){
-            // Only show the rewards pane if there are rewards left to complete.
-            //$scope.showRewards = true;
-            var count=0;
-            var rewardsGiven = results.rewards || [];
-              // Update the status of the user's rewards.
-              rewardsGiven.forEach(function(reward){
-                // RewardTypes are 1-based indexed in the server.
-                $scope.rewards[reward.rewardType - 1].status = rewardStatusTypes[reward.status];
-                if(reward.status == 1) count++;
-                if(reward.status == 0 && reward.rewardType==1) // this guy is on the waiting list
-                    getPlaceInLine();
-              });
-            computeRewardProgress();
-            $scope.showRewards=(count<3);
+  var emailAction = {
+    message: 'Earn a reward by verifying an email address you can use to recover your account.',
+    info: 'You will unlock...',
+    template: 'templates/verify-email.html',
+    success: function(){
+      $scope.rewards[2].status = "complete";
+      computeRewardProgress();
+      $scope.closeReward();
+    }
+  };
+  $rootScope.$on('emailVerified', emailAction.success);
+
+  var sendAction = {
+    message: 'Learn how to send digital money.',
+    info: 'Send 100 stellars to a friend and get 100 stellars for learning.',
+    template: 'templates/send-stellar.html',
+    start: function() {
+      $rootScope.tab = 'send';
+      scrollTo(scrollX, 188);
+      // TODO: Show send tutorial.
+    },
+    success: function() {
+      $scope.rewards[3].status = "complete";
+      computeRewardProgress();
+      $scope.closeReward();
+    }
+  };
+
+  var createAction = {
+    message: 'Enable rewards by registering for a Stellar account',
+    info: 'You have unlocked rewards...',
+    start: function() {}
+  };
+
+  function getPlaceInLine() {
+    var placeInLineRequest = new bruteRequest({
+      url: Options.API_SERVER + '/claim/placeInLine',
+      type: 'GET',
+      dataType: 'json'
+    });
+    // Load the status of the user's rewards.
+    placeInLineRequest.send(
+      {
+        username: session.get('username')
+      },
+      //Success
+      function (result) {
+        $scope.$apply(function () {
+          if (result.days > 1) {
+            $scope.rewards[0].message = "You are on the waiting list. You will get your stellars in about " + result.days + " days.";
+          } else {
+            $scope.rewards[0].message = "You are on the waiting list. You should get your stellars tomorrow.";
+          }
+
+          $scope.rewards[0].action = function () {
+          };
+        });
+      }
+    );
+  }
+
+  var rewardStatusTypes = ['pending', 'complete' ];
+
+  $scope.rewardStatusIcons = {
+    'incomplete': 'glyphicon glyphicon-lock',
+    'pending': 'glyphicon glyphicon-time',
+    'complete': 'glyphicon glyphicon-ok-circle'
+  };
+
+  $scope.rewards = [
+    {title: 'Create a new wallet', status: 'complete', action: createAction},
+    {title: 'Get you first stellars.', status: 'incomplete', action: fbAction},
+    {title: 'Confirm your email.', status: 'incomplete', action: emailAction},
+    {title: 'Learn to send stellars.', status: 'incomplete', action: sendAction}
+  ];
+
+  function computeRewardProgress() {
+    var statuses = $scope.rewards.map(function (reward) { return reward.status; });
+    $scope.rewardProgress = statuses.sort(function (a, b) {
+      var order = ['complete', 'pending', 'incomplete'];
+      return order.indexOf(a) - order.indexOf(b);
+    });
+  }
+
+  computeRewardProgress();
+
+  var rewardsRequest = new bruteRequest({
+    url: Options.API_SERVER + '/user/rewards',
+    type: 'GET',
+    dataType: 'json'
+  });
+
+  // Load the status of the user's rewards.
+  rewardsRequest.send(
+    {
+      username: session.get('username'),
+      updateToken: session.get('blob').get('updateToken')
+    },
+    //Success
+    function (result) {
+      // Only show the rewards pane if there are rewards left to complete.
+      var count = 0;
+
+      // Update the status of the user's rewards.
+      var rewardsGiven = result.rewards;
+      rewardsGiven.forEach(function (reward) {
+        $scope.rewards[reward.rewardType].status = rewardStatusTypes[reward.status];
+        if (reward.status == 1) {
+          count++;
         }
-      );
+        if (reward.status == 0 && reward.rewardType == 1) {
+          // this guy is on the waiting list
+          getPlaceInLine();
+        }
+      });
+      computeRewardProgress();
+      $scope.showRewards = (count < 3);
+    }
+  );
 }]);
