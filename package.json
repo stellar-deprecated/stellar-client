@@ -17,17 +17,21 @@
     "gulp-jshint": "^1.5.3",
     "gulp-livereload": "^1.2.0",
     "gulp-load-plugins": "^0.5.0",
-    "gulp-ruby-sass": "^0.4.3",
-    "gulp-size": "^0.3.0",
-    "gulp-uglify": "^0.2.1",
-    "gulp-useref": "^0.3.1",
     "gulp-ngmin": "^0.2.0",
     "gulp-plumber": "^0.6.1",
+    "gulp-sass": "^0.7.2",
+    "gulp-size": "^0.3.0",
+    "gulp-uglify": "^0.2.1",
+    "gulp-useref": "^0.4.4",
     "jshint-stylish": "^0.1.5",
     "opn": "^0.1.1",
     "wiredep": "^1.4.3"
   },
   "engines": {
     "node": ">=0.10.0"
+  },
+  "repository" : { 
+    "type" : "git",
+    "url" : "http://github.com/stellar/stellar-client.git"
   }
 }
