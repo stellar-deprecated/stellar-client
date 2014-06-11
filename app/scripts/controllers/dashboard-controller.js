@@ -6,8 +6,8 @@ sc.controller('DashboardCtrl', function($rootScope, $scope, $timeout, $state, se
   $scope.blob = session.get('blob');
     $rootScope.tab = 'none';
 
-    $scope.newTransaction = false;
-    $scope.newTransactionAmount = null;
+    $scope.showTransaction = false;
+    $scope.newTransaction = null;
 
     stNetwork.init();
 
@@ -40,7 +40,7 @@ sc.controller('DashboardCtrl', function($rootScope, $scope, $timeout, $state, se
             }
 
             cleanupTimer = $timeout(function () {
-                $scope.newTransaction = false;
+                $scope.showTransaction = false;
                 cleanupTimer = null;
             }, 10000);
         }
