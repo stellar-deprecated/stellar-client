@@ -41,7 +41,9 @@ function fbLoginStart(username, updateToken, success, error){
       data.fbAccessToken = response.authResponse.accessToken;
       claim(data, success, error);
     } else {
-      FB.login(function(){ handleFBSessionResponse(data, success, error); }, {scope: 'read_stream'});
+      FB.login(function(){
+        handleFBSessionResponse(data, success, error);
+      }, {scope: 'read_stream'});
     }
   });
 }
