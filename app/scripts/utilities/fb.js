@@ -75,7 +75,7 @@ function handleFBSessionResponse(data, success, error) {
  * @param {function} error callback
  */
 function claim(data, success, error) {
-  $.post(Options.API_SERVER + "/claim/claim", data, null, "json")
+  $.post(Options.API_SERVER + "/claim/facebook", data, null, "json")
     .done(function (response) {
       console.log(response.status);
       if (response.error) response.status = 'error';
