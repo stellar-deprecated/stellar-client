@@ -18,24 +18,33 @@ sc.controller('VerifyEmailCtrl', function ($scope, $rootScope, session) {
         url: Options.API_SERVER + '/claim/verifyEmail',
         dataType: 'JSON',
         data: data,
-        success: function(response){
-          $scope.$apply(function(){
-            if(response.error) response.status = 'error';
+        success: $scope.$apply(verifyEmailSuccess)
+      }).done($scope.$apply(verifyEmailDone))
+        .error($scope.$apply(verifyEmailError));
 
-            switch(response.status){
-              case 'success':
-                $rootScope.$broadcast('emailVerified');
-                break;
-              case 'error':
-                $scope.errors.push('Invalid verification code.');
-                break;
-              case 'default':
-                break;
-            }
-          });
+      function verifyEmailSuccess(response){
+        if(response.error) response.status = 'error';
+
+        switch(response.status){
+          case 'success':
+            $rootScope.$broadcast('emailVerified');
+            break;
+          case 'error':
+            $scope.errors.push('Invalid verification code.');
+            break;
+          case 'default':
+            break;
         }
-      }).done(function(){ $scope.$apply(function(){ $scope.loading = false; })})
-        .error(function(){ $scope.$apply(function(){ $scope.loading = false; $scope.errors.push('An error occurred.'); })});
+      }
+
+      function verifyEmailDone(){
+        $scope.loading = false;
+      }
+
+      function verifyEmailError(){
+        $scope.loading = false;
+        $scope.errors.push('An error occurred.');
+      }
     }
   };
 

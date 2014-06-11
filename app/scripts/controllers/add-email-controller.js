@@ -2,8 +2,8 @@ sc.controller('AddEmailCtrl', function ($scope, $rootScope, session) {
   $scope.loading = false;
   $scope.errors = [];
 
-  $scope.addEmail = function(){
-    if($scope.email){
+  $scope.addEmail = function() {
+    if ($scope.email) {
       $scope.loading = true;
       $scope.errors = [];
 
@@ -18,28 +18,37 @@ sc.controller('AddEmailCtrl', function ($scope, $rootScope, session) {
         url: Options.API_SERVER + '/user/email',
         dataType: 'JSON',
         data: data,
-        success: function(response){
-          $scope.$apply(function(){
-            if(response.error) response.status = 'error';
+        success: $scope.$apply(addEmailSuccess)
+      }).done($scope.$apply(addEmailDone))
+        .error($scope.$apply(addEmailError));
 
-            switch(response.status){
-              case 'success':
-                // Store the email address in the blob.
-                session.get('blob').put('email', $scope.email);
-                session.storeBlob();
+      function addEmailSuccess(response) {
+        if (response.error) response.status = 'error';
 
-                // Switch to the verify overlay.
-                $rootScope.emailToVerify = $scope.email;
-                break;
-              case 'error':
-                $scope.errors.push('Invalid email address');
-              case 'default':
-                break;
-            }
-          });
+        switch (response.status) {
+          case 'success':
+            // Store the email address in the blob.
+            session.get('blob').put('email', $scope.email);
+            session.storeBlob();
+
+            // Switch to the verify overlay.
+            $rootScope.emailToVerify = $scope.email;
+            break;
+          case 'error':
+            $scope.errors.push('Invalid email address');
+          case 'default':
+            break;
         }
-      }).done(function(){ $scope.$apply(function(){ $scope.loading = false; })})
-        .error(function(){ $scope.$apply(function(){ $scope.loading = false; $scope.errors.push('An error occurred.'); })});
+      }
+
+      function addEmailDone() {
+        $scope.loading = false;
+      }
+
+      function addEmailError() {
+        $scope.loading = false;
+        $scope.errors.push('An error occurred.');
+      }
     }
   };
 

@@ -168,7 +168,7 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, bruteRequest
             console.log(response.status);
             switch(response.status)
             {
-                case 'success':
+              case 'success':
                 // Create the initial blob and insert the user's data.
                 var blob = new DataBlob();
                 blob.put('username', $scope.username);
