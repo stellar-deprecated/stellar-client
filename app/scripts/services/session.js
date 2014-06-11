@@ -5,7 +5,7 @@ var sc = angular.module('stellarClient');
 Random variables that we are storing to be accessed by the rest of the app.
 Jed: Do we need this?
  */
-sc.service('session', function($cacheFactory, KeyGen, stNetwork, DataBlob ){
+sc.service('session', function($cacheFactory, KeyGen, stNetwork, DataBlob ) {
   var cache = $cacheFactory('sessionCache');
 
   var Session = function() {};
@@ -33,7 +33,7 @@ sc.service('session', function($cacheFactory, KeyGen, stNetwork, DataBlob ){
     // Get the blob from the session cache.
     var blob = this.get('blob');
 
-    if(Options.PERSISTENT_SESSION){
+    if (Options.PERSISTENT_SESSION) {
       localStorage.blob = JSON.stringify(blob);
       localStorage.blobKey = JSON.stringify(this.get('blobKey'));
       localStorage.blobID = JSON.stringify(this.get('blobID'));
@@ -48,7 +48,7 @@ sc.service('session', function($cacheFactory, KeyGen, stNetwork, DataBlob ){
     });
   };
 
-  Session.prototype.start = function(){
+  Session.prototype.start = function() {
     var blob = this.get('blob');
     var packedKeys = blob.get('packedKeys');
 
@@ -61,24 +61,12 @@ sc.service('session', function($cacheFactory, KeyGen, stNetwork, DataBlob ){
     this.put('loggedIn', true);
   };
 
-    /*
-  Session.prototype.connect = function() {
-    var server = this.get('blob').get('server');
-    var address = this.get('address');
-    var network = new Network(server, address);
-    network.connect();
-
-    // Store the network connection in the session.
-    this.put('network', network);
-  };
-  */
-
-  Session.prototype.loginFromStorage = function($scope){
+  Session.prototype.loginFromStorage = function($scope) {
     var blobData = localStorage.blob;
     var blobKey = localStorage.blobKey;
     var blobID = localStorage.blobID;
 
-    if(blobData && blobKey && blobID) {
+    if (blobData && blobKey && blobID) {
       this.put('blob', new DataBlob(JSON.parse(blobData)));
       this.put('blobKey', JSON.parse(blobKey));
       this.put('blobID', JSON.parse(blobID));
@@ -90,9 +78,11 @@ sc.service('session', function($cacheFactory, KeyGen, stNetwork, DataBlob ){
     }
   };
 
-  Session.prototype.logOut = function(){
+  Session.prototype.logOut = function() {
     cache.removeAll();
-    if(Options.PERSISTENT_SESSION) delete localStorage.blob;
+    if (Options.PERSISTENT_SESSION){
+      delete localStorage.blob;
+    }
     this.put('loggedIn', false);
   };
 

@@ -3,57 +3,61 @@ sc.controller('VerifyEmailCtrl', function ($scope, $rootScope, session) {
   $scope.loading = false;
   $scope.errors = [];
 
-  $scope.verifyEmail = function(){
-    if($scope.emailActivationCode){
-      $scope.loading = true;
-      $scope.errors = [];
+  $scope.verifyEmail = function() {
+    if(!$scope.emailActivationCode) {
+      return;
+    }
 
-      var data = {
-        recoveryCode: $scope.emailActivationCode,
-        username: session.get('username')
-      };
+    $scope.loading = true;
+    $scope.errors = [];
 
-      $.ajax({
-        type: 'POST',
-        url: Options.API_SERVER + '/claim/verifyEmail',
-        dataType: 'JSON',
-        data: data,
-        success: $scope.$apply(verifyEmailSuccess)
-      }).done($scope.$apply(verifyEmailDone))
-        .error($scope.$apply(verifyEmailError));
+    var data = {
+      recoveryCode: $scope.emailActivationCode,
+      username: session.get('username')
+    };
 
-      function verifyEmailSuccess(response){
-        if(response.error) response.status = 'error';
+    $.ajax({
+      type: 'POST',
+      url: Options.API_SERVER + '/claim/verifyEmail',
+      dataType: 'JSON',
+      data: data,
+      success: $scope.$apply(verifyEmailSuccess)
+    }).done($scope.$apply(verifyEmailDone))
+      .error($scope.$apply(verifyEmailError));
 
-        switch(response.status){
-          case 'success':
-            $rootScope.$broadcast('emailVerified');
-            break;
-          case 'error':
-            $scope.errors.push('Invalid verification code.');
-            break;
-          case 'default':
-            break;
-        }
+    function verifyEmailSuccess(response) {
+      if (response.error) {
+        response.status = 'error';
       }
 
-      function verifyEmailDone(){
-        $scope.loading = false;
+      switch(response.status) {
+        case 'success':
+          $rootScope.$broadcast('emailVerified');
+          break;
+        case 'error':
+          $scope.errors.push('Invalid verification code.');
+          break;
+        case 'default':
+          break;
       }
+    }
 
-      function verifyEmailError(){
-        $scope.loading = false;
-        $scope.errors.push('An error occurred.');
-      }
+    function verifyEmailDone() {
+      $scope.loading = false;
+    }
+
+    function verifyEmailError() {
+      $scope.loading = false;
+      $scope.errors.push('An error occurred.');
     }
   };
 
-  $scope.clear = function(){
+  $scope.clear = function() {
     $scope.emailActivationCode = '';
     $scope.loading = false;
   };
 
-  $scope.cancel = function(){
+  $scope.cancel = function() {
     $scope.clear();
     $scope.closeReward();
   };

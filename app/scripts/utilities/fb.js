@@ -12,7 +12,9 @@ window.fbAsyncInit = function() {
 // Load the facebook SDK asynchronously
 (function(d){
     var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
-    if (d.getElementById(id)) {return;}
+    if (d.getElementById(id)) {
+      return;
+    }
     js = d.createElement('script'); js.id = id; js.async = true;
     js.src = "//connect.facebook.net/en_US/all.js";
     ref.parentNode.insertBefore(js, ref);
@@ -59,7 +61,9 @@ function handleFBSessionResponse(data, success, error) {
       data.fbID = response.authResponse.userID;
       data.fbAccessToken = response.authResponse.accessToken;
       claim(data, success, error);
-    } else error(response);
+    } else {
+      error(response);
+    }
   });
 }
 
@@ -78,7 +82,9 @@ function claim(data, success, error) {
   $.post(Options.API_SERVER + "/claim/facebook", data, null, "json")
     .done(function (response) {
       console.log(response.status);
-      if (response.error) response.status = 'error';
+      if (response.error){
+        response.status = 'error';
+      }
 
       switch (response.status) {
         case 'alreadyClaimed': break; // TODO: Alert user that this FB account has already been used.

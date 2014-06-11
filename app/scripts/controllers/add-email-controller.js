@@ -23,7 +23,9 @@ sc.controller('AddEmailCtrl', function ($scope, $rootScope, session) {
         .error($scope.$apply(addEmailError));
 
       function addEmailSuccess(response) {
-        if (response.error) response.status = 'error';
+        if (response.error) {
+          response.status = 'error';
+        }
 
         switch (response.status) {
           case 'success':
@@ -52,12 +54,12 @@ sc.controller('AddEmailCtrl', function ($scope, $rootScope, session) {
     }
   };
 
-  $scope.clear = function(){
+  $scope.clear = function() {
     $scope.email = '';
     $scope.loading = false;
   };
 
-  $scope.cancel = function(){
+  $scope.cancel = function() {
     $scope.clear();
     $scope.closeReward();
   };

@@ -7,14 +7,19 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
   $scope.selectedReward = null;
   $rootScope.emailToVerify = session.get('blob').get('email');
 
-  $scope.toggleReward = function(index, status){
-    if(status !== 'incomplete') return;
+  $scope.toggleReward = function(index, status) {
+    if (status !== 'incomplete') {
+      return;
+    }
 
-    if($scope.selectedReward === index) $scope.selectedReward = null;
-    else $scope.selectedReward = index;
+    if ($scope.selectedReward === index) {
+      $scope.selectedReward = null;
+    } else {
+      $scope.selectedReward = index;
+    }
   };
 
-  $scope.closeReward = function(){
+  $scope.closeReward = function() {
     $scope.selectedReward = null;
   };
 
@@ -27,11 +32,11 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
       var updateToken = session.get('blob').get('updateToken');
       fbLoginStart(username, updateToken, fbAction.success, fbAction.error);
     },
-    success: function(){
+    success: function() {
       $scope.$apply(function(){
-          $scope.rewards[1].status = "complete";
-          computeRewardProgress();
-          $scope.closeReward();
+        $scope.rewards[1].status = "complete";
+        computeRewardProgress();
+        $scope.closeReward();
       });
     },
     error: function(){}
@@ -58,7 +63,7 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
       scrollTo(scrollX, 188);
       // TODO: Show send tutorial.
     },
-    success: function(){
+    success: function() {
       $scope.rewards[3].status = "complete";
       computeRewardProgress();
       $scope.closeReward();
@@ -85,9 +90,11 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
       //Success
       function (result) {
         $scope.$apply(function () {
-          if (result.days > 1)
+          if (result.days > 1) {
             $scope.rewards[0].message = "You are on the waiting list. You will get your stellars in about " + result.days + " days.";
-          else $scope.rewards[0].message = "You are on the waiting list. You should get your stellars tomorrow.";
+          } else {
+            $scope.rewards[0].message = "You are on the waiting list. You should get your stellars tomorrow.";
+          }
 
           $scope.rewards[0].action = function () {
           };
@@ -142,9 +149,13 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
       var rewardsGiven = result.rewards;
       rewardsGiven.forEach(function (reward) {
         $scope.rewards[reward.rewardType].status = rewardStatusTypes[reward.status];
-        if (reward.status == 1) count++;
-        if (reward.status == 0 && reward.rewardType == 1) // this guy is on the waiting list
+        if (reward.status == 1) {
+          count++;
+        }
+        if (reward.status == 0 && reward.rewardType == 1) {
+          // this guy is on the waiting list
           getPlaceInLine();
+        }
       });
       computeRewardProgress();
       $scope.showRewards = (count < 3);
