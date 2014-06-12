@@ -34,7 +34,6 @@ sc.controller('AlphaCtrl', function ($scope, $state, session,  bruteRequest) {
       var data = {
         alphaCode: $scope.alphaCode
       };
-      console.log("test");
       // Submit the registration data to the server.
       requestAlpha.send(data,
         // Success
@@ -55,7 +54,6 @@ sc.controller('AlphaCtrl', function ($scope, $state, session,  bruteRequest) {
                 if (error.code == "already_taken") {
                   $scope.alphaCodeErrors.push('This Alpha Code is already taken.');
                 } else {
-                  console.log("push invalid");
                   $scope.alphaCodeErrors.push('This Alpha Code is invalid.');
                 }
               }
