@@ -21,34 +21,40 @@ sc.controller('VerifyEmailCtrl', function ($scope, $rootScope, session) {
       url: Options.API_SERVER + '/claim/verifyEmail',
       dataType: 'JSON',
       data: data,
-      success: function(){ $scope.$apply(verifyEmailSuccess); }
-    }).done(function(){ $scope.$apply(verifyEmailDone); })
-      .error(function(){ $scope.$apply(verifyEmailError); });
+      success: verifyEmailSuccess
+    }).done(verifyEmailDone)
+      .error(verifyEmailError);
 
     function verifyEmailSuccess(response) {
-      if (response.error) {
-        response.status = 'error';
-      }
+      $scope.$apply(function(){
+        if (response.error) {
+          response.status = 'error';
+        }
 
-      switch(response.status) {
-        case 'success':
-          $rootScope.$broadcast('emailVerified');
-          break;
-        case 'error':
-          $scope.errors.push('Invalid verification code.');
-          break;
-        case 'default':
-          break;
-      }
+        switch(response.status) {
+          case 'success':
+            $rootScope.$broadcast('emailVerified');
+            break;
+          case 'error':
+            $scope.errors.push('Invalid verification code.');
+            break;
+          case 'default':
+            break;
+        }
+      });
     }
 
     function verifyEmailDone() {
-      $scope.loading = false;
+      $scope.$apply(function() {
+        $scope.loading = false;
+      });
     }
 
     function verifyEmailError() {
-      $scope.loading = false;
-      $scope.errors.push('An error occurred.');
+      $scope.$apply(function() {
+        $scope.loading = false;
+        $scope.errors.push('An error occurred.');
+      });
     }
   };
 

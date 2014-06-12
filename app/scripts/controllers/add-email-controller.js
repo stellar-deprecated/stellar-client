@@ -18,38 +18,44 @@ sc.controller('AddEmailCtrl', function ($scope, $rootScope, session) {
         url: Options.API_SERVER + '/user/email',
         dataType: 'JSON',
         data: data,
-        success: function(){ $scope.$apply(addEmailSuccess); }
-      }).done(function(){ $scope.$apply(addEmailDone); })
-        .error(function(){ $scope.$apply(addEmailError); });
+        success: addEmailSuccess
+      }).done(addEmailDone)
+        .error(addEmailError);
 
       function addEmailSuccess(response) {
-        if (response.error) {
-          response.status = 'error';
-        }
+        $scope.$apply(function() {
+          if (response.error) {
+            response.status = 'error';
+          }
 
-        switch (response.status) {
-          case 'success':
-            // Store the email address in the blob.
-            session.get('blob').put('email', $scope.email);
-            session.storeBlob();
+          switch (response.status) {
+            case 'success':
+              // Store the email address in the blob.
+              session.get('blob').put('email', $scope.email);
+              session.storeBlob();
 
-            // Switch to the verify overlay.
-            $rootScope.emailToVerify = $scope.email;
-            break;
-          case 'error':
-            $scope.errors.push('Invalid email address');
-          case 'default':
-            break;
-        }
+              // Switch to the verify overlay.
+              $rootScope.emailToVerify = $scope.email;
+              break;
+            case 'error':
+              $scope.errors.push('Invalid email address');
+            case 'default':
+              break;
+          }
+        });
       }
 
       function addEmailDone() {
-        $scope.loading = false;
+        $scope.$apply(function() {
+          $scope.loading = false;
+        });
       }
 
       function addEmailError() {
-        $scope.loading = false;
-        $scope.errors.push('An error occurred.');
+        $scope.$apply(function() {
+          $scope.loading = false;
+          $scope.errors.push('An error occurred.');
+        });
       }
     }
   };
