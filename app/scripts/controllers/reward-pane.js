@@ -152,12 +152,13 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
         var rewardsGiven = response.data.rewards;
         rewardsGiven.forEach(function (reward) {
             $scope.rewards[reward.rewardType].status = rewardStatusTypes[reward.status];
-            if (reward.status == 1) {
-                count++;
-            }
-            if (reward.status == 0 && reward.rewardType == 1) {
-                // this guy is on the waiting list
-                getPlaceInLine();
+            switch (reward.status) {
+                case 'awaiting payout':
+                    // this guy is on the waiting list
+                    getPlaceInLine();
+                    break;
+                case 'sent':
+                    count++;
             }
         });
         computeRewardProgress();
