@@ -10,10 +10,6 @@ npm install -g bower
 npm install -g gulp
 
 ```bash
-# Install ruby
-
-# Install the sass gem
-gem install sass
 
 # Install dev dependencies
 npm install

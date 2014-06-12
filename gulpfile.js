@@ -7,10 +7,19 @@ var plumber = require('gulp-plumber');
 // load plugins
 var $ = require('gulp-load-plugins')();
 
+
+//composite tasks
+gulp.task('default', ['clean'], function () { 
+    gulp.start('build'); 
+});
+gulp.task('develop', ['serve']);
+gulp.task('build',   ['html', 'images', 'fonts']);
+
+//component tasks
 gulp.task('styles', function () {
     return gulp.src('app/styles/main.scss')
         .pipe(plumber({errorHandler: console.log}))
-        .pipe($.rubySass({style: 'expanded'}))
+        .pipe($.sass({outputStyle: 'expanded'}))
         .pipe($.autoprefixer('last 1 version'))
         .pipe(gulp.dest('.tmp/styles'))
         .pipe($.size());
@@ -65,11 +74,6 @@ gulp.task('clean', function () {
     return gulp.src(['.tmp', 'dist'], { read: false }).pipe($.clean());
 });
 
-gulp.task('build', ['html', 'images', 'fonts']);
-
-gulp.task('default', ['clean'], function () {
-    gulp.start('build');
-});
 
 gulp.task('connect', function () {
     var connect = require('connect');
