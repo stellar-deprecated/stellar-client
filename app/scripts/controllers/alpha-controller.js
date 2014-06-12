@@ -41,22 +41,9 @@ sc.controller('AlphaCtrl', function ($scope, $state, session,  bruteRequest) {
         function (response) {
           $scope.$apply(function () {
             console.log('Alpha code: ' + response.status);
-
-            switch (response.status) {
-              case 'success':
-                // Save code for the registration page
-                session.put('alpha', $scope.alphaCode);
-                $state.go('register');
-                break;
-
-              case 'fail':
-              console.log("fail");
-
-              case 'error':
-              default:
-                // TODO: internal error
-
-            }
+            // Save code for the registration page
+            session.put('alpha', $scope.alphaCode);
+            $state.go('register');
           });
         },
         function (response) {
