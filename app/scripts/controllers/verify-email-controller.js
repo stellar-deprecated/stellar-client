@@ -26,34 +26,31 @@ sc.controller('VerifyEmailCtrl', function ($scope, $rootScope, session) {
       .error(verifyEmailError);
 
     function verifyEmailSuccess(response) {
-      $scope.$apply(function(){
-        if (response.error) {
-          response.status = 'error';
-        }
+      $scope.$apply(function() {
+        $rootScope.$broadcast('emailVerified', response.message);
+      });
+    }
 
-        switch(response.status) {
-          case 'success':
-            $rootScope.$broadcast('emailVerified');
-            break;
-          case 'error':
-            $scope.errors.push('Invalid verification code.');
-            break;
-          case 'default':
-            break;
+    function verifyEmailError (response) {
+      $scope.$apply(function() {
+        var responseJSON = response.responseJSON;
+        if (responseJSON.status == 'fail') {
+          if (responseJSON.code == 'validation_error') {
+            // TODO: invalid credentials, send to login page?
+            $scope.errors.push('Please login again.');
+          } else if (responseJSON.code == 'already_claimed') {
+            // TODO: this user has already claimed the verify_email reward
+          }
+        } else {
+          $scope.errors.push('An error occured.');
         }
+        $scope.loading = false;
       });
     }
 
     function verifyEmailDone() {
       $scope.$apply(function() {
         $scope.loading = false;
-      });
-    }
-
-    function verifyEmailError() {
-      $scope.$apply(function() {
-        $scope.loading = false;
-        $scope.errors.push('An error occurred.');
       });
     }
   };

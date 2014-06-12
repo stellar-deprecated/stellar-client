@@ -24,37 +24,36 @@ sc.controller('AddEmailCtrl', function ($scope, $rootScope, session) {
 
       function addEmailSuccess(response) {
         $scope.$apply(function() {
-          if (response.error) {
-            response.status = 'error';
-          }
+          // Store the email address in the blob.
+          session.get('blob').put('email', $scope.email);
+          session.storeBlob();
 
-          switch (response.status) {
-            case 'success':
-              // Store the email address in the blob.
-              session.get('blob').put('email', $scope.email);
-              session.storeBlob();
+          // Switch to the verify overlay.
+          $rootScope.emailToVerify = $scope.email;
+        });
+      }
 
-              // Switch to the verify overlay.
-              $rootScope.emailToVerify = $scope.email;
-              break;
-            case 'error':
-              $scope.errors.push('Invalid email address');
-            case 'default':
-              break;
+      function addEmailError(response) {
+        $scope.$apply(function() {
+          var responseJSON = response.responseJSON;
+          if (responseJSON.status == 'fail') {
+            if (responseJSON.code == 'validation_error') {
+              var error = responseJSON.data;
+              if (error.field == "update_token" && error.code == "invalid") {
+                // TODO: send them to login screen?
+                $scope.errors.push('Login expired');
+              }
+            }
+          } else {
+            $scope.errors.push('An error occured');
           }
+          $scope.loading = false;
         });
       }
 
       function addEmailDone() {
         $scope.$apply(function() {
           $scope.loading = false;
-        });
-      }
-
-      function addEmailError() {
-        $scope.$apply(function() {
-          $scope.loading = false;
-          $scope.errors.push('An error occurred.');
         });
       }
     }

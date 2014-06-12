@@ -20,6 +20,7 @@ var bruteRequest = angular.module('bruteRequest', [])
           this.pendingRequest = null;
         })
         .fail(function (response, error, message) {
+          console.log("fail");
           if (message === 'Too Many Requests') {
             var suggestedRetryTime = new Date(response.responseJSON.error.nextValidRequestDate).getTime();
             var waitTime = suggestedRetryTime - Date.now();
@@ -29,9 +30,9 @@ var bruteRequest = angular.module('bruteRequest', [])
             $timeout(function(){
               this.send(data, success, fail);
             }.bind(this), waitTime);
+          } else {
+            fail(response, error, message);
           }
-
-          fail(response, error, message);
         }.bind(this));
     };
 

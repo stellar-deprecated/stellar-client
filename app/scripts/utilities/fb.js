@@ -82,20 +82,33 @@ function handleFBSessionResponse(data, success, error) {
  */
 function claim(data, success, error) {
   $.post(Options.API_SERVER + "/claim/facebook", data, null, "json")
-    .done(function (response) {
-      console.log(response.status);
-      if (response.error){
-        response.status = 'error';
-      }
+    .success(
+      function (response) {
+        console.log(response.status);
+        success(response.message);
+      })
+    .error(
+      function (response) {
+        var responseJSON = response.responseJSON;
+        if (responseJSON.status == 'fail') {
+          switch (responseJSON.code) {
+            case 'validation_error':
+              var error = responseJSON.data;
+              if (error.field == "update_token" && error.code == "invalid") {
+                  // TODO: error
+                  break;
+              }
+            case 'ineligible_account':
+              // TODO: inform the user their account is ineligible now
+              // TODO: provide a reason in the message
+            case 'fake_account':
+              // TODO: inform the user their account is fake
+            case 'reward_already_queued':
+            case 'reward_limit_reached':
+            default:
+          }
+        } else {
 
-      switch (response.status) {
-        case 'alreadyClaimed': break; // TODO: Alert user that this FB account has already been used.
-        case 'newFB': break;
-        case 'queued': break;
-        case 'success': success(); break;
-        case 'error': error(); break;
-        default: break;
-      }
-    })
-  ;
+        }
+      });
 }

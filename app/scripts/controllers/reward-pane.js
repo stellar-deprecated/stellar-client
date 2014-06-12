@@ -32,10 +32,12 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
       var updateToken = session.get('blob').get('updateToken');
       fbLoginStart(username, updateToken, fbAction.success, fbAction.error);
     },
-    success: function() {
+    success: function(status) {
       $scope.$apply(function(){
-        $scope.rewards[1].status = "complete";
+        console.log(status);
+        $scope.rewards[1].status = status;
         computeRewardProgress();
+        updateRewards();
         $scope.closeReward();
       });
     },
@@ -46,8 +48,8 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
     message: 'Earn a reward by verifying an email address you can use to recover your account.',
     info: 'You will unlock...',
     template: 'templates/verify-email.html',
-    success: function(){
-      $scope.rewards[2].status = "complete";
+    success: function(event, status){
+      $scope.rewards[2].status = status;
       computeRewardProgress();
       $scope.closeReward();
     }
@@ -99,20 +101,21 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
           $scope.rewards[0].action = function () {
           };
         });
+      },
+      function (response) {
+        // TODO: error
       }
     );
   }
 
-  var rewardStatusTypes = ['pending', 'complete' ];
-
   $scope.rewardStatusIcons = {
     'incomplete': 'glyphicon glyphicon-lock',
-    'pending': 'glyphicon glyphicon-time',
-    'complete': 'glyphicon glyphicon-ok-circle'
+    'awaiting_payout': 'glyphicon glyphicon-time',
+    'sent': 'glyphicon glyphicon-ok-circle'
   };
 
   $scope.rewards = [
-    {title: 'Create a new wallet', status: 'complete', action: createAction},
+    {title: 'Create a new wallet', status: 'sent', action: createAction},
     {title: 'Get you first stellars.', status: 'incomplete', action: fbAction},
     {title: 'Confirm your email.', status: 'incomplete', action: emailAction},
     {title: 'Learn to send stellars.', status: 'incomplete', action: sendAction}
@@ -121,12 +124,10 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
   function computeRewardProgress() {
     var statuses = $scope.rewards.map(function (reward) { return reward.status; });
     $scope.rewardProgress = statuses.sort(function (a, b) {
-      var order = ['complete', 'pending', 'incomplete'];
+      var order = ['sent', 'awaiting_payout', 'incomplete'];
       return order.indexOf(a) - order.indexOf(b);
     });
   }
-
-  computeRewardProgress();
 
   var rewardsRequest = new bruteRequest({
     url: Options.API_SERVER + '/user/rewards',
@@ -134,31 +135,50 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
     dataType: 'json'
   });
 
-  // Load the status of the user's rewards.
-  rewardsRequest.send(
-    {
-      username: session.get('username'),
-      updateToken: session.get('blob').get('updateToken')
-    },
-    //Success
-    function (result) {
-      // Only show the rewards pane if there are rewards left to complete.
-      var count = 0;
+    function updateRewards() {
+      // Load the status of the user's rewards.
+      rewardsRequest.send(
+        {
+          username: session.get('username'),
+          updateToken: session.get('blob').get('updateToken')
+        },
+        //Success
+        function (response) {
+            // Only show the rewards pane if there are rewards left to complete.
+            var count = 0;
 
-      // Update the status of the user's rewards.
-      var rewardsGiven = result.rewards;
-      rewardsGiven.forEach(function (reward) {
-        $scope.rewards[reward.rewardType].status = rewardStatusTypes[reward.status];
-        if (reward.status == 1) {
-          count++;
+            // Update the status of the user's rewards.
+            var rewardsGiven = response.data.rewards;
+            rewardsGiven.forEach(function (reward) {
+                $scope.rewards[reward.rewardType].status = reward.status;
+                switch (reward.status) {
+                    case 'awaiting_payout':
+                        // this guy is on the waiting list
+                        getPlaceInLine();
+                        break;
+                    case 'sent':
+                        count++;
+                }
+            });
+            computeRewardProgress();
+            $scope.showRewards = (count < 3);
+        },
+        function (response) {
+            if (response.status == 'fail') {
+                if (response.code == 'validaiton_error') {
+                    var error = response.data;
+                    if (error.field == "update_token" && error.code == "invalid") {
+                        // TODO: invalid update token error
+                    }
+                }
+            } else {
+                // TODO: error
+            }
         }
-        if (reward.status == 0 && reward.rewardType == 1) {
-          // this guy is on the waiting list
-          getPlaceInLine();
-        }
-      });
-      computeRewardProgress();
-      $scope.showRewards = (count < 3);
+      );
     }
-  );
+
+  computeRewardProgress();
+  updateRewards();
+
 }]);
