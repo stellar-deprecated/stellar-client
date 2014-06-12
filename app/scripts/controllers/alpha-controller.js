@@ -47,19 +47,22 @@ sc.controller('AlphaCtrl', function ($scope, $state, session,  bruteRequest) {
           });
         },
         function (response) {
-          if (response.status == 'fail') {
-            if (response.code == "validation_error") {
-              var error = response.data;
-              if (error.code == "already_taken") {
-                $scope.alphaCodeErrors.push('This Alpha Code is already taken.');
-              } else {
-                console.log("push invalid");
-                $scope.alphaCodeErrors.push('This Alpha Code is invalid.');
+          $scope.$apply(function () {
+            var responseJSON = response.responseJSON;
+            if (responseJSON.status == 'fail') {
+              if (responseJSON.code == "validation_error") {
+                var error = responseJSON.data;
+                if (error.code == "already_taken") {
+                  $scope.alphaCodeErrors.push('This Alpha Code is already taken.');
+                } else {
+                  console.log("push invalid");
+                  $scope.alphaCodeErrors.push('This Alpha Code is invalid.');
+                }
               }
+            } else {
+                $scope.alphaCodeErrors.push('An error occured.');
             }
-          } else {
-              $scope.alphaCodeErrors.push('An error occured.');
-          }
+          });
         }
       );
     }

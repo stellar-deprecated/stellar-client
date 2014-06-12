@@ -35,9 +35,10 @@ sc.controller('AddEmailCtrl', function ($scope, $rootScope, session) {
 
       function addEmailError(response) {
         $scope.$apply(function() {
-          if (response.status == 'fail') {
-            if (response.code == 'validation_error') {
-              var error = response.data;
+          var responseJSON = response.responseJSON;
+          if (responseJSON.status == 'fail') {
+            if (responseJSON.code == 'validation_error') {
+              var error = responseJSON.data;
               if (error.field == "update_token" && error.code == "invalid") {
                 // TODO: send them to login screen?
                 $scope.errors.push('Login expired');

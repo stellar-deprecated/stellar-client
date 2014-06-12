@@ -27,18 +27,19 @@ sc.controller('VerifyEmailCtrl', function ($scope, $rootScope, session) {
 
     function verifyEmailSuccess(response) {
       $scope.$apply(function() {
-        $rootScope.$broadcast('emailVerified');
+        $rootScope.$broadcast('emailVerified', response.message);
       });
     }
 
     function verifyEmailError (response) {
       $scope.$apply(function() {
-        if (response.status == 'fail') {
-          if (response.code == 'validation_error') {
+        var responseJSON = response.responseJSON;
+        if (responseJSON.status == 'fail') {
+          if (responseJSON.code == 'validation_error') {
             // TODO: invalid credentials, send to login page?
             $scope.errors.push('Please login again.');
-          } else if (response.code == 'facebook_auth') {
-            // TODO: let the user know their reward is waiting, but they need to facebook auth first
+          } else if (responseJSON.code == 'already_claimed') {
+            // TODO: this user has already claimed the verify_email reward
           }
         } else {
           $scope.errors.push('An error occured.');

@@ -82,31 +82,33 @@ function handleFBSessionResponse(data, success, error) {
  */
 function claim(data, success, error) {
   $.post(Options.API_SERVER + "/claim/facebook", data, null, "json")
-    .done(function (response) {
-      console.log(response.status);
-      success();
-    },
-    function (response) {
-      if (response.status == 'fail') {
-        switch (response.code) {
-          case 'validation_error':
-            var error = response.data;
-            if (error.field == "update_token" && error.code == "invalid") {
-                // TODO: error
-                break;
-            }
-          case 'ineligible_account':
-            // TODO: inform the user their account is ineligible now
-            // TODO: provide a reason in the message
-          case 'fake_account':
-            // TODO: inform the user their account is fake
-          case 'reward_already_queued':
-          case 'reward_limit_reached':
-          default:
-        }
-      } else {
+    .success(
+      function (response) {
+        console.log(response.status);
+        success(response.message);
+      })
+    .error(
+      function (response) {
+        var responseJSON = response.responseJSON;
+        if (responseJSON.status == 'fail') {
+          switch (responseJSON.code) {
+            case 'validation_error':
+              var error = responseJSON.data;
+              if (error.field == "update_token" && error.code == "invalid") {
+                  // TODO: error
+                  break;
+              }
+            case 'ineligible_account':
+              // TODO: inform the user their account is ineligible now
+              // TODO: provide a reason in the message
+            case 'fake_account':
+              // TODO: inform the user their account is fake
+            case 'reward_already_queued':
+            case 'reward_limit_reached':
+            default:
+          }
+        } else {
 
-      }
-    }
-  );
+        }
+      });
 }

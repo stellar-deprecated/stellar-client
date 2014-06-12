@@ -43,7 +43,8 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, bruteRequest
         },
         // Fail
         function (response){
-          if (response.code == "already_taken") {
+          var responseJSON = response.responseJSON;
+          if (responseJSON.code == "already_taken") {
             $scope.usernameErrors.push('This username is taken.');
             $scope.usernameAvailable = false;
           } else {
@@ -197,10 +198,11 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, bruteRequest
         },
         // Fail
         function (response) {
-          if (response.status == "fail") {
-            if (response.code == "validation_error") {
+          var responseJSON = response.responseJSON;
+          if (responseJSON.status == "fail") {
+            if (responseJSON.code == "validation_error") {
               // TODO: iterate through the validation errors when we add server side validation
-              var error = response.data;
+              var error = responseJSON.data;
               if (error.field == "username" && error.code == "already_taken") {
                 // Show an error stating the username is already taken.
                 $scope.usernameAvailable = false;
