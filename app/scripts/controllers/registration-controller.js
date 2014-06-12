@@ -43,13 +43,18 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, bruteRequest
         },
         // Fail
         function (response){
-          var responseJSON = response.responseJSON;
-          if (responseJSON.code == "already_taken") {
-            $scope.usernameErrors.push('This username is taken.');
-            $scope.usernameAvailable = false;
-          } else {
-            // TODO
-          }
+          $scope.$apply(function() {
+            var responseJSON = response.responseJSON;
+            switch(responseJSON.code) {
+              case 'already_taken':
+                $scope.usernameErrors.push('This username is taken.');
+                $scope.usernameAvailable = false;
+                break;
+              default:
+                $scope.usernameErrors.push('An error occurred.');
+                $scope.usernameAvailable = null;
+            }
+          });
         }
       );
     }
