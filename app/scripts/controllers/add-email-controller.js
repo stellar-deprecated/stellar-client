@@ -23,54 +23,33 @@ sc.controller('AddEmailCtrl', function ($scope, $rootScope, session) {
         .error($scope.$apply(addEmailError));
 
       function addEmailSuccess(response) {
-        switch (response.status) {
-          case 'success':
-            // Store the email address in the blob.
-            session.get('blob').put('email', $scope.email);
-            session.storeBlob();
+          // Store the email address in the blob.
+          session.get('blob').put('email', $scope.email);
+          session.storeBlob();
 
-            // Switch to the verify overlay.
-            $rootScope.emailToVerify = $scope.email;
-            break;
-          case 'fail':
-            switch (response.code) {
-              case 'validation_error':
-                var error = response.data;
-                if (error.field == "update_token" && error.code == "invalid") {
-                    // TODO: invalid update token error
-                    addEmailError();
-                }
-                break;
+          // Switch to the verify overlay.
+          $rootScope.emailToVerify = $scope.email;
+      }
+
+      function addEmailError(response) {
+        if (response.status == 'fail') {
+          if (response.code == 'validation_error') {
+            var error = response.data;
+            if (error.field == "update_token" && error.code == "invalid") {
+              // TODO: send them to login screen?
+              $scope.errors.push('Login expired');
             }
-            break;
-          case 'error':
-            addEmailError();
+          }
+        } else {
+          $scope.errors.push('An error occured');
         }
-
-
-
-        if (response.error) {
-          response.status = 'error';
-        }
-
-        switch (response.status) {
-          case 'success':
-
-          case 'error':
-            $scope.errors.push('Invalid email address');
-          case 'default':
-            break;
-        }
+        $scope.loading = false;
       }
 
       function addEmailDone() {
         $scope.loading = false;
       }
 
-      function addEmailError() {
-        $scope.loading = false;
-        $scope.errors.push('An error occurred.');
-      }
     }
   };
 

@@ -38,24 +38,17 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, bruteRequest
         function (response) {
           $scope.$apply(function(){
             console.log(response.status);
-            switch (response.status) {
-              case "success":
-                $scope.usernameAvailable = true;
-                break;
-              case "fail":
-                if (response.code == "already_taken") {
-                  $scope.usernameErrors.push('This username is taken.');
-                  $scope.usernameAvailable = false;
-                  break;
-                }
-              case "error":
-                // TODO: show an error
-            }
+            $scope.usernameAvailable = true;
           });
         },
         // Fail
-        function(){
-          // TODO: Show an error.
+        function (response){
+          if (response.code == "already_taken") {
+            $scope.usernameErrors.push('This username is taken.');
+            $scope.usernameAvailable = false;
+          } else {
+            // TODO
+          }
         }
       );
     }
@@ -171,72 +164,56 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, bruteRequest
         function (response) {
           $scope.$apply(function () {
             console.log(response.status);
-            switch(response.status)
-            {
-              case 'success':
-                // Create the initial blob and insert the user's data.
-                var blob = new DataBlob();
-                blob.put('username', $scope.username);
-                blob.put('email', $scope.email);
-                blob.put('packedKeys', packedKeys);
-                blob.put('updateToken', response.data.updateToken);
-                blob.put('walletAuthToken', response.data.walletAuthToken);
+            // Create the initial blob and insert the user's data.
+            var blob = new DataBlob();
+            blob.put('username', $scope.username);
+            blob.put('email', $scope.email);
+            blob.put('packedKeys', packedKeys);
+            blob.put('updateToken', response.data.updateToken);
+            blob.put('walletAuthToken', response.data.walletAuthToken);
 
-                // Set the default client configuration
-                blob.put('server', Options.server);
+            // Set the default client configuration
+            blob.put('server', Options.server);
 
-                // Save the new blob to the session
-                session.put('blob', blob);
+            // Save the new blob to the session
+            session.put('blob', blob);
 
-                // Store the credentials needed to encrypt and decrypt the blob.
-                session.storeCredentials($scope.username, $scope.password);
+            // Store the credentials needed to encrypt and decrypt the blob.
+            session.storeCredentials($scope.username, $scope.password);
 
-                // Initialize the session variables.
-                session.start();
+            // Initialize the session variables.
+            session.start();
 
-                // Encrypt the blob and send it to the server.
-                // TODO: Handle failures when trying to save the blob.
-                session.storeBlob();
+            // Encrypt the blob and send it to the server.
+            // TODO: Handle failures when trying to save the blob.
+            session.storeBlob();
 
-                // Connect to the websocket server.
-                $scope.$broadcast('$idAccountLoad', {account: packedKeys.address, secret: packedKeys.sec});
+            // Connect to the websocket server.
+            $scope.$broadcast('$idAccountLoad', {account: packedKeys.address, secret: packedKeys.sec});
 
-                // Take the user to the dashboard.
-                $state.go('dashboard');
-                break;
-
-              case 'fail':
-                switch (response.code) {
-                  case 'validation_error':
-                    // TODO: iterate through the validation errors when we add server side validation
-                    var error = response.data;
-                    if (error.field == "username" && error.code == "already_taken") {
-                      // Show an error stating the username is already taken.
-                      $scope.usernameAvailable = false;
-                      $scope.usernameErrors.push('The username "' + $scope.username + '" is taken.');
-                    } else if (error.field == "alpha_code" && error.code == "already_taken") {
-                      // TODO: ux for alpha code has already been used
-                    } else if (error.field == "alpha_code" && error.code == "invalid") {
-                      // TODO: ux for alpha code is invalid
-                    }
-                    break;
-                  default:
-                    break;
-                }
-                break;
-              case 'error':
-                  $scope.usernameErrors.push('Registration error?');
-                break;
-
-              default:
-                  $scope.usernameErrors.push('Unknown response.');
-                break;
-            }
+            // Take the user to the dashboard.
+            $state.go('dashboard');
           });
         },
         // Fail
-        function(){
-            $scope.usernameErrors.push('Something is wrong?');
+        function (response) {
+          if (response.status == "fail") {
+            if (response.code == "validation_error") {
+              // TODO: iterate through the validation errors when we add server side validation
+              var error = response.data;
+              if (error.field == "username" && error.code == "already_taken") {
+                // Show an error stating the username is already taken.
+                $scope.usernameAvailable = false;
+                $scope.usernameErrors.push('The username "' + $scope.username + '" is taken.');
+              } else if (error.field == "alpha_code" && error.code == "already_taken") {
+                // TODO: ux for alpha code has already been used
+              } else if (error.field == "alpha_code" && error.code == "invalid") {
+                // TODO: ux for alpha code is invalid
+              }
+            }
+          } else {
+            $scope.usernameErrors.push('Registration error?');
+          }
         }
       );
     }

@@ -84,32 +84,29 @@ function claim(data, success, error) {
   $.post(Options.API_SERVER + "/claim/facebook", data, null, "json")
     .done(function (response) {
       console.log(response.status);
-      switch (response.status) {
-        case 'success':
-          success();
-          break;
-        case 'fail':
-          switch (response.code) {
-            case 'validation_error':
-              var error = response.data;
-              if (error.field == "update_token" && error.code == "invalid") {
-                  error();
-                  break;
-              }
-            case 'ineligible_account':
-              // TODO: inform the user their account is ineligible now
-              // TODO: provide a reason in the message
-            case 'fake_account':
-              // TODO: inform the user their account is fake
-            case 'reward_already_queued':
-            case 'reward_limit_reached':
-            break;
-          }
-          break;
-        case 'error':
-          error();
-          break;
+      success();
+    },
+    function (response) {
+      if (response.status == 'fail') {
+        switch (response.code) {
+          case 'validation_error':
+            var error = response.data;
+            if (error.field == "update_token" && error.code == "invalid") {
+                // TODO: error
+                break;
+            }
+          case 'ineligible_account':
+            // TODO: inform the user their account is ineligible now
+            // TODO: provide a reason in the message
+          case 'fake_account':
+            // TODO: inform the user their account is fake
+          case 'reward_already_queued':
+          case 'reward_limit_reached':
+          default:
+        }
+      } else {
+
       }
-    })
-  ;
+    }
+  );
 }

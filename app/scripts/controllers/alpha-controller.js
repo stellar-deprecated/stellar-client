@@ -34,7 +34,7 @@ sc.controller('AlphaCtrl', function ($scope, $state, session,  bruteRequest) {
       var data = {
         alphaCode: $scope.alphaCode
       };
-
+      console.log("test");
       // Submit the registration data to the server.
       requestAlpha.send(data,
         // Success
@@ -50,23 +50,29 @@ sc.controller('AlphaCtrl', function ($scope, $state, session,  bruteRequest) {
                 break;
 
               case 'fail':
-                switch (response.code) {
-                  case 'validation_error':
-                  var error = response.data;
-                  if (error.code == "already_taken") {
-                    $scope.alphaCodeErrors.push('This Alpha Code is already taken.');
-                  } else {
-                    $scope.alphaCodeErrors.push('This Alpha Code is invalid.');
-                  }
-                  break;
-                }
-                break;
+              console.log("fail");
+
               case 'error':
               default:
                 // TODO: internal error
-                $scope.alphaCodeErrors.push('An error occured.');
+
             }
           });
+        },
+        function (response) {
+          if (response.status == 'fail') {
+            if (response.code == "validation_error") {
+              var error = response.data;
+              if (error.code == "already_taken") {
+                $scope.alphaCodeErrors.push('This Alpha Code is already taken.');
+              } else {
+                console.log("push invalid");
+                $scope.alphaCodeErrors.push('This Alpha Code is invalid.');
+              }
+            }
+          } else {
+              $scope.alphaCodeErrors.push('An error occured.');
+          }
         }
       );
     }
