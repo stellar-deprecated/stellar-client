@@ -21,9 +21,9 @@ sc.controller('VerifyEmailCtrl', function ($scope, $rootScope, session) {
       url: Options.API_SERVER + '/claim/verifyEmail',
       dataType: 'JSON',
       data: data,
-      success: $scope.$apply(verifyEmailSuccess)
-    }).done($scope.$apply(verifyEmailDone))
-      .error($scope.$apply(verifyEmailError));
+      success: function(){ $scope.$apply(verifyEmailSuccess); }
+    }).done(function(){ $scope.$apply(verifyEmailDone); })
+      .error(function(){ $scope.$apply(verifyEmailError); });
 
     function verifyEmailSuccess(response) {
       if (response.error) {

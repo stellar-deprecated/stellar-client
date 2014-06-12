@@ -18,9 +18,9 @@ sc.controller('AddEmailCtrl', function ($scope, $rootScope, session) {
         url: Options.API_SERVER + '/user/email',
         dataType: 'JSON',
         data: data,
-        success: $scope.$apply(addEmailSuccess)
-      }).done($scope.$apply(addEmailDone))
-        .error($scope.$apply(addEmailError));
+        success: function(){ $scope.$apply(addEmailSuccess); }
+      }).done(function(){ $scope.$apply(addEmailDone); })
+        .error(function(){ $scope.$apply(addEmailError); });
 
       function addEmailSuccess(response) {
         if (response.error) {
