@@ -30,7 +30,7 @@ sc.controller('AddEmailCtrl', function ($scope, $rootScope, session) {
 
           // Switch to the verify overlay.
           $rootScope.emailToVerify = $scope.email;
-        }
+        });
       }
 
       function addEmailError(response) {
@@ -47,7 +47,7 @@ sc.controller('AddEmailCtrl', function ($scope, $rootScope, session) {
             $scope.errors.push('An error occured');
           }
           $scope.loading = false;
-        }
+        });
       }
 
       function addEmailDone() {

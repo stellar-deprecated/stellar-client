@@ -28,7 +28,7 @@ sc.controller('VerifyEmailCtrl', function ($scope, $rootScope, session) {
     function verifyEmailSuccess(response) {
       $scope.$apply(function() {
         $rootScope.$broadcast('emailVerified');
-      }
+      });
     }
 
     function verifyEmailError (response) {
@@ -39,13 +39,12 @@ sc.controller('VerifyEmailCtrl', function ($scope, $rootScope, session) {
             $scope.errors.push('Please login again.');
           } else if (response.code == 'facebook_auth') {
             // TODO: let the user know their reward is waiting, but they need to facebook auth first
-            break;
           }
         } else {
           $scope.errors.push('An error occured.');
         }
         $scope.loading = false;
-      }
+      });
     }
 
     function verifyEmailDone() {
