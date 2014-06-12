@@ -14,5 +14,8 @@
     "ng-table":                  "~0.3.2",
     "angular-moment":            "~0.7.0"
   },
-  "devDependencies": {}
+  "devDependencies": {},
+  "resolutions": {
+    "angular": "~1.2.17"
+  }
 }
