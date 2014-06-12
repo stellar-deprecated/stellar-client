@@ -21,31 +21,37 @@ sc.controller('VerifyEmailCtrl', function ($scope, $rootScope, session) {
       url: Options.API_SERVER + '/claim/verifyEmail',
       dataType: 'JSON',
       data: data,
-      success: function(){ $scope.$apply(verifyEmailSuccess); }
-    }).done(function(){ $scope.$apply(verifyEmailDone); })
-      .error(function(){ $scope.$apply(verifyEmailError); });
+      success: verifyEmailSuccess
+    }).done(verifyEmailDone)
+      .error(verifyEmailError);
 
     function verifyEmailSuccess(response) {
-      $rootScope.$broadcast('emailVerified');
+      $scope.$apply(function() {
+        $rootScope.$broadcast('emailVerified');
+      }
     }
 
     function verifyEmailError (response) {
-      if (response.status == 'fail') {
-        if (response.code == 'validation_error') {
-          // TODO: invalid credentials, send to login page?
-          $scope.errors.push('Please login again.');
-        } else if (response.code == 'facebook_auth') {
-          // TODO: let the user know their reward is waiting, but they need to facebook auth first
-          break;
+      $scope.$apply(function() {
+        if (response.status == 'fail') {
+          if (response.code == 'validation_error') {
+            // TODO: invalid credentials, send to login page?
+            $scope.errors.push('Please login again.');
+          } else if (response.code == 'facebook_auth') {
+            // TODO: let the user know their reward is waiting, but they need to facebook auth first
+            break;
+          }
+        } else {
+          $scope.errors.push('An error occured.');
         }
-      } else {
-        $scope.errors.push('An error occured.');
+        $scope.loading = false;
       }
-      $scope.loading = false;
     }
 
     function verifyEmailDone() {
-      $scope.loading = false;
+      $scope.$apply(function() {
+        $scope.loading = false;
+      });
     }
   };
 
