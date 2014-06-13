@@ -31,8 +31,15 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, bruteRequest
   // Checks to see if the supplied username is available.
   // This function is debounced to prevent API calls before the user is finished typing.
   var checkUsername = debounce(2000, function(){
-    if($scope.username === '') $scope.usernameAvailable = null;
-    else{
+    if ($scope.username === '') {
+      $scope.usernameAvailable = null;
+    } else {
+      var error = getUsernameError($scope.username);
+      if (error) {
+        $scope.usernameErrors.push(error);
+        $scope.usernameAvailable = false;
+        return;
+      }
       requestUsernameStatus.send({username: $scope.username},
         // Success
         function (response) {
@@ -59,6 +66,16 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, bruteRequest
       );
     }
   });
+
+  function getUsernameError(username) {
+    if (username.length < 3 || username.length > 20) {
+      return "Username must be between 3 and 20 characters";
+    }
+    if (!username.match(/^[a-z0-9]+([._-]+[a-z0-9]+)*$/)) {
+      return "Username is invalid";
+    }
+    return null;
+  }
 
   // The following functions validate user input on the fly.
   // This will clear error messages once the input is valid.
