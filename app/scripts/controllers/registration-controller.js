@@ -72,7 +72,7 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, bruteRequest
       return "Username must be between 3 and 20 characters";
     }
     if (!username.match(/^[a-z0-9]+([._-]+[a-z0-9]+)*$/)) {
-      return "Username is invalid";
+      return "Username must start and end with a letter, and may contain \".\", \"_\", or \"-\"";
     }
     return null;
   }
