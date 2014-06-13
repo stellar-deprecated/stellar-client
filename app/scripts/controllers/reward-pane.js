@@ -41,7 +41,11 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
         $scope.closeReward();
       });
     },
-    error: function(){}
+    error: function(message){
+      $scope.$apply(function () {
+        console.log(message);
+      });
+    }
   };
 
   var emailAction = {

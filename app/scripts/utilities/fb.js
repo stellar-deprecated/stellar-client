@@ -97,6 +97,8 @@ function claim(data, success, error) {
               if (error.field == "update_token" && error.code == "invalid") {
                   // TODO: error
                   break;
+              } else if (error.field == "facebook_id" && error.code == "already_taken") {
+                error("Facebook already linked to another user.");
               }
             case 'ineligible_account':
               // TODO: inform the user their account is ineligible now
