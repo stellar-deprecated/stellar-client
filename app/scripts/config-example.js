@@ -22,8 +22,8 @@ var Options = {
     },
 
     APP_ID: '703276886397629',
-    DOMAIN_NAME: 'stellar.org',
-    DEFAULT_FEDERATION_DOMAIN: 'stellar.org',
+    DOMAIN_NAME: 'gostellar.org',
+    DEFAULT_FEDERATION_DOMAIN: 'gostellar.org',
     API_SERVER: 'http://localhost:80',
     WALLET_SERVER: 'http://localhost:80',
 
