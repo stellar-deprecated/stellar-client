@@ -21,6 +21,7 @@ var Options = {
         "track": false
     },
 
+    APP_ID: '703276886397629',
     DOMAIN_NAME: 'stellar.org',
     DEFAULT_FEDERATION_DOMAIN: 'stellar.org',
     API_SERVER: 'http://localhost:80',
