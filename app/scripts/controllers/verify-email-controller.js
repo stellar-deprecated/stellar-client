@@ -34,7 +34,7 @@ sc.controller('VerifyEmailCtrl', function ($scope, $rootScope, session) {
     function verifyEmailError (response) {
       $scope.$apply(function() {
         var responseJSON = response.responseJSON;
-        if (responseJSON.status == 'fail') {
+        if (responseJSON && responseJSON.status == 'fail') {
           if (responseJSON.code == 'validation_error') {
             // TODO: invalid credentials, send to login page?
             $scope.errors.push('Please login again.');
