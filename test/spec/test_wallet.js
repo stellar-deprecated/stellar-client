@@ -307,11 +307,48 @@ describe('Wallet', function () {
   });
 
   describe('encryptData', function(){
-    // TODO: Write tests for Wallet.encryptData()
+    it('should encrypt data', function(){
+      var data = {content: 'test'};
+      var key = [0, 1, 2, 3, 4, 5, 6, 7];
+
+      var result = Wallet.encryptData(data, key);
+
+      expect(result.length).to.equal(256);
+      var resultObject = JSON.parse(atob(result));
+      expect(resultObject.cipherName).to.equal('aes');
+      expect(resultObject.hash.length).to.equal(44);
+      expect(resultObject.hashSalt.length).to.equal(24);
+      expect(resultObject.cipherText.length).to.equal(64);
+    });
   });
 
   describe('decryptData', function(){
-    // TODO: Write tests for Wallet.decryptData()
+    it('should decrypt data', function(){
+      var encryptedData = "eyJoYXNoIjoiNzFHdmc5SEhmTmZFWUJFRFBJV3BrM24xQUNsUUN5aWNjYkc5NWh1Y3ZMQT0iLCJoYXNoU2FsdCI6IkVyb2xaTTZpZzBydjIzTUZhd1dkYnc9PSIsImNpcGhlclRleHQiOiIvVDdzcUtURzR5K3NhN3p1NHZzdGo0b1J1Uy9adVVpSzRXcmhVT2RJcnF6cG5HN2pmb1YrYmhrcTBGd0VLa0ZJIiwiY2lwaGVyTmFtZSI6ImFlcyJ9";
+      var key = [0, 1, 2, 3, 4, 5, 6, 7];
+
+      var result = Wallet.decryptData(encryptedData, key);
+
+      expect(result).to.deep.equal({content: 'test'});
+    });
+
+    it('should throw an error if the encryptedData was corrupted', function(){
+      var corruptedData = "IjoiNzFHdmc5SEhmTmZFWUJFRFBJV3BrM24xQUNsUUN5aWNjYkc5NWh1Y3ZMQT0iLCJoYXNoU2FsdCI6IkVyb2xaTTZpZzBydjIzTUZhd1dkYnc9PSIsImNpcGhlclRleHQiOiIvVDdzcUtURzR5K3NhN3p1NHZzdGo0b1J1Uy9adVVpSzRXcmhVT2RJcnF6cG5HN2pmb1YrYmhrcTBGd0VLa0ZJIiwiY2lwaGVyTmFtZSI6";
+      var key = [0, 1, 2, 3, 4, 5, 6, 7];
+
+      expect(function(){
+        var result = Wallet.decryptData(corruptedData, key);
+      }).to.throw('Data corrupt!');
+    });
+
+    it('should throw an error if the cipherText has been modified', function(){
+      var corruptedData = "eyJoYXNoIjoiWDlXYU55aElkY090dndJR09TUkptSHJ2M296TlpOaERkdlVqSmsvcGRLRT0iLCJoYXNoU2FsdCI6IlNYZ0ZvQUR2dXdCWEJZdmxYNExxWmc9PSIsImNpcGhlclRleHQiOiJhdkd1b1dDVFMxK0tDNTJNenhBTHVJZldZczFBL1BQU0ZUVWptMXdFenpRb3VrbnhKSlgxOWt2WjlUSUw2R20iLCJjaXBoZXJOYW1lIjoiYWVzIn0=";
+      var key = [0, 1, 2, 3, 4, 5, 6, 7];
+
+      expect(function(){
+        var result = Wallet.decryptData(corruptedData, key);
+      }).to.throw('Message integrity check failed!');
+    });
   });
 
   describe('checkHash()', function(){

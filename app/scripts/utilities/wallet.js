@@ -111,16 +111,42 @@ Wallet.prototype.encrypt = function(){
   };
 };
 
+/**
+ * Configure the data cryptography setting.
+ */
+var settings = {
+  pbkdf2: {
+    iterations: 1000,
+    size: 256 // Must be a valid AES key size.
+  },
+
+  scrypt: {
+    N: Math.pow(2, 11),
+    r: 8,
+    p: 1,
+    size: 256
+  },
+
+  cipherName: 'aes'
+};
+
 Wallet.expandCredentials = function(username, password){
-  var expandedCredentials = {};
+  var credentials = username + password;
+  var salt = credentials;
 
-  // TODO: Expand username + password into key.
-  expandedCredentials.key = [0, 0, 0, 0, 0, 0, 0, 0];
+  console.time('Generating ID');
+  var id = sjcl.misc.scrypt(credentials, salt, settings.scrypt.N, settings.scrypt.r, settings.scrypt.p, settings.scrypt.size/8);
+  id = sjcl.codec.base64.fromBits(id);
+  console.timeEnd('Generating ID');
 
-  // TODO: Expand walletKey into id.
-  expandedCredentials.id = '';
+  console.time('Generating key');
+  var key = sjcl.misc.scrypt(id + credentials, id + salt, settings.scrypt.N, settings.scrypt.r, settings.scrypt.p, settings.scrypt.size/8);
+  console.timeEnd('Generating key');
 
-  return expandedCredentials;
+  return {
+    id: id,
+    key: key
+  };
 };
 
 /**
@@ -138,16 +164,6 @@ function bitsToString(bits){
 }
 
 /**
- * Configure the data cryptography setting.
- */
-var settings = {
-  pbkdf2: {
-    iterations: 1000,
-    size: 256 // Must be a valid AES key size.
-  }
-};
-
-/**
  * Encrypt data using 256bit AES in CBC mode with HMAC-SHA256 integrity checking.
  *
  * @param {object} data The data to encrypt.
@@ -159,8 +175,8 @@ Wallet.encryptData = function(data, key) {
   // Encode data into a JSON byte array.
   var rawData = sjcl.codec.utf8String.toBits(JSON.stringify(data));
 
-  // Initialize the AES algorithm with the cipher key.
-  var cipher = new sjcl.cipher.aes(key);
+  // Initialize the cipher algorithm with the key.
+  var cipher = new sjcl.cipher[settings.cipherName](key);
 
   // SJCL doesn't know we are using HMAC-SHA256 to check integrity.
   // TODO: Consider using GCM mode to avoid implementation errors.
@@ -182,14 +198,16 @@ Wallet.encryptData = function(data, key) {
   // Calculate the authentication hash of the cipher text using HMAC-SHA256.
   var rawHash = CryptoJS.HmacSHA256(cipherText, hashKey).words;
 
-  // Encrypted data structure:
-  //  ------------------------------------- -------------------------------
-  // |        HMAC-SHA256(cipherText)      |           cipherText          |
-  // |-------------------------------------|-------------------------------|
-  // | hash (8 bytes) | hashSalt (4 bytes) | IV (4 bytes) | data (n bytes) |
-  //  ------------------------------------- -------------------------------
-  var rawEncryptedData = rawHash.concat(rawHashSalt, rawCipherText);
-  return sjcl.codec.base64.fromBits(rawEncryptedData);
+  // Pack the results into a JSON encoded string.
+  var resultString = JSON.stringify({
+    hash: sjcl.codec.base64.fromBits(rawHash),
+    hashSalt: sjcl.codec.base64.fromBits(rawHashSalt),
+    cipherText: sjcl.codec.base64.fromBits(rawCipherText),
+    cipherName: settings.cipherName
+  });
+
+  // Encode the JSON string as base64 to obscure it's structure.
+  return btoa(resultString);
 };
 
 /**
@@ -199,27 +217,35 @@ Wallet.encryptData = function(data, key) {
  * @param {string | Array.<bits>} key The key used to decrypt the blob.
  */
 Wallet.decryptData = function(encryptedData, key) {
-  // Decode the base64 encode data into a bit array.
-  var rawEncryptedData = sjcl.codec.base64.toBits(encryptedData);
+  try {
+    // Parse the base64 encoded JSON object.
+    var resultObject = JSON.parse(atob(encryptedData));
 
-  // Extract the authentication hash and hash salt from the encrypted data.
-  var rawGivenHash = rawEncryptedData.slice(0, 8);
-  var givenHash = bitsToString(rawGivenHash);
-  var rawHashSalt = rawEncryptedData.slice(8, 12);
+    // Extract the authentication hash and hash salt from the encrypted data.
+    var rawGivenHash = sjcl.codec.base64.toBits(resultObject.hash);
+    var rawHashSalt = sjcl.codec.base64.toBits(resultObject.hashSalt);
+
+    // Extract the cipher text from the encrypted data.
+    var rawCipherText = sjcl.codec.base64.toBits(resultObject.cipherText);
+    var cipherText = bitsToString(rawCipherText);
+
+    // Extract the cipher name from the encrypted data.
+    var cipherName = resultObject.cipherName;
+  } catch(e) {
+    // The encoded data does not represent valid base64 values.
+    throw('Data corrupt!');
+  }
 
   // Expand the key into a hash key using PBKDF2 with the given hash salt.
   var rawHashKey = sjcl.misc.pbkdf2(key, rawHashSalt, settings.pbkdf2.iterations, settings.pbkdf2.size);
   var hashKey = bitsToString(rawHashKey);
-
-  // Extract the cipher text from the encrypted data.
-  var rawCipherText = rawEncryptedData.slice(12);
-  var cipherText = bitsToString(rawCipherText);
 
   // Calculate the authentication hash of the cipher text using HMAC-SHA256.
   var rawCalculatedHash = CryptoJS.HmacSHA256(cipherText, hashKey).words;
   var calculatedHash = bitsToString(rawCalculatedHash);
 
   // Ensure that the given cipher text hash matches the calculated cipher text hash.
+  var givenHash = bitsToString(rawGivenHash);
   if(givenHash !== calculatedHash) throw("Message integrity check failed!");
 
   // Extract the IV and encrypted data from the cipher text.
@@ -230,8 +256,8 @@ Wallet.decryptData = function(encryptedData, key) {
   // TODO: Consider using GCM mode to avoid implementation errors.
   sjcl.beware["CBC mode is dangerous because it doesn't protect message integrity."]();
 
-  // Initialize the AES algorithm with the cipher key.
-  var cipher = new sjcl.cipher.aes(key);
+  // Initialize the cipher algorithm with the key.
+  var cipher = new sjcl.cipher[cipherName](key);
 
   // Decrypt the data in CBC mode using AES and the given IV.
   var rawData = sjcl.mode.cbc.decrypt(cipher, rawEncryptedText, rawIV);
