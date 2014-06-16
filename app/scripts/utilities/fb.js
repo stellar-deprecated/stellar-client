@@ -93,11 +93,11 @@ function claim(data, success, error) {
         if (responseJSON.status == 'fail') {
           switch (responseJSON.code) {
             case 'validation_error':
-              var error = responseJSON.data;
-              if (error.field == "update_token" && error.code == "invalid") {
+              var errorJSON = responseJSON.data;
+              if (errorJSON.field == "update_token" && errorJSON.code == "invalid") {
                   // TODO: error
                   break;
-              } else if (error.field == "facebook_id" && error.code == "already_taken") {
+              } else if (errorJSON.field == "facebook_id" && errorJSON.code == "already_taken") {
                 error("Facebook already linked to another user.");
               }
             case 'ineligible_account':

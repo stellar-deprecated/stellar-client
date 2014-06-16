@@ -42,9 +42,7 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
       });
     },
     error: function(message){
-      $scope.$apply(function () {
-        console.log(message);
-      });
+      // TODO: show error
     }
   };
 
