@@ -15,6 +15,8 @@ gulp.task('default', ['clean'], function () {
 gulp.task('develop', ['serve']);
 gulp.task('build',   ['html', 'images', 'fonts']);
 
+
+
 //component tasks
 gulp.task('styles', function () {
     return gulp.src('app/styles/main.scss')
@@ -32,7 +34,7 @@ gulp.task('scripts', function () {
         .pipe($.size());
 });
 
-gulp.task('html', ['styles', 'scripts'], function () {
+gulp.task('html', ['config', 'styles', 'scripts'], function () {
     var jsFilter = $.filter('**/*.js');
     var cssFilter = $.filter('**/*.css');
 
@@ -68,6 +70,15 @@ gulp.task('fonts', function () {
         .pipe($.flatten())
         .pipe(gulp.dest('dist/fonts'))
         .pipe($.size());
+});
+
+gulp.task('config', function() {
+    var env = process.env.NODE_ENV || 'development'
+    gulp.src('config/' + env + ".js")
+        .pipe($.rename(function (path) {
+            path.basename = "config";
+        }))
+        .pipe(gulp.dest('app/scripts'))
 });
 
 gulp.task('clean', function () {
