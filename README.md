@@ -16,10 +16,14 @@ npm install
 
 # Install app dependencies
 bower install
+
+# set your initial (development) configuration
+
+gulp config
 ```
 
 ## Starting your dev server
 
 ```bash
-gulp watch
+gulp develop
 ```
