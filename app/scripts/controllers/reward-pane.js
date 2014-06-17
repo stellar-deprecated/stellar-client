@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteRequest', function ($scope, $rootScope, session, bruteRequest) {
+sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteRequest', 'stNetwork', function ($scope, $rootScope, session, bruteRequest, stNetwork) {
   $scope.showRewards = false;
   $scope.selectedReward = null;
   $rootScope.emailToVerify = session.get('blob').get('email');
@@ -68,7 +68,7 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
       // TODO: Show send tutorial.
     },
     success: function() {
-      $scope.rewards[3].status = "complete";
+      $scope.rewards[3].status = "sent";
       computeRewardProgress();
       $scope.closeReward();
     }
@@ -155,8 +155,10 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
                 $scope.rewards[reward.rewardType].status = reward.status;
                 switch (reward.status) {
                     case 'awaiting_payout':
-                        // this guy is on the waiting list
-                        getPlaceInLine();
+                        if (reward.rewardType == 1) {
+                          // this guy is on the waiting list
+                          getPlaceInLine();
+                        }
                         break;
                     case 'sent':
                         count++;
@@ -164,6 +166,9 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
             });
             computeRewardProgress();
             $scope.showRewards = (count < 3);
+            if ($scope.rewards[reward.rewardType].status == "incomplete") {
+              checkSentTransactions();
+            }
         },
         function (response) {
             if (response.status == 'fail') {
@@ -179,6 +184,62 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
         }
       );
     }
+
+  // checks if the user has any "sent" transactions, requests send reward if so
+  function checkSentTransactions() {
+    var remote = stNetwork.remote;
+    var account = $rootScope.account;
+    var requestStellars = true;
+    // Transactions
+    remote.request_account_tx({
+        'account': account,
+        'ledger_index_min': 0,
+        'ledger_index_max': 9999999,
+        'descending': true,
+        'count': true
+    })
+    .on('success', function(data) {
+      $scope.$apply(function () {
+        if (data.transactions) {
+            data.transactions.forEach(function (e) {
+              var processedTxn = JsonRewriter.processTxn(e.tx, e.meta, account);
+              var transaction = processedTxn.transaction;
+              if (transaction.type == "sent" && $scope.rewards[3].status == "incomplete" && requestStellars) {
+                requestSentStellarsReward();
+                requestStellars = false;
+              }
+            });
+        }
+      });
+    })
+    .on('error', function () {
+
+    })
+    .request();
+  }
+
+  function requestSentStellarsReward() {
+    var username = session.get('username');
+    $.post(Options.API_SERVER + "/claim/sendStellars", {"username": username}, null, "json")
+    .success(
+      function (response) {
+        $scope.$apply(function () {
+          console.log(response.status);
+          $scope.rewards[3].status = response.message;
+        });
+      })
+    .error(
+      function (response) {
+
+      });
+  }
+
+  // Show a notification when new transactions are received.
+  $scope.$on('$appTxNotification', function(event, tx){
+      if (tx.type == 'sent' && $scope.rewards[3].status == "incomplete") {
+        requestSentStellarsReward();
+      }
+  });
 
   computeRewardProgress();
   updateRewards();
