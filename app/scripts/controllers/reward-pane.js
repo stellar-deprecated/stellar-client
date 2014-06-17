@@ -166,7 +166,7 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
             });
             computeRewardProgress();
             $scope.showRewards = (count < 3);
-            if ($scope.rewards[reward.rewardType].status == "incomplete") {
+            if ($scope.rewards[3].status == "incomplete") {
               checkSentTransactions();
             }
         },
