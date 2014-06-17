@@ -3,7 +3,6 @@
 var sc = angular.module('stellarClient');
 
 sc.controller('DashboardCtrl', function($rootScope, $scope, $timeout, $state, session, stNetwork) {
-  $scope.blob = session.get('blob');
     $rootScope.tab = 'none';
 
     $scope.showTransaction = false;

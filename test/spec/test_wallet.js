@@ -53,27 +53,20 @@ describe('Wallet', function () {
   describe('create()', function() {
     beforeEach(function () {
       var create = Wallet.create;
-      sandbox.stub(SigningKeys, 'generate').returns('signingKeys');
 
       // Expose the static create method on the stubbed version of Wallet.
       sandbox.stub(window, 'Wallet');
       Wallet.create = create;
     });
 
-    it('should generate signing keys', function () {
-      var wallet = Wallet.create('username', 'password', 'authToken', 'updateToken', 'recoveryId');
-
-      expect(SigningKeys.generate.called).to.equal(true);
-    });
-
     it('should expand the user credentials', function () {
-      var wallet = Wallet.create('username', 'password', 'authToken', 'updateToken', 'recoveryId');
+      var wallet = Wallet.create('username', 'password', 'signingKeys', 'authToken', 'updateToken', 'recoveryId');
 
       expect(Wallet.expandCredentials.called).to.equal(true);
     });
 
     it('should create a new wallet', function () {
-      var wallet = Wallet.create('username', 'password', 'authToken', 'updateToken', 'recoveryId');
+      var wallet = Wallet.create('username', 'password', 'signingKeys', 'authToken', 'updateToken', 'recoveryId');
 
       expect(Wallet.called).to.equal(true);
 
@@ -94,7 +87,6 @@ describe('Wallet', function () {
       var decrypt = Wallet.decrypt;
       var decryptData = sandbox.stub(Wallet, 'decryptData');
       var checkHash = sandbox.stub(Wallet, 'checkHash');
-      sandbox.stub(SigningKeys, 'unpack').returns('signingKeys');
 
       // Expose the required methods on the stubbed version of Wallet.
       sandbox.stub(window, 'Wallet');
@@ -123,7 +115,7 @@ describe('Wallet', function () {
       Wallet.decryptData.withArgs('encryptedMainData', key).returns('mainData');
       Wallet.decryptData.withArgs('encryptedRecoveryData', key).returns('recoveryData');
       Wallet.decryptData.withArgs('encryptedKeychainData', key).returns({
-        signingKeys: 'packedSigningKeys',
+        signingKeys: 'signingKeys',
         authToken:   'authToken',
         updateToken: 'updateToken'
       });
@@ -259,24 +251,16 @@ describe('Wallet', function () {
       sandbox.stub(Wallet, 'encryptData');
       Wallet.encryptData.withArgs(walletOptions.recoveryData, walletOptions.key).returns('encryptedRecoveryData');
       Wallet.encryptData.withArgs(walletOptions.mainData, walletOptions.key).returns('encryptedMainData');
-      var keychainData = {
-        keys: {pub: 'pub', sec: 'sec'},
-        authToken: 'authToken',
-        updateToken: 'updateToken'
-      };
-      Wallet.encryptData.withArgs(keychainData, walletOptions.key).returns('encryptedKeychainData');
+      Wallet.encryptData.withArgs(walletOptions.keychainData, walletOptions.key).returns('encryptedKeychainData');
 
-      sandbox.stub(SigningKeys.prototype, 'pack').returns({pub: 'pub', sec: 'sec'});
       sandbox.stub(sjcl.hash.sha1, 'hash');
+      sandbox.stub(sjcl.codec.hex, 'fromBits');
       sjcl.hash.sha1.hash.withArgs('encryptedRecoveryData').returns('encryptedRecoveryDataHash');
       sjcl.hash.sha1.hash.withArgs('encryptedMainData').returns('encryptedMainDataHash');
       sjcl.hash.sha1.hash.withArgs('encryptedKeychainData').returns('encryptedKeychainDataHash');
-    });
-
-    it('should pack the signing keys', function(){
-      var encryptedWallet = wallet.encrypt();
-
-      expect(SigningKeys.prototype.pack.called).to.equal(true);
+      sjcl.codec.hex.fromBits.withArgs('encryptedRecoveryDataHash').returns('encryptedRecoveryDataHashHex');
+      sjcl.codec.hex.fromBits.withArgs('encryptedMainDataHash').returns('encryptedMainDataHashHex');
+      sjcl.codec.hex.fromBits.withArgs('encryptedKeychainDataHash').returns('encryptedKeychainDataHashHex');
     });
 
     it('should encrypt the mainData, recoveryData, and keychainData', function(){
@@ -292,9 +276,9 @@ describe('Wallet', function () {
       var encryptedWallet = wallet.encrypt();
 
       expect(sjcl.hash.sha1.hash.callCount).to.equal(3);
-      expect(encryptedWallet.mainDataHash).to.equal('encryptedMainDataHash');
-      expect(encryptedWallet.recoveryDataHash).to.equal('encryptedRecoveryDataHash');
-      expect(encryptedWallet.keychainDataHash).to.equal('encryptedKeychainDataHash');
+      expect(encryptedWallet.mainDataHash).to.equal('encryptedMainDataHashHex');
+      expect(encryptedWallet.recoveryDataHash).to.equal('encryptedRecoveryDataHashHex');
+      expect(encryptedWallet.keychainDataHash).to.equal('encryptedKeychainDataHashHex');
     });
 
     it('should return the id, authToken, and recoveryId', function(){
@@ -324,7 +308,7 @@ describe('Wallet', function () {
 
   describe('decryptData', function(){
     it('should decrypt data', function(){
-      var encryptedData = "eyJoYXNoIjoiNzFHdmc5SEhmTmZFWUJFRFBJV3BrM24xQUNsUUN5aWNjYkc5NWh1Y3ZMQT0iLCJoYXNoU2FsdCI6IkVyb2xaTTZpZzBydjIzTUZhd1dkYnc9PSIsImNpcGhlclRleHQiOiIvVDdzcUtURzR5K3NhN3p1NHZzdGo0b1J1Uy9adVVpSzRXcmhVT2RJcnF6cG5HN2pmb1YrYmhrcTBGd0VLa0ZJIiwiY2lwaGVyTmFtZSI6ImFlcyJ9";
+      var encryptedData = "eyJoYXNoIjoiT3lLYnRVbUxNMzE5YUhUT1NCSHJJNG41TUwyUkgrakgwbDNSTkwvc0hYdz0iLCJoYXNoU2FsdCI6IjZ5aUFRSXdKbVFhSy9EL0RFNlhEWmc9PSIsImNpcGhlclRleHQiOiJsZXpRQ2ZaV2xRYnJnbU1xajExQ1ErSW5FZVZBeVVQektDZmNhdzRRT0xJV3NZN2d2bHU3VGZHOWkzOEc4Z2NqIiwiY2lwaGVyTmFtZSI6ImFlcyJ9";
       var key = [0, 1, 2, 3, 4, 5, 6, 7];
 
       var result = Wallet.decryptData(encryptedData, key);
@@ -342,7 +326,7 @@ describe('Wallet', function () {
     });
 
     it('should throw an error if the cipherText has been modified', function(){
-      var corruptedData = "eyJoYXNoIjoiWDlXYU55aElkY090dndJR09TUkptSHJ2M296TlpOaERkdlVqSmsvcGRLRT0iLCJoYXNoU2FsdCI6IlNYZ0ZvQUR2dXdCWEJZdmxYNExxWmc9PSIsImNpcGhlclRleHQiOiJhdkd1b1dDVFMxK0tDNTJNenhBTHVJZldZczFBL1BQU0ZUVWptMXdFenpRb3VrbnhKSlgxOWt2WjlUSUw2R20iLCJjaXBoZXJOYW1lIjoiYWVzIn0=";
+      var corruptedData = "eyJoYXNoIjoiT3lLYnRVbUxNMzE5YUhUT1NCSHJJNG41TUwyUkgrakgwbDNSTkwvc0hYdz0iLCJoYXNoU2FsdCI6IjZ5aUFRSXdKbVFhSy9EL0RFNlhEWmc9PSIsImNpcGhlclRleHQiOiJ6UUNmWldsUWJyZ21NcWoxMUNRK0luRWVWQXlVUHpLQ2ZjYXc0UU9MSVdzWTdndmx1N1RmRzlpMzhHOGdjaiIsImNpcGhlck5hbWUiOiJhZXMifQ==";
       var key = [0, 1, 2, 3, 4, 5, 6, 7];
 
       expect(function(){
@@ -354,23 +338,28 @@ describe('Wallet', function () {
   describe('checkHash()', function(){
     beforeEach(function(){
       sandbox.stub(sjcl.hash.sha1, 'hash');
+      sandbox.stub(sjcl.codec.hex, 'fromBits');
     });
 
     it('should return true if the hash of the data matches the expected hash', function(){
       sjcl.hash.sha1.hash.returns('expectedHash');
+      sjcl.codec.hex.fromBits.returns('expectedHashHex');
 
-      var result = Wallet.checkHash('data', 'expectedHash');
+      var result = Wallet.checkHash('data', 'expectedHashHex');
 
       expect(sjcl.hash.sha1.hash.called).to.equal(true);
+      expect(sjcl.codec.hex.fromBits.called).to.equal(true);
       expect(result).to.equal(true);
     });
 
     it('should return false if the hash of the data does not match the expected hash', function(){
       sjcl.hash.sha1.hash.returns('differentHash');
+      sjcl.codec.hex.fromBits.returns('differentHashHex');
 
-      var result = Wallet.checkHash('data', 'expectedHash');
+      var result = Wallet.checkHash('data', 'expectedHashHex');
 
       expect(sjcl.hash.sha1.hash.called).to.equal(true);
+      expect(sjcl.codec.hex.fromBits.called).to.equal(true);
       expect(result).to.equal(false);
     });
   });

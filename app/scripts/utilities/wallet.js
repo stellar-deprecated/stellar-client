@@ -13,13 +13,14 @@ var Wallet = function(options){
  *
  * @param {string} username
  * @param {string} password
+ * @param {object} signingKeys
  * @param {string} recoveryId
  * @param {string} authToken
  * @param {string} updateToken
  *
  * @returns {Wallet}
  */
-Wallet.create = function(username, password, authToken, updateToken, recoveryId){
+Wallet.create = function(username, password, signingKeys, authToken, updateToken, recoveryId){
   var expandedCredentials = Wallet.expandCredentials(username, password);
 
   var options = {
@@ -27,7 +28,7 @@ Wallet.create = function(username, password, authToken, updateToken, recoveryId)
     key:        expandedCredentials.key,
     recoveryId: recoveryId,
     keychainData: {
-      signingKeys: SigningKeys.generate(),
+      signingKeys: signingKeys,
       authToken:   authToken,
       updateToken: updateToken
     }
@@ -50,11 +51,12 @@ Wallet.create = function(username, password, authToken, updateToken, recoveryId)
  * @param {string} encryptedWallet.keychainDataHash
  * @param {string} encryptedWallet.recoveryData
  * @param {string} encryptedWallet.recoveryDataHash
- * @param {Array.<bits>} key
+ * @param {string} username
+ * @param {string} password
  *
  * @returns {Wallet}
  */
-Wallet.decrypt = function(encryptedWallet, key){
+Wallet.decrypt = function(encryptedWallet, username, password){
   if (!Wallet.checkHash(encryptedWallet.mainData, encryptedWallet.mainDataHash)){
     throw new Error('Incorrect hash for mainData.');
   }
@@ -67,16 +69,15 @@ Wallet.decrypt = function(encryptedWallet, key){
     throw new Error('Incorrect hash for keychainData.');
   }
 
-  var mainData = Wallet.decryptData(encryptedWallet.mainData, key);
-  var recoveryData = Wallet.decryptData(encryptedWallet.recoveryData, key);
-  var keychainData = Wallet.decryptData(encryptedWallet.keychainData, key);
+  var expandedCredentials = Wallet.expandCredentials(username, password);
 
-  // Unpack the signing key strings into objects that can be used for signing.
-  keychainData.signingKeys = SigningKeys.unpack(keychainData.signingKeys);
+  var mainData = Wallet.decryptData(encryptedWallet.mainData, expandedCredentials.key);
+  var recoveryData = Wallet.decryptData(encryptedWallet.recoveryData, expandedCredentials.key);
+  var keychainData = Wallet.decryptData(encryptedWallet.keychainData, expandedCredentials.key);
 
   var options = {
-    id:           encryptedWallet.id,
-    key:          key,
+    id:           expandedCredentials.id,
+    key:          expandedCredentials.key,
     recoveryId:   encryptedWallet.recoveryId,
     recoveryData: recoveryData,
     mainData:     mainData,
@@ -87,27 +88,20 @@ Wallet.decrypt = function(encryptedWallet, key){
 };
 
 Wallet.prototype.encrypt = function(){
-  var keychainData = {
-    // Signing keys must be packed as strings before encryption.
-    keys:        this.keychainData.keys.pack(),
-    authToken:   this.keychainData.authToken,
-    updateToken: this.keychainData.updateToken
-  };
-
   var encryptedMainData = Wallet.encryptData(this.mainData, this.key);
   var encryptedRecoveryData = Wallet.encryptData(this.recoveryData, this.key);
-  var encryptedKeychainData = Wallet.encryptData(keychainData, this.key);
+  var encryptedKeychainData = Wallet.encryptData(this.keychainData, this.key);
 
   return {
     id:               this.id,
     authToken:        this.keychainData.authToken,
     recoveryId:       this.recoveryId,
     mainData:         encryptedMainData,
-    mainDataHash:     sjcl.hash.sha1.hash(encryptedMainData),
+    mainDataHash:     sjcl.codec.hex.fromBits(sjcl.hash.sha1.hash(encryptedMainData)),
     keychainData:     encryptedKeychainData,
-    keychainDataHash: sjcl.hash.sha1.hash(encryptedKeychainData),
+    keychainDataHash: sjcl.codec.hex.fromBits(sjcl.hash.sha1.hash(encryptedKeychainData)),
     recoveryData:     encryptedRecoveryData,
-    recoveryDataHash: sjcl.hash.sha1.hash(encryptedRecoveryData)
+    recoveryDataHash: sjcl.codec.hex.fromBits(sjcl.hash.sha1.hash(encryptedRecoveryData))
   };
 };
 
@@ -150,20 +144,6 @@ Wallet.expandCredentials = function(username, password){
 };
 
 /**
- * Encode a bit array into a utf8 string.
- * This function is required, because sjcl.codec.utf8String.fromBits()
- * is deprecated and fails to handle some binary values.
- *
- * @param {Array.<bits>} bits The array of bits to encode.
- *
- * @returns {string} The utf8 encoded string.
- */
-function bitsToString(bits){
-  var bytes = sjcl.codec.bytes.fromBits(bits);
-  return String.fromCharCode.apply(null, bytes);
-}
-
-/**
  * Encrypt data using 256bit AES in CBC mode with HMAC-SHA256 integrity checking.
  *
  * @param {object} data The data to encrypt.
@@ -188,12 +168,12 @@ Wallet.encryptData = function(data, key) {
 
   // Concatenate the IV and encrypted blob data respectively into the cipher text.
   var rawCipherText = rawIV.concat(rawEncryptedText);
-  var cipherText = bitsToString(rawCipherText);
+  var cipherText = sjcl.codec.base64.fromBits(rawCipherText);
 
   // Expand the key into a randomly salted hash key using PBKDF2.
   var rawHashSalt = sjcl.random.randomWords(4);
   var rawHashKey = sjcl.misc.pbkdf2(key, rawHashSalt, settings.pbkdf2.iterations, settings.pbkdf2.size);
-  var hashKey = bitsToString(rawHashKey);
+  var hashKey = sjcl.codec.base64.fromBits(rawHashKey);
 
   // Calculate the authentication hash of the cipher text using HMAC-SHA256.
   var rawHash = CryptoJS.HmacSHA256(cipherText, hashKey).words;
@@ -227,7 +207,7 @@ Wallet.decryptData = function(encryptedData, key) {
 
     // Extract the cipher text from the encrypted data.
     var rawCipherText = sjcl.codec.base64.toBits(resultObject.cipherText);
-    var cipherText = bitsToString(rawCipherText);
+    var cipherText = sjcl.codec.base64.fromBits(rawCipherText);
 
     // Extract the cipher name from the encrypted data.
     var cipherName = resultObject.cipherName;
@@ -238,14 +218,14 @@ Wallet.decryptData = function(encryptedData, key) {
 
   // Expand the key into a hash key using PBKDF2 with the given hash salt.
   var rawHashKey = sjcl.misc.pbkdf2(key, rawHashSalt, settings.pbkdf2.iterations, settings.pbkdf2.size);
-  var hashKey = bitsToString(rawHashKey);
+  var hashKey = sjcl.codec.base64.fromBits(rawHashKey);
 
   // Calculate the authentication hash of the cipher text using HMAC-SHA256.
   var rawCalculatedHash = CryptoJS.HmacSHA256(cipherText, hashKey).words;
-  var calculatedHash = bitsToString(rawCalculatedHash);
+  var calculatedHash = sjcl.codec.base64.fromBits(rawCalculatedHash);
 
   // Ensure that the given cipher text hash matches the calculated cipher text hash.
-  var givenHash = bitsToString(rawGivenHash);
+  var givenHash = sjcl.codec.base64.fromBits(rawGivenHash);
   if(givenHash !== calculatedHash) throw("Message integrity check failed!");
 
   // Extract the IV and encrypted data from the cipher text.
@@ -268,5 +248,5 @@ Wallet.decryptData = function(encryptedData, key) {
 };
 
 Wallet.checkHash = function(data, expectedHash) {
-  return sjcl.hash.sha1.hash(data) === expectedHash;
+  return sjcl.codec.hex.fromBits(sjcl.hash.sha1.hash(data)) === expectedHash;
 };

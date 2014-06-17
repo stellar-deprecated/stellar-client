@@ -1,88 +1,68 @@
 'use strict';
 
 var sc = angular.module('stellarClient');
-/*
-Random variables that we are storing to be accessed by the rest of the app.
-Jed: Do we need this?
- */
-sc.service('session', function($cacheFactory, KeyGen, stNetwork, DataBlob ) {
-  var cache = $cacheFactory('sessionCache');
 
+var cache = {};
+
+sc.service('session', function($rootScope) {
   var Session = function() {};
 
-  Session.prototype.get = function(name){ return cache.get(name); };
-  Session.prototype.put = function(name, value){ return cache.put(name, value); };
+  Session.prototype.get = function(name){ return cache[name]; };
+  Session.prototype.put = function(name, value){ return cache[name] =  value; };
 
   Session.prototype.storeCredentials = function(username, password){
-    // Expand the user's credentials into the key used to encrypt the blob.
-    var blobKey = KeyGen.expandCredentials(password, username);
-
-    // Expand the user's credentials into the ID used to encrypt the blob.
-    // The blobID must not allow an attacker to compute the blobKey.
-    var blobID = sjcl.codec.hex.fromBits(sjcl.codec.bytes.toBits(KeyGen.expandCredentials(password, blobKey)));
-
-    // Store the username, key, and ID in the session cache.
-    // Don't store the password since we no longer need it.
+    // Store the username and password in the session cache.
     this.put('username', username);
-    this.put('blobKey', blobKey);
-    this.put('blobID', blobID);
+    this.put('password', password);
   };
 
   // TODO: Think about moving this.
-  Session.prototype.storeBlob = function() {
-    // Get the blob from the session cache.
-    var blob = this.get('blob');
-
+  Session.prototype.storeWallet = function(encryptedWallet, username, password) {
     if (Options.PERSISTENT_SESSION) {
-      localStorage.blob = JSON.stringify(blob);
-      localStorage.blobKey = JSON.stringify(this.get('blobKey'));
-      localStorage.blobID = JSON.stringify(this.get('blobID'));
+      localStorage.wallet = JSON.stringify(encryptedWallet);
+      localStorage.username = username || localStorage.username;
+      localStorage.password = password || localStorage.password;
     }
-
-    // Encrypt the blob and upload it to the server.
-    $.ajax({
-      url: Options.WALLET_SERVER + '/wallets/' + this.get('blobID'),
-      method: 'POST',
-      data: {blob: blob.encrypt(this.get('blobKey'))},
-      dataType: 'json'
-    });
   };
 
-  Session.prototype.start = function() {
-    var blob = this.get('blob');
-    var packedKeys = blob.get('packedKeys');
-
+  Session.prototype.start = function(username, signingKeys) {
     // Initialize the session with the blob's data.
-    this.put('username', blob.get('username'));
-    this.put('keys', KeyGen.unpack(packedKeys));
-    this.put('address', packedKeys.address);
+    this.put('username', username);
+    this.put('keys', signingKeys);
+    this.put('address', signingKeys.address);
+
+    $rootScope.$broadcast('$idAccountLoad', {account: signingKeys.address, secret: signingKeys.secretKey});
 
     // Set loggedIn to be true to signify that it is safe to use the session variables.
     this.put('loggedIn', true);
   };
 
   Session.prototype.loginFromStorage = function($scope) {
-    var blobData = localStorage.blob;
-    var blobKey = localStorage.blobKey;
-    var blobID = localStorage.blobID;
+    var encryptedWallet = JSON.parse(localStorage.wallet);
+    var username = localStorage.username;
+    var password = localStorage.password;
 
-    if (blobData && blobKey && blobID) {
-      this.put('blob', new DataBlob(JSON.parse(blobData)));
-      this.put('blobKey', JSON.parse(blobKey));
-      this.put('blobID', JSON.parse(blobID));
-      this.start();
+    if (encryptedWallet && username && password) {
+      var wallet = Wallet.decrypt(encryptedWallet, username, password);
 
-      var account = this.get('blob').get('packedKeys').address;
-      var secret = this.get('blob').get('packedKeys').secret;
-      $scope.$broadcast('$idAccountLoad', {account: account, secret: secret});
+      this.put('wallet', wallet);
+      this.put('username', username);
+      this.put('password', password);
+      this.put('loggedIn', true);
+
+      this.start(username, wallet.keychainData.signingKeys);
     }
   };
 
   Session.prototype.logOut = function() {
     cache.removeAll();
+
     if (Options.PERSISTENT_SESSION){
-      delete localStorage.blob;
+      delete localStorage.wallet;
+      delete localStorage.username;
+      delete localStorage.password;
     }
+
     this.put('loggedIn', false);
   };
 

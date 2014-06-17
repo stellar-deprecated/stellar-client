@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('RegistrationCtrl', function($scope, $state, session, bruteRequest, debounce, passwordStrengthComputations, KeyGen, DataBlob) {
+sc.controller('RegistrationCtrl', function($scope, $state, session, bruteRequest, debounce, passwordStrengthComputations) {
   $scope.username             = '';
   $scope.email                = '';
   $scope.password             = '';
@@ -168,8 +168,8 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, bruteRequest
     }
 
     if(validInput){
-      var keys = KeyGen.generateKeys();
-      var packedKeys = KeyGen.pack(keys);
+      var signingKeys = SigningKeys.generate();
+      var packedKeys = signingKeys.pack();
 
       // TODO: Don't spoof the address.
       packedKeys.address = 'gHb9CJAWyB4gj91VRWn96DkukG4bwdtyTh';
@@ -187,32 +187,39 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, bruteRequest
         function (response) {
           $scope.$apply(function () {
             console.log(response.status);
-            // Create the initial blob and insert the user's data.
-            var blob = new DataBlob();
-            blob.put('username', $scope.username);
-            blob.put('email', $scope.email);
-            blob.put('packedKeys', packedKeys);
-            blob.put('updateToken', response.data.updateToken);
-            blob.put('walletAuthToken', response.data.walletAuthToken);
+
+            var wallet = Wallet.create(
+              $scope.username,
+              $scope.password,
+              packedKeys,
+              response.data.authToken,
+              response.data.updateToken,
+              response.data.recoveryId
+            );
+
+            wallet.mainData.username = $scope.username;
+            wallet.mainData.email = $scope.email;
 
             // Set the default client configuration
-            blob.put('server', Options.server);
+            wallet.mainData.server = Options.server;
 
             // Save the new blob to the session
-            session.put('blob', blob);
-
-            // Store the credentials needed to encrypt and decrypt the blob.
-            session.storeCredentials($scope.username, $scope.password);
+            session.put('wallet', wallet);
 
             // Initialize the session variables.
-            session.start();
+            session.start($scope.username, packedKeys);
 
-            // Encrypt the blob and send it to the server.
-            // TODO: Handle failures when trying to save the blob.
-            session.storeBlob();
+            var encryptedWallet = wallet.encrypt();
+            session.storeWallet(encryptedWallet, $scope.username, $scope.password);
 
-            // Connect to the websocket server.
-            $scope.$broadcast('$idAccountLoad', {account: packedKeys.address, secret: packedKeys.sec});
+            // Encrypt the wallet and send it to the server.
+            // TODO: Handle failures when trying to create the wallet.
+            $.ajax({
+              url: Options.WALLET_SERVER + '/wallets/create',
+              method: 'POST',
+              data: encryptedWallet,
+              dataType: 'json'
+            });
 
             // Take the user to the dashboard.
             $state.go('dashboard');

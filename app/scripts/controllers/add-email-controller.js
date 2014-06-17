@@ -7,10 +7,12 @@ sc.controller('AddEmailCtrl', function ($scope, $rootScope, session) {
       $scope.loading = true;
       $scope.errors = [];
 
+      var wallet = session.get('wallet');
+
       var data = {
         email: $scope.email,
         username: session.get('username'),
-        updateToken: session.get('blob').get('updateToken')
+        updateToken: wallet.keychainData.updateToken
       };
 
       $.ajax({
@@ -25,8 +27,8 @@ sc.controller('AddEmailCtrl', function ($scope, $rootScope, session) {
       function addEmailSuccess(response) {
         $scope.$apply(function() {
           // Store the email address in the blob.
-          session.get('blob').put('email', $scope.email);
-          session.storeBlob();
+          wallet.mainData.email = $scope.email;
+          session.storeWallet(wallet.encrypt());
 
           // Switch to the verify overlay.
           $rootScope.emailToVerify = $scope.email;
