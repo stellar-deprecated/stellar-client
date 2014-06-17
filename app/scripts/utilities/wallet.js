@@ -9,7 +9,7 @@ var Wallet = function(options){
 };
 
 /**
- * Create a wallet containing blobs of encrypted data.
+ * Creates a new wallet.
  *
  * @param {string} username
  * @param {string} password
@@ -38,7 +38,7 @@ Wallet.create = function(username, password, signingKeys, authToken, updateToken
 };
 
 /**
- * Create a wallet containing blobs of encrypted data.
+ * Decrypts an encrypted wallet.
  *
  * @param {object} encryptedWallet
  * @param {string} encryptedWallet.id
@@ -87,6 +87,11 @@ Wallet.decrypt = function(encryptedWallet, username, password){
   return new Wallet(options);
 };
 
+/**
+ * Encrypts the wallet data into a generic object.
+ *
+ * @returns {object}
+ */
 Wallet.prototype.encrypt = function(){
   var encryptedMainData = Wallet.encryptData(this.mainData, this.key);
   var encryptedRecoveryData = Wallet.encryptData(this.recoveryData, this.key);
@@ -124,18 +129,30 @@ var settings = {
   cipherName: 'aes'
 };
 
+/**
+ * Expand a username and password into an id and key using sjcl-scrypt.
+ * Since the results must be deterministic, the credentials are used for the salt.
+ *
+ * id = scrypt(username + password)
+ * key = scrypt(scrypt(username + password) + username + password)
+ *
+ * @param username
+ * @param password
+ * @returns {
+ *   {
+ *     id: {string},
+ *     key: {string}
+ *   }
+ * }
+ */
 Wallet.expandCredentials = function(username, password){
   var credentials = username + password;
   var salt = credentials;
 
-  console.time('Generating ID');
   var id = sjcl.misc.scrypt(credentials, salt, settings.scrypt.N, settings.scrypt.r, settings.scrypt.p, settings.scrypt.size/8);
   id = sjcl.codec.base64.fromBits(id);
-  console.timeEnd('Generating ID');
 
-  console.time('Generating key');
   var key = sjcl.misc.scrypt(id + credentials, id + salt, settings.scrypt.N, settings.scrypt.r, settings.scrypt.p, settings.scrypt.size/8);
-  console.timeEnd('Generating key');
 
   return {
     id: id,
@@ -247,6 +264,14 @@ Wallet.decryptData = function(encryptedData, key) {
   return JSON.parse(data);
 };
 
+/**
+ * Determines if a given hash matches the SHA1 hash of some data.
+ *
+ * @param data {string}
+ * @param expectedHash {string} SHA1 hex encoded hash.
+ *
+ * @returns {boolean}
+ */
 Wallet.checkHash = function(data, expectedHash) {
   return sjcl.codec.hex.fromBits(sjcl.hash.sha1.hash(data)) === expectedHash;
 };

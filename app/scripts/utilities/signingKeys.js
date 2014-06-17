@@ -72,7 +72,9 @@ SigningKeys.prototype.pack = function() {
  * @param {Array.<bytes>} bytes The array of bytes to hash.
  * @returns {Array.<bytes>} The hashed array of bytes.
  */
-function RIPEMD160(bytes){ return CryptoJS.RIPEMD160(new CryptoJS.lib.WordArray.init(bytes)).words; }
+function RIPEMD160(bytes){
+  return CryptoJS.RIPEMD160(new CryptoJS.lib.WordArray.init(bytes)).words;
+}
 
 /**
  * Wrap RIPEMD160(sjcl.hash.sha256) to pass the parameters with the correct encoding.
@@ -81,7 +83,9 @@ function RIPEMD160(bytes){ return CryptoJS.RIPEMD160(new CryptoJS.lib.WordArray.
  * @param {Array.<bits>} bits The array of bits to hash.
  * @returns {Array.<bytes>} The hashed array of bytes.
  */
-function SHA256_RIPEMD160(bits) { return RIPEMD160(sjcl.codec.bytes.fromBits(sjcl.hash.sha256.hash(bits))); }
+function SHA256_RIPEMD160(bits) {
+  return RIPEMD160(sjcl.codec.bytes.fromBits(sjcl.hash.sha256.hash(bits)));
+}
 
 /**
  * Calculates an address from a public key.
