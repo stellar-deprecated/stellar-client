@@ -15,8 +15,8 @@ var Options = {
     APP_ID: '703276886397629',
     DOMAIN_NAME: 'gostellar.org',
     DEFAULT_FEDERATION_DOMAIN: 'gostellar.org',
-    API_SERVER: 'https://gostellar.org/api',
-    WALLET_SERVER: 'http://gostellar.org/wallet',
+    API_SERVER: 'https://api.gostellar.org',
+    WALLET_SERVER: 'http://wallet.gostellar.org',
 
     // If set, login will persist across sessions (page reload). This is mostly
     // intended for developers, be careful about using this in a real setting.
