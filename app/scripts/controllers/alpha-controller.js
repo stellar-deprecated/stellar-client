@@ -48,7 +48,7 @@ sc.controller('AlphaCtrl', function ($scope, $state, session,  bruteRequest) {
         function (response) {
           $scope.$apply(function () {
             var responseJSON = response.responseJSON;
-            if (responseJSON.status == 'fail') {
+            if (responseJSON && responseJSON.status == 'fail') {
               if (responseJSON.code == "validation_error") {
                 var error = responseJSON.data;
                 if (error.code == "already_taken") {

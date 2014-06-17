@@ -90,7 +90,7 @@ function claim(data, success, error) {
     .error(
       function (response) {
         var responseJSON = response.responseJSON;
-        if (responseJSON.status == 'fail') {
+        if (responseJSON && responseJSON.status == 'fail') {
           switch (responseJSON.code) {
             case 'validation_error':
               var errorJSON = responseJSON.data;
@@ -110,7 +110,7 @@ function claim(data, success, error) {
             default:
           }
         } else {
-
+          error("An error occured");
         }
       });
 }
