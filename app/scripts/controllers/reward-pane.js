@@ -201,14 +201,22 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
     .on('success', function(data) {
       $scope.$apply(function () {
         if (data.transactions) {
-            data.transactions.forEach(function (e) {
-              var processedTxn = JsonRewriter.processTxn(e.tx, e.meta, account);
-              var transaction = processedTxn.transaction;
-              if (transaction.type == "sent" && $scope.rewards[3].status == "incomplete" && requestStellars) {
+          data.transactions.forEach(function (e) {
+            var processedTxn = JsonRewriter.processTxn(e.tx, e.meta, account);
+            var transaction = processedTxn.transaction;
+            if (transaction.type == "sent" && $scope.rewards[3].status == "incomplete" && requestStellars) {
+              requestSentStellarsReward();
+              requestStellars = false;
+            }
+          });
+          if (requestStellars) {
+            var offFn = $scope.$on('$appTxNotification', function(event, tx) {
+              if (tx.type == 'sent' && $scope.rewards[3].status == "incomplete") {
                 requestSentStellarsReward();
-                requestStellars = false;
+                offFn();
               }
             });
+          }
         }
       });
     })
@@ -233,13 +241,6 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
 
       });
   }
-
-  // Show a notification when new transactions are received.
-  $scope.$on('$appTxNotification', function(event, tx){
-      if (tx.type == 'sent' && $scope.rewards[3].status == "incomplete") {
-        requestSentStellarsReward();
-      }
-  });
 
   computeRewardProgress();
   updateRewards();
