@@ -14,6 +14,7 @@ gulp.task('default', ['clean'], function () {
 });
 gulp.task('develop', ['serve']);
 gulp.task('build',   ['html', 'images', 'fonts']);
+gulp.task('dist',    ['build']);
 
 
 
@@ -45,6 +46,7 @@ gulp.task('html', ['config', 'styles', 'scripts'], function () {
         .pipe($.uglify())
         .pipe(jsFilter.restore())
         .pipe(cssFilter)
+        .pipe($.replace('bower_components/bootstrap-sass-official/vendor/assets/fonts/bootstrap','fonts'))
         .pipe($.csso())
         .pipe(cssFilter.restore())
         .pipe($.useref.restore())

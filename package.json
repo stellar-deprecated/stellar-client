@@ -20,6 +20,7 @@
     "gulp-ngmin": "^0.2.0",
     "gulp-plumber": "^0.6.1",
     "gulp-rename": "^1.2.0",
+    "gulp-replace": "^0.3.0",
     "gulp-sass": "^0.7.2",
     "gulp-size": "^0.3.0",
     "gulp-uglify": "^0.2.1",
