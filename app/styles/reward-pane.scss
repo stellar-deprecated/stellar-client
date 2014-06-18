@@ -85,7 +85,7 @@
           @include transition(color 200ms ease-in-out);
         }
 
-        &.incomplete {
+        &.incomplete, &.unverified {
           background-color: white;
 
           i {
@@ -106,7 +106,7 @@
         }
 
         &.sent,
-        &.awaiting_payout {
+        &.awaiting_payout, &.ineligible {
           background-color: #F9F9F9;
           color: $info-grey;
 
@@ -196,6 +196,10 @@
         left: 0%;
       }
 
+      &.error {
+        border-bottom: 6px solid $error;
+      }
+
       .title {
         font-family: $avenir-heavy;
         padding-top: 10px;
@@ -206,13 +210,20 @@
         }
       }
 
-      .content {
+
+      .content, .error {
         margin: 0 57px;
+        display: none;
+
+        &.active {
+          display: inherit;
+        }
 
         .body,
         .info {
           font-family: $avenir-medium;
           font-size: 20px;
+          text-align: center;
         }
 
         .fbconnect {
@@ -312,6 +323,24 @@
             width: 300px;
           }
         }
+      }
+
+      .error {
+          display: none;
+
+          .body {
+            color: $error;
+            font-size: 35px;
+          }
+
+          .errorButton button {
+            color:#000000;
+            width: 270px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 40px;
+          }
       }
 
       .close-reward {

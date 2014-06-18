@@ -87,30 +87,8 @@ function claim(data, success, error) {
         console.log(response.status);
         success(response.message);
       })
-    .error(
-      function (response) {
-        var responseJSON = response.responseJSON;
-        if (responseJSON && responseJSON.status == 'fail') {
-          switch (responseJSON.code) {
-            case 'validation_error':
-              var errorJSON = responseJSON.data;
-              if (errorJSON.field == "update_token" && errorJSON.code == "invalid") {
-                  // TODO: error
-                  break;
-              } else if (errorJSON.field == "facebook_id" && errorJSON.code == "already_taken") {
-                error("Facebook already linked to another user.");
-              }
-            case 'ineligible_account':
-              // TODO: inform the user their account is ineligible now
-              // TODO: provide a reason in the message
-            case 'fake_account':
-              // TODO: inform the user their account is fake
-            case 'reward_already_queued':
-            case 'reward_limit_reached':
-            default:
-          }
-        } else {
-          error("An error occured");
-        }
+    .error(function (response) {
+        console.log(response.status);
+        error(response);
       });
 }

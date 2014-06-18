@@ -8,7 +8,7 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
   $rootScope.emailToVerify = session.get('blob').get('email');
 
   $scope.toggleReward = function(index, status) {
-    if (status !== 'incomplete') {
+    if (status !== 'incomplete' && status !== 'unverified') {
       return;
     }
 
@@ -41,10 +41,66 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
         $scope.closeReward();
       });
     },
-    error: function(message){
-      // TODO: show error
+    error: function(response){
+      $scope.$apply(function () {
+        var responseJSON = response.responseJSON;
+        if (!responseJSON) {
+          // TODO: push generic "an error occured"
+          return;
+        }
+        if (responseJSON.status == 'fail') {
+          switch (responseJSON.code) {
+            case 'validation_error':
+              var errorJSON = responseJSON.data;
+              if (errorJSON.field == "update_token" && errorJSON.code == "invalid") {
+                  // TODO: error
+                  break;
+              } else if (errorJSON.field == "facebook_id" && errorJSON.code == "already_taken") {
+                  // TODO: push "duplicate facebook" to generic error box
+              }
+            case 'unverified':
+              $scope.rewards[1].status = 'unverified';
+              rewardError($scope.rewards[1], 'unverified');
+              break;
+            case 'ineligible_account':
+              $scope.rewards[1].status = 'ineligible';
+              rewardError($scope.rewards[1], 'ineligible');
+              break;
+            case 'fake_account':
+              // TODO: inform the user their account is fake
+            case 'reward_already_queued':
+            case 'reward_limit_reached':
+            default:
+              // TODO: an error occured message
+          }
+        } else {
+
+        }
+      })
     }
   };
+
+  function rewardError(reward, error) {
+    console.log("error: " + error);
+    var info, panel, action;
+    switch (error) {
+      case 'unverified':
+        info = "Please verify your Facebook account and try again.";
+        panel = "Almost there! Verify your Facebook account.";
+        action = function () { reward.error = null };
+        break;
+      case 'ineligible':
+        info = "Your Facebook acount is too new to qualify. Stay tuned for new ways to grab stellars.";
+        panel = "Sorry, your Facebook account is too new."
+        action = null;
+    }
+    reward.error = {
+      panel: panel,
+      body: "Ooops!",
+      info: info,
+      action: action
+    }
+  }
 
   var emailAction = {
     message: 'Earn a reward by verifying an email address you can use to recover your account.',
@@ -113,7 +169,9 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
   $scope.rewardStatusIcons = {
     'incomplete': 'glyphicon glyphicon-lock',
     'awaiting_payout': 'glyphicon glyphicon-time',
-    'sent': 'glyphicon glyphicon-ok-circle'
+    'sent': 'glyphicon glyphicon-ok-circle',
+    'unverified': 'glyphicon glyphicon-warning-sign',
+    'ineligible': 'glyphicon glyphicon-warning-sign'
   };
 
   $scope.rewards = [
@@ -126,7 +184,7 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
   function computeRewardProgress() {
     var statuses = $scope.rewards.map(function (reward) { return reward.status; });
     $scope.rewardProgress = statuses.sort(function (a, b) {
-      var order = ['sent', 'awaiting_payout', 'incomplete'];
+      var order = ['sent', 'awaiting_payout', 'incomplete', 'unverified', 'ineligible'];
       return order.indexOf(a) - order.indexOf(b);
     });
   }
@@ -154,6 +212,10 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
             rewardsGiven.forEach(function (reward) {
                 $scope.rewards[reward.rewardType].status = reward.status;
                 switch (reward.status) {
+                    case 'unverified':
+                      rewardError($scope.rewards[reward.rewardType], "unverified");
+                    case 'ineligible':
+                      rewardError($scope.rewards[reward.rewardType], "ineligible");
                     case 'awaiting_payout':
                         if (reward.rewardType == 1) {
                           // this guy is on the waiting list
@@ -171,9 +233,10 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
             }
         },
         function (response) {
-            if (response.status == 'fail') {
-                if (response.code == 'validaiton_error') {
-                    var error = response.data;
+          var responseJSON = response.responseJSON;
+            if (responseJSON.status == 'fail') {
+                if (responseJSON.code == 'validaiton_error') {
+                    var error = responseJSON.data;
                     if (error.field == "update_token" && error.code == "invalid") {
                         // TODO: invalid update token error
                     }
