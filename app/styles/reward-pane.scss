@@ -197,7 +197,7 @@
       }
 
       &.error {
-        border-bottom: 6px solid #FF0000;
+        border-bottom: 6px solid $error;
       }
 
       .title {
@@ -329,7 +329,7 @@
           display: none;
 
           .body {
-            color: #FF0000;
+            color: $error;
             font-size: 35px;
           }
 
