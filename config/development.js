@@ -1,7 +1,7 @@
 var Options = {
     server: {
         "trusted" : true,
-        "websocket_ip" : "validator-01.gostellar.org",
+        "websocket_ip" : "public-01.gostellar.org",
         "websocket_port" : 9001,
         "websocket_ssl" : false
     },
