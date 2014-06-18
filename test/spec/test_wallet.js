@@ -86,13 +86,11 @@ describe('Wallet', function () {
     beforeEach(function(){
       var decrypt = Wallet.decrypt;
       var decryptData = sandbox.stub(Wallet, 'decryptData');
-      var checkHash = sandbox.stub(Wallet, 'checkHash');
 
       // Expose the required methods on the stubbed version of Wallet.
       sandbox.stub(window, 'Wallet');
       Wallet.decrypt = decrypt;
       Wallet.decryptData = decryptData;
-      Wallet.checkHash = checkHash;
     });
 
     it('should decrypt an existing wallet', function(){
@@ -102,16 +100,10 @@ describe('Wallet', function () {
         authToken:        'authToken',
         updateToken:      'updateToken',
         mainData:         'encryptedMainData',
-        mainDataHash:     'encryptedMainDataHash',
         keychainData:     'encryptedKeychainData',
-        keychainDataHash: 'encryptedKeychainDataHash',
-        recoveryData:     'encryptedRecoveryData',
-        recoveryDataHash: 'encryptedRecoveryDataHash'
+        recoveryData:     'encryptedRecoveryData'
       };
       var key = [1, 2, 3, 4, 5, 6, 7, 8];
-      Wallet.checkHash.withArgs('encryptedMainData', 'encryptedMainDataHash').returns(true);
-      Wallet.checkHash.withArgs('encryptedKeychainData', 'encryptedKeychainDataHash').returns(true);
-      Wallet.checkHash.withArgs('encryptedRecoveryData', 'encryptedRecoveryDataHash').returns(true);
       Wallet.decryptData.withArgs('encryptedMainData', key).returns('mainData');
       Wallet.decryptData.withArgs('encryptedRecoveryData', key).returns('recoveryData');
       Wallet.decryptData.withArgs('encryptedKeychainData', key).returns({
@@ -122,7 +114,6 @@ describe('Wallet', function () {
 
       var wallet = Wallet.decrypt(encryptedWallet, key);
 
-      expect(Wallet.checkHash.callCount).to.equal(3);
       expect(Wallet.decryptData.callCount).to.equal(3);
       expect(Wallet.called).to.equal(true);
 
@@ -135,93 +126,6 @@ describe('Wallet', function () {
         authToken:   'authToken',
         updateToken: 'updateToken'
       });
-    });
-
-    it('should throw an error if the mainDataHash is incorrect', function(){
-      var encryptedWallet = {
-        id:               1,
-        recoveryId:       'recoveryId',
-        authToken:        'authToken',
-        updateToken:      'updateToken',
-        mainData:         'encryptedMainData',
-        mainDataHash:     'corruptHash',
-        recoveryData:     'encryptedRecoveryData',
-        recoveryDataHash: 'encryptedRecoveryDataHash',
-        keychainData:     'encryptedKeychainData',
-        keychainDataHash: 'encryptedKeychainDataHash'
-      };
-      var key = [1, 2, 3, 4, 5, 6, 7, 8];
-      Wallet.checkHash.withArgs('encryptedMainData', 'corruptHash').returns(false);
-      Wallet.checkHash.withArgs('encryptedRecoveryData', 'encryptedRecoveryDataHash').returns(true);
-      Wallet.checkHash.withArgs('encryptedKeychainData', 'encryptedKeychainDataHash').returns(true);
-
-      var wallet;
-      expect(function() {
-        wallet = Wallet.decrypt(encryptedWallet, key);
-      }).to.throw('Incorrect hash for mainData.');
-
-      expect(Wallet.checkHash.callCount).to.equal(1);
-      expect(Wallet.decryptData.callCount).to.equal(0);
-      expect(Wallet.called).to.equal(false);
-      expect(wallet).to.equal(undefined);
-    });
-
-    it('should throw an error if the keychainDataHash is incorrect', function(){
-      var encryptedWallet = {
-        id:               1,
-        recoveryId:       'recoveryId',
-        authToken:        'authToken',
-        updateToken:      'updateToken',
-        mainData:         'encryptedMainData',
-        mainDataHash:     'encryptedMainDataHash',
-        recoveryData:     'encryptedRecoveryData',
-        recoveryDataHash: 'corruptHash',
-        keychainData:     'encryptedKeychainData',
-        keychainDataHash: 'encryptedKeychainDataHash'
-      };
-      var key = [1, 2, 3, 4, 5, 6, 7, 8];
-      Wallet.checkHash.withArgs('encryptedMainData', 'encryptedMainDataHash').returns(false);
-      Wallet.checkHash.withArgs('encryptedRecoveryData', 'corruptHash').returns(true);
-      Wallet.checkHash.withArgs('encryptedKeychainData', 'encryptedKeychainDataHash').returns(true);
-
-      var wallet;
-      expect(function() {
-        wallet = Wallet.decrypt(encryptedWallet, key);
-      }).to.throw('Incorrect hash for mainData.');
-
-      expect(Wallet.checkHash.callCount).to.equal(1);
-      expect(Wallet.decryptData.callCount).to.equal(0);
-      expect(Wallet.called).to.equal(false);
-      expect(wallet).to.equal(undefined);
-    });
-
-    it('should throw an error if the recoveryDataHash is incorrect', function(){
-      var encryptedWallet = {
-        id:               1,
-        recoveryId:       'recoveryId',
-        authToken:        'authToken',
-        updateToken:      'updateToken',
-        mainData:         'encryptedMainData',
-        mainDataHash:     'encryptedMainDataHash',
-        recoveryData:     'encryptedRecoveryData',
-        recoveryDataHash: 'encryptedRecoveryDataHash',
-        keychainData:     'encryptedKeychainData',
-        keychainDataHash: 'corruptHash'
-      };
-      var key = [1, 2, 3, 4, 5, 6, 7, 8];
-      Wallet.checkHash.withArgs('encryptedMainData', 'encryptedMainDataHash').returns(true);
-      Wallet.checkHash.withArgs('encryptedRecoveryData', 'encryptedRecoveryDataHash').returns(true);
-      Wallet.checkHash.withArgs('encryptedKeychainData', 'corruptHash').returns(false);
-
-      var wallet;
-      expect(function() {
-        wallet = Wallet.decrypt(encryptedWallet, key);
-      }).to.throw('Incorrect hash for keychainData.');
-
-      expect(Wallet.checkHash.callCount).to.equal(3);
-      expect(Wallet.decryptData.callCount).to.equal(0);
-      expect(Wallet.called).to.equal(false);
-      expect(wallet).to.equal(undefined);
     });
   });
 
@@ -332,35 +236,6 @@ describe('Wallet', function () {
       expect(function(){
         var result = Wallet.decryptData(corruptedData, key);
       }).to.throw('Message integrity check failed!');
-    });
-  });
-
-  describe('checkHash()', function(){
-    beforeEach(function(){
-      sandbox.stub(sjcl.hash.sha1, 'hash');
-      sandbox.stub(sjcl.codec.hex, 'fromBits');
-    });
-
-    it('should return true if the hash of the data matches the expected hash', function(){
-      sjcl.hash.sha1.hash.returns('expectedHash');
-      sjcl.codec.hex.fromBits.returns('expectedHashHex');
-
-      var result = Wallet.checkHash('data', 'expectedHashHex');
-
-      expect(sjcl.hash.sha1.hash.called).to.equal(true);
-      expect(sjcl.codec.hex.fromBits.called).to.equal(true);
-      expect(result).to.equal(true);
-    });
-
-    it('should return false if the hash of the data does not match the expected hash', function(){
-      sjcl.hash.sha1.hash.returns('differentHash');
-      sjcl.codec.hex.fromBits.returns('differentHashHex');
-
-      var result = Wallet.checkHash('data', 'expectedHashHex');
-
-      expect(sjcl.hash.sha1.hash.called).to.equal(true);
-      expect(sjcl.codec.hex.fromBits.called).to.equal(true);
-      expect(result).to.equal(false);
     });
   });
 });

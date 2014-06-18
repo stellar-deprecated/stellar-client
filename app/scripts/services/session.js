@@ -55,7 +55,7 @@ sc.service('session', function($rootScope) {
   };
 
   Session.prototype.logOut = function() {
-    cache.removeAll();
+    cache = {};
 
     if (Options.PERSISTENT_SESSION){
       delete localStorage.wallet;

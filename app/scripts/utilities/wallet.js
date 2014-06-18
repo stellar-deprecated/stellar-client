@@ -57,18 +57,6 @@ Wallet.create = function(username, password, signingKeys, authToken, updateToken
  * @returns {Wallet}
  */
 Wallet.decrypt = function(encryptedWallet, username, password){
-  if (!Wallet.checkHash(encryptedWallet.mainData, encryptedWallet.mainDataHash)){
-    throw new Error('Incorrect hash for mainData.');
-  }
-
-  if (!Wallet.checkHash(encryptedWallet.recoveryData, encryptedWallet.recoveryDataHash)){
-    throw new Error('Incorrect hash for recoveryData.');
-  }
-
-  if (!Wallet.checkHash(encryptedWallet.keychainData, encryptedWallet.keychainDataHash)){
-    throw new Error('Incorrect hash for keychainData.');
-  }
-
   var expandedCredentials = Wallet.expandCredentials(username, password);
 
   var mainData = Wallet.decryptData(encryptedWallet.mainData, expandedCredentials.key);
@@ -262,16 +250,4 @@ Wallet.decryptData = function(encryptedData, key) {
 
   // Parse and return the decrypted data as a JSON object.
   return JSON.parse(data);
-};
-
-/**
- * Determines if a given hash matches the SHA1 hash of some data.
- *
- * @param data {string}
- * @param expectedHash {string} SHA1 hex encoded hash.
- *
- * @returns {boolean}
- */
-Wallet.checkHash = function(data, expectedHash) {
-  return sjcl.codec.hex.fromBits(sjcl.hash.sha1.hash(data)) === expectedHash;
 };

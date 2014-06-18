@@ -217,8 +217,14 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, bruteRequest
             $.ajax({
               url: Options.WALLET_SERVER + '/wallets/create',
               method: 'POST',
-              data: encryptedWallet,
-              dataType: 'json'
+              data: JSON.stringify(encryptedWallet),
+              contentType: 'application/json; charset=UTF-8',
+              dataType: 'json',
+              success: function(){
+
+              }
+            }).fail(function(){
+
             });
 
             // Take the user to the dashboard.

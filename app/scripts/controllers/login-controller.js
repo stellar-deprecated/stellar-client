@@ -10,37 +10,32 @@ sc.controller('LoginCtrl', function($scope, $state, session) {
   $scope.loginError = null;
 
   $scope.attemptLogin = function() {
-    // Store the credentials needed to encrypt and decrypt the blob.
-    session.storeCredentials($scope.username, $scope.password);
-
-    // Initialize the session variables.
-    session.start();
-
-    // Encrypt the blob and send it to the server.
-    session.storeBlob();
-    // end TEMP
-
-    $scope.$broadcast('$idAccountLoad', {account: blob.get('packedKeys').address, secret: blob.get('packedKeys').secret});
     $state.go('dashboard');
+
+    var credentials = Wallet.expandCredentials($scope.username, $scope.password);
 
     // TODO: waiting for Wallet server
     $.ajax({
-      method: 'GET',
+      method: 'POST',
       url: Options.WALLET_SERVER + '/wallets/show',
+      data: JSON.stringify({id: credentials.id}),
+      contentType: 'application/json; charset=UTF-8',
       dataType: 'json',
-      success: function(data, status, xhr){
+      success: function(response, status, xhr){
         $scope.$apply(function() {
           if (status == 'success') {
             try {
-              var wallet = Wallet.decrypt(data, $scope.username, $scope.password);
+              var wallet = Wallet.decrypt(response.data, $scope.username, $scope.password);
 
               session.put('wallet', wallet);
-              session.start();
+              session.storeWallet(wallet, $scope.username, $scope.password);
+
+              session.start($scope.username, wallet.keychainData.signingKeys);
 
               $state.go('dashboard');
             } catch (err) {
               // Error decrypting blob.
-              $scope.loginError = err;
+              $scope.loginError = err.message;
             }
           } else {
             // No blob found.
