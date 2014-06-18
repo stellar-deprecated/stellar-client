@@ -12,23 +12,3 @@ $avenir-black: 'Avenir LT W01 95 Black';
 }
 
 @import url(https://fast.fonts.net/cssapi/d96d4bc8-5740-4ee1-b1ab-eafb3bdf7f1e.css);
-
-// Chrome needs to render fonts from svg to alias correctly.
-@media screen and (-webkit-min-device-pixel-ratio:0) {
-  @font-face {
-    font-family:"Avenir LT W01 45 Book";
-    src:url("https://fast.fonts.net/dv2/11/f67fa3b5-c1d1-488f-8e60-a828b9ad56a4.svg?d44f19a684109620e484147fa790e81859e92aaaea3d337f84586d5df8888fe5455f55e0f83ed0be044ddfaa95e824a4b1318d5b552aaa24a44025e9&projectId=d96d4bc8-5740-4ee1-b1ab-eafb3bdf7f1e#f67fa3b5-c1d1-488f-8e60-a828b9ad56a4") format("svg");
-  }
-  @font-face{
-    font-family:"Avenir LT W01 65 Medium";
-    src:url("https://fast.fonts.net/dv2/11/294099f3-8d00-4676-afc5-5e9d8d43ad69.svg?d44f19a684109620e484147fa790e81859e92aaaea3d337f84586d5df8888fe5455f55e0f83ed0be044ddfaa95e824a4b1318d5b552aaa24a44025e9&projectId=d96d4bc8-5740-4ee1-b1ab-eafb3bdf7f1e#294099f3-8d00-4676-afc5-5e9d8d43ad69") format("svg");
-  }
-  @font-face{
-    font-family:"Avenir LT W01 85 Heavy";
-    src:url("https://fast.fonts.net/dv2/11/731dd4d3-64da-427d-ba61-01575b3cf3f7.svg?d44f19a684109620e484147fa790e81859e92aaaea3d337f84586d5df8888fe5455f55e0f83ed0be044ddfaa95e824a4b1318d5b552aaa24a44025e9&projectId=d96d4bc8-5740-4ee1-b1ab-eafb3bdf7f1e#731dd4d3-64da-427d-ba61-01575b3cf3f7") format("svg");
-  }
-  @font-face{
-    font-family:"Avenir LT W01 95 Black";
-    src:url("https://fast.fonts.net/dv2/11/7bdad4a5-289b-42f9-b6fa-c5883b9e9f23.svg?d44f19a684109620e484147fa790e81859e92aaaea3d337f84586d5df8888fe5455f55e0f83ed0be044ddfaa95e824a4b1318d5b552aaa24a44025e9&projectId=d96d4bc8-5740-4ee1-b1ab-eafb3bdf7f1e#7bdad4a5-289b-42f9-b6fa-c5883b9e9f23") format("svg");
-  }
-}
