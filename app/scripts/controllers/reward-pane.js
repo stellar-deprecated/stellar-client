@@ -33,6 +33,7 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
     start: function(){
       var username = session.get('username');
       var updateToken = wallet.keychainData.updateToken;
+      $scope.loading = true;
       fbLoginStart(username, updateToken, fbAction.success, fbAction.error);
     },
     success: function(status) {
@@ -46,6 +47,7 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
     },
     error: function(response){
       $scope.$apply(function () {
+        $scope.loading = false;
         var responseJSON = response.responseJSON;
         if (!responseJSON) {
           // TODO: push generic "an error occured"
@@ -77,7 +79,13 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
               // TODO: an error occured message
           }
         } else {
-
+          if (responseJSON.code == 'transaction_error') {
+              // we've stored the reward but there was an error sending the transaction
+              $scope.rewards[1].status = 'awaiting_payout';
+              computeRewardProgress();
+              updateRewards();
+              $scope.closeReward();
+          }
         }
       })
     }
@@ -237,8 +245,8 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
         },
         function (response) {
           var responseJSON = response.responseJSON;
-            if (responseJSON.status == 'fail') {
-                if (responseJSON.code == 'validaiton_error') {
+            if (responseJSON && responseJSON.status == 'fail') {
+                if (responseJSON.code == 'validation_error') {
                     var error = responseJSON.data;
                     if (error.field == "update_token" && error.code == "invalid") {
                         // TODO: invalid update token error

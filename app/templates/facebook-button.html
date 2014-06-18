@@ -1,6 +1,7 @@
 <div class="fbconnect">
     <button class="fbbutton" ng-click="reward.action.start()">
         <div class="fblogo">f</div>
-        <div class="fblabel">Connect with Facebook</div>
+        <div class="fblabel" ng-hide="loading">Connect with Facebook</div>
+        <div class="fblabel" ng-show="loading">Loading...</div>
     </div>
 </div>
