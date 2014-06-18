@@ -15,7 +15,7 @@
                     <span class="type">{{ tx.transaction.type }}</span>
                 </td>
                 <td data-title="'Date'" sortable="'date'" am-time-ago="tx.date"></td>
-                <td data-title="'Amount'" sortable="'transaction.amount'">{{ tx.transaction.amount.to_human() }} STX</td>
+                <td data-title="'Amount'" sortable="'transaction.amount'">{{ tx.transaction.amount.to_human() }} XTR</td>
                 <td class="direction">{{ tx.transaction.type === 'sent' ? 'to' : 'from' }}</td>
                 <td class="other-party">
                     <div class="avatar">
