@@ -69,20 +69,20 @@ Wallet.prototype.encrypt = function(){
 /**
  * Configure the data cryptography setting.
  */
-var settings = {
-  pbkdf2: {
-    iterations: 1000,
-    size: 256 // Must be a valid AES key size.
+Wallet.SETTINGS = {
+  PBKDF2: {
+    ITERATIONS: 1000,
+    SIZE: 256 // Must be a valid AES key size.
   },
 
-  scrypt: {
+  SCRYPT: {
     N: Math.pow(2, 11),
     r: 8,
     p: 1,
-    size: 256
+    SIZE: 256
   },
 
-  cipherName: 'aes'
+  CIPHER_NAME: 'aes'
 };
 
 /**
@@ -106,7 +106,14 @@ Wallet.deriveId = function(username, password){
   var credentials = username + password;
   var salt = credentials;
 
-  var id = sjcl.misc.scrypt(credentials, salt, settings.scrypt.N, settings.scrypt.r, settings.scrypt.p, settings.scrypt.size/8);
+  var id = sjcl.misc.scrypt(
+    credentials,
+    salt,
+    Wallet.SETTINGS.SCRYPT.N,
+    Wallet.SETTINGS.SCRYPT.r,
+    Wallet.SETTINGS.SCRYPT.p,
+    Wallet.SETTINGS.SCRYPT.SIZE/8
+  );
 
   return sjcl.codec.hex.fromBits(id);
 };
@@ -115,9 +122,16 @@ Wallet.deriveKey = function(id, username, password){
   var credentials = username + password;
   var salt = credentials;
 
-  var id = sjcl.misc.scrypt(id + credentials, id + salt, settings.scrypt.N, settings.scrypt.r, settings.scrypt.p, settings.scrypt.size/8);
+  var key = sjcl.misc.scrypt(
+    id + credentials,
+    id + salt,
+    Wallet.SETTINGS.SCRYPT.N,
+    Wallet.SETTINGS.SCRYPT.r,
+    Wallet.SETTINGS.SCRYPT.p,
+    Wallet.SETTINGS.SCRYPT.SIZE/8
+  );
 
-  return sjcl.codec.hex.fromBits(id);
+  return sjcl.codec.hex.fromBits(key);
 };
 
 /**
@@ -133,7 +147,7 @@ Wallet.encryptData = function(data, key) {
   var rawData = sjcl.codec.utf8String.toBits(JSON.stringify(data));
 
   // Initialize the cipher algorithm with the key.
-  var cipher = new sjcl.cipher[settings.cipherName](key);
+  var cipher = new sjcl.cipher[Wallet.SETTINGS.CIPHER_NAME](key);
 
   // SJCL doesn't know we are using HMAC-SHA256 to check integrity.
   // TODO: Consider using GCM mode to avoid implementation errors.
@@ -149,7 +163,12 @@ Wallet.encryptData = function(data, key) {
 
   // Expand the key into a randomly salted hash key using PBKDF2.
   var rawHashSalt = sjcl.random.randomWords(4);
-  var rawHashKey = sjcl.misc.pbkdf2(key, rawHashSalt, settings.pbkdf2.iterations, settings.pbkdf2.size);
+  var rawHashKey = sjcl.misc.pbkdf2(
+    key,
+    rawHashSalt,
+    Wallet.SETTINGS.PBKDF2.iterations,
+    Wallet.SETTINGS.PBKDF2.size
+  );
   var hashKey = sjcl.codec.base64.fromBits(rawHashKey);
 
   // Calculate the authentication hash of the cipher text using HMAC-SHA256.
@@ -160,7 +179,7 @@ Wallet.encryptData = function(data, key) {
     hash: sjcl.codec.base64.fromBits(rawHash),
     hashSalt: sjcl.codec.base64.fromBits(rawHashSalt),
     cipherText: sjcl.codec.base64.fromBits(rawCipherText),
-    cipherName: settings.cipherName
+    cipherName: Wallet.SETTINGS.CIPHER_NAME
   });
 
   // Encode the JSON string as base64 to obscure it's structure.
@@ -194,7 +213,12 @@ Wallet.decryptData = function(encryptedData, key) {
   }
 
   // Expand the key into a hash key using PBKDF2 with the given hash salt.
-  var rawHashKey = sjcl.misc.pbkdf2(key, rawHashSalt, settings.pbkdf2.iterations, settings.pbkdf2.size);
+  var rawHashKey = sjcl.misc.pbkdf2(
+    key,
+    rawHashSalt,
+    Wallet.SETTINGS.PBKDF2.iterations,
+    Wallet.SETTINGS.PBKDF2.size
+  );
   var hashKey = sjcl.codec.base64.fromBits(rawHashKey);
 
   // Calculate the authentication hash of the cipher text using HMAC-SHA256.
