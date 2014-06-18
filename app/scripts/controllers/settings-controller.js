@@ -3,7 +3,7 @@
 var sc = angular.module('stellarClient');
 
 sc.controller('SettingsCtrl', function($scope, session){
-  var settings = session.get('blob').data;
+  var settings = session.get('wallet').mainData;
 
   // Account settings.
   $scope.username = session.get('username');

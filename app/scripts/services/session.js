@@ -1,88 +1,68 @@
 'use strict';
 
 var sc = angular.module('stellarClient');
-/*
-Random variables that we are storing to be accessed by the rest of the app.
-Jed: Do we need this?
- */
-sc.service('session', function($cacheFactory, KeyGen, stNetwork, DataBlob ) {
-  var cache = $cacheFactory('sessionCache');
 
+var cache = {};
+
+sc.service('session', function($rootScope) {
   var Session = function() {};
 
-  Session.prototype.get = function(name){ return cache.get(name); };
-  Session.prototype.put = function(name, value){ return cache.put(name, value); };
-
-  Session.prototype.storeCredentials = function(username, password){
-    // Expand the user's credentials into the key used to encrypt the blob.
-    var blobKey = KeyGen.expandCredentials(password, username);
-
-    // Expand the user's credentials into the ID used to encrypt the blob.
-    // The blobID must not allow an attacker to compute the blobKey.
-    var blobID = sjcl.codec.hex.fromBits(sjcl.codec.bytes.toBits(KeyGen.expandCredentials(password, blobKey)));
-
-    // Store the username, key, and ID in the session cache.
-    // Don't store the password since we no longer need it.
-    this.put('username', username);
-    this.put('blobKey', blobKey);
-    this.put('blobID', blobID);
-  };
+  Session.prototype.get = function(name){ return cache[name]; };
+  Session.prototype.put = function(name, value){ return cache[name] =  value; };
 
   // TODO: Think about moving this.
-  Session.prototype.storeBlob = function() {
-    // Get the blob from the session cache.
-    var blob = this.get('blob');
-
-    if (Options.PERSISTENT_SESSION) {
-      localStorage.blob = JSON.stringify(blob);
-      localStorage.blobKey = JSON.stringify(this.get('blobKey'));
-      localStorage.blobID = JSON.stringify(this.get('blobID'));
-    }
-
-    // Encrypt the blob and upload it to the server.
+  Session.prototype.syncWallet = function(wallet, action, success, fail) {
+    // Send it to the server.
     $.ajax({
-      url: Options.WALLET_SERVER + '/wallets/' + this.get('blobID'),
+      url: Options.WALLET_SERVER + '/wallets/' + action,
       method: 'POST',
-      data: {blob: blob.encrypt(this.get('blobKey'))},
-      dataType: 'json'
-    });
+      data: JSON.stringify(wallet.encrypt()),
+      contentType: 'application/json; charset=UTF-8',
+      dataType: 'json',
+      success: success || function(){}
+    }).fail(fail || function(){});
   };
 
-  Session.prototype.start = function() {
-    var blob = this.get('blob');
-    var packedKeys = blob.get('packedKeys');
+  Session.prototype.login = function(wallet) {
+    this.put('wallet', wallet);
 
-    // Initialize the session with the blob's data.
-    this.put('username', blob.get('username'));
-    this.put('keys', KeyGen.unpack(packedKeys));
-    this.put('address', packedKeys.address);
+    if (Options.PERSISTENT_SESSION) {
+      localStorage.wallet = JSON.stringify(wallet);
+    }
+
+    var signingKeys = wallet.keychainData.signingKeys;
+
+    // Initialize the session with the wallet's data.
+    this.put('username', wallet.mainData.username);
+    this.put('signingKeys', signingKeys);
+    this.put('address', signingKeys.address);
+
+    $rootScope.$broadcast('$idAccountLoad', {account: signingKeys.address, secret: signingKeys.secretKey});
 
     // Set loggedIn to be true to signify that it is safe to use the session variables.
     this.put('loggedIn', true);
   };
 
   Session.prototype.loginFromStorage = function($scope) {
-    var blobData = localStorage.blob;
-    var blobKey = localStorage.blobKey;
-    var blobID = localStorage.blobID;
+    if(localStorage.wallet) {
+      try {
+        var wallet = JSON.parse(localStorage.wallet);
 
-    if (blobData && blobKey && blobID) {
-      this.put('blob', new DataBlob(JSON.parse(blobData)));
-      this.put('blobKey', JSON.parse(blobKey));
-      this.put('blobID', JSON.parse(blobID));
-      this.start();
-
-      var account = this.get('blob').get('packedKeys').address;
-      var secret = this.get('blob').get('packedKeys').secret;
-      $scope.$broadcast('$idAccountLoad', {account: account, secret: secret});
+        if (wallet) {
+          this.login(wallet);
+        }
+      }
+      catch(e) { }
     }
   };
 
   Session.prototype.logOut = function() {
-    cache.removeAll();
+    cache = {};
+
     if (Options.PERSISTENT_SESSION){
-      delete localStorage.blob;
+      delete localStorage.wallet;
     }
+
     this.put('loggedIn', false);
   };
 

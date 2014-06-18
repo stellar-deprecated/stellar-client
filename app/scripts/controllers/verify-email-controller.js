@@ -1,5 +1,5 @@
 sc.controller('VerifyEmailCtrl', function ($scope, $rootScope, session) {
-  $scope.email = session.get('blob').get('email');
+  $scope.email = session.get('wallet').mainData.email;
   $scope.loading = false;
   $scope.errors = [];
 

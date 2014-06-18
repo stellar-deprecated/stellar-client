@@ -5,7 +5,10 @@ var sc = angular.module('stellarClient');
 sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteRequest', 'stNetwork', function ($scope, $rootScope, session, bruteRequest, stNetwork) {
   $scope.showRewards = false;
   $scope.selectedReward = null;
-  $rootScope.emailToVerify = session.get('blob').get('email');
+
+  var wallet = session.get('wallet');
+
+  $rootScope.emailToVerify = wallet.mainData.email;
 
   $scope.toggleReward = function(index, status) {
     if (status !== 'incomplete' && status !== 'unverified') {
@@ -29,7 +32,7 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
     template: 'templates/facebook-button.html',
     start: function(){
       var username = session.get('username');
-      var updateToken = session.get('blob').get('updateToken');
+      var updateToken = wallet.keychainData.updateToken;
       fbLoginStart(username, updateToken, fbAction.success, fbAction.error);
     },
     success: function(status) {
@@ -200,7 +203,7 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
       rewardsRequest.send(
         {
           username: session.get('username'),
-          updateToken: session.get('blob').get('updateToken')
+          updateToken: wallet.keychainData.updateToken
         },
         //Success
         function (response) {

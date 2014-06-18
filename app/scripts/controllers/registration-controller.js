@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('RegistrationCtrl', function($scope, $state, session, bruteRequest, debounce, passwordStrengthComputations, KeyGen, DataBlob) {
+sc.controller('RegistrationCtrl', function($scope, $state, session, bruteRequest, debounce, passwordStrengthComputations) {
   $scope.username             = '';
   $scope.email                = '';
   $scope.password             = '';
@@ -168,8 +168,8 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, bruteRequest
     }
 
     if(validInput){
-      var keys = KeyGen.generateKeys();
-      var packedKeys = KeyGen.pack(keys);
+      var signingKeys = SigningKeys.generate();
+      var packedKeys = signingKeys.pack();
 
       // TODO: Don't spoof the address.
       packedKeys.address = 'gHb9CJAWyB4gj91VRWn96DkukG4bwdtyTh';
@@ -187,32 +187,31 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, bruteRequest
         function (response) {
           $scope.$apply(function () {
             console.log(response.status);
-            // Create the initial blob and insert the user's data.
-            var blob = new DataBlob();
-            blob.put('username', $scope.username);
-            blob.put('email', $scope.email);
-            blob.put('packedKeys', packedKeys);
-            blob.put('updateToken', response.data.updateToken);
-            blob.put('walletAuthToken', response.data.walletAuthToken);
 
-            // Set the default client configuration
-            blob.put('server', Options.server);
+            var id = Wallet.deriveId($scope.username, $scope.password);
+            var key = Wallet.deriveKey(id, $scope.username, $scope.password);
 
-            // Save the new blob to the session
-            session.put('blob', blob);
+            var wallet = new Wallet({
+              id: id,
+              key: key,
+              recoveryId: response.data.recoveryId,
+              keychainData: {
+                authToken: response.data.authToken,
+                updateToken: response.data.updateToken,
+                signingKeys: packedKeys
+              },
+              mainData: {
+                username: $scope.username,
+                email: $scope.email,
+                server: Options.server
+              }
+            });
 
-            // Store the credentials needed to encrypt and decrypt the blob.
-            session.storeCredentials($scope.username, $scope.password);
+            // Upload the new wallet to the server.
+            session.syncWallet(wallet, 'create');
 
-            // Initialize the session variables.
-            session.start();
-
-            // Encrypt the blob and send it to the server.
-            // TODO: Handle failures when trying to save the blob.
-            session.storeBlob();
-
-            // Connect to the websocket server.
-            $scope.$broadcast('$idAccountLoad', {account: packedKeys.address, secret: packedKeys.sec});
+            // Initialize the session with the new wallet.
+            session.login(wallet);
 
             // Take the user to the dashboard.
             $state.go('dashboard');
