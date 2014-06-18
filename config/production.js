@@ -3,7 +3,7 @@ var Options = {
         "trusted" : true,
         "websocket_ip" : "public-01.gostellar.org",
         "websocket_port" : 9001,
-        "websocket_ssl" : false
+        "websocket_ssl" : true
     },
 
     mixpanel: {
