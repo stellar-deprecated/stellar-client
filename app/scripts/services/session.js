@@ -10,25 +10,31 @@ sc.service('session', function($rootScope) {
   Session.prototype.get = function(name){ return cache[name]; };
   Session.prototype.put = function(name, value){ return cache[name] =  value; };
 
-  Session.prototype.storeCredentials = function(username, password){
-    // Store the username and password in the session cache.
-    this.put('username', username);
-    this.put('password', password);
-  };
-
   // TODO: Think about moving this.
-  Session.prototype.storeWallet = function(encryptedWallet, username, password) {
-    if (Options.PERSISTENT_SESSION) {
-      localStorage.wallet = JSON.stringify(encryptedWallet);
-      localStorage.username = username || localStorage.username;
-      localStorage.password = password || localStorage.password;
-    }
+  Session.prototype.syncWallet = function(wallet, action, success, fail) {
+    // Send it to the server.
+    $.ajax({
+      url: Options.WALLET_SERVER + '/wallets/' + action,
+      method: 'POST',
+      data: JSON.stringify(wallet.encrypt()),
+      contentType: 'application/json; charset=UTF-8',
+      dataType: 'json',
+      success: success || function(){}
+    }).fail(fail || function(){});
   };
 
-  Session.prototype.start = function(username, signingKeys) {
-    // Initialize the session with the blob's data.
-    this.put('username', username);
-    this.put('keys', signingKeys);
+  Session.prototype.login = function(wallet) {
+    this.put('wallet', wallet);
+
+    if (Options.PERSISTENT_SESSION) {
+      localStorage.wallet = JSON.stringify(wallet);
+    }
+
+    var signingKeys = wallet.keychainData.signingKeys;
+
+    // Initialize the session with the wallet's data.
+    this.put('username', wallet.mainData.username);
+    this.put('signingKeys', signingKeys);
     this.put('address', signingKeys.address);
 
     $rootScope.$broadcast('$idAccountLoad', {account: signingKeys.address, secret: signingKeys.secretKey});
@@ -38,19 +44,15 @@ sc.service('session', function($rootScope) {
   };
 
   Session.prototype.loginFromStorage = function($scope) {
-    var encryptedWallet = JSON.parse(localStorage.wallet);
-    var username = localStorage.username;
-    var password = localStorage.password;
+    if(localStorage.wallet) {
+      try {
+        var wallet = JSON.parse(localStorage.wallet);
 
-    if (encryptedWallet && username && password) {
-      var wallet = Wallet.decrypt(encryptedWallet, username, password);
-
-      this.put('wallet', wallet);
-      this.put('username', username);
-      this.put('password', password);
-      this.put('loggedIn', true);
-
-      this.start(username, wallet.keychainData.signingKeys);
+        if (wallet) {
+          this.login(wallet);
+        }
+      }
+      catch(e) { }
     }
   };
 
@@ -59,8 +61,6 @@ sc.service('session', function($rootScope) {
 
     if (Options.PERSISTENT_SESSION){
       delete localStorage.wallet;
-      delete localStorage.username;
-      delete localStorage.password;
     }
 
     this.put('loggedIn', false);

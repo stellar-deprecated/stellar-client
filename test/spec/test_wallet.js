@@ -1,10 +1,6 @@
 var sandbox = sinon.sandbox.create();
 
 describe('Wallet', function () {
-  beforeEach(function(){
-    sandbox.stub(Wallet, 'expandCredentials').returns({id: 1, key: [1, 2, 3, 4, 5, 6, 7, 8]});
-  });
-
   afterEach(function(){
     sandbox.restore();
   });
@@ -13,7 +9,7 @@ describe('Wallet', function () {
     it('should use the supplied wallet options', function () {
       var walletOptions = {
         id:           1,
-        key:          [1, 2, 3, 4, 5, 6, 7, 8],
+        key:          'key',
         recoveryId:   'recoveryId',
         recoveryData: {contents: 'recoveryData'},
         mainData:     {contents: 'mainData'},
@@ -33,9 +29,8 @@ describe('Wallet', function () {
     it('should use default wallet options', function () {
       var walletOptions = {
         id:           1,
-        key:          [1, 2, 3, 4, 5, 6, 7, 8],
-        recoveryId:   'recoveryId',
-        keychainData: {contents: 'keychainData'}
+        key:          'key',
+        recoveryId:   'recoveryId'
       };
 
       var wallet = new Wallet(walletOptions);
@@ -43,42 +38,10 @@ describe('Wallet', function () {
       expect(wallet.id).to.equal(walletOptions.id);
       expect(wallet.key).to.equal(walletOptions.key);
       expect(wallet.recoveryId).to.equal(walletOptions.recoveryId);
-      expect(wallet.keychainData).to.equal(walletOptions.keychainData);
 
+      expect(wallet.keychainData).to.deep.equal({});
       expect(wallet.recoveryData).to.deep.equal({});
       expect(wallet.mainData).to.deep.equal({});
-    });
-  });
-
-  describe('create()', function() {
-    beforeEach(function () {
-      var create = Wallet.create;
-
-      // Expose the static create method on the stubbed version of Wallet.
-      sandbox.stub(window, 'Wallet');
-      Wallet.create = create;
-    });
-
-    it('should expand the user credentials', function () {
-      var wallet = Wallet.create('username', 'password', 'signingKeys', 'authToken', 'updateToken', 'recoveryId');
-
-      expect(Wallet.expandCredentials.called).to.equal(true);
-    });
-
-    it('should create a new wallet', function () {
-      var wallet = Wallet.create('username', 'password', 'signingKeys', 'authToken', 'updateToken', 'recoveryId');
-
-      expect(Wallet.called).to.equal(true);
-
-      var options = Wallet.args[0][0];
-      expect(options.id).to.equal(1);
-      expect(options.key).to.deep.equal([1, 2, 3, 4, 5, 6, 7, 8]);
-      expect(options.recoveryId).to.equal('recoveryId');
-      expect(options.keychainData).to.deep.equal({
-        signingKeys: 'signingKeys',
-        authToken:   'authToken',
-        updateToken: 'updateToken'
-      });
     });
   });
 
@@ -86,11 +49,16 @@ describe('Wallet', function () {
     beforeEach(function(){
       var decrypt = Wallet.decrypt;
       var decryptData = sandbox.stub(Wallet, 'decryptData');
+      Wallet.decryptData.withArgs('encryptedMainData').returns('mainData');
+      Wallet.decryptData.withArgs('encryptedRecoveryData').returns('recoveryData');
+      Wallet.decryptData.withArgs('encryptedKeychainData').returns({authToken: 'authToken'});
 
       // Expose the required methods on the stubbed version of Wallet.
       sandbox.stub(window, 'Wallet');
       Wallet.decrypt = decrypt;
       Wallet.decryptData = decryptData;
+
+      sandbox.stub(sjcl.codec.hex, 'toBits').returns([0, 1, 2, 3, 4, 5, 6, 7])
     });
 
     it('should decrypt an existing wallet', function(){
@@ -103,42 +71,33 @@ describe('Wallet', function () {
         keychainData:     'encryptedKeychainData',
         recoveryData:     'encryptedRecoveryData'
       };
-      var key = [1, 2, 3, 4, 5, 6, 7, 8];
-      Wallet.decryptData.withArgs('encryptedMainData', key).returns('mainData');
-      Wallet.decryptData.withArgs('encryptedRecoveryData', key).returns('recoveryData');
-      Wallet.decryptData.withArgs('encryptedKeychainData', key).returns({
-        signingKeys: 'signingKeys',
-        authToken:   'authToken',
-        updateToken: 'updateToken'
-      });
 
-      var wallet = Wallet.decrypt(encryptedWallet, key);
+      var wallet = Wallet.decrypt(encryptedWallet, 1, 'key');
 
       expect(Wallet.decryptData.callCount).to.equal(3);
       expect(Wallet.called).to.equal(true);
 
       var options = Wallet.args[0][0];
       expect(options.id).to.equal(1);
-      expect(options.key).to.deep.equal([1, 2, 3, 4, 5, 6, 7, 8]);
+      expect(options.key).to.equal('key');
       expect(options.recoveryId).to.equal('recoveryId');
-      expect(options.keychainData).to.deep.equal({
-        signingKeys: 'signingKeys',
-        authToken:   'authToken',
-        updateToken: 'updateToken'
-      });
+      expect(options.mainData).to.equal('mainData');
+      expect(options.recoveryData).to.equal('recoveryData');
+      expect(options.keychainData).to.deep.equal({authToken: 'authToken'});
     });
   });
 
   describe('encrypt()', function(){
     var wallet;
 
+    sandbox.stub(sjcl.codec.hex, 'toBits').returns([0, 1, 2, 3, 4, 5, 6, 7]);
     sandbox.stub(SigningKeys, 'getAddress').returns('address');
     var signingKeys = new SigningKeys({pub: 'pub', sec: 'sec'});
     SigningKeys.getAddress.restore();
 
     var walletOptions = {
       id:           1,
-      key:          [1, 2, 3, 4, 5, 6, 7, 8],
+      key:          'key',
       recoveryId:   'recoveryId',
       recoveryData: {contents: 'recoveryData'},
       mainData:     {contents: 'mainData'},
@@ -153,9 +112,9 @@ describe('Wallet', function () {
       wallet = new Wallet(walletOptions);
 
       sandbox.stub(Wallet, 'encryptData');
-      Wallet.encryptData.withArgs(walletOptions.recoveryData, walletOptions.key).returns('encryptedRecoveryData');
-      Wallet.encryptData.withArgs(walletOptions.mainData, walletOptions.key).returns('encryptedMainData');
-      Wallet.encryptData.withArgs(walletOptions.keychainData, walletOptions.key).returns('encryptedKeychainData');
+      Wallet.encryptData.withArgs(walletOptions.recoveryData).returns('encryptedRecoveryData');
+      Wallet.encryptData.withArgs(walletOptions.mainData).returns('encryptedMainData');
+      Wallet.encryptData.withArgs(walletOptions.keychainData).returns('encryptedKeychainData');
 
       sandbox.stub(sjcl.hash.sha1, 'hash');
       sandbox.stub(sjcl.codec.hex, 'fromBits');

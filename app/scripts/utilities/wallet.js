@@ -2,39 +2,10 @@ var Wallet = function(options){
   this.id = options.id;
   this.key = options.key;
   this.recoveryId = options.recoveryId;
-  this.keychainData = options.keychainData;
 
+  this.keychainData = options.keychainData || {};
   this.mainData = options.mainData || {};
   this.recoveryData = options.recoveryData || {};
-};
-
-/**
- * Creates a new wallet.
- *
- * @param {string} username
- * @param {string} password
- * @param {object} signingKeys
- * @param {string} recoveryId
- * @param {string} authToken
- * @param {string} updateToken
- *
- * @returns {Wallet}
- */
-Wallet.create = function(username, password, signingKeys, authToken, updateToken, recoveryId){
-  var expandedCredentials = Wallet.expandCredentials(username, password);
-
-  var options = {
-    id:         expandedCredentials.id,
-    key:        expandedCredentials.key,
-    recoveryId: recoveryId,
-    keychainData: {
-      signingKeys: signingKeys,
-      authToken:   authToken,
-      updateToken: updateToken
-    }
-  };
-
-  return new Wallet(options);
 };
 
 /**
@@ -43,29 +14,24 @@ Wallet.create = function(username, password, signingKeys, authToken, updateToken
  * @param {object} encryptedWallet
  * @param {string} encryptedWallet.id
  * @param {string} encryptedWallet.recoveryId
- * @param {string} encryptedWallet.authToken
- * @param {string} encryptedWallet.updateToken
  * @param {string} encryptedWallet.mainData
- * @param {string} encryptedWallet.mainDataHash
  * @param {string} encryptedWallet.keychainData
- * @param {string} encryptedWallet.keychainDataHash
  * @param {string} encryptedWallet.recoveryData
- * @param {string} encryptedWallet.recoveryDataHash
- * @param {string} username
- * @param {string} password
+ * @param {string} id
+ * @param {string} key
  *
  * @returns {Wallet}
  */
-Wallet.decrypt = function(encryptedWallet, username, password){
-  var expandedCredentials = Wallet.expandCredentials(username, password);
+Wallet.decrypt = function(encryptedWallet, id, key){
+  var rawKey = sjcl.codec.hex.toBits(key);
 
-  var mainData = Wallet.decryptData(encryptedWallet.mainData, expandedCredentials.key);
-  var recoveryData = Wallet.decryptData(encryptedWallet.recoveryData, expandedCredentials.key);
-  var keychainData = Wallet.decryptData(encryptedWallet.keychainData, expandedCredentials.key);
+  var mainData = Wallet.decryptData(encryptedWallet.mainData, rawKey);
+  var recoveryData = Wallet.decryptData(encryptedWallet.recoveryData, rawKey);
+  var keychainData = Wallet.decryptData(encryptedWallet.keychainData, rawKey);
 
   var options = {
-    id:           expandedCredentials.id,
-    key:          expandedCredentials.key,
+    id:           id,
+    key:          key,
     recoveryId:   encryptedWallet.recoveryId,
     recoveryData: recoveryData,
     mainData:     mainData,
@@ -81,9 +47,11 @@ Wallet.decrypt = function(encryptedWallet, username, password){
  * @returns {object}
  */
 Wallet.prototype.encrypt = function(){
-  var encryptedMainData = Wallet.encryptData(this.mainData, this.key);
-  var encryptedRecoveryData = Wallet.encryptData(this.recoveryData, this.key);
-  var encryptedKeychainData = Wallet.encryptData(this.keychainData, this.key);
+  var rawKey = sjcl.codec.hex.toBits(this.key);
+
+  var encryptedMainData = Wallet.encryptData(this.mainData, rawKey);
+  var encryptedRecoveryData = Wallet.encryptData(this.recoveryData, rawKey);
+  var encryptedKeychainData = Wallet.encryptData(this.keychainData, rawKey);
 
   return {
     id:               this.id,
@@ -133,19 +101,23 @@ var settings = {
  *   }
  * }
  */
-Wallet.expandCredentials = function(username, password){
+
+Wallet.deriveId = function(username, password){
   var credentials = username + password;
   var salt = credentials;
 
   var id = sjcl.misc.scrypt(credentials, salt, settings.scrypt.N, settings.scrypt.r, settings.scrypt.p, settings.scrypt.size/8);
-  id = sjcl.codec.base64.fromBits(id);
 
-  var key = sjcl.misc.scrypt(id + credentials, id + salt, settings.scrypt.N, settings.scrypt.r, settings.scrypt.p, settings.scrypt.size/8);
+  return sjcl.codec.hex.fromBits(id);
+};
 
-  return {
-    id: id,
-    key: key
-  };
+Wallet.deriveKey = function(id, username, password){
+  var credentials = username + password;
+  var salt = credentials;
+
+  var id = sjcl.misc.scrypt(id + credentials, id + salt, settings.scrypt.N, settings.scrypt.r, settings.scrypt.p, settings.scrypt.size/8);
+
+  return sjcl.codec.hex.fromBits(id);
 };
 
 /**
@@ -199,7 +171,7 @@ Wallet.encryptData = function(data, key) {
  * Decrypt data using 256bit AES in CBC mode with HMAC-SHA256 integrity checking.
  *
  * @param {string} encryptedData The encrypted data encoded as base64.
- * @param {string | Array.<bits>} key The key used to decrypt the blob.
+ * @param {Array.<bits>} key The key used to decrypt the blob.
  */
 Wallet.decryptData = function(encryptedData, key) {
   try {

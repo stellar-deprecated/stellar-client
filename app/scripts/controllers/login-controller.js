@@ -10,27 +10,23 @@ sc.controller('LoginCtrl', function($scope, $state, session) {
   $scope.loginError = null;
 
   $scope.attemptLogin = function() {
-    $state.go('dashboard');
-
-    var credentials = Wallet.expandCredentials($scope.username, $scope.password);
+    var id = Wallet.deriveId($scope.username, $scope.password);
 
     // TODO: waiting for Wallet server
     $.ajax({
       method: 'POST',
       url: Options.WALLET_SERVER + '/wallets/show',
-      data: JSON.stringify({id: credentials.id}),
+      data: JSON.stringify({id: id}),
       contentType: 'application/json; charset=UTF-8',
       dataType: 'json',
       success: function(response, status, xhr){
         $scope.$apply(function() {
           if (status == 'success') {
             try {
-              var wallet = Wallet.decrypt(response.data, $scope.username, $scope.password);
+              var key = Wallet.deriveKey(id, $scope.username, $scope.password);
+              var wallet = Wallet.decrypt(response.data, id, key);
 
-              session.put('wallet', wallet);
-              session.storeWallet(wallet, $scope.username, $scope.password);
-
-              session.start($scope.username, wallet.keychainData.signingKeys);
+              session.login(wallet);
 
               $state.go('dashboard');
             } catch (err) {

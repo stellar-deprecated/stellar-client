@@ -188,44 +188,30 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, bruteRequest
           $scope.$apply(function () {
             console.log(response.status);
 
-            var wallet = Wallet.create(
-              $scope.username,
-              $scope.password,
-              packedKeys,
-              response.data.authToken,
-              response.data.updateToken,
-              response.data.recoveryId
-            );
+            var id = Wallet.deriveId($scope.username, $scope.password);
+            var key = Wallet.deriveKey(id, $scope.username, $scope.password);
 
-            wallet.mainData.username = $scope.username;
-            wallet.mainData.email = $scope.email;
-
-            // Set the default client configuration
-            wallet.mainData.server = Options.server;
-
-            // Save the new blob to the session
-            session.put('wallet', wallet);
-
-            // Initialize the session variables.
-            session.start($scope.username, packedKeys);
-
-            var encryptedWallet = wallet.encrypt();
-            session.storeWallet(encryptedWallet, $scope.username, $scope.password);
-
-            // Encrypt the wallet and send it to the server.
-            // TODO: Handle failures when trying to create the wallet.
-            $.ajax({
-              url: Options.WALLET_SERVER + '/wallets/create',
-              method: 'POST',
-              data: JSON.stringify(encryptedWallet),
-              contentType: 'application/json; charset=UTF-8',
-              dataType: 'json',
-              success: function(){
-
+            var wallet = new Wallet({
+              id: id,
+              key: key,
+              recoveryId: response.data.recoveryId,
+              keychainData: {
+                authToken: response.data.authToken,
+                updateToken: response.data.updateToken,
+                signingKeys: packedKeys
+              },
+              mainData: {
+                username: $scope.username,
+                email: $scope.email,
+                server: Options.server
               }
-            }).fail(function(){
-
             });
+
+            // Upload the new wallet to the server.
+            session.syncWallet(wallet, 'create');
+
+            // Initialize the session with the new wallet.
+            session.login(wallet);
 
             // Take the user to the dashboard.
             $state.go('dashboard');
