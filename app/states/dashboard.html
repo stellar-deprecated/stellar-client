@@ -1,22 +1,28 @@
 <div class="dashboard" ng-controller="DashboardCtrl">
-    <div class="row controls">
-        <div class="col-md-3">
-            <img src="images/wallet.png"><br>
-            <button class="stellar-button btn btn-default" ng-click="toggleReceive()">
-                <i class="glyphicon glyphicon-download"></i>
-                Receive
-            </button>
+    <div class="controls-container">
+        <div class="row controls top-row">
+            <div class="img-container"><img src="images/wallet.png"></div>
+            <div class="dash-balance-container">
+                <span class="dash-balance" rp-tooltip="{{$root.balance  | rpamount}}  (reserve: {{ $root.reserve  | rpamount }} XTR)" ng-bind-html="$root.balance | rpamount:{rel_precision: 0} | shrinkText:84:6"></span>
+            </div>
+            <div class="img-container"><img src="images/rocket.png"></div>
         </div>
-        <div class="col-md-6 dash-balance-container">
-            <span class="dash-balance" rp-tooltip="{{$root.balance  | rpamount}}  (reserve: {{ $root.reserve  | rpamount }} XTR)" ng-bind-html="$root.balance | rpamount:{rel_precision: 0} | shrinkText:84:8"></span><br>
-            <span class="dash-balance-info">Current Balance <b>Stellars</b></span>
-        </div>
-        <div class="col-md-3">
-            <img src="images/rocket.png"><br>
-            <button class="stellar-button btn btn-default" ng-click="toggleSend()">
-                <i class="glyphicon glyphicon-upload"></i>
-                Send
-            </button>
+        <div class="row controls">
+            <div class="dash-info-container">
+                <span class="dash-balance-info">Current Balance <b>Stellars</b></span>
+            </div>
+            <div class="dash-receive-container">
+                <button class="stellar-button btn btn-default" ng-click="toggleReceive()">
+                    <i class="glyphicon glyphicon-download"></i>
+                    Receive
+                </button>
+            </div>
+            <div class="dash-send-container">
+                <button class="stellar-button btn btn-default" ng-click="toggleSend()">
+                    <i class="glyphicon glyphicon-upload"></i>
+                    Send
+                </button>
+            </div>
         </div>
     </div>
     <div class="row tx-tip-container">

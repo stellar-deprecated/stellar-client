@@ -3,57 +3,108 @@
     margin: 0;
   }
 
-  .controls {
+  .controls-container {
     background-color: $grey-background;
     padding-bottom: 25px;
-    text-align: center;
-    display: flex;
+    padding-top: 25px;
 
-    > div {
-      padding-left: 0;
-      padding-right: 0;
+    .controls {
+      text-align: center;
 
-      &.dash-balance-container {
-        margin-left: auto;
-        margin-right: auto;
+      &.top-row {
+        display: flex;
+      }
+
+      > div {
+        padding-left: 0;
+        padding-right: 0;
+
+        &.dash-balance-container {
+          width: 100%;
+          padding-top: 20px;
+        }
+
+        &.dash-receive-container,
+        &.dash-send-container {
+          width: 100%;
+          margin-top: 25px;
+        }
+
+        &.img-container {
+          display: none;
+        }
+      }
+
+      .dash-title {
+
+      }
+
+      .dash-balance {
+        color: $dark-grey;
+        font-family: $avenir-black;
+        white-space: nowrap;
+
+        span {
+          font-size: 84px;
+        }
+      }
+
+      .dash-balance-info {
+        color: $info-grey;
+        font-family: $avenir-book;
+        font-size: 17px;
+
+        b {
+          font-family: $avenir-heavy;
+        }
+      }
+
+      button {
+        padding: 6px 24px;
+        width: 100%;
+
+        i {
+          margin-right: 6px;
+          font-size: 22px;
+          vertical-align: middle;
+          margin-top: -6px;
+        }
       }
     }
+  }
 
-    .dash-title {
+  @media (min-width: $mobile-width) {
+    .controls-container {
+      .controls {
+        display: flex;
 
-    }
+        > div {
+          &.dash-info-container {
+            order: 2;
+            flex-grow: 2;
+            line-height: 45px;
+          }
 
-    .dash-balance {
-      color: $dark-grey;
-      font-family: $avenir-black;
-      font-size: 84px;
-      white-space: nowrap;
-    }
+          &.dash-receive-container {
+            width: 220px;
+            min-width: 220px;
+            margin-top: 0;
+            order: 1;
+          }
 
-    .dash-balance-info {
-      color: $info-grey;
-      font-family: $avenir-book;
-      font-size: 17px;
+          &.dash-send-container {
+            width: 220px;
+            min-width: 220px;
+            margin-top: 0;
+            order: 3;
+          }
 
-      b {
-        font-family: $avenir-heavy;
-      }
-    }
-
-    img {
-      margin-top: 25px;
-      margin-bottom: 10px;
-    }
-
-    button {
-      padding: 6px 24px;
-      width: 100%;
-
-      i {
-        margin-right: 6px;
-        font-size: 22px;
-        vertical-align: middle;
-        margin-top: -6px;
+          &.img-container {
+            display: inline-block;
+            width: 220px;
+            min-width: 220px;
+          }
+        }
       }
     }
   }
