@@ -91,9 +91,6 @@ describe('Wallet', function () {
     var wallet;
 
     sandbox.stub(sjcl.codec.hex, 'toBits').returns([0, 1, 2, 3, 4, 5, 6, 7]);
-    sandbox.stub(SigningKeys, 'getAddress').returns('address');
-    var signingKeys = new SigningKeys({pub: 'pub', sec: 'sec'});
-    SigningKeys.getAddress.restore();
 
     var walletOptions = {
       id:           1,
@@ -102,7 +99,7 @@ describe('Wallet', function () {
       recoveryData: {contents: 'recoveryData'},
       mainData:     {contents: 'mainData'},
       keychainData: {
-        keys:        signingKeys,
+        keys:        'signingKeys',
         authToken:   'authToken',
         updateToken: 'updateToken'
       }
@@ -160,18 +157,17 @@ describe('Wallet', function () {
 
       var result = Wallet.encryptData(data, key);
 
-      expect(result.length).to.equal(256);
+      expect(result.length).to.equal(156);
       var resultObject = JSON.parse(atob(result));
       expect(resultObject.cipherName).to.equal('aes');
-      expect(resultObject.hash.length).to.equal(44);
-      expect(resultObject.hashSalt.length).to.equal(24);
-      expect(resultObject.cipherText.length).to.equal(64);
+      expect(resultObject.mode).to.equal('ccm');
+      expect(resultObject.cipherText.length).to.equal(36);
     });
   });
 
   describe('decryptData', function(){
     it('should decrypt data', function(){
-      var encryptedData = "eyJoYXNoIjoiT3lLYnRVbUxNMzE5YUhUT1NCSHJJNG41TUwyUkgrakgwbDNSTkwvc0hYdz0iLCJoYXNoU2FsdCI6IjZ5aUFRSXdKbVFhSy9EL0RFNlhEWmc9PSIsImNpcGhlclRleHQiOiJsZXpRQ2ZaV2xRYnJnbU1xajExQ1ErSW5FZVZBeVVQektDZmNhdzRRT0xJV3NZN2d2bHU3VGZHOWkzOEc4Z2NqIiwiY2lwaGVyTmFtZSI6ImFlcyJ9";
+      var encryptedData = "eyJJViI6IkVoOVFnQVNnQS8wYStLdXdtNGpjT1E9PSIsImNpcGhlclRleHQiOiI4dlFOZE5nV1VZcHUxajV2ZmkrRUV5UUJ0cnUyUnhWUVF6RT0iLCJjaXBoZXJOYW1lIjoiYWVzIiwibW9kZSI6ImNjbSJ9";
       var key = [0, 1, 2, 3, 4, 5, 6, 7];
 
       var result = Wallet.decryptData(encryptedData, key);
@@ -180,7 +176,7 @@ describe('Wallet', function () {
     });
 
     it('should throw an error if the encryptedData was corrupted', function(){
-      var corruptedData = "IjoiNzFHdmc5SEhmTmZFWUJFRFBJV3BrM24xQUNsUUN5aWNjYkc5NWh1Y3ZMQT0iLCJoYXNoU2FsdCI6IkVyb2xaTTZpZzBydjIzTUZhd1dkYnc9PSIsImNpcGhlclRleHQiOiIvVDdzcUtURzR5K3NhN3p1NHZzdGo0b1J1Uy9adVVpSzRXcmhVT2RJcnF6cG5HN2pmb1YrYmhrcTBGd0VLa0ZJIiwiY2lwaGVyTmFtZSI6";
+      var corruptedData = "eyJJViI6IkVoOVFnQVNnQS8wYStLdXdtNGpjT1E9PSIsImNpcGhlclRleHQiOiI4dlFOZE5nV1VZcHUxajV2ZmkrRUV5UUJ0cnUyUnhWUVF6RT0iLCJjaXBoZXJOYW";
       var key = [0, 1, 2, 3, 4, 5, 6, 7];
 
       expect(function(){
@@ -189,12 +185,12 @@ describe('Wallet', function () {
     });
 
     it('should throw an error if the cipherText has been modified', function(){
-      var corruptedData = "eyJoYXNoIjoiT3lLYnRVbUxNMzE5YUhUT1NCSHJJNG41TUwyUkgrakgwbDNSTkwvc0hYdz0iLCJoYXNoU2FsdCI6IjZ5aUFRSXdKbVFhSy9EL0RFNlhEWmc9PSIsImNpcGhlclRleHQiOiJ6UUNmWldsUWJyZ21NcWoxMUNRK0luRWVWQXlVUHpLQ2ZjYXc0UU9MSVdzWTdndmx1N1RmRzlpMzhHOGdjaiIsImNpcGhlck5hbWUiOiJhZXMifQ==";
+      var corruptedData = "eyJJViI6IkVoOVFnQVNnQS8wYStLdXdtNGpjT1E9PSIsImNpcGhlclRleHQiOiI4dlFOZE5nV1VZcHUxajV2ZmkrRUF5UUJ0cnUyUnhWUVF6RT0iLCJjaXBoZXJOYW1lIjoiYWVzIiwibW9kZSI6ImNjbSJ9";
       var key = [0, 1, 2, 3, 4, 5, 6, 7];
 
       expect(function(){
         var result = Wallet.decryptData(corruptedData, key);
-      }).to.throw('Message integrity check failed!');
+      }).to.throw('ccm: tag doesn\'t match');
     });
   });
 });

@@ -17,12 +17,12 @@
     <script src="lib/sinon.js"></script>
 
     <!-- include source files here... -->
-    <script src="../app/scripts/libraries/sjcl.js"></script>
+    <script src="../app/scripts/libraries/stellar-0.7.35-min.js"></script>
+    <script>var sjcl = stellar.sjcl;</script>
     <script src="../app/bower_components/crypto-js/components/core.js"></script>
     <script src="../app/bower_components/crypto-js/components/ripemd160.js"></script>
-    <script src="../app/bower_components/crypto-js/rollups/hmac-sha256.js"></script>
     <script src="../app/scripts/utilities/wallet.js"></script>
-    <script src="../app/scripts/utilities/signingKeys.js"></script>
+    <script src="../app/scripts/library/StellarWallet.js"></script>
 
     <!-- include spec files here... -->
     <script src="spec/test_wallet.js"></script>

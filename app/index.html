@@ -90,7 +90,6 @@
 <script src="bower_components/ng-table/ng-table.min.js"></script>
 <script src="bower_components/crypto-js/components/core.js"></script>
 <script src="bower_components/crypto-js/components/ripemd160.js"></script>
-<script src="bower_components/crypto-js/rollups/hmac-sha256.js"></script>
 <script src="bower_components/moment/moment.js"></script>
 <script src="bower_components/angular-moment/angular-moment.js"></script>
 <!-- endbuild -->
@@ -111,15 +110,15 @@
 <!-- endbuild -->
 
 <!-- build:js scripts/app.js -->
-<script src="scripts/libraries/base58.js"></script>
-<script src="scripts/libraries/sjcl.js"></script>
-<script src="scripts/libraries/sjcl-scrypt.js"></script>
 <script src="scripts/libraries/stellar-0.7.35-min.js"></script>
+<script>var sjcl = stellar.sjcl;</script>
+<script src="scripts/libraries/sjcl-scrypt.js"></script>
 <script src="scripts/data/iso4217.js"></script>
 <script src="scripts/data/currencies.js"></script>
 <script src="scripts/utilities/web.js"></script>
 <script src="scripts/libraries/underscore.js"></script>
 <script src="scripts/libraries/setImmediate.js"></script>
+<script src="scripts/libraries/stellar-wallet.js"></script>
 
 
 <script src="scripts/filters/filters.js"></script>
@@ -145,9 +144,7 @@
 <script src="scripts/directives/validators.js"></script>
 
 <script src="scripts/utilities/wallet.js"></script>
-<script src="scripts/utilities/signingKeys.js"></script>
 <script src="scripts/utilities/bruteRequest.js"></script>
-<script src="scripts/utilities/base58check.js"></script>
 <script src="scripts/utilities/jsonrewriter.js"></script>
 
 <script src="scripts/services/session.js"></script>
