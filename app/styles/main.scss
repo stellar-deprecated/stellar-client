@@ -4,6 +4,8 @@ $icon-font-path: "../bower_components/bootstrap-sass-official/vendor/assets/font
 @import "../bower_components/bootstrap-sass-official/vendor/assets/stylesheets/bootstrap.scss";
 // endbower
 
+$mobile-width: 950px;
+
 @import "color-palette.scss";
 @import "fonts.scss";
 
@@ -16,11 +18,8 @@ $icon-font-path: "../bower_components/bootstrap-sass-official/vendor/assets/font
 
 body {
   height: 100%;
-  width: 65%;
-  margin-left: auto;
-  margin-right: auto;
+  width: 100%;
   padding-top: 89px;
-  padding-bottom: 70px;
   color: $dark-grey;
 }
 
@@ -200,10 +199,6 @@ body {
 }
 
 .client-nav {
-  width: 65%;
-  left: auto;
-  right: auto;
-
   ul {
     font-family: $avenir-medium;
     font-size: 15px;
@@ -224,7 +219,7 @@ body {
   }
 
   & > div {
-    padding: 20px 105px 15px 105px;
+    padding: 20px 40px 15px 40px;
     border-top: 3px solid $stellar-blue;
     border-bottom: 1px solid $grey-border;
     background-color: $grey-background;
@@ -251,7 +246,7 @@ body {
     }
 
     > * {
-      padding: 0 105px;
+      padding: 0 40px;
 
       &:not(:last-child){
         border-bottom: $grey-border-bottom;
@@ -317,8 +312,7 @@ body {
   background-color: $white-grey;
   background-image: url(../images/rainbow.png);
   background-repeat: repeat-x;
-  margin: 0 15px;
-  padding: 25px 105px;
+  padding: 25px 40px;
 
   .summary {
     color: $info-grey;
@@ -348,5 +342,27 @@ body {
         text-decoration: none;
       }
     }
+  }
+}
+
+@media (min-width: 1440px) {
+  body,
+  .client-nav {
+    width: 1440px;
+    margin: 0 auto;
+  }
+}
+
+@media (min-width: $mobile-width) {
+  .client-container > div > * {
+    padding: 0 105px;
+  }
+
+  .client-nav ul > div {
+    padding: 20px 105px 15px 105px;
+  }
+
+  .footer {
+    padding: 25px 105px;
   }
 }

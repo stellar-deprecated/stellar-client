@@ -21,7 +21,7 @@
 </head>
 <body ng-controller="AppCtrl">
 <div class="app-wrapper">
-    <nav class="client-nav container-fluid navbar navbar-fixed-top" role="navigation" ng-controller="NavCtrl">
+    <nav class="client-nav navbar navbar-fixed-top" role="navigation" ng-controller="NavCtrl">
         <div class="container-fluid navbar-default">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
@@ -39,14 +39,14 @@
                 </ul>
 
                 <ul class="nav navbar-nav navbar-right ng-hide" ng-show="session.get('loggedIn')">
-                    <li>@{{ session.get('username') }}</li>
+                    <li><a href="#">@{{ session.get('username') }}</a></li>
                     <li><a href="#/login" ui-sref="login">LOG OUT</a></li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <div class="client-container container-fluid" ui-view>
+    <div class="client-container" ui-view>
         <div class="page-header">
             <h1>Loading...</h1>
         </div>
