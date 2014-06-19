@@ -91,9 +91,6 @@ describe('Wallet', function () {
     var wallet;
 
     sandbox.stub(sjcl.codec.hex, 'toBits').returns([0, 1, 2, 3, 4, 5, 6, 7]);
-    sandbox.stub(SigningKeys, 'getAddress').returns('address');
-    var signingKeys = new SigningKeys({pub: 'pub', sec: 'sec'});
-    SigningKeys.getAddress.restore();
 
     var walletOptions = {
       id:           1,
@@ -102,7 +99,7 @@ describe('Wallet', function () {
       recoveryData: {contents: 'recoveryData'},
       mainData:     {contents: 'mainData'},
       keychainData: {
-        keys:        signingKeys,
+        keys:        'signingKeys',
         authToken:   'authToken',
         updateToken: 'updateToken'
       }

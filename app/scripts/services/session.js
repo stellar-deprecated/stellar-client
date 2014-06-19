@@ -37,7 +37,7 @@ sc.service('session', function($rootScope) {
     this.put('signingKeys', signingKeys);
     this.put('address', signingKeys.address);
 
-    $rootScope.$broadcast('$idAccountLoad', {account: signingKeys.address, secret: signingKeys.secretKey});
+    $rootScope.$broadcast('$idAccountLoad', {account: signingKeys.address, secret: signingKeys.secret});
 
     // Set loggedIn to be true to signify that it is safe to use the session variables.
     this.put('loggedIn', true);

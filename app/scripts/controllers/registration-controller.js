@@ -168,8 +168,7 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, bruteRequest
     }
 
     if(validInput){
-      var signingKeys = SigningKeys.generate();
-      var packedKeys = signingKeys.pack();
+      var signingKeys = StellarWallet.generate();
 
       // Keep this to spoof the address.
       // packedKeys.address = 'gHb9CJAWyB4gj91VRWn96DkukG4bwdtyTh';
@@ -178,7 +177,7 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, bruteRequest
         alphaCode: session.get('alpha'),
         username: $scope.username,
         email: $scope.email,
-        address: packedKeys.address
+        address: signingKeys.address
       };
 
       // Submit the registration data to the server.
@@ -198,7 +197,7 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, bruteRequest
               keychainData: {
                 authToken: response.data.authToken,
                 updateToken: response.data.updateToken,
-                signingKeys: packedKeys
+                signingKeys: signingKeys
               },
               mainData: {
                 username: $scope.username,
