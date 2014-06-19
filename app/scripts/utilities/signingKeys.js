@@ -61,7 +61,8 @@ SigningKeys.prototype.pack = function() {
 
   return {
     pub: base58check.encode(0, sjcl.codec.bytes.fromBits(pub.x.concat(pub.y))),
-    sec: base58check.encode(33, sjcl.codec.bytes.fromBits(sec))
+    sec: base58check.encode(33, sjcl.codec.bytes.fromBits(sec)),
+    address: this.address
   };
 };
 
