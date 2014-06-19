@@ -15,6 +15,8 @@ $mobile-width: 950px;
 @import "registration.scss";
 @import "transactionHistory.scss";
 @import "reward-pane.scss";
+@import "pane.scss";
+@import "modalStatus.scss";
 
 body {
   height: 100%;
@@ -124,7 +126,7 @@ body {
   }
 }
 
-.stellar-button {
+.stellar-button, .btn-stellar {
   height: 45px;
   font-family: $avenir-heavy;
   font-size: 17px;
@@ -244,14 +246,6 @@ body {
       padding-bottom: 20px;
       margin-top: 5px;
     }
-
-    > * {
-      padding: 0 40px;
-
-      &:not(:last-child){
-        border-bottom: $grey-border-bottom;
-      }
-    }
   }
 }
 
@@ -342,6 +336,14 @@ body {
         text-decoration: none;
       }
     }
+  }
+}
+
+.client-container > div > * {
+  padding: 0 40px;
+
+  &:not(:last-child){
+    border-bottom: $grey-border-bottom;
   }
 }
 

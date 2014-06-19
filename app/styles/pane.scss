@@ -1,0 +1,22 @@
+$status-strip-width: 8px;
+
+.pane {
+  padding: 0 40px;
+  margin: 0 -40px;  // TODO: remove this when we no longer have the > * rule that sets padding
+}
+
+@media (min-width: $mobile-width) {
+  .pane {
+    padding: 0 105px;
+    margin: 0 -105px;  // TODO: remove this when we no longer have the > * rule that sets padding
+  }
+}
+
+.pane-error {
+  border-bottom: $status-strip-width solid $error;
+}
+
+.pane-success {
+  border-bottom: $status-strip-width solid $success;
+}
+

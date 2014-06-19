@@ -8,6 +8,7 @@ sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout'
 {
     var timer;
 
+
     $scope.closePane = function(){
       $scope.reset();
       $rootScope.tab = 'none';
@@ -703,9 +704,19 @@ sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout'
         };
         $scope.nickname = '';
         $scope.error_type = '';
+        $scope.error_message = '';
         $scope.resetAddressForm();
         if ($scope.sendForm) $scope.sendForm.$setPristine(true);
     };
+
+    $scope.tryAgain = function() {
+        // TODO: we should remember some state, such as address and amount to speed up the next try
+        $scope.reset();
+    }
+
+    $scope.isError = function() {
+        return $scope.mode === 'error' || $scope.mode === 'stellarerror';
+    }
 
     $scope.cancelConfirm = function () {
         $scope.mode = "form";
@@ -722,14 +733,6 @@ sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout'
         $scope.saveAddressName = '';
         $scope.addressSaving = false;
         if ($scope.saveAddressForm) $scope.saveAddressForm.$setPristine(true);
-    };
-
-    $scope.reset_goto = function (tabName) {
-        $scope.reset();
-
-        // TODO do something clever instead of document.location
-        // because goToTab does $scope.$digest() which we don't need
-        document.location = '#' + tabName;
     };
 
     /**
@@ -808,9 +811,11 @@ sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout'
                 } else if (res.error === 'remoteError') {
                     $scope.mode = "error";
                     $scope.error_type = res.remote.error;
+                    $scope.error_message = "TODO"
                 } else {
                     $scope.mode = "error";
                     $scope.error_type = "unknown";
+                    $scope.error_message = "An unknown error occurred"
                 }
             });
         });
@@ -926,6 +931,7 @@ sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout'
         $scope.engine_status_accepted = !!accepted;
         $scope.mode = "status";
         $scope.tx_result = "partial";
+
         switch (res.engine_result.slice(0, 3)) {
             case 'tes':
                 $scope.mode = "status";
@@ -937,6 +943,8 @@ sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout'
                 break;
             default:
                 $scope.mode = "stellarerror";
+                //TODO: set an error type and unify our error reporting for the send pane
+                $scope.error_message = "An error occurred: " + res.engine_result_message;
         }
     };
 
