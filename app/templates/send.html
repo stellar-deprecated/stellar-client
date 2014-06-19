@@ -1,5 +1,5 @@
 
-<div class="send-pane" ng-controller="SendPaneCtrl">
+<div class="send-pane pane" ng-controller="SendPaneCtrl" ng-class="{'pane-error':isError(), 'pane-success':success}">
 <group ng-hide="connected" class="send-error disconnected">
     <p l10n="l10n" class="literal">You have to be online to see this screen</p>
 </group>
@@ -221,28 +221,13 @@
         <button ng-click="cancelConfirm()" l10n="l10n" class="btn btn-default">&laquo; Back</button>
     </p>
 </group>
-<group ng-show="mode=='rippleerror' && account.Balance" class="mode-ripplerror">
-    <rp-transaction-status rp-engine-result="{{engine_result}}" rp-engine-result-message="{{engine_result_message}}" rp-accepted="{{engine_status_accepted}}"></rp-transaction-status>
-    <group class="actions">
-        <hr/>
-        <div ng-show="addressSaved" l10n="l10n" class="text-success actionLink">Contact saved!</div>
-        <div ng-hide="contact" class="save-address-form actionLink"><a href="" ng-click="show_save_address_form = true" l10n="l10n">Add this address to contacts</a>
-            <form name="saveAddressForm" ng-class="{ show: show_save_address_form }" ng-submit="saveAddress()">
-                <div class="address">{{send.recipient_address}}</div>
-                <label for="save_address_name" l10n="l10n">Name this user</label>
-                <input id="contact_name" name="save_address_name" type="text" ng-model="saveAddressName" unique="unique" required="required" rp-autofill="$routeParams.name" class="form-control"/>
-                <div ng-show="saveAddressForm.save_address_name.$error.unique" l10n="l10n" class="error">You already have a contact with the same name.</div>
-                <div>
-                    <button type="submit" ng-disabled="addressSaving" class="btn btn-success"><span ng-show="addressSaving" l10n="l10n">Saving...</span><span ng-hide="addressSaving" l10n="l10n">Save</span></button><a href="" ng-click="show_save_address_form = false" l10n="l10n">Cancel</a>
-                </div>
-                <hr/>
-            </form>
-        </div>
-        <div class="actionLink"><a href="" ng-click="reset()" l10n="l10n">Send another payment</a></div>
-        <div class="actionLink"><a href="" ng-click="reset_goto('balance')" l10n="l10n">Back to balance</a></div>
-        <hr/>
-    </group>
-</group>
+
+<div ng-show="mode=='stellarerror'" class="modalStatus error-modalStatus">
+    <div class="modalStatus-title">Oops</div>
+    <div class="modalStatus-info">{{error_message}}</div>
+    <button class="btn btn-default btn-stellar modalStatus-btn" ng-click="tryAgain()">Try again</button>
+</div>
+
 <group ng-show="mode=='status' && account.Balance" class="mode-status">
     <group ng-show="tx_result=='pending'" class="pending">
         <h2 l10n="l10n" class="tx-status">Your transaction has been submitted.</h2>
@@ -286,21 +271,7 @@
     </group>
     <group class="actions">
         <hr/>
-        <!-- <div ng-show="addressSaved" l10n="l10n" class="text-success actionLink">Contact saved!</div>
-        <div ng-hide="contact" class="save-address-form actionLink"><a href="" ng-click="show_save_address_form = true" l10n="l10n">Add this address to contacts</a>
-            <form name="saveAddressForm" ng-class="{ show: show_save_address_form }" ng-submit="saveAddress()">
-                <div class="address">{{send.recipient_address}}</div>
-                <label for="save_address_name" l10n="l10n">Name this user</label>
-                <input id="contact_name" name="save_address_name" type="text" ng-model="saveAddressName" unique="unique" required="required" rp-autofill="$routeParams.name" class="form-control"/>
-                <div ng-show="saveAddressForm.save_address_name.$error.unique" l10n="l10n" class="error">You already have a contact with the same name.</div>
-                <div>
-                    <button type="submit" ng-disabled="addressSaving" class="btn btn-success"><span ng-show="addressSaving" l10n="l10n">Saving...</span><span ng-hide="addressSaving" l10n="l10n">Save</span></button><a href="" ng-click="show_save_address_form = false" l10n="l10n">Cancel</a>
-                </div>
-                <hr/>
-            </form>
-        </div> -->
         <div class="actionLink"><a href="" ng-click="reset()" l10n="l10n">Send another payment</a></div>
-        <!-- <div class="actionLink"><a href="" ng-click="reset_goto('balance')" l10n="l10n">Back to balance</a></div> -->
         <hr/>
     </group>
 </group>
