@@ -12,7 +12,7 @@ var $ = require('gulp-load-plugins')();
 gulp.task('default', ['clean'], function () { 
     gulp.start('build'); 
 });
-gulp.task('develop', ['serve']);
+gulp.task('develop', ['watch']);
 gulp.task('build',   ['html', 'images', 'fonts']);
 gulp.task('dist',    ['build']);
 
