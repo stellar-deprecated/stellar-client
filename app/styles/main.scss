@@ -246,14 +246,6 @@ body {
       padding-bottom: 20px;
       margin-top: 5px;
     }
-
-    > * {
-      padding: 0 40px;
-
-      &:not(:last-child){
-        border-bottom: $grey-border-bottom;
-      }
-    }
   }
 }
 
@@ -344,6 +336,14 @@ body {
         text-decoration: none;
       }
     }
+  }
+}
+
+.client-container > div > * {
+  padding: 0 40px;
+
+  &:not(:last-child){
+    border-bottom: $grey-border-bottom;
   }
 }
 
