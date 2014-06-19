@@ -19,7 +19,9 @@
             </div>
         </div>
         <div class="form-group">
-            <div class="errors col-sm-12"></div>
+            <div class="errors col-sm-12">
+                <div class="tip col-sm-offset-6 col-sm-3">{{ emailErrors.join('\n') }}</div>
+            </div>
             <label for="email" class="col-sm-3">
                 EMAIL
                 <span class="tip">(optional)</span>
