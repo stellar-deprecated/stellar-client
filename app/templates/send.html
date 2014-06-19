@@ -123,7 +123,9 @@
         <p ng-show="send.path_status == 'fed-check'" rp-spinner="4" l10n="l10n" class="literal">Analyzing address</p>
         <p ng-show="send.path_status == 'bridge-quote'" rp-spinner="4" l10n="l10n" class="literal">Requesting quote</p>
         <p ng-show="send.path_status == 'pending' && send.currency_code != 'XTR'" rp-spinner="4" l10n="l10n" class="literal">Calculating paths</p>
+        <!--
         <p ng-show="send.path_status == 'pending' && send.currency_code == 'XTR'" rp-spinner="4" l10n="l10n" class="literal">Calculating alternatives</p>
+        -->
         <p ng-show="send.path_status == 'no-path' && send.currency_code != 'XTR'" l10n="l10n" class="literal">
             Sorry! Cannot send {{send.amount}} {{send.currency}} to
             {{send.recipient}}. Please make sure your account has enough funds,
