@@ -28,7 +28,6 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
 
   var fbAction = {
     message: 'Earn a reward by verifying your Stellar account with Facebook.',
-    info: 'You will unlock...',
     template: 'templates/facebook-button.html',
     start: function(){
       var username = session.get('username');
@@ -115,7 +114,6 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
 
   var emailAction = {
     message: 'Earn a reward by verifying an email address you can use to recover your account.',
-    info: 'You will unlock...',
     template: 'templates/verify-email.html',
     success: function(event, status){
       $scope.rewards[2].status = status;
@@ -127,7 +125,6 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
 
   var sendAction = {
     message: 'Learn how to send digital money.',
-    info: 'Send 100 stellars to a friend and get 100 stellars for learning.',
     template: 'templates/send-stellar.html',
     start: function() {
       $rootScope.tab = 'send';
@@ -242,6 +239,10 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
                 }
             });
             computeRewardProgress();
+            $scope.fbGiveawayAmount = response.data.giveawayAmount;
+            fbAction.info = 'You will receive ' + $scope.fbGiveawayAmount + ' stellas.';
+            emailAction.info = 'You will receive ' + $scope.fbGiveawayAmount * .2 + ' stellas.';
+            sendAction.info = 'Send stellars to a friend and get ' + $scope.fbGiveawayAmount * .2 + ' stellars for learning.';
             $scope.showRewards = (count < 3);
             if ($scope.rewards[3].status == "incomplete") {
               checkSentTransactions();
@@ -320,7 +321,6 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
       });
   }
 
-  computeRewardProgress();
   updateRewards();
-
+  computeRewardProgress();
 }]);
