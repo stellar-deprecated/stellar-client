@@ -73,8 +73,13 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, bruteRequest
     if (username.length < 3 || username.length > 20) {
       return "Username must be between 3 and 20 characters";
     }
-    if (!username.match(/^[a-z0-9]+([._-]+[a-z0-9]+)*$/)) {
-      return "Username must start and end with a letter, and may contain \".\", \"_\", or \"-\"";
+     if(!username.match(/^[a-zA-Z0-9].*[a-zA-Z0-9]$/))
+     {
+         return "Must start and end with a letter or number.";
+     }
+    if (!username.match(/^[a-zA-Z0-9]+([._-]+[a-zA-Z0-9]+)*$/)) {
+      //return "Must start and end with a letter, and may contain \".\", \"_\", or \"-\"";
+        return "Only letters numbers or ._-";
     }
     return null;
   }
@@ -189,8 +194,8 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, bruteRequest
           $scope.$apply(function () {
             console.log(response.status);
 
-            var id = Wallet.deriveId($scope.username, $scope.password);
-            var key = Wallet.deriveKey(id, $scope.username, $scope.password);
+            var id = Wallet.deriveId($scope.username.toLowerCase(), $scope.password);
+            var key = Wallet.deriveKey(id, $scope.username.toLowerCase(), $scope.password);
 
             var wallet = new Wallet({
               id: id,
