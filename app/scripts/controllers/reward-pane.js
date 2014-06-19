@@ -161,13 +161,13 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
       //Success
       function (result) {
         $scope.$apply(function () {
-          if (result.days > 1) {
-            $scope.rewards[0].message = "You are on the waiting list. You will get your stellars in about " + result.days + " days.";
+          if (result.message > 1) {
+            $scope.rewards[1].title = "You are on the waiting list! Approximate waiting time: " + result.message + " days.";
           } else {
-            $scope.rewards[0].message = "You are on the waiting list. You should get your stellars tomorrow.";
+            $scope.rewards[1].title = "You are on the waiting list! You will get your stellars tomorrow.";
           }
 
-          $scope.rewards[0].action = function () {
+          $scope.rewards[1].action = function () {
           };
         });
       },
@@ -187,7 +187,7 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
 
   $scope.rewards = [
     {title: 'Create a new wallet', status: 'sent', action: createAction},
-    {title: 'Get you first stellars.', status: 'incomplete', action: fbAction},
+    {title: 'Get your first stellars.', status: 'incomplete', action: fbAction},
     {title: 'Confirm your email.', status: 'incomplete', action: emailAction},
     {title: 'Learn to send stellars.', status: 'incomplete', action: sendAction}
   ];
