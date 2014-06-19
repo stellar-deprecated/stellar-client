@@ -43,7 +43,7 @@ function fbLoginStart(username, updateToken, success, error){
     } else {
       FB.login(function(){
         handleFBSessionResponse(data, success, error);
-      }, {scope: 'read_stream'});
+      }, {scope: 'user_status'});
     }
   });
 }

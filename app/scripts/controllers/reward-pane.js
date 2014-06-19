@@ -50,7 +50,7 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
         $scope.loading = false;
         var responseJSON = response.responseJSON;
         if (!responseJSON) {
-          // TODO: push generic "an error occured"
+          // TODO: push generic "an error occurred"
           return;
         }
         if (responseJSON.status == 'fail') {
