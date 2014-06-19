@@ -33,6 +33,7 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
     start: function(){
       var username = session.get('username');
       var updateToken = wallet.keychainData.updateToken;
+      $scope.loading = true;
       fbLoginStart(username, updateToken, fbAction.success, fbAction.error);
     },
     success: function(status) {
@@ -46,6 +47,7 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
     },
     error: function(response){
       $scope.$apply(function () {
+        $scope.loading = false;
         var responseJSON = response.responseJSON;
         if (!responseJSON) {
           // TODO: push generic "an error occured"
@@ -77,7 +79,13 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
               // TODO: an error occured message
           }
         } else {
-
+          if (responseJSON.code == 'transaction_error') {
+              // we've stored the reward but there was an error sending the transaction
+              $scope.rewards[1].status = 'awaiting_payout';
+              computeRewardProgress();
+              updateRewards();
+              $scope.closeReward();
+          }
         }
       })
     }
@@ -153,13 +161,13 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
       //Success
       function (result) {
         $scope.$apply(function () {
-          if (result.days > 1) {
-            $scope.rewards[0].message = "You are on the waiting list. You will get your stellars in about " + result.days + " days.";
+          if (result.message > 1) {
+            $scope.rewards[1].title = "You are on the waiting list! Approximate waiting time: " + result.message + " days.";
           } else {
-            $scope.rewards[0].message = "You are on the waiting list. You should get your stellars tomorrow.";
+            $scope.rewards[1].title = "You are on the waiting list! You will get your stellars tomorrow.";
           }
 
-          $scope.rewards[0].action = function () {
+          $scope.rewards[1].action = function () {
           };
         });
       },
@@ -179,7 +187,7 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
 
   $scope.rewards = [
     {title: 'Create a new wallet', status: 'sent', action: createAction},
-    {title: 'Get you first stellars.', status: 'incomplete', action: fbAction},
+    {title: 'Get your first stellars.', status: 'incomplete', action: fbAction},
     {title: 'Confirm your email.', status: 'incomplete', action: emailAction},
     {title: 'Learn to send stellars.', status: 'incomplete', action: sendAction}
   ];
@@ -237,8 +245,8 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
         },
         function (response) {
           var responseJSON = response.responseJSON;
-            if (responseJSON.status == 'fail') {
-                if (responseJSON.code == 'validaiton_error') {
+            if (responseJSON && responseJSON.status == 'fail') {
+                if (responseJSON.code == 'validation_error') {
                     var error = responseJSON.data;
                     if (error.field == "update_token" && error.code == "invalid") {
                         // TODO: invalid update token error

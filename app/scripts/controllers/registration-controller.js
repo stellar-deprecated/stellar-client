@@ -171,8 +171,8 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, bruteRequest
       var signingKeys = SigningKeys.generate();
       var packedKeys = signingKeys.pack();
 
-      // TODO: Don't spoof the address.
-      packedKeys.address = 'gHb9CJAWyB4gj91VRWn96DkukG4bwdtyTh';
+      // Keep this to spoof the address.
+      // packedKeys.address = 'gHb9CJAWyB4gj91VRWn96DkukG4bwdtyTh';
 
       var data = {
         alphaCode: session.get('alpha'),
