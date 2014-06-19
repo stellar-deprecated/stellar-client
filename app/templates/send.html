@@ -54,8 +54,8 @@
         <div rp-errors="send_destination" class="errors col-sm-12">
             <div rp-error-valid ng-show="send.recipient != send.recipient_address" class="success tip col-sm-offset-6 col-sm-3">{{send.recipient_address}}</div>
             <div rp-error-on="required" l10n="l10n" class="tip col-sm-offset-6 col-sm-3">Please enter a recipient.</div>
-            <div rp-error-on="rpDest" l10n="l10n" class="tip col-sm-offset-6 col-sm-3">Recipient should be either a name from your contact list or Ripple/Bitcoin address.</div>
-            <div rp-error-on="federation" l10n="l10n" class="tip col-sm-offset-6 col-sm-3">This email address is not Ripple-enabled.</div>
+            <div rp-error-on="rpDest" l10n="l10n" class="tip col-sm-offset-6 col-sm-3">Recipient should be either a name from your contact list or Stellar/Bitcoin address.</div>
+            <div rp-error-on="federation" l10n="l10n" class="tip col-sm-offset-6 col-sm-3">This email address is not Stellar-enabled.</div>
         </div>
         <label for="send_destination" l10n="l10n" class="col-sm-3">ADDRESS</label>
         <div class="col-sm-6 send-address right-inner-addon">
@@ -117,7 +117,7 @@
     <div class="remote">
         <p ng-show="send.fund_status == 'insufficient-xtr'" l10n="l10n" class="literal">
             Destination account is unfunded; send at least
-            {{send.xtr_deficiency | rpamount}} XTR to fund it.<a href="https://ripple.com/wiki/Reserves" target="_blank" l10n="l10n">More information</a>
+            {{send.xtr_deficiency | rpamount}} XTR to fund it.<a href="https://wiki.gostellar.org/Reserves" target="_blank" l10n="l10n">More information</a>
         </p>
         <p ng-show="send.path_status == 'checking'" rp-spinner="4" l10n="l10n" class="literal">Checking</p>
         <p ng-show="send.path_status == 'fed-check'" rp-spinner="4" l10n="l10n" class="literal">Analyzing address</p>
@@ -156,7 +156,7 @@
     </div>
 </form>
 <group ng-show="mode=='wait_path' && account.Balance" class="mode-wait-path">
-    <p rp-spinner="4" l10n="l10n" class="literal">Ripple is calculating a path for your payment.</p>
+    <p rp-spinner="4" l10n="l10n" class="literal">Stellar is calculating a path for your payment.</p>
 </group>
 <group ng-show="mode=='confirm' && account.Balance" class="mode-confirm">
     <div>
@@ -187,7 +187,7 @@
     <button ng-click="cancelConfirm()" l10n="l10n" class="btn btn-block btn-default stellar-button change-button">Change</button>
 </group>
 <group ng-show="mode=='sending' && account.Balance" class="mode-sending">
-    <p rp-spinner="4" l10n="l10n" class="literal">Sending transaction to Ripple network</p>
+    <p rp-spinner="4" l10n="l10n" class="literal">Sending transaction to Stellar network</p>
     <hr/>
     <p>
         <button ng-click="reset()" l10n="l10n" class="btn btn-default">Stop waiting</button>
@@ -201,7 +201,7 @@
         </group>
         <group ng-switch-when="noPath" class="result-error">
             <h2 l10n="l10n" class="tx-status">No Path</h2>
-            <p l10n="l10n">Ripple was unable to find a path between you and the destination account.</p>
+            <p l10n="l10n">Stellar was unable to find a path between you and the destination account.</p>
         </group>
         <group ng-switch-when="invalidTransaction" class="result-error">
             <h2 l10n="l10n" class="tx-status">Invalid transaction</h2>
