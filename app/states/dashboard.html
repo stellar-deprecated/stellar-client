@@ -3,7 +3,8 @@
         <div class="row controls top-row">
             <div class="img-container"><img src="images/wallet.png"></div>
             <div class="dash-balance-container">
-                <span class="dash-balance" rp-tooltip="{{$root.balance  | rpamount}}  (reserve: {{ $root.reserve  | rpamount }} XTR)" ng-bind-html="$root.balance | rpamount:{rel_precision: 0} | shrinkText:84:6"></span>
+                <span ng-show="$root.balance" class="dash-balance" rp-tooltip="{{$root.balance  | rpamount}}  (reserve: {{ $root.reserve  | rpamount }} XTR)" ng-bind-html="$root.balance | rpamount:{rel_precision: 0} | shrinkText:84:6"></span>
+                <span ng-hide="$root.balance" class="dash-balance" ng-bind-html="'Get your stellars below!' | shrinkText:84:6"></span>
             </div>
             <div class="img-container"><img src="images/rocket.png"></div>
         </div>
