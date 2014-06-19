@@ -197,24 +197,6 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
     });
   }
 
-  $scope.fbGiveawayAmount;
-  function computeGiveawayAmount() {
-    $.get(Options.API_SERVER + "/claim/giveawayAmount", null, "json")
-    .success(
-      function (response) {
-        $scope.$apply(function () {
-          $scope.fbGiveawayAmount = response.message;
-          fbAction.info = 'You will receive ' + $scope.fbGiveawayAmount + ' stellas.';
-          emailAction.info = 'You will receive ' + $scope.fbGiveawayAmount * .2 + ' stellas.';
-          sendAction.info = 'Send stellars to a friend and get ' + $scope.fbGiveawayAmount * .2 + ' stellars for learning.';
-        });
-      })
-    .error(
-      function (response) {
-
-      });
-  }
-
   var rewardsRequest = new bruteRequest({
     url: Options.API_SERVER + '/user/rewards',
     type: 'GET',
@@ -257,6 +239,10 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
                 }
             });
             computeRewardProgress();
+            $scope.fbGiveawayAmount = response.data.giveawayAmount;
+            fbAction.info = 'You will receive ' + $scope.fbGiveawayAmount + ' stellas.';
+            emailAction.info = 'You will receive ' + $scope.fbGiveawayAmount * .2 + ' stellas.';
+            sendAction.info = 'Send stellars to a friend and get ' + $scope.fbGiveawayAmount * .2 + ' stellars for learning.';
             $scope.showRewards = (count < 3);
             if ($scope.rewards[3].status == "incomplete") {
               checkSentTransactions();
@@ -335,7 +321,6 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
       });
   }
 
-  computeGiveawayAmount();
   updateRewards();
   computeRewardProgress();
 }]);
