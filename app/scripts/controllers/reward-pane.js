@@ -224,9 +224,13 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
                 $scope.rewards[reward.rewardType].status = reward.status;
                 switch (reward.status) {
                     case 'unverified':
-                      rewardError($scope.rewards[reward.rewardType], "unverified");
+                      if (reward.rewardType == 1) {
+                        rewardError($scope.rewards[reward.rewardType], "unverified");
+                      }
+                      break;
                     case 'ineligible':
                       rewardError($scope.rewards[reward.rewardType], "ineligible");
+                      break;
                     case 'awaiting_payout':
                         if (reward.rewardType == 1) {
                           // this guy is on the waiting list

@@ -9,10 +9,12 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, bruteRequest
   $scope.passwordConfirmation = '';
 
   $scope.usernameAvailable    = null;
+  $scope.emailAvailable       = null;
   $scope.passwordValid        = null;
   $scope.passwordConfirmValid = null;
 
   $scope.usernameErrors        = [];
+  $scope.emailErrors           = [];
   $scope.passwordErrors        = [];
   $scope.passwordConfirmErrors = [];
 
@@ -52,7 +54,7 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, bruteRequest
         function (response){
           $scope.$apply(function() {
             var responseJSON = response.responseJSON;
-            switch(responseJSON.code) {
+            switch(responseJSON && responseJSON.code) {
               case 'already_taken':
                 $scope.usernameErrors.push('This username is taken.');
                 $scope.usernameAvailable = false;
@@ -220,7 +222,7 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, bruteRequest
         // Fail
         function (response) {
           var responseJSON = response.responseJSON;
-          if (responseJSON.status == "fail") {
+          if (responseJSON && responseJSON.status == "fail") {
             if (responseJSON.code == "validation_error") {
               // TODO: iterate through the validation errors when we add server side validation
               var error = responseJSON.data;
@@ -228,6 +230,12 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, bruteRequest
                 // Show an error stating the username is already taken.
                 $scope.usernameAvailable = false;
                 $scope.usernameErrors.push('The username "' + $scope.username + '" is taken.');
+              } else if (error.field == "username" && error.code == "invalid") {
+                $scope.usernameErrors.push("Username must start and end with a letter, and may contain \".\", \"_\", or \"-\"");
+              } else if (error.field == "email" && error.code == "already_taken") {
+                $scope.emailErrors.push('The email is taken.');
+              } else if (error.field == "email" && error.code == "invalid") {
+                $scope.emailErrors.push('The email is invalid.');
               } else if (error.field == "alpha_code" && error.code == "already_taken") {
                 // TODO: ux for alpha code has already been used
               } else if (error.field == "alpha_code" && error.code == "invalid") {
