@@ -178,6 +178,7 @@ sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', function($scope, $r
             }
         });
     }
+
     function handleAccountTxError(data)
     {
 

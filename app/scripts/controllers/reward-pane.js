@@ -58,10 +58,10 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
               var errorJSON = responseJSON.data;
               if (errorJSON.field == "update_token" && errorJSON.code == "invalid") {
                   // TODO: error
-                  break;
               } else if (errorJSON.field == "facebook_id" && errorJSON.code == "already_taken") {
-                  // TODO: push "duplicate facebook" to generic error box
+                  rewardError($scope.rewards[1], 'already_taken');
               }
+              break;
             case 'unverified':
               $scope.rewards[1].status = 'unverified';
               rewardError($scope.rewards[1], 'unverified');
@@ -103,6 +103,10 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
         info = "Your Facebook acount is too new to qualify. Stay tuned for new ways to grab stellars.";
         panel = "Sorry, your Facebook account is too new."
         action = null;
+        break;
+      case 'already_taken':
+        info = "This Facebook account is already in use.";
+        action = function () { reward.error = null};
     }
     reward.error = {
       panel: panel,
@@ -220,6 +224,9 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
             rewardsGiven.forEach(function (reward) {
                 $scope.rewards[reward.rewardType].status = reward.status;
                 switch (reward.status) {
+                    case 'pending':
+                      $scope.rewards[reward.rewardType].status = 'incomplete';
+                      break;
                     case 'unverified':
                       if (reward.rewardType == 1) {
                         rewardError($scope.rewards[reward.rewardType], "unverified");
@@ -264,6 +271,7 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
       );
     }
 
+  var offFn;
   // checks if the user has any "sent" transactions, requests send reward if so
   function checkSentTransactions() {
     var remote = stNetwork.remote;
@@ -289,7 +297,10 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
             }
           });
           if (requestStellars) {
-            var offFn = $scope.$on('$appTxNotification', function(event, tx) {
+            if (offFn) {
+              offFn();
+            }
+            offFn = $scope.$on('$appTxNotification', function(event, tx) {
               if (tx.type == 'sent' && $scope.rewards[3].status == "incomplete") {
                 requestSentStellarsReward();
                 offFn();
@@ -313,6 +324,7 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
         $scope.$apply(function () {
           console.log(response.status);
           $scope.rewards[3].status = response.message;
+          computeRewardProgress();
         });
       })
     .error(
