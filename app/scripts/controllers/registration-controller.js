@@ -18,6 +18,27 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, bruteRequest
   $scope.passwordErrors        = [];
   $scope.passwordConfirmErrors = [];
 
+  // Remove default password requirements.
+  delete passwordStrengthComputations.aspects.minimumLength;
+  delete passwordStrengthComputations.aspects.uppercaseLetters;
+  delete passwordStrengthComputations.aspects.lowercaseLetters;
+  delete passwordStrengthComputations.aspects.numbers;
+  delete passwordStrengthComputations.aspects.duplicates;
+  delete passwordStrengthComputations.aspects.consecutive;
+  delete passwordStrengthComputations.aspects.dictionary;
+
+  // Enforce 16 character minimum.
+  passwordStrengthComputations.aspects.minLength = {
+    weight: 100,
+    strength: function(password){
+      var minLength = 16;
+      if(password.length < minLength/2) return 25;
+      if(password.length < minLength) return 50;
+      if(password.length < 2*minLength) return 75;
+      return 100;
+    }
+  };
+
   var requestUsernameStatus = new bruteRequest({
     url: Options.API_SERVER + '/user/validname',
     type: 'POST',
@@ -131,9 +152,9 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, bruteRequest
     if(!$scope.password) return '';
 
     var strength = passwordStrengthComputations.getStrength($scope.password);
-    if(strength <= 25) return 'WEAK';
-    if(strength <= 50) return 'OK';
-    if(strength <= 75) return 'GOOD';
+    if(strength < 25) return 'WEAK';
+    if(strength < 50) return 'ALMOST';
+    if(strength < 75) return 'GOOD';
     return 'STRONG';
   };
 
