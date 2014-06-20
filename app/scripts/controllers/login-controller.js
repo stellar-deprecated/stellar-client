@@ -2,62 +2,61 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('LoginCtrl', function($scope, $state, session) {
+sc.controller('LoginCtrl', function($scope, $state, $http, $timeout, session) {
   if(session.get('loggedIn')) session.logOut();
 
   $scope.username   = null;
   $scope.password   = null;
+  $scope.loggingIn  = false;
   $scope.loginError = null;
 
   $scope.attemptLogin = function() {
-    var id = Wallet.deriveId($scope.username, $scope.password);
+    if($scope.loggingIn) return;
+    
+    $scope.loginError = null;
+    $scope.loggingIn = true;
 
-    // TODO: waiting for Wallet server
-    $.ajax({
-      method: 'POST',
-      url: Options.WALLET_SERVER + '/wallets/show',
-      data: JSON.stringify({id: id}),
-      contentType: 'application/json; charset=UTF-8',
-      dataType: 'json',
-      success: function(response, status, xhr){
-        $scope.$apply(function() {
-          if (status == 'success') {
-            try {
-              var key = Wallet.deriveKey(id, $scope.username, $scope.password);
-              var wallet = Wallet.decrypt(response.data, id, key);
-
-              session.login(wallet);
-
-              $state.go('dashboard');
-            } catch (err) {
-              // Error decrypting blob.
-              $scope.loginError = err.message;
-            }
-          } else {
-            // No blob found.
-            $scope.loginError = 'Invalid username or password.';
-          }
-        });
-      },
-      error: function(response){
-        $scope.$apply(function() {
-          var errorStatus;
-          if(response.responseJSON){
-            errorStatus = response.responseJSON.status;
-          }
-
-          switch(errorStatus) {
-            case 'fail':
-              $scope.loginError = 'Invalid username or password.';
-              break;
-            case 'error':
-              $scope.loginError = 'Unable to contact the server.';
-              break;
-            default:
-              $scope.loginError = 'An error occurred.';
-          }
-        });
-      }
-    });
+    deriveId()
+      .then(performLogin)
+      .finally(function() {
+        $scope.loggingIn = false;
+      });
   };
+
+
+  function deriveId() {
+    //TODO: actually make Wallet.deriveId Promiseable
+    //HACK: use timeout to turn an expensive synchronous operation into a promise
+    return  $timeout(function() {
+              return Wallet.deriveId($scope.username, $scope.password);
+            }, 0);
+  }
+
+  function performLogin(id) {
+    return $http.post(Options.WALLET_SERVER + '/wallets/show', {id: id})
+      .success(function(body) {
+        try {
+          var key    = Wallet.deriveKey(id, $scope.username, $scope.password);
+          var wallet = Wallet.decrypt(body.data, id, key);
+
+          session.login(wallet);
+          $state.go('dashboard');
+        } catch (err) {
+          // Error decrypting blob.
+          $scope.loginError = err.message;
+        }
+      })
+      .error(function(body, status) {
+        switch(status) {
+          case 404:
+            $scope.loginError = 'Invalid username or password.';
+            break;
+          case 0:
+            $scope.loginError = 'Unable to contact the server.';
+            break;
+          default:
+            $scope.loginError = 'An error occurred.';
+        }
+      });
+  }
 });
