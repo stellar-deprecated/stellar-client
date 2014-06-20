@@ -27,11 +27,11 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, bruteRequest
   delete passwordStrengthComputations.aspects.consecutive;
   delete passwordStrengthComputations.aspects.dictionary;
 
-  // Enforce 16 character minimum.
+  // Enforce 8 character minimum.
   passwordStrengthComputations.aspects.minLength = {
     weight: 100,
     strength: function(password){
-      var minLength = 16;
+      var minLength = 8;
       if(password.length < minLength/2) return 25;
       if(password.length < minLength) return 50;
       if(password.length < 2*minLength) return 75;
