@@ -199,6 +199,9 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
       var order = ['sent', 'awaiting_payout', 'incomplete', 'unverified', 'ineligible'];
       return order.indexOf(a) - order.indexOf(b);
     });
+
+    var completedRewards = $scope.rewards.filter(function (reward) { return reward.status == 'sent'; });
+    $scope.showRewards = (completedRewards.length !== $scope.rewards.length);
   }
 
   var rewardsRequest = new bruteRequest({
@@ -216,9 +219,6 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
         },
         //Success
         function (response) {
-            // Only show the rewards pane if there are rewards left to complete.
-            var count = 0;
-
             // Update the status of the user's rewards.
             var rewardsGiven = response.data.rewards;
             rewardsGiven.forEach(function (reward) {
@@ -240,9 +240,6 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
                           // this guy is on the waiting list
                           getPlaceInLine();
                         }
-                        break;
-                    case 'sent':
-                        count++;
                 }
             });
             computeRewardProgress();
@@ -250,7 +247,6 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
             fbAction.info = 'You will receive ' + $scope.fbGiveawayAmount + ' stellas.';
             emailAction.info = 'You will receive ' + $scope.fbGiveawayAmount * .2 + ' stellas.';
             sendAction.info = 'Send stellars to a friend and get ' + $scope.fbGiveawayAmount * .2 + ' stellars for learning.';
-            $scope.showRewards = (count < 3);
             if ($scope.rewards[3].status == "incomplete") {
               checkSentTransactions();
             }
