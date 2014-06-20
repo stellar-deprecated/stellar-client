@@ -2,9 +2,10 @@
     <h1 class="title">Log in</h1>
 
     <form role="form" class="form-horizontal stellar-form" ng-controller="LoginCtrl">
-        <div class="alert alert-danger ng-hide" ng-show="loginError">{{ loginError }}</div>
         <div class="form-group">
-            <div class="errors col-sm-12"></div>
+            <div class="errors col-sm-12">
+                <div class="tip col-sm-offset-6 col-sm-3">{{ loginError }}</div>
+            </div>
             <label for="username" class="col-sm-3">USERNAME</label>
             <div class="col-sm-6">
                 <input id="username" type="text" class="form-control" placeholder="Username" ng-model="username">
