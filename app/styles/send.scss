@@ -101,12 +101,13 @@
 
       .info {
         font-size: 20px;
-        color: $info-grey;
+        color: $grey;
       }
 
       .amount_feedback,
       .recipient-name {
         font-size: 46px;
+        font-family: $avenir-book;
       }
 
       .recipient-address {
