@@ -224,6 +224,9 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
             rewardsGiven.forEach(function (reward) {
                 $scope.rewards[reward.rewardType].status = reward.status;
                 switch (reward.status) {
+                    case 'pending':
+                      $scope.rewards[reward.rewardType].status = 'incomplete';
+                      break;
                     case 'unverified':
                       if (reward.rewardType == 1) {
                         rewardError($scope.rewards[reward.rewardType], "unverified");
