@@ -24,6 +24,10 @@
           padding-top: 20px;
         }
 
+        &.dash-info-container {
+          margin-top: 16px;
+        }
+
         &.dash-receive-container,
         &.dash-send-container {
           width: 100%;
@@ -43,10 +47,8 @@
         color: $dark-grey;
         font-family: $avenir-black;
         white-space: nowrap;
-
-        span {
-          font-size: 84px;
-        }
+        font-size: 84px;
+        line-height: 42px;
       }
 
       .dash-balance-info {
@@ -83,6 +85,7 @@
             order: 2;
             flex-grow: 2;
             line-height: 45px;
+            margin-top: 0;
           }
 
           &.dash-receive-container {
