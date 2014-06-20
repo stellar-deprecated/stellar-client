@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteRequest', 'stNetwork', function ($scope, $rootScope, session, bruteRequest, stNetwork) {
+sc.controller('RewardPaneCtrl', ['$http', '$scope', '$rootScope', 'session', 'stNetwork', function ($http, $scope, $rootScope, session, stNetwork) {
   $scope.showRewards = false;
   $scope.selectedReward = null;
 
@@ -154,33 +154,27 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
   };
 
   function getPlaceInLine() {
-    var placeInLineRequest = new bruteRequest({
-      url: Options.API_SERVER + '/claim/placeInLine',
-      type: 'GET',
-      dataType: 'json'
-    });
     // Load the status of the user's rewards.
-    placeInLineRequest.send(
-      {
-        username: session.get('username')
-      },
-      //Success
-      function (result) {
-        $scope.$apply(function () {
-          if (result.message > 1) {
-            $scope.rewards[1].title = "You are on the waiting list! Approximate waiting time: " + result.message + " days.";
-          } else {
-            $scope.rewards[1].title = "You are on the waiting list! You will get your stellars tomorrow.";
-          }
-
-          $scope.rewards[1].action = function () {
-          };
-        });
-      },
-      function (response) {
-        // TODO: error
+    var config = {
+      params:
+        {
+          username: session.get('username')
+        }
+    };
+    $http.get(Options.API_SERVER + '/claim/placeInLine', config)
+    .success(function (result) {
+      if (result.message > 1) {
+        $scope.rewards[1].title = "You are on the waiting list! Approximate waiting time: " + result.message + " days.";
+      } else {
+        $scope.rewards[1].title = "You are on the waiting list! You will get your stellars tomorrow.";
       }
-    );
+
+      $scope.rewards[1].action = function () {
+      };
+    })
+    .error(function (response) {
+        // TODO: error
+    });
   }
 
   $scope.rewardStatusIcons = {
@@ -213,26 +207,24 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
     $scope.showRewards = (completedRewards.length !== $scope.rewards.length);
   }
 
-  var rewardsRequest = new bruteRequest({
-    url: Options.API_SERVER + '/user/rewards',
-    type: 'GET',
-    dataType: 'json'
-  });
-
   function updateRewards() {
-    // Load the status of the user's rewards.
-    rewardsRequest.send(
-      {
+    var config = {
+      params: {
         username: session.get('username'),
         updateToken: wallet.keychainData.updateToken
-      },
-      //Success
-      function (response) {
-        // Update the status of the user's rewards.
-        var rewardsGiven = response.data.rewards;
-        rewardsGiven.forEach(function (reward) {
-          $scope.rewards[reward.rewardType].status = reward.status;
-          switch (reward.status) {
+      }
+    };
+    // Load the status of the user's rewards.
+    $http.get(Options.API_SERVER + '/user/rewards', config)
+    .success(function (response) {
+      // Only show the rewards pane if there are rewards left to complete.
+      var count = 0;
+
+      // Update the status of the user's rewards.
+      var rewardsGiven = response.data.rewards;
+      rewardsGiven.forEach(function (reward) {
+        $scope.rewards[reward.rewardType].status = reward.status;
+        switch (reward.status) {
             case 'pending':
               $scope.rewards[reward.rewardType].status = 'incomplete';
               break;
@@ -245,35 +237,38 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
               rewardError($scope.rewards[reward.rewardType], "ineligible");
               break;
             case 'awaiting_payout':
-              if (reward.rewardType == 1) {
-                // this guy is on the waiting list
-                getPlaceInLine();
-              }
-          }
-        });
-        computeRewardProgress();
-        $scope.fbGiveawayAmount = response.data.giveawayAmount;
-        fbAction.info = 'You will receive ' + $scope.fbGiveawayAmount + ' stellas.';
-        emailAction.info = 'You will receive ' + $scope.fbGiveawayAmount * .2 + ' stellas.';
-        sendAction.info = 'Send stellars to a friend and get ' + $scope.fbGiveawayAmount * .2 + ' stellars for learning.';
-        if ($scope.rewards[3].status == "incomplete") {
-          checkSentTransactions();
+                if (reward.rewardType == 1) {
+                  // this guy is on the waiting list
+                  getPlaceInLine();
+                }
+                break;
+            case 'sent':
+                count++;
         }
-      },
-      function (response) {
-        var responseJSON = response.responseJSON;
-        if (responseJSON && responseJSON.status == 'fail') {
-          if (responseJSON.code == 'validation_error') {
-            var error = responseJSON.data;
-            if (error.field == "update_token" && error.code == "invalid") {
-              // TODO: invalid update token error
-            }
-          }
-        } else {
-          // TODO: error
-        }
+      });
+      computeRewardProgress();
+      $scope.fbGiveawayAmount = response.data.giveawayAmount;
+      fbAction.info = 'You will receive ' + $scope.fbGiveawayAmount + ' stellas.';
+      emailAction.info = 'You will receive ' + $scope.fbGiveawayAmount * .2 + ' stellas.';
+      sendAction.info = 'Send stellars to a friend and get ' + $scope.fbGiveawayAmount * .2 + ' stellars for learning.';
+      $scope.showRewards = (count < 3);
+      if ($scope.rewards[3].status == "incomplete") {
+        checkSentTransactions();
       }
-    );
+    })
+    .error(function (response) {
+      var responseJSON = response.responseJSON;
+      if (responseJSON && responseJSON.status == 'fail') {
+        if (responseJSON.code == 'validation_error') {
+          var error = responseJSON.data;
+          if (error.field == "update_token" && error.code == "invalid") {
+              // TODO: invalid update token error
+          }
+        }
+      } else {
+          // TODO: error
+      }
+    });
   }
 
   var offFn;

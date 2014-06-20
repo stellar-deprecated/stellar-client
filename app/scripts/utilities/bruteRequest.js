@@ -1,41 +1,28 @@
 // bruteRequest() wrap $.ajax to automatically retry when express-brute rate limits a request.
-var bruteRequest = angular.module('bruteRequest', [])
-  .factory('bruteRequest', function($timeout){
+var bruteRequest = angular.module('bruteRequest', []);
 
-    var bruteRequest = function(options){
-      this.options = options;
-      this.pendingRequest = null;
-    };
+bruteRequest.factory('bruteRequestInterceptor', function ($q, $timeout, $injector) {
 
-    bruteRequest.prototype.send = function(data, success, fail){
-      var options = this.options;
+  var bruteRecoverer = {
+    responseError: function (response) {
+      if (response.status == '429') {
+        var error = response.data.error;
+        // inject http to avoid angular circular dependency error
+        var http = $injector.get('$http');
 
-      success = success || function () {};
-      fail = fail || function () {};
+        var suggestedRetryTime = new Date(error.nextValidRequestDate).getTime();
+        var waitTime = suggestedRetryTime - Date.now();
 
-      if (this.pendingRequest) this.pendingRequest.abort();
+        // Resend the request at the suggested time.
+        console.log("Waiting " + waitTime + "ms");
 
-      pendingRequest = $.ajax({url: options.url, success: success, data: data, dataType: options.dataType, type: options.type})
-        .done(function (response) {
-          this.pendingRequest = null;
-        })
-        .fail(function (response, error, message) {
-          console.log("fail");
-          if (message === 'Too Many Requests') {
-            var suggestedRetryTime = new Date(response.responseJSON.error.nextValidRequestDate).getTime();
-            var waitTime = suggestedRetryTime - Date.now();
+        return $timeout(function() {
+          return http(response.config);
+        }, waitTime);
+      }
+      return $q.reject(response);
+    }
+  }
 
-            // Resend the request at the suggested time.
-            console.log("Waiting " + waitTime + "ms");
-            $timeout(function(){
-              this.send(data, success, fail);
-            }.bind(this), waitTime);
-          } else {
-            fail(response, error, message);
-          }
-        }.bind(this));
-    };
-
-    return bruteRequest;
-  })
-;
+  return bruteRecoverer;
+});

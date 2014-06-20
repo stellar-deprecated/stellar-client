@@ -2,15 +2,9 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('AlphaCtrl', function ($scope, $state, session,  bruteRequest) {
+sc.controller('AlphaCtrl', function ($scope, $state, $http, session) {
   $scope.alphaCode = '';
   $scope.alphaCodeErrors = [];
-
-  var requestAlpha = new bruteRequest({
-    url: Options.API_SERVER + '/user/checkAlphaCode',
-    type: 'POST',
-    dataType: 'json'
-  });
 
   // Remove errors now that the code has changed.
   $scope.clearErrors = function(){
@@ -35,34 +29,30 @@ sc.controller('AlphaCtrl', function ($scope, $state, session,  bruteRequest) {
         alphaCode: $scope.alphaCode
       };
       // Submit the registration data to the server.
-      requestAlpha.send(data,
-        // Success
+      $http.post(Options.API_SERVER + '/user/checkAlphaCode', data)
+      .success(
         function (response) {
-          $scope.$apply(function () {
-            console.log('Alpha code: ' + response.status);
-            // Save code for the registration page
-            session.put('alpha', $scope.alphaCode);
-            $state.go('register');
-          });
-        },
+          console.log('Alpha code: ' + response.status);
+          // Save code for the registration page
+          session.put('alpha', $scope.alphaCode);
+          $state.go('register');
+      })
+      .error(
         function (response) {
-          $scope.$apply(function () {
-            var responseJSON = response.responseJSON;
-            if (responseJSON && responseJSON.status == 'fail') {
-              if (responseJSON.code == "validation_error") {
-                var error = responseJSON.data;
-                if (error.code == "already_taken") {
-                  $scope.alphaCodeErrors.push('This Alpha Code is already taken.');
-                } else {
-                  $scope.alphaCodeErrors.push('This Alpha Code is invalid.');
-                }
+          var responseJSON = response.responseJSON;
+          if (responseJSON && responseJSON.status == 'fail') {
+            if (responseJSON.code == "validation_error") {
+              var error = responseJSON.data;
+              if (error.code == "already_taken") {
+                $scope.alphaCodeErrors.push('This Alpha Code is already taken.');
+              } else {
+                $scope.alphaCodeErrors.push('This Alpha Code is invalid.');
               }
-            } else {
-                $scope.alphaCodeErrors.push('An error occured.');
             }
-          });
-        }
-      );
+          } else {
+              $scope.alphaCodeErrors.push('An error occured.');
+          }
+      });
     }
   };
 });
