@@ -264,6 +264,7 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
       );
     }
 
+  var offFn;
   // checks if the user has any "sent" transactions, requests send reward if so
   function checkSentTransactions() {
     var remote = stNetwork.remote;
@@ -289,7 +290,10 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
             }
           });
           if (requestStellars) {
-            var offFn = $scope.$on('$appTxNotification', function(event, tx) {
+            if (offFn) {
+              offFn();
+            }
+            offFn = $scope.$on('$appTxNotification', function(event, tx) {
               if (tx.type == 'sent' && $scope.rewards[3].status == "incomplete") {
                 requestSentStellarsReward();
                 offFn();
@@ -313,6 +317,7 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
         $scope.$apply(function () {
           console.log(response.status);
           $scope.rewards[3].status = response.message;
+          computeRewardProgress();
         });
       })
     .error(
