@@ -10,7 +10,7 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
 
   $rootScope.emailToVerify = wallet.mainData.email;
 
-  $scope.toggleReward = function(index, status) {
+  $scope.toggleReward = function (index, status) {
     if (status !== 'incomplete' && status !== 'unverified') {
       return;
     }
@@ -22,21 +22,21 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
     }
   };
 
-  $scope.closeReward = function() {
+  $scope.closeReward = function () {
     $scope.selectedReward = null;
   };
 
   var fbAction = {
     message: 'Earn a reward by verifying your Stellar account with Facebook.',
     template: 'templates/facebook-button.html',
-    start: function(){
+    start: function () {
       var username = session.get('username');
       var updateToken = wallet.keychainData.updateToken;
       $scope.loading = true;
       fbLoginStart(username, updateToken, fbAction.success, fbAction.error);
     },
-    success: function(status) {
-      $scope.$apply(function(){
+    success: function (status) {
+      $scope.$apply(function () {
         console.log(status);
         $scope.rewards[1].status = status;
         computeRewardProgress();
@@ -44,7 +44,7 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
         $scope.closeReward();
       });
     },
-    error: function(response){
+    error: function (response) {
       $scope.$apply(function () {
         $scope.loading = false;
         var responseJSON = response.responseJSON;
@@ -57,9 +57,9 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
             case 'validation_error':
               var errorJSON = responseJSON.data;
               if (errorJSON.field == "update_token" && errorJSON.code == "invalid") {
-                  // TODO: error
+                // TODO: error
               } else if (errorJSON.field == "facebook_id" && errorJSON.code == "already_taken") {
-                  rewardError($scope.rewards[1], 'already_taken');
+                rewardError($scope.rewards[1], 'already_taken');
               }
               break;
             case 'unverified':
@@ -71,19 +71,19 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
               rewardError($scope.rewards[1], 'ineligible');
               break;
             case 'fake_account':
-              // TODO: inform the user their account is fake
+            // TODO: inform the user their account is fake
             case 'reward_already_queued':
             case 'reward_limit_reached':
             default:
-              // TODO: an error occured message
+            // TODO: an error occured message
           }
         } else {
           if (responseJSON.code == 'transaction_error') {
-              // we've stored the reward but there was an error sending the transaction
-              $scope.rewards[1].status = 'awaiting_payout';
-              computeRewardProgress();
-              updateRewards();
-              $scope.closeReward();
+            // we've stored the reward but there was an error sending the transaction
+            $scope.rewards[1].status = 'awaiting_payout';
+            computeRewardProgress();
+            updateRewards();
+            $scope.closeReward();
           }
         }
       })
@@ -97,7 +97,9 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
       case 'unverified':
         info = "Please verify your Facebook account and try again.";
         panel = "Almost there! Verify your Facebook account.";
-        action = function () { reward.error = null };
+        action = function () {
+          reward.error = null
+        };
         break;
       case 'ineligible':
         info = "Your Facebook acount is too new to qualify. Stay tuned for new ways to grab stellars.";
@@ -106,7 +108,9 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
         break;
       case 'already_taken':
         info = "This Facebook account is already in use.";
-        action = function () { reward.error = null};
+        action = function () {
+          reward.error = null
+        };
     }
     reward.error = {
       panel: panel,
@@ -119,7 +123,7 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
   var emailAction = {
     message: 'Earn a reward by verifying an email address you can use to recover your account.',
     template: 'templates/verify-email.html',
-    success: function(event, status){
+    success: function (event, status) {
       $scope.rewards[2].status = status;
       computeRewardProgress();
       $scope.closeReward();
@@ -130,12 +134,12 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
   var sendAction = {
     message: 'Learn how to send digital money.',
     template: 'templates/send-stellar.html',
-    start: function() {
+    start: function () {
       $rootScope.tab = 'send';
       scrollTo(scrollX, 188);
       // TODO: Show send tutorial.
     },
-    success: function() {
+    success: function () {
       $scope.rewards[3].status = "sent";
       computeRewardProgress();
       $scope.closeReward();
@@ -145,7 +149,8 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
   var createAction = {
     message: 'Enable rewards by registering for a Stellar account',
     info: 'You have unlocked rewards...',
-    start: function() {}
+    start: function () {
+    }
   };
 
   function getPlaceInLine() {
@@ -194,11 +199,18 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
   ];
 
   function computeRewardProgress() {
-    var statuses = $scope.rewards.map(function (reward) { return reward.status; });
+    var statuses = $scope.rewards.map(function (reward) {
+      return reward.status;
+    });
     $scope.rewardProgress = statuses.sort(function (a, b) {
       var order = ['sent', 'awaiting_payout', 'incomplete', 'unverified', 'ineligible'];
       return order.indexOf(a) - order.indexOf(b);
     });
+
+    var completedRewards = $scope.rewards.filter(function (reward) {
+      return reward.status == 'sent';
+    });
+    $scope.showRewards = (completedRewards.length !== $scope.rewards.length);
   }
 
   var rewardsRequest = new bruteRequest({
@@ -207,69 +219,62 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
     dataType: 'json'
   });
 
-    function updateRewards() {
-      // Load the status of the user's rewards.
-      rewardsRequest.send(
-        {
-          username: session.get('username'),
-          updateToken: wallet.keychainData.updateToken
-        },
-        //Success
-        function (response) {
-            // Only show the rewards pane if there are rewards left to complete.
-            var count = 0;
-
-            // Update the status of the user's rewards.
-            var rewardsGiven = response.data.rewards;
-            rewardsGiven.forEach(function (reward) {
-                $scope.rewards[reward.rewardType].status = reward.status;
-                switch (reward.status) {
-                    case 'pending':
-                      $scope.rewards[reward.rewardType].status = 'incomplete';
-                      break;
-                    case 'unverified':
-                      if (reward.rewardType == 1) {
-                        rewardError($scope.rewards[reward.rewardType], "unverified");
-                      }
-                      break;
-                    case 'ineligible':
-                      rewardError($scope.rewards[reward.rewardType], "ineligible");
-                      break;
-                    case 'awaiting_payout':
-                        if (reward.rewardType == 1) {
-                          // this guy is on the waiting list
-                          getPlaceInLine();
-                        }
-                        break;
-                    case 'sent':
-                        count++;
-                }
-            });
-            computeRewardProgress();
-            $scope.fbGiveawayAmount = response.data.giveawayAmount;
-            fbAction.info = 'You will receive ' + $scope.fbGiveawayAmount + ' stellas.';
-            emailAction.info = 'You will receive ' + $scope.fbGiveawayAmount * .2 + ' stellas.';
-            sendAction.info = 'Send stellars to a friend and get ' + $scope.fbGiveawayAmount * .2 + ' stellars for learning.';
-            $scope.showRewards = (count < 3);
-            if ($scope.rewards[3].status == "incomplete") {
-              checkSentTransactions();
-            }
-        },
-        function (response) {
-          var responseJSON = response.responseJSON;
-            if (responseJSON && responseJSON.status == 'fail') {
-                if (responseJSON.code == 'validation_error') {
-                    var error = responseJSON.data;
-                    if (error.field == "update_token" && error.code == "invalid") {
-                        // TODO: invalid update token error
-                    }
-                }
-            } else {
-                // TODO: error
-            }
+  function updateRewards() {
+    // Load the status of the user's rewards.
+    rewardsRequest.send(
+      {
+        username: session.get('username'),
+        updateToken: wallet.keychainData.updateToken
+      },
+      //Success
+      function (response) {
+        // Update the status of the user's rewards.
+        var rewardsGiven = response.data.rewards;
+        rewardsGiven.forEach(function (reward) {
+          $scope.rewards[reward.rewardType].status = reward.status;
+          switch (reward.status) {
+            case 'pending':
+              $scope.rewards[reward.rewardType].status = 'incomplete';
+              break;
+            case 'unverified':
+              if (reward.rewardType == 1) {
+                rewardError($scope.rewards[reward.rewardType], "unverified");
+              }
+              break;
+            case 'ineligible':
+              rewardError($scope.rewards[reward.rewardType], "ineligible");
+              break;
+            case 'awaiting_payout':
+              if (reward.rewardType == 1) {
+                // this guy is on the waiting list
+                getPlaceInLine();
+              }
+          }
+        });
+        computeRewardProgress();
+        $scope.fbGiveawayAmount = response.data.giveawayAmount;
+        fbAction.info = 'You will receive ' + $scope.fbGiveawayAmount + ' stellas.';
+        emailAction.info = 'You will receive ' + $scope.fbGiveawayAmount * .2 + ' stellas.';
+        sendAction.info = 'Send stellars to a friend and get ' + $scope.fbGiveawayAmount * .2 + ' stellars for learning.';
+        if ($scope.rewards[3].status == "incomplete") {
+          checkSentTransactions();
         }
-      );
-    }
+      },
+      function (response) {
+        var responseJSON = response.responseJSON;
+        if (responseJSON && responseJSON.status == 'fail') {
+          if (responseJSON.code == 'validation_error') {
+            var error = responseJSON.data;
+            if (error.field == "update_token" && error.code == "invalid") {
+              // TODO: invalid update token error
+            }
+          }
+        } else {
+          // TODO: error
+        }
+      }
+    );
+  }
 
   var offFn;
   // checks if the user has any "sent" transactions, requests send reward if so
@@ -279,47 +284,47 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
     var requestStellars = true;
     // Transactions
     remote.request_account_tx({
-        'account': account,
-        'ledger_index_min': 0,
-        'ledger_index_max': 9999999,
-        'descending': true,
-        'count': true
+      'account': account,
+      'ledger_index_min': 0,
+      'ledger_index_max': 9999999,
+      'descending': true,
+      'count': true
     })
-    .on('success', function(data) {
-      $scope.$apply(function () {
-        if (data.transactions) {
-          data.transactions.forEach(function (e) {
-            var processedTxn = JsonRewriter.processTxn(e.tx, e.meta, account);
-            var transaction = processedTxn.transaction;
-            if (transaction.type == "sent" && $scope.rewards[3].status == "incomplete" && requestStellars) {
-              requestSentStellarsReward();
-              requestStellars = false;
-            }
-          });
-          if (requestStellars) {
-            if (offFn) {
-              offFn();
-            }
-            offFn = $scope.$on('$appTxNotification', function(event, tx) {
-              if (tx.type == 'sent' && $scope.rewards[3].status == "incomplete") {
+      .on('success', function (data) {
+        $scope.$apply(function () {
+          if (data.transactions) {
+            data.transactions.forEach(function (e) {
+              var processedTxn = JsonRewriter.processTxn(e.tx, e.meta, account);
+              var transaction = processedTxn.transaction;
+              if (transaction.type == "sent" && $scope.rewards[3].status == "incomplete" && requestStellars) {
                 requestSentStellarsReward();
-                offFn();
+                requestStellars = false;
               }
             });
+            if (requestStellars) {
+              if (offFn) {
+                offFn();
+              }
+              offFn = $scope.$on('$appTxNotification', function (event, tx) {
+                if (tx.type == 'sent' && $scope.rewards[3].status == "incomplete") {
+                  requestSentStellarsReward();
+                  offFn();
+                }
+              });
+            }
           }
-        }
-      });
-    })
-    .on('error', function () {
+        });
+      })
+      .on('error', function () {
 
-    })
-    .request();
+      })
+      .request();
   }
 
   function requestSentStellarsReward() {
     var username = session.get('username');
     $.post(Options.API_SERVER + "/claim/sendStellars", {"username": username}, null, "json")
-    .success(
+      .success(
       function (response) {
         $scope.$apply(function () {
           console.log(response.status);
@@ -327,7 +332,7 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
           computeRewardProgress();
         });
       })
-    .error(
+      .error(
       function (response) {
 
       });

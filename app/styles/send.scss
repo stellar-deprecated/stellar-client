@@ -1,0 +1,150 @@
+.send-container {
+  .send-pane {
+    background-color: transparent;
+    color: $dark-grey;
+
+    form > div {
+      margin: 45px 0;
+
+      label {
+        padding-left: 0;
+        font-size: 14px;
+        line-height: 36px;
+      }
+
+      .send-amount {
+        padding: 0;
+
+        i {
+          font-size: 12px;
+          font-style: normal;
+          top: 21px;
+        }
+
+        input {
+          font-size: 48px;
+          height: auto;
+          padding-right: 50px;
+        }
+
+        + .tip {
+          line-height: 82px
+        }
+      }
+
+      .send-address {
+        padding: 0;
+
+        i {
+          top: 5px;
+        }
+
+        input {
+          font-size: 22px;
+          height: auto;
+          padding-right: 36px;
+        }
+
+        + .tip {
+          line-height: 45px
+        }
+      }
+    }
+
+    .close-send-tab {
+      float: right;
+      font-size: 16px;
+      margin: 5px 0;
+      cursor: pointer;
+      color: $info-grey;
+      @include transition(color 200ms ease-in-out);
+
+      &:hover {
+        color: $error;
+
+        i {
+          color: $error;
+        }
+      }
+
+      i {
+        font-size: 26px;
+        vertical-align: middle;
+        margin-left: 10px;
+        margin-top: -4px;
+      }
+    }
+
+    .title {
+      font-size: 20px;
+      margin: 20px 0;
+      border-bottom: $grey-border-bottom;
+      padding-bottom: 20px;
+    }
+
+    .send-error p {
+      padding: 20px;
+      margin-bottom: 20px;
+      text-align: center;
+      border: 1px solid $error;
+      color: $error;
+      border-radius: 2px;
+    }
+
+    .mode-confirm > div {
+      text-align: center;
+      border: 1px solid $grey-border;
+      border-radius: 2px;
+      margin: 40px auto 30px auto;
+      width: 540px;
+      padding: 30px 36px;
+
+      .info {
+        font-size: 20px;
+        color: $info-grey;
+      }
+
+      .amount_feedback {
+        font-size: 46px;
+      }
+
+      input {
+        width: 100%;
+        padding: 10px 15px;
+        margin-top: 15px;
+        margin-bottom: 40px;
+        border-radius: 2px;
+        border: 1px solid rgba($grey, 0.3);
+        background-color: rgba($light-grey, 0.4);
+
+        + i {
+          font-size: 16px;
+          margin-top: 14px;
+        }
+      }
+
+      button {
+        height: 60px;
+        width: 100%;
+        color: white;
+        background-color: #80D8BF;
+        font-size: 25px;
+        box-shadow: none;
+        border-bottom-color: $stellar-blue;
+
+        &:hover {
+          background-color: $stellar-blue;
+        }
+      }
+    }
+
+    .change-button {
+      width: 220px;
+      margin: 0 auto 40px auto;
+    }
+
+    .errors .tip {
+      right: -7px;
+    }
+  }
+}

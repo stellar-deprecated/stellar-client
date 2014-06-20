@@ -1,17 +1,16 @@
 
 <div class="send-pane pane" ng-controller="SendPaneCtrl" ng-class="{'pane-error':isError(), 'pane-success':success}">
-<group ng-hide="connected" class="send-error disconnected">
-    <p l10n="l10n" class="literal">You have to be online to see this screen</p>
-</group>
-<div ng-hide="account.Balance || !connected" class="send-error unfunded">
-    <p l10n="l10n" class="literal">You have to be funded before you can send money</p>
-    <p><a href="#/balance" l10n="l10n" class="btn btn-default">Back to balance</a></p>
-</div>
 <div class="close-send-tab" ng-click="closePane()">
     <span>Close</span>
     <i class="glyphicon glyphicon-remove-circle"></i>
 </div>
 <div l10n="l10n" class="literal title">Send Stellars</div>
+<group ng-hide="connected" class="send-error disconnected">
+    <p l10n="l10n" class="literal">You have to be online to see this screen</p>
+</group>
+<div ng-hide="account.Balance || !connected" class="send-error unfunded">
+    <p l10n="l10n" class="literal">You have to be funded before you can send money</p>
+</div>
 <form name="sendForm" id="sendForm" role="form" ng-show="mode=='form' && account.Balance" ng-submit="send_prepared()" class="row-padding-small mode-form stellar-form">
     <div class="form-group">
         <div rp-errors="send_amount" class="errors col-sm-12">
