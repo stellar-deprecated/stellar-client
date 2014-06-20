@@ -46,7 +46,7 @@ sc.service('session', function($rootScope) {
   Session.prototype.loginFromStorage = function($scope) {
     if(localStorage.wallet) {
       try {
-        var wallet = JSON.parse(localStorage.wallet);
+        var wallet = new Wallet(JSON.parse(localStorage.wallet));
 
         if (wallet) {
           this.login(wallet);
