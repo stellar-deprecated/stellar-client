@@ -39,10 +39,23 @@ sc.controller('LoginCtrl', function($scope, $state, session) {
           }
         });
       },
-      error: function(){
+      error: function(response){
         $scope.$apply(function() {
-          // Request failed.
-          $scope.loginError = 'Unable to contact the server.';
+          var errorStatus;
+          if(response.responseJSON){
+            errorStatus = response.responseJSON.status;
+          }
+
+          switch(errorStatus) {
+            case 'fail':
+              $scope.loginError = 'Invalid username or password.';
+              break;
+            case 'error':
+              $scope.loginError = 'Unable to contact the server.';
+              break;
+            default:
+              $scope.loginError = 'An error occurred.';
+          }
         });
       }
     });
