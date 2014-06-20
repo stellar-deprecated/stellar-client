@@ -41,7 +41,12 @@ sc.controller('LoginCtrl', function($scope, $state, session) {
       },
       error: function(response){
         $scope.$apply(function() {
-          switch(response.responseJSON.status) {
+          var errorStatus;
+          if(response.responseJSON){
+            errorStatus = response.responseJSON.status;
+          }
+
+          switch(errorStatus) {
             case 'fail':
               $scope.loginError = 'Invalid username or password.';
               break;
