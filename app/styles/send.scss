@@ -82,9 +82,9 @@
       padding-bottom: 20px;
     }
 
-    group.send-error p {
+    .send-error p {
       padding: 20px;
-      margin-top: 10px;
+      margin-bottom: 20px;
       text-align: center;
       border: 1px solid $error;
       color: $error;
