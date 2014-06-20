@@ -58,10 +58,10 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
               var errorJSON = responseJSON.data;
               if (errorJSON.field == "update_token" && errorJSON.code == "invalid") {
                   // TODO: error
-                  break;
               } else if (errorJSON.field == "facebook_id" && errorJSON.code == "already_taken") {
-                  // TODO: push "duplicate facebook" to generic error box
+                  rewardError($scope.rewards[1], 'already_taken');
               }
+              break;
             case 'unverified':
               $scope.rewards[1].status = 'unverified';
               rewardError($scope.rewards[1], 'unverified');
@@ -103,6 +103,10 @@ sc.controller('RewardPaneCtrl', ['$scope', '$rootScope', 'session', 'bruteReques
         info = "Your Facebook acount is too new to qualify. Stay tuned for new ways to grab stellars.";
         panel = "Sorry, your Facebook account is too new."
         action = null;
+        break;
+      case 'already_taken':
+        info = "This Facebook account is already in use.";
+        action = function () { reward.error = null};
     }
     reward.error = {
       panel: panel,
