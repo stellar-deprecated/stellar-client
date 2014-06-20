@@ -165,12 +165,11 @@
         <p class="amount_feedback"><span class="value">{{send.amount_feedback | rpamount}}&#32;</span><span class="currency">{{send.amount_feedback | rpcurrency}}</span></p>
         <p l10n="l10n" class="literal info">to this address</p>
         <div class="dest_feedback">
-            <div ng-show="send.recipient_name" class="recipient">{{send.recipient_name}}</div>
+            <div ng-show="send.recipient_name" class="recipient-name">{{send.recipient_name}}</div>
             <div class="input-icon-wrapper">
-                <input ng-hide="send.recipient_name" class="recipient" value="{{send.recipient_address}}" disabled>
+                <input class="recipient-address" value="{{send.recipient_address}}" disabled>
                 <i class="glyphicon glyphicon-globe"></i>
             </div>
-            <div href="" ng-show="send.recipient != send.recipient_address || send.recipient_name" class="extra"> {{send.recipient_address}}</div>
             <div ng-show="send.dt" l10n="l10n" class="dt">Destination tag: {{send.dt}}</div>
         </div>
         <group ng-show="send.indirect">

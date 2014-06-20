@@ -104,11 +104,12 @@
         color: $info-grey;
       }
 
-      .amount_feedback {
+      .amount_feedback,
+      .recipient-name {
         font-size: 46px;
       }
 
-      input {
+      .recipient-address {
         width: 100%;
         padding: 10px 15px;
         margin-top: 15px;
