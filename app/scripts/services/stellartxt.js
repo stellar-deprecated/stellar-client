@@ -24,9 +24,9 @@ module.factory('rpStellarTxt', ['$q', '$rootScope',
 
                 // TODO: change these back to https
                 var urls = [
-                        'http://stellar.'+domain+'/stellar.txt',
-                        'http://www.'+domain+'/stellar.txt',
-                        'http://'+domain+'/stellar.txt'
+                        'https://www.'+domain+'/stellar.txt',
+                        'https://'+domain+'/stellar.txt',
+                        'https://stellar.'+domain+'/stellar.txt'
                 ];
                 var next = function (xhr, status) {
                     if (!urls.length) {
