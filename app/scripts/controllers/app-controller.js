@@ -163,6 +163,7 @@ sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', function($scope, $r
             $rootScope.balance=data.Balance;
             $rootScope.reserve=$scope.account.reserve;
             $rootScope.account.max_spend = bal.subtract($scope.account.reserve);
+            $rootScope.$broadcast("accountLoaded", $rootScope.account);
         });
     }
 
