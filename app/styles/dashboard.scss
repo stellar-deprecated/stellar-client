@@ -139,7 +139,7 @@
       cursor: default;
 
       &:before {
-        border: solid;
+        border-style: solid;
         border-color: $grey-border transparent;
         border-width: 0 10px 10px 10px;
         bottom: -7px;
@@ -149,7 +149,7 @@
       }
 
       &:after {
-        border: solid;
+        border-style: solid;
         border-color: white transparent;
         border-width: 0 10px 10px 10px;
         bottom: -8px;
