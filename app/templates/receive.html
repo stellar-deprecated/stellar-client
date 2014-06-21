@@ -1,6 +1,28 @@
-<div class="receive-pane">
-    <b>Receive stellars</b><br>
-    <a ng-click="tab='none'">close</a>
-    <hr>
-    {{$root.account.Account || $root.account}}
+<div class="receive-pane pane">
+    <div class="close-tab" ng-click="closePane()">
+        <span>Close</span>
+        <i class="glyphicon glyphicon-remove-circle"></i>
+    </div>
+    <div l10n="l10n" class="literal title">Receive Stellars</div>
+    <form name="receiveForm" id="receiveForm" role="form" class="row-padding-small mode-form stellar-form">
+        <div class="row form-group">
+            <label for="receive_username" class="col-sm-3">USERNAME</label>
+            <div class="col-sm-6 receive-username">
+                <i class="glyphicon glyphicon-user"></i>
+                <span class="username">@{{username}}</span>
+            </div>
+        </div>
+        <div class="row form-group address-row">
+            <label for="receive_address" class="col-sm-3">YOUR ADDRESS</label>
+            <div class="col-sm-6 receive-address right-inner-addon">
+                <input id="receive_address" name="receive_address" type="text" value="{{$root.account.Account || $root.account}}" class="form-control stellar-input" disabled/>
+                <i class="glyphicon glyphicon-globe"></i>
+            </div>
+        </div>
+        <div class="row form-group info-row">
+            <div class="col-sm-offset-3 col-sm-6 receive-info">
+                <span class="info">Give this address or your username to other users so they can send you money.</span>
+            </div>
+        </div>
+    </form>
 </div>
