@@ -1,8 +1,8 @@
 
 <div class="send-pane pane" ng-controller="SendPaneCtrl" ng-class="paneState()">
-<div class="close-tab" ng-click="closePane()">
+<div class="pane-close" ng-click="closePane()">
     <span>Close</span>
-    <i class="glyphicon glyphicon-remove-circle"></i>
+    <i class="icon icon-times-circle-thin"></i>
 </div>
 <div l10n="l10n" class="literal title">Send Stellars</div>
 <group ng-show="mode=='disconnected'" class="send-error disconnected">
@@ -238,7 +238,7 @@
         <p l10n="l10n">Your account balance will update once the payment has cleared.</p>
     </group>
     <div ng-show="tx_result=='cleared'" class="result-success">
-        <i class="fa fa-check-circle-o modalStatus-icon"></i>
+        <i class="icon icon-check-circle-thin modalStatus-icon"></i>
         <p class="modalStatus-title">Transaction cleared.</p>
     </div>
     <group ng-show="tx_result=='partial'" class="result-partial">

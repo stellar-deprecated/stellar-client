@@ -340,31 +340,6 @@
             margin-top: 40px;
           }
       }
-
-      .close-reward {
-        float: right;
-        font-size: 16px;
-        margin: 5px 0;
-        cursor: pointer;
-        font-weight: $avenir-medium;
-        color: $info-grey;
-        @include transition(color 200ms ease-in-out);
-
-        &:hover {
-          color: $error;
-
-          i {
-            color: $error;
-          }
-        }
-
-        i {
-          font-size: 26px;
-          vertical-align: middle;
-          margin-left: 10px;
-          margin-top: -4px;
-        }
-      }
     }
   }
 }

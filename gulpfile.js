@@ -18,9 +18,8 @@ gulp.task('build',   ['html', 'images', 'fonts']);
 gulp.task('dist',    ['build']);
 
 
-
 //component tasks
-gulp.task('styles', function () {
+gulp.task('styles', ['iconfont'], function () {
     return gulp.src('app/styles/main.scss')
         .pipe(plumber({errorHandler: console.log}))
         .pipe($.sass({outputStyle: 'expanded'}))
@@ -143,6 +142,7 @@ gulp.task('watch', ['connect', 'serve'], function () {
     gulp.watch('app/styles/**/*.scss', ['styles']);
     gulp.watch('app/scripts/**/*.js', ['scripts']);
     gulp.watch('app/images/**/*', ['images']);
+    gulp.watch('app/icons/**/*', ['iconfont']);
     gulp.watch('bower.json', ['wiredep']);
 });
 
@@ -158,4 +158,19 @@ gulp.task("stellar-lib", function(cb) {
         console.log(stderr);
         cb(err);
     });
-})
+});
+
+gulp.task('iconfont', function() {
+    var fontName = 'stellar-client';
+    return gulp.src(['app/icons/*.svg'])
+        .pipe($.iconfontCss({
+            fontName: fontName,
+            targetPath: '../styles/icons.scss',
+            fontPath: '../fonts/'
+        }))
+        .pipe($.iconfont({
+            fontName: fontName,
+            normalize: true
+         }))
+        .pipe(gulp.dest('app/fonts/'));
+});
