@@ -48,7 +48,7 @@
 
       .dash-balance {
         color: $dark-grey;
-        font-family: $avenir-black;
+        font-weight: $avenir-black;
         white-space: nowrap;
         font-size: 84px;
         line-height: 42px;
@@ -56,11 +56,11 @@
 
       .dash-balance-info {
         color: $info-grey;
-        font-family: $avenir-book;
+        font-weight: $avenir-book;
         font-size: 17px;
 
         b {
-          font-family: $avenir-heavy;
+          font-weight: $avenir-heavy;
         }
       }
 
@@ -127,7 +127,7 @@
     }
 
     .tx-tip {
-      font-family: $avenir-medium;
+      font-weight: $avenir-medium;
       font-size: 20px;
       color: $dark-grey;
       background-color: white;
@@ -181,7 +181,7 @@
         background-color: white;
 
         .amount {
-          font-family: $avenir-black;
+          font-weight: $avenir-black;
         }
       }
     }
