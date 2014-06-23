@@ -3,6 +3,7 @@
 
 var gulp = require('gulp');
 var plumber = require('gulp-plumber');
+var exec = require('child_process').exec;
 
 // load plugins
 var $ = require('gulp-load-plugins')();
@@ -144,3 +145,17 @@ gulp.task('watch', ['connect', 'serve'], function () {
     gulp.watch('app/images/**/*', ['images']);
     gulp.watch('bower.json', ['wiredep']);
 });
+
+gulp.task("stellar-lib", function(cb) {
+    var steps = [
+        "cd ../stellar-lib",
+        "./node_modules/.bin/grunt webpack",
+        "cp build/stellar-0.7.35.js ../stellar-client/app/scripts/libraries/stellar-0.7.35.js"
+    ]
+    console.log(steps.join(" && "))
+    exec(steps.join(" && "), function (err, stdout, stderr) {
+        console.log(stdout);
+        console.log(stderr);
+        cb(err);
+    });
+})
