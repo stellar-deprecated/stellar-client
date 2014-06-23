@@ -71,7 +71,6 @@
         font-size: 20px;
         list-style-type: none;
         cursor: pointer;
-        border: 1px solid rgba($stellar-blue, 0);
         position: relative;
         overflow: visible;
         white-space: nowrap;
@@ -87,6 +86,7 @@
 
         &.incomplete, &.unverified {
           background-color: white;
+          border: 1px solid rgba($stellar-blue, 0);
 
           i {
             color: $grey;
@@ -106,16 +106,14 @@
         }
 
         &.sent,
-        &.awaiting_payout, &.ineligible {
+        &.awaiting_payout,
+        &.ineligible {
           background-color: #F9F9F9;
           color: $info-grey;
+          cursor: default;
 
           i {
             color: $info-grey;
-          }
-
-          &:hover {
-            border: 1px solid rgba($grey, 0.5);
           }
         }
 
