@@ -127,7 +127,7 @@ var stellar =
 
 	var EventEmitter = require(31).EventEmitter;
 	var util         = require(32);
-	var LRU          = require(46);
+	var LRU          = require(41);
 	var Request      = require(2).Request;
 	var Server       = require(16).Server;
 	var Amount       = require(3).Amount;
@@ -3450,8 +3450,8 @@ var stellar =
 	        "object" === typeof err &&
 	        "object" === typeof err.remote &&
 	        err.remote.error === "actNotFound") {
-	      // New accounts will start out as sequence zero
-	      callback(null, 0);
+	      // New accounts will start out as sequence one
+	      callback(null, 1);
 	    } else if (err) {
 	      callback(err);
 	    } else {
@@ -14576,7 +14576,7 @@ var stellar =
 	  }
 	};
 	
-	/* WEBPACK VAR INJECTION */}(require, require(39)(module)))
+	/* WEBPACK VAR INJECTION */}(require, require(46)(module)))
 
 /***/ },
 
@@ -15848,8 +15848,8 @@ var stellar =
 /***/ function(module, exports, require) {
 
 	var EventEmitter = exports.EventEmitter = function EventEmitter() {};
-	var isArray = require(40);
-	var indexOf = require(45);
+	var isArray = require(39);
+	var indexOf = require(40);
 
 
 
@@ -16044,11 +16044,11 @@ var stellar =
 
 	var events = require(31);
 
-	var isArray = require(40);
-	var Object_keys = require(41);
-	var Object_getOwnPropertyNames = require(42);
-	var Object_create = require(43);
-	var isRegExp = require(44);
+	var isArray = require(39);
+	var Object_keys = require(42);
+	var Object_getOwnPropertyNames = require(43);
+	var Object_create = require(44);
+	var isRegExp = require(45);
 
 	exports.isArray = isArray;
 	exports.isDate = isDate;
@@ -16360,8 +16360,8 @@ var stellar =
 	var util = require(32);
 	var pSlice = Array.prototype.slice;
 
-	var objectKeys = require(41);
-	var isRegExp = require(44);
+	var objectKeys = require(42);
+	var isRegExp = require(45);
 
 	// 1. The assert module provides functions that throw
 	// AssertionError's when particular conditions are not met. The
@@ -17151,23 +17151,6 @@ var stellar =
 /***/ 39:
 /***/ function(module, exports, require) {
 
-	module.exports = function(module) {
-		if(!module.webpackPolyfill) {
-			module.deprecate = function() {};
-			module.paths = [];
-			// module.parent = undefined by default
-			module.children = [];
-			module.webpackPolyfill = 1;
-		}
-		return module;
-	}
-
-
-/***/ },
-
-/***/ 40:
-/***/ function(module, exports, require) {
-
 	module.exports = typeof Array.isArray === 'function'
 	    ? Array.isArray
 	    : function (xs) {
@@ -17189,75 +17172,7 @@ var stellar =
 
 /***/ },
 
-/***/ 41:
-/***/ function(module, exports, require) {
-
-	module.exports = Object.keys || function objectKeys(object) {
-		if (object !== Object(object)) throw new TypeError('Invalid object');
-		var result = [];
-		for (var name in object) {
-			if (Object.prototype.hasOwnProperty.call(object, name)) {
-				result.push(name);
-			}
-		}
-		return result;
-	};
-
-
-/***/ },
-
-/***/ 42:
-/***/ function(module, exports, require) {
-
-	module.exports = Object.getOwnPropertyNames || function (obj) {
-	    var res = [];
-	    for (var key in obj) {
-	        if (Object.hasOwnProperty.call(obj, key)) res.push(key);
-	    }
-	    return res;
-	};
-
-/***/ },
-
-/***/ 43:
-/***/ function(module, exports, require) {
-
-	module.exports = Object.create || function (prototype, properties) {
-	    // from es5-shim
-	    var object;
-	    if (prototype === null) {
-	        object = { '__proto__' : null };
-	    }
-	    else {
-	        if (typeof prototype !== 'object') {
-	            throw new TypeError(
-	                'typeof prototype[' + (typeof prototype) + '] != \'object\''
-	            );
-	        }
-	        var Type = function () {};
-	        Type.prototype = prototype;
-	        object = new Type();
-	        object.__proto__ = prototype;
-	    }
-	    if (typeof properties !== 'undefined' && Object.defineProperties) {
-	        Object.defineProperties(object, properties);
-	    }
-	    return object;
-	};
-
-/***/ },
-
-/***/ 44:
-/***/ function(module, exports, require) {
-
-	module.exports = function isRegExp(re) {
-	  return re instanceof RegExp ||
-	    (typeof re === 'object' && Object.prototype.toString.call(re) === '[object RegExp]');
-	}
-
-/***/ },
-
-/***/ 45:
+/***/ 40:
 /***/ function(module, exports, require) {
 
 	module.exports = function indexOf (xs, x) {
@@ -17271,7 +17186,7 @@ var stellar =
 
 /***/ },
 
-/***/ 46:
+/***/ 41:
 /***/ function(module, exports, require) {
 
 	/* WEBPACK VAR INJECTION */(function(require, module) {;(function () { // closure for web browsers
@@ -17527,7 +17442,92 @@ var stellar =
 
 	})()
 	
-	/* WEBPACK VAR INJECTION */}(require, require(39)(module)))
+	/* WEBPACK VAR INJECTION */}(require, require(46)(module)))
+
+/***/ },
+
+/***/ 42:
+/***/ function(module, exports, require) {
+
+	module.exports = Object.keys || function objectKeys(object) {
+		if (object !== Object(object)) throw new TypeError('Invalid object');
+		var result = [];
+		for (var name in object) {
+			if (Object.prototype.hasOwnProperty.call(object, name)) {
+				result.push(name);
+			}
+		}
+		return result;
+	};
+
+
+/***/ },
+
+/***/ 43:
+/***/ function(module, exports, require) {
+
+	module.exports = Object.getOwnPropertyNames || function (obj) {
+	    var res = [];
+	    for (var key in obj) {
+	        if (Object.hasOwnProperty.call(obj, key)) res.push(key);
+	    }
+	    return res;
+	};
+
+/***/ },
+
+/***/ 44:
+/***/ function(module, exports, require) {
+
+	module.exports = Object.create || function (prototype, properties) {
+	    // from es5-shim
+	    var object;
+	    if (prototype === null) {
+	        object = { '__proto__' : null };
+	    }
+	    else {
+	        if (typeof prototype !== 'object') {
+	            throw new TypeError(
+	                'typeof prototype[' + (typeof prototype) + '] != \'object\''
+	            );
+	        }
+	        var Type = function () {};
+	        Type.prototype = prototype;
+	        object = new Type();
+	        object.__proto__ = prototype;
+	    }
+	    if (typeof properties !== 'undefined' && Object.defineProperties) {
+	        Object.defineProperties(object, properties);
+	    }
+	    return object;
+	};
+
+/***/ },
+
+/***/ 45:
+/***/ function(module, exports, require) {
+
+	module.exports = function isRegExp(re) {
+	  return re instanceof RegExp ||
+	    (typeof re === 'object' && Object.prototype.toString.call(re) === '[object RegExp]');
+	}
+
+/***/ },
+
+/***/ 46:
+/***/ function(module, exports, require) {
+
+	module.exports = function(module) {
+		if(!module.webpackPolyfill) {
+			module.deprecate = function() {};
+			module.paths = [];
+			// module.parent = undefined by default
+			module.children = [];
+			module.webpackPolyfill = 1;
+		}
+		return module;
+	}
+
 
 /***/ },
 
