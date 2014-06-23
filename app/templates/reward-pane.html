@@ -24,9 +24,9 @@
                 </ul>
                 <div ng-repeat="reward in rewards" class="reward-page"
                     ng-class="{active: selectedReward == $index, error: !!reward.error}">
-                    <div class="close-reward" ng-click="closeReward()">
+                    <div class="pane-close" ng-click="closeReward()">
                         <span>Close</span>
-                        <i class="glyphicon glyphicon-remove-circle"></i>
+                        <i class="icon icon-times-circle-thin"></i>
                     </div>
                     <div class="title">
                         <i class="glyphicon glyphicon-lock"></i>
