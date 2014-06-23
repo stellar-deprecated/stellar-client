@@ -1,4 +1,4 @@
-sc.controller('AddEmailCtrl', function ($scope, $rootScope, session) {
+sc.controller('AddEmailCtrl', function ($scope, $rootScope, $http, session) {
   $scope.loading = false;
   $scope.errors = [];
 
@@ -15,48 +15,37 @@ sc.controller('AddEmailCtrl', function ($scope, $rootScope, session) {
         updateToken: wallet.keychainData.updateToken
       };
 
-      $.ajax({
-        type: 'POST',
-        url: Options.API_SERVER + '/user/email',
-        dataType: 'JSON',
-        data: data,
-        success: addEmailSuccess
-      }).done(addEmailDone)
-        .error(addEmailError);
+      $http.post(Options.API_SERVER + '/user/email', data)
+      .success(addEmailSuccess)
+      .error(addEmailError)
+      .finally(addEmailDone);
 
       function addEmailSuccess(response) {
-        $scope.$apply(function() {
-          // Store the email address in the wallet.
-          wallet.mainData.email = $scope.email;
-          session.syncWallet(wallet, 'update');
+        // Store the email address in the wallet.
+        wallet.mainData.email = $scope.email;
+        session.syncWallet(wallet, 'update');
 
-          // Switch to the verify overlay.
-          $rootScope.emailToVerify = $scope.email;
-        });
+        // Switch to the verify overlay.
+        $rootScope.emailToVerify = $scope.email;
       }
 
       function addEmailError(response) {
-        $scope.$apply(function() {
-          var responseJSON = response.responseJSON;
-          if (responseJSON && responseJSON.status == 'fail') {
-            if (responseJSON.code == 'validation_error') {
-              var error = responseJSON.data;
-              if (error.field == "update_token" && error.code == "invalid") {
-                // TODO: send them to login screen?
-                $scope.errors.push('Login expired');
-              }
+        if (response && response.status == 'fail') {
+          if (response.code == 'validation_error') {
+            var error = response.data;
+            if (error.field == "update_token" && error.code == "invalid") {
+              // TODO: send them to login screen?
+              $scope.errors.push('Login expired');
             }
-          } else {
-            $scope.errors.push('An error occured');
           }
-          $scope.loading = false;
-        });
+        } else {
+          $scope.errors.push('An error occured');
+        }
+        $scope.loading = false;
       }
 
       function addEmailDone() {
-        $scope.$apply(function() {
-          $scope.loading = false;
-        });
+        $scope.loading = false;
       }
     }
   };

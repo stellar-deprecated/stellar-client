@@ -1,4 +1,4 @@
-sc.controller('VerifyEmailCtrl', function ($scope, $rootScope, session) {
+sc.controller('VerifyEmailCtrl', function ($scope, $rootScope, $http, session) {
   $scope.email = session.get('wallet').mainData.email;
   $scope.loading = false;
   $scope.errors = [];
@@ -16,36 +16,27 @@ sc.controller('VerifyEmailCtrl', function ($scope, $rootScope, session) {
       username: session.get('username')
     };
 
-    $.ajax({
-      type: 'POST',
-      url: Options.API_SERVER + '/claim/verifyEmail',
-      dataType: 'JSON',
-      data: data,
-      success: verifyEmailSuccess
-    }).done(verifyEmailDone)
-      .error(verifyEmailError);
+    $http.post(Options.API_SERVER + '/claim/verifyEmail', data)
+    .success(verifyEmailSuccess)
+    .error(verifyEmailError)
+    .finally(verifyEmailDone);
 
     function verifyEmailSuccess(response) {
-      $scope.$apply(function() {
-        $rootScope.$broadcast('emailVerified', response.message);
-      });
+      $rootScope.$broadcast('emailVerified', response.message);
     }
 
     function verifyEmailError (response) {
-      $scope.$apply(function() {
-        var responseJSON = response.responseJSON;
-        if (responseJSON && responseJSON.status == 'fail') {
-          if (responseJSON.code == 'validation_error') {
-            // TODO: invalid credentials, send to login page?
-            $scope.errors.push('Please login again.');
-          } else if (responseJSON.code == 'already_claimed') {
-            // TODO: this user has already claimed the verify_email reward
-          }
-        } else {
-          $scope.errors.push('An error occured.');
+      if (response && response.status == 'fail') {
+        if (response.code == 'validation_error') {
+          // TODO: invalid credentials, send to login page?
+          $scope.errors.push('Please login again.');
+        } else if (response.code == 'already_claimed') {
+          // TODO: this user has already claimed the verify_email reward
         }
-        $scope.loading = false;
-      });
+      } else {
+        $scope.errors.push('An error occured.');
+      }
+      $scope.loading = false;
     }
 
     function verifyEmailDone() {
