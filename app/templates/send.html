@@ -110,13 +110,16 @@
     </ul>  -->
     <div class="row">
         <div ng-show="send.currency_code == 'XTR'">
-            <button type="submit" ng-disabled="sendForm.$invalid || send.self || !send.recipient_resolved || account.max_spend.to_number() < send.amount * 1000000" l10n="l10n" class="btn btn-default submit col-sm-offset-3 col-sm-6 stellar-button">Send</button>
+            <button type="submit" ng-disabled="sendForm.$invalid || send.self || !send.recipient_resolved || account.max_spend.to_number() < send.amount * 1000000 || send.fund_status !== 'none'" l10n="l10n" class="btn btn-default submit col-sm-offset-3 col-sm-6 stellar-button">Send</button>
         </div>
     </div>
     <div class="remote">
         <p ng-show="send.fund_status == 'insufficient-xtr'" l10n="l10n" class="literal">
             Destination account is unfunded; send at least
             {{send.xtr_deficiency | rpamount}} XTR to fund it.<a href="https://wiki.gostellar.org/Reserves" target="_blank" l10n="l10n">More information</a>
+        </p>
+        <p ng-show="send.fund_status == 'invalid'" l10n="l10n" class="literal">
+            Send amount must be a number.
         </p>
         <p ng-show="account.max_spend.to_number() < send.amount * 1000000" l10n="l10n" class="literal">
             You need a reserve amount of 50 Stellars to send. <a href="https://wiki.gostellar.org/Reserves" target="_blank" l10n="l10n">More information</a>

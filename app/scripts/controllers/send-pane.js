@@ -415,9 +415,31 @@ sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout'
         // inputs have changed.
         if (pathUpdateTimeout) $timeout.cancel(pathUpdateTimeout);
 
-        // If the form is invalid, we won't be able to submit anyway, so no point
-        // in calculating paths.
-        if ($scope.sendForm.$invalid) return;
+        // Don't calculate paths if the amount is empty.
+        if (send.amount == '') {
+            send.fund_status = 'empty';
+            return;
+        }
+
+        // Validate the send amount.
+        if (!stellar.Amount.is_valid(amount)) {
+            send.fund_status = 'invalid';
+            return;
+        }
+
+        // Send amount passed validation.
+        send.fund_status = 'none';
+
+        // Don't calculate paths if the recipient is empty.
+        if (recipient == '') {
+            return;
+        }
+
+        // Validate the recipient address.
+        if (!stellar.UInt160.is_valid(recipient)){
+            // Invalid address.
+            return;
+        }
 
         if (send.quote_url) {
             if (!send.amount_feedback.is_valid())
@@ -427,11 +449,6 @@ sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout'
             send.amount_feedback.set_issuer(1);
             pathUpdateTimeout = $timeout($scope.update_quote, 500);
         } else {
-            if (!stellar.UInt160.is_valid(recipient) || !stellar.Amount.is_valid(amount)) {
-                // XXX Error?
-                return;
-            }
-
             // Create Amount object
             if (!send.amount_feedback.is_native()) {
                 send.amount_feedback.set_issuer(recipient);
