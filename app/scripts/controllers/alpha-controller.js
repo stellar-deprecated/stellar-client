@@ -32,17 +32,15 @@ sc.controller('AlphaCtrl', function ($scope, $state, $http, session) {
       $http.post(Options.API_SERVER + '/user/checkAlphaCode', data)
       .success(
         function (response) {
-          console.log('Alpha code: ' + response.status);
           // Save code for the registration page
           session.put('alpha', $scope.alphaCode);
           $state.go('register');
       })
       .error(
         function (response) {
-          var responseJSON = response.responseJSON;
-          if (responseJSON && responseJSON.status == 'fail') {
-            if (responseJSON.code == "validation_error") {
-              var error = responseJSON.data;
+          if (response && response.status == 'fail') {
+            if (response.code == "validation_error") {
+              var error = response.data;
               if (error.code == "already_taken") {
                 $scope.alphaCodeErrors.push('This Alpha Code is already taken.');
               } else {

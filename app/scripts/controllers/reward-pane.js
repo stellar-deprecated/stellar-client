@@ -257,10 +257,9 @@ sc.controller('RewardPaneCtrl', ['$http', '$scope', '$rootScope', 'session', 'st
       }
     })
     .error(function (response) {
-      var responseJSON = response.responseJSON;
-      if (responseJSON && responseJSON.status == 'fail') {
-        if (responseJSON.code == 'validation_error') {
-          var error = responseJSON.data;
+      if (response && response.status == 'fail') {
+        if (response.code == 'validation_error') {
+          var error = response.data;
           if (error.field == "update_token" && error.code == "invalid") {
               // TODO: invalid update token error
           }
