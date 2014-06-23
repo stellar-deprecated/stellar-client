@@ -751,6 +751,24 @@ sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout'
         return $scope.mode === 'error' || $scope.mode === 'stellarerror';
     }
 
+    $scope.isSuccess = function() {
+        return $scope.mode === "status" && $scope.tx_result === "cleared";
+    }
+
+    $scope.isInProgress = function() {
+        return $scope.mode === "status" && $scope.tx_result === "pending";
+    }
+
+    $scope.paneState = function() {
+        if ($scope.isError()) {
+            return 'pane-error';
+        } else if ($scope.isSuccess()) {
+            return 'pane-success';
+        } else if ($scope.isInProgress()) {
+            return 'pane-in-progress';
+        }
+    }
+
     $scope.cancelConfirm = function () {
         $scope.changeMode("form");
         $scope.send.alt = null;
