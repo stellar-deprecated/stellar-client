@@ -23,6 +23,7 @@ body {
   width: 100%;
   padding-top: 89px;
   color: $dark-grey;
+  font-family: $avenir;
 }
 
 .stellar-form {
@@ -36,7 +37,7 @@ body {
       height: 40px;
 
       .tip {
-        font-family: $avenir-heavy;
+        font-weight: $avenir-heavy;
         font-size: 14px;
         background-color: $error;
         color: white;
@@ -75,8 +76,7 @@ body {
     }
 
     label {
-      font-family: $avenir-heavy;
-      font-weight: normal;
+      font-weight: $avenir-heavy;
       font-size: 15px;
       line-height: 42px;
     }
@@ -109,9 +109,8 @@ body {
     }
 
     .tip {
-      font-family: $avenir-book;
+      font-weight: $avenir-book;
       font-size: 14px;
-      font-weight: normal;
       color: $info-grey;
       line-height: 42px;
     }
@@ -120,7 +119,7 @@ body {
       width: 100%;
       margin-top: 30px;
       margin-bottom: 50px;
-      font-family: $avenir-heavy;
+      font-weight: $avenir-heavy;
       font-size: 17px;
     }
   }
@@ -135,7 +134,7 @@ body {
 
 .stellar-button, .btn-stellar {
   height: 45px;
-  font-family: $avenir-heavy;
+  font-weight: $avenir-heavy;
   font-size: 17px;
   color: $info-grey;
   background-color: $white-grey;
@@ -213,7 +212,7 @@ body {
 
 .client-nav {
   ul {
-    font-family: $avenir-medium;
+    font-weight: $avenir-medium;
     font-size: 15px;
 
     a {
@@ -240,7 +239,7 @@ body {
 
   .navbar-brand {
     color: #09B5E5;
-    font-family: $avenir-black;
+    font-weight: $avenir-black;
     font-size: 26px;
 
     &:hover {

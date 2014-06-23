@@ -1,14 +1,15 @@
-$avenir-book: 'Avenir LT W01 45 Book';
-$avenir-medium: 'Avenir LT W01 65 Medium';
-$avenir-heavy: 'Avenir LT W01 85 Heavy';
-$avenir-black: 'Avenir LT W01 95 Black';
+$avenir: 'Avenir W01';
+$avenir-book: 300;
+$avenir-medium: 500;
+$avenir-heavy: 800;
+$avenir-black: 900;
 
 .title {
-  font-family: $avenir-medium;
+
+  font-weight: $avenir-medium;
 }
 
 .info {
-  font-family: $avenir-book;
-}
 
-@import url(https://fast.fonts.net/cssapi/d96d4bc8-5740-4ee1-b1ab-eafb3bdf7f1e.css);
+  font-weight: $avenir-book;
+}

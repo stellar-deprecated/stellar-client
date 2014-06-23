@@ -67,7 +67,7 @@
       li {
         margin: 3px 0;
         padding: 0 0;
-        font-family: $avenir-medium;
+        font-weight: $avenir-medium;
         font-size: 20px;
         list-style-type: none;
         cursor: pointer;
@@ -167,14 +167,14 @@
             border-top-right-radius: 3px;
 
             .title {
-              font-family: $avenir-heavy;
+              font-weight: $avenir-heavy;
               padding-top: 10px;
               padding-bottom: 10px;
               font-size: 16px;
             }
 
             .message {
-              font-family: $avenir-medium;
+              font-weight: $avenir-medium;
               font-size: 16px;
             }
           }
@@ -201,7 +201,7 @@
       }
 
       .title {
-        font-family: $avenir-heavy;
+        font-weight: $avenir-heavy;
         padding-top: 10px;
 
         i {
@@ -221,7 +221,7 @@
 
         .body,
         .info {
-          font-family: $avenir-medium;
+          font-weight: $avenir-medium;
           font-size: 20px;
           text-align: center;
         }
@@ -348,7 +348,7 @@
         font-size: 16px;
         margin: 5px 0;
         cursor: pointer;
-        font-family: $avenir-medium;
+        font-weight: $avenir-medium;
         color: $info-grey;
         @include transition(color 200ms ease-in-out);
 
