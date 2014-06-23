@@ -20,3 +20,7 @@ $status-strip-width: 8px;
   border-bottom: $status-strip-width solid $success;
 }
 
+.pane-in-progress {
+  border-bottom: $status-strip-width solid $in-progress;
+}
+

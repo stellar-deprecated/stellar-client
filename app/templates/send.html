@@ -1,5 +1,5 @@
 
-<div class="send-pane pane" ng-controller="SendPaneCtrl" ng-class="{'pane-error':isError(), 'pane-success':success}">
+<div class="send-pane pane" ng-controller="SendPaneCtrl" ng-class="paneState()">
 <div class="close-tab" ng-click="closePane()">
     <span>Close</span>
     <i class="glyphicon glyphicon-remove-circle"></i>
@@ -229,14 +229,15 @@
     <button class="btn btn-default btn-stellar modalStatus-btn" ng-click="tryAgain()">Try again</button>
 </div>
 
-<group ng-show="mode=='status'" class="mode-status">
+<div ng-show="mode=='status'" class="modalStatus">
     <group ng-show="tx_result=='pending'" class="pending">
         <h2 l10n="l10n" class="tx-status">Your transaction has been submitted.</h2>
         <p l10n="l10n">Your account balance will update once the payment has cleared.</p>
     </group>
-    <group ng-show="tx_result=='cleared'" class="result-success">
-        <h2 l10n="l10n" class="tx-status">Transaction cleared!</h2>
-    </group>
+    <div ng-show="tx_result=='cleared'" class="result-success">
+        <i class="fa fa-check-circle-o modalStatus-icon"></i>
+        <p class="modalStatus-title">Transaction cleared.</p>
+    </div>
     <group ng-show="tx_result=='partial'" class="result-partial">
         <h2 l10n="l10n" class="tx-status">Transaction partially valid!</h2>
         <p l10n="l10n">Your transaction could only be partially applied.</p>
@@ -270,12 +271,12 @@
         <h2 l10n="l10n" class="tx-status">Transaction failed!</h2>
         <p ng-switch on="engine_result"><span ng-switch-when="terNO_LINE" l10n="l10n">You have no trust line in this currency.</span><span ng-switch-default="ng-switch-default" l10n="l10n">Your transaction failed to clear, reason: {{engine_result_message}}</span></p>
     </group>
-    <group class="actions">
-        <hr/>
-        <div class="actionLink"><a href="" ng-click="reset()" l10n="l10n">Send another payment</a></div>
-        <hr/>
-    </group>
-</group>
+
+    <button class="btn btn-default btn-stellar modalStatus-btn" ng-click="reset()">
+        <i class="glyphicon glyphicon-upload"></i>
+        Send another payment
+    </button>
+</div>
 </div>
 
 
