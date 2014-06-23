@@ -1,0 +1,36 @@
+.receive-pane {
+
+  .stellar-form .form-group {
+    &.address-row {
+      margin-bottom: 24px;
+    }
+
+    &.info-row {
+      margin-top: 24px;
+      margin-bottom: 80px;
+    }
+
+    div {
+      padding: 0;
+    }
+
+    .receive-username {
+      font-size: 20px;
+
+      i {
+        margin-right: 15px;
+      }
+    }
+
+    .receive-address {
+      i {
+        top: 14px;
+      }
+
+      input {
+        height: 60px;
+        font-size: 20px;
+      }
+    }
+  }
+}

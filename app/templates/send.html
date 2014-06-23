@@ -1,17 +1,17 @@
 
 <div class="send-pane pane" ng-controller="SendPaneCtrl" ng-class="{'pane-error':isError(), 'pane-success':success}">
-<div class="close-send-tab" ng-click="closePane()">
+<div class="close-tab" ng-click="closePane()">
     <span>Close</span>
     <i class="glyphicon glyphicon-remove-circle"></i>
 </div>
 <div l10n="l10n" class="literal title">Send Stellars</div>
-<group ng-hide="connected" class="send-error disconnected">
+<group ng-show="mode=='disconnected'" class="send-error disconnected">
     <p l10n="l10n" class="literal">You have to be online to see this screen</p>
 </group>
-<div ng-hide="account.Balance || !connected" class="send-error unfunded">
+<div ng-show="mode=='unfunded'" class="send-error unfunded">
     <p l10n="l10n" class="literal">You have to be funded before you can send money</p>
 </div>
-<form name="sendForm" id="sendForm" role="form" ng-show="mode=='form' && account.Balance" ng-submit="send_prepared()" class="row-padding-small mode-form stellar-form">
+<form name="sendForm" id="sendForm" role="form" ng-show="mode=='form'" ng-submit="send_prepared()" class="row-padding-small mode-form stellar-form">
     <div class="form-group">
         <div rp-errors="send_amount" class="errors col-sm-12">
             <div rp-error-on="required" l10n="l10n" class="tip col-sm-offset-6 col-sm-3">Please enter an amount.</div>
@@ -118,6 +118,9 @@
             Destination account is unfunded; send at least
             {{send.xtr_deficiency | rpamount}} XTR to fund it.<a href="https://wiki.gostellar.org/Reserves" target="_blank" l10n="l10n">More information</a>
         </p>
+        <p ng-show="account.max_spend.to_number() < send.amount * 1000000" l10n="l10n" class="literal">
+            You need a reserve amount of 50 Stellars to send. <a href="https://wiki.gostellar.org/Reserves" target="_blank" l10n="l10n">More information</a>
+        </p>
         <p ng-show="send.path_status == 'checking'" rp-spinner="4" l10n="l10n" class="literal">Checking</p>
         <p ng-show="send.path_status == 'fed-check'" rp-spinner="4" l10n="l10n" class="literal">Analyzing address</p>
         <p ng-show="send.path_status == 'bridge-quote'" rp-spinner="4" l10n="l10n" class="literal">Requesting quote</p>
@@ -156,21 +159,20 @@
         </div>
     </div>
 </form>
-<group ng-show="mode=='wait_path' && account.Balance" class="mode-wait-path">
+<group ng-show="mode=='wait_path'" class="mode-wait-path">
     <p rp-spinner="4" l10n="l10n" class="literal">Stellar is calculating a path for your payment.</p>
 </group>
-<group ng-show="mode=='confirm' && account.Balance" class="mode-confirm">
+<group ng-show="mode=='confirm'" class="mode-confirm">
     <div>
         <p l10n="l10n" class="literal info">You are sending</p>
         <p class="amount_feedback"><span class="value">{{send.amount_feedback | rpamount}}&#32;</span><span class="currency">{{send.amount_feedback | rpcurrency}}</span></p>
         <p l10n="l10n" class="literal info">to this address</p>
         <div class="dest_feedback">
-            <div ng-show="send.recipient_name" class="recipient">{{send.recipient_name}}</div>
+            <div ng-show="send.recipient_name" class="recipient-name">{{send.recipient_name}}</div>
             <div class="input-icon-wrapper">
-                <input ng-hide="send.recipient_name" class="recipient" value="{{send.recipient_address}}" disabled>
+                <input class="recipient-address" value="{{send.recipient_address}}" disabled>
                 <i class="glyphicon glyphicon-globe"></i>
             </div>
-            <div href="" ng-show="send.recipient != send.recipient_address || send.recipient_name" class="extra"> {{send.recipient_address}}</div>
             <div ng-show="send.dt" l10n="l10n" class="dt">Destination tag: {{send.dt}}</div>
         </div>
         <group ng-show="send.indirect">
@@ -187,14 +189,14 @@
     </div>
     <button ng-click="cancelConfirm()" l10n="l10n" class="btn btn-block btn-default stellar-button change-button">Change</button>
 </group>
-<group ng-show="mode=='sending' && account.Balance" class="mode-sending">
+<group ng-show="mode=='sending'" class="mode-sending">
     <p rp-spinner="4" l10n="l10n" class="literal">Sending transaction to Stellar network</p>
     <hr/>
     <p>
         <button ng-click="reset()" l10n="l10n" class="btn btn-default">Stop waiting</button>
     </p>
 </group>
-<group ng-show="mode=='error' && account.Balance" class="mode-error">
+<group ng-show="mode=='error'" class="mode-error">
     <group ng-switch on="error_type">
         <group ng-switch-when="noDest" class="result-error">
             <h2 l10n="l10n" class="tx-status">Destination does not exist</h2>
@@ -227,7 +229,7 @@
     <button class="btn btn-default btn-stellar modalStatus-btn" ng-click="tryAgain()">Try again</button>
 </div>
 
-<group ng-show="mode=='status' && account.Balance" class="mode-status">
+<group ng-show="mode=='status'" class="mode-status">
     <group ng-show="tx_result=='pending'" class="pending">
         <h2 l10n="l10n" class="tx-status">Your transaction has been submitted.</h2>
         <p l10n="l10n">Your account balance will update once the payment has cleared.</p>

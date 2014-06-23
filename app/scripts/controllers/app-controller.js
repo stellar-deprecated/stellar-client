@@ -5,7 +5,7 @@ var sc = angular.module('stellarClient');
     When we are connected to the stellard and we have our account info back from the wallet server,
     Ask the stellard for the account's info
     waits for:
-     $idAccountLoad
+     walletAddressLoaded
  */
 sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', function($scope, $rootScope, $network) {
 
@@ -80,7 +80,7 @@ sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', function($scope, $r
             .on('error', handleOffersError).request();
     };
 
-    $scope.$on('$idAccountLoad', function (e, data) {
+    $scope.$on('walletAddressLoaded', function (e, data) {
         $rootScope.account=data.account;
 
         // Server is connected
@@ -163,6 +163,7 @@ sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', function($scope, $r
             $rootScope.balance=data.Balance;
             $rootScope.reserve=$scope.account.reserve;
             $rootScope.account.max_spend = bal.subtract($scope.account.reserve);
+            $rootScope.$broadcast("accountLoaded", $rootScope.account);
         });
     }
 

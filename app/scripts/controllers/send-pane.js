@@ -14,6 +14,39 @@ sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout'
       $rootScope.tab = 'none';
     };
 
+    $scope.changeMode = function(targetMode) {
+        if (!$rootScope.connected) {
+            $scope.mode = "disconnected";
+            return;
+        }
+
+        if (!$scope.account.Balance) {
+            $scope.mode = "unfunded";
+            return;
+        }
+
+        $scope.mode = targetMode;
+    };
+
+    $scope.$on('$netConnected', function(){
+        if ($scope.mode === "disconnected") {
+            $scope.changeMode("form");
+        }
+    });
+
+    $rootScope.$on('accountLoaded', function() {
+        if ($scope.mode === "unfunded") {
+            $scope.changeMode("form");
+        }
+    });
+
+    $scope.$on('$appTxNotification', function(){
+        if ($scope.mode === "unfunded") {
+            $scope.changeMode("form");
+        }
+    });
+
+
     $scope.currencies_all = StellarDefaultCurrencyList;
     // XRP currency object.
     // {name: "XRP - Ripples", order: 146, value: "XRP"}
@@ -681,7 +714,7 @@ sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout'
     }, true);
 
     $scope.reset = function () {
-        $scope.mode = "form";
+        $scope.changeMode("form");
 
         // XXX Most of these variables should be properties of $scope.send.
         //     The Angular devs recommend that models be objects due to the way
@@ -719,7 +752,7 @@ sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout'
     }
 
     $scope.cancelConfirm = function () {
-        $scope.mode = "form";
+        $scope.changeMode("form");
         $scope.send.alt = null;
 
         // Force pathfinding reset
@@ -757,7 +790,7 @@ sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout'
             delete $scope.send.pathfind;
         }
 
-        $scope.mode = "confirm";
+        $scope.changeMode("confirm");
 
         $rpTracker.track('Send confirmation page', {
             'Currency': $scope.send.currency_code,
@@ -809,11 +842,11 @@ sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout'
                 if (res.engine_result) {
                     $scope.setEngineStatus(res);
                 } else if (res.error === 'remoteError') {
-                    $scope.mode = "error";
+                    $scope.changeMode("error");
                     $scope.error_type = res.remote.error;
                     $scope.error_message = "TODO"
                 } else {
-                    $scope.mode = "error";
+                    $scope.changeMode("error");
                     $scope.error_type = "unknown";
                     $scope.error_message = "An unknown error occurred"
                 }
@@ -903,8 +936,7 @@ sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout'
 
         tx.submit();
 
-        $scope.mode = "sending";
-
+        $scope.changeMode("sending");
         $scope.confirmedTime = new Date();
     };
 
@@ -912,7 +944,7 @@ sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout'
      * N5. Sent page
      */
     $scope.sent = function (hash) {
-        $scope.mode = "status";
+        $scope.changeMode("status");
         $network.remote.on('transaction', handleAccountEvent);
 
         function handleAccountEvent(e) {
@@ -929,20 +961,20 @@ sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout'
         $scope.engine_result = res.engine_result;
         $scope.engine_result_message = res.engine_result_message;
         $scope.engine_status_accepted = !!accepted;
-        $scope.mode = "status";
+        $scope.changeMode("status");
         $scope.tx_result = "partial";
 
         switch (res.engine_result.slice(0, 3)) {
             case 'tes':
-                $scope.mode = "status";
+                $scope.changeMode("status");
                 $scope.tx_result = accepted ? "cleared" : "pending";
                 break;
             case 'tep':
-                $scope.mode = "status";
+                $$scope.changeMode("status");
                 $scope.tx_result = "partial";
                 break;
             default:
-                $scope.mode = "stellarerror";
+                $scope.changeMode("stellarerror");
                 //TODO: set an error type and unify our error reporting for the send pane
                 $scope.error_message = "An error occurred: " + res.engine_result_message;
         }

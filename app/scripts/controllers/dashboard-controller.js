@@ -7,8 +7,13 @@ sc.controller('DashboardCtrl', function($rootScope, $scope, $timeout, $state, se
 
     $scope.showTransaction = false;
     $scope.newTransaction = null;
+    $scope.username = session.get('username');
 
     stNetwork.init();
+
+    $scope.closePane = function(){
+      $rootScope.tab = 'none';
+    };
 
     $scope.toggleSend = function() {
         if ($rootScope.tab!='send') {
