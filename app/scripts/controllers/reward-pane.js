@@ -184,13 +184,20 @@ sc.controller('RewardPaneCtrl', ['$http', '$scope', '$rootScope', 'session', 'st
     {title: 'Learn to send stellars.', status: 'incomplete', action: sendAction}
   ];
 
+  $scope.sortedRewards = [];
+
   function computeRewardProgress() {
+    var order = ['sent', 'awaiting_payout', 'incomplete', 'unverified', 'ineligible'];
+
     var statuses = $scope.rewards.map(function (reward) {
       return reward.status;
     });
     $scope.rewardProgress = statuses.sort(function (a, b) {
-      var order = ['sent', 'awaiting_payout', 'incomplete', 'unverified', 'ineligible'];
       return order.indexOf(a) - order.indexOf(b);
+    });
+
+    $scope.sortedRewards = $scope.rewards.slice().sort(function(a, b){
+      return order.indexOf(b.status) - order.indexOf(a.status);
     });
 
     var completedRewards = $scope.rewards.filter(function (reward) {
