@@ -33,60 +33,52 @@ sc.controller('RewardPaneCtrl', ['$http', '$scope', '$rootScope', 'session', 'st
       var username = session.get('username');
       var updateToken = wallet.keychainData.updateToken;
       $scope.loading = true;
-      fbLoginStart(username, updateToken, fbAction.success, fbAction.error);
+      fbLoginStart($http, username, updateToken, fbAction.success, fbAction.error);
     },
     success: function (status) {
-      $scope.$apply(function () {
-        console.log(status);
-        $scope.rewards[1].status = status;
-        computeRewardProgress();
-        updateRewards();
-        $scope.closeReward();
-      });
+      $scope.rewards[1].status = status;
+      computeRewardProgress();
+      updateRewards();
+      $scope.closeReward();
     },
     error: function (response) {
-      $scope.$apply(function () {
-        $scope.loading = false;
-        var responseJSON = response.responseJSON;
-        if (!responseJSON) {
-          // TODO: push generic "an error occurred"
-          return;
+      $scope.loading = false;
+      if (response && response.status == 'fail') {
+        switch (response.code) {
+          case 'validation_error':
+            var errorJSON = response.data;
+            if (errorJSON.field == "update_token" && errorJSON.code == "invalid") {
+              // TODO: error
+            } else if (errorJSON.field == "facebook_id" && errorJSON.code == "already_taken") {
+              rewardError($scope.rewards[1], 'already_taken');
+            }
+            break;
+          case 'unverified':
+            $scope.rewards[1].status = 'unverified';
+            rewardError($scope.rewards[1], 'unverified');
+            break;
+          case 'ineligible_account':
+            $scope.rewards[1].status = 'ineligible';
+            rewardError($scope.rewards[1], 'ineligible');
+            break;
+          case 'fake_account':
+          // TODO: inform the user their account is fake
+          case 'reward_already_queued':
+          case 'reward_limit_reached':
+          default:
+          // TODO: an error occured message
         }
-        if (responseJSON.status == 'fail') {
-          switch (responseJSON.code) {
-            case 'validation_error':
-              var errorJSON = responseJSON.data;
-              if (errorJSON.field == "update_token" && errorJSON.code == "invalid") {
-                // TODO: error
-              } else if (errorJSON.field == "facebook_id" && errorJSON.code == "already_taken") {
-                rewardError($scope.rewards[1], 'already_taken');
-              }
-              break;
-            case 'unverified':
-              $scope.rewards[1].status = 'unverified';
-              rewardError($scope.rewards[1], 'unverified');
-              break;
-            case 'ineligible_account':
-              $scope.rewards[1].status = 'ineligible';
-              rewardError($scope.rewards[1], 'ineligible');
-              break;
-            case 'fake_account':
-            // TODO: inform the user their account is fake
-            case 'reward_already_queued':
-            case 'reward_limit_reached':
-            default:
-            // TODO: an error occured message
-          }
-        } else {
-          if (responseJSON.code == 'transaction_error') {
-            // we've stored the reward but there was an error sending the transaction
-            $scope.rewards[1].status = 'awaiting_payout';
-            computeRewardProgress();
-            updateRewards();
-            $scope.closeReward();
-          }
+      } else if (response && response.status == 'error') {
+        if (response.code == 'transaction_error') {
+          // we've stored the reward but there was an error sending the transaction
+          $scope.rewards[1].status = 'awaiting_payout';
+          computeRewardProgress();
+          updateRewards();
+          $scope.closeReward();
         }
-      })
+      } else {
+        $scope.rewards[1].status = 'incomplete';
+      }
     }
   };
 
@@ -317,17 +309,13 @@ sc.controller('RewardPaneCtrl', ['$http', '$scope', '$rootScope', 'session', 'st
 
   function requestSentStellarsReward() {
     var username = session.get('username');
-    $.post(Options.API_SERVER + "/claim/sendStellars", {"username": username}, null, "json")
-      .success(
-      function (response) {
-        $scope.$apply(function () {
-          console.log(response.status);
-          $scope.rewards[3].status = response.message;
-          computeRewardProgress();
-        });
+    $http.post(Options.API_SERVER + "/claim/sendStellars", {"username": username})
+      .success(function (response) {
+        console.log(response.status);
+        $scope.rewards[3].status = response.message;
+        computeRewardProgress();
       })
-      .error(
-      function (response) {
+      .error(function (response) {
 
       });
   }
