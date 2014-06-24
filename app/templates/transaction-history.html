@@ -18,7 +18,7 @@
                 <td data-title="'Amount'" sortable="'transaction.amount.to_number()'">{{ tx.transaction.amount.to_human() }} XTR</td>
                 <td class="direction">{{ tx.transaction.type === 'sent' ? 'to' : 'from' }}</td>
                 <td class="other-party">
-                    <span class="address">{{ tx.transaction.counterparty }}</span>
+                    <span class="address">{{ tx.transaction.counterparty | addressToUsername }}</span>
                 </td>
             </tr>
         </table>

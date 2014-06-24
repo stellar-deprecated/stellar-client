@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('TransactionHistoryCtrl', ['$scope', 'stNetwork', 'ngTableParams', '$filter', function( $scope, $network, ngTableParams, $filter)
+sc.controller('TransactionHistoryCtrl', ['$scope', 'stNetwork', 'ngTableParams', '$filter', 'session', function( $scope, $network, ngTableParams, $filter, session)
 {
   $scope.typeIcons = {
     'sent': 'glyphicon glyphicon-upload',

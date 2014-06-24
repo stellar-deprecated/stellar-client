@@ -19,7 +19,14 @@ sc.service('session', function($rootScope) {
       data: JSON.stringify(wallet.encrypt()),
       contentType: 'application/json; charset=UTF-8',
       dataType: 'json',
-      success: success || function(){}
+      success: function() {
+        if (Options.PERSISTENT_SESSION) {
+          localStorage.wallet = JSON.stringify(wallet);
+        }
+        if (success) {
+          success();
+        }
+      }
     }).fail(fail || function(){});
   };
 
