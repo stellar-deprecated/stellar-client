@@ -6,6 +6,20 @@ var Base = stellar.Base;
 // TODO: var webutil = require('../utilities/web');
 
 /**
+* Turn a stellar address into a username
+*/
+module.filter('addressToUsername', function (session) {
+    return function (input, options) {
+        var wallet = session.get('wallet');
+        if (wallet.mainData.contacts[input]) {
+          var contact = wallet.mainData.contacts[input];
+          return contact.destination + "@" + contact.domain;
+        }
+        return input;
+    };
+});
+
+/**
  * Format a ripple.Amount.
  *
  * If the parameter is a number, the number is treated the relative

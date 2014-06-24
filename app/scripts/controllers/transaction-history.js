@@ -26,13 +26,4 @@ sc.controller('TransactionHistoryCtrl', ['$scope', 'stNetwork', 'ngTableParams',
   $scope.$on('$paymentNotification', function(){
     $scope.tableParams.reload();
   });
-
-  $scope.addressToUsername=function(address) {
-    var wallet = session.get('wallet');
-    if (wallet.mainData.contacts[address]) {
-      var contact = wallet.mainData.contacts[address];
-      return contact.destination + "@" + contact.domain;
-    }
-    return address;
-  }
 }]);
