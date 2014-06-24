@@ -4,6 +4,7 @@
 var gulp = require('gulp');
 var plumber = require('gulp-plumber');
 var exec = require('child_process').exec;
+var mergeStream = require('merge-stream');
 
 // load plugins
 var $ = require('gulp-load-plugins')();
@@ -18,9 +19,8 @@ gulp.task('build',   ['html', 'images', 'fonts']);
 gulp.task('dist',    ['build']);
 
 
-
 //component tasks
-gulp.task('styles', function () {
+gulp.task('styles', ['iconfont'], function () {
     return gulp.src('app/styles/main.scss')
         .pipe(plumber({errorHandler: console.log}))
         .pipe($.sass({outputStyle: 'expanded'}))
@@ -67,8 +67,11 @@ gulp.task('images', function () {
         .pipe($.size());
 });
 
-gulp.task('fonts', function () {
-    return $.bowerFiles()
+gulp.task('fonts', ['iconfont'], function () {
+    return mergeStream(
+            $.bowerFiles(),
+            gulp.src('.tmp/fonts/**/*')
+        )
         .pipe($.filter('**/*.{eot,svg,ttf,woff}'))
         .pipe($.flatten())
         .pipe(gulp.dest('dist/fonts'))
@@ -143,6 +146,7 @@ gulp.task('watch', ['connect', 'serve'], function () {
     gulp.watch('app/styles/**/*.scss', ['styles']);
     gulp.watch('app/scripts/**/*.js', ['scripts']);
     gulp.watch('app/images/**/*', ['images']);
+    gulp.watch('app/icons/**/*', ['iconfont']);
     gulp.watch('bower.json', ['wiredep']);
 });
 
@@ -158,4 +162,40 @@ gulp.task("stellar-lib", function(cb) {
         console.log(stderr);
         cb(err);
     });
+});
+
+gulp.task('iconfont', function() {
+    var fontName = 'stellar-client';
+    return gulp.src(['app/icons/*.svg'])
+        .pipe($.iconfontCss({
+            fontName: fontName,
+            targetPath: '../styles/icons.scss',
+            fontPath: '../fonts/'
+        }))
+        .pipe($.iconfont({
+            fontName: fontName,
+            normalize: true
+         }))
+        .pipe(gulp.dest('.tmp/fonts/'));
+});
+
+
+gulp.task('connect-dist', ['dist'], function() {
+    var connect = require('connect');
+    var app = connect()
+        .use(connect.static('dist'))
+        .use(connect.directory('dist'));
+
+    require('http').createServer(app)
+        .listen(9001)
+        .on('listening', function () {
+            console.log('Started connect web server on http://localhost:9001');
+        });
 })
+
+gulp.task('serve-dist', ['connect-dist'], function() {
+    require('opn')('http://localhost:9001');
+})
+
+
+

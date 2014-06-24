@@ -105,4 +105,8 @@
   .errors .tip {
     right: -7px;
   }
+
+  .result-success .modalStatus-icon {
+    color: $success;
+  }
 }

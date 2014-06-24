@@ -9,7 +9,7 @@
             </ul>
             <div class="slider-pane">
                 <ul class="rewards" ng-class="{active: selectedReward == null}">
-                    <li ng-repeat="reward in rewards" ng-class="reward.status" selected-index="selectedReward">
+                    <li ng-repeat="reward in sortedRewards" ng-class="reward.status" selected-index="selectedReward">
                         <div class="reward-body" ng-click="toggleReward($index, reward.status)">
                             <i ng-class="rewardStatusIcons[reward.status]"></i>
                             <span>{{ reward.error.panel || reward.title }}</span>
@@ -22,13 +22,13 @@
                         </div>
                     </li>
                 </ul>
-                <div ng-repeat="reward in rewards" class="reward-page"
+                <div ng-repeat="reward in sortedRewards" class="reward-page"
                     ng-class="{active: selectedReward == $index, error: !!reward.error}">
-                    <div class="close-reward" ng-click="closeReward()">
+                    <div class="pane-close" ng-click="closeReward()">
                         <span>Close</span>
-                        <i class="glyphicon glyphicon-remove-circle"></i>
+                        <i class="icon icon-times-circle-thin"></i>
                     </div>
-                    <div class="title">
+                    <div class="reward-pane-title">
                         <i class="glyphicon glyphicon-lock"></i>
                         {{ reward.title }}
                     </div>

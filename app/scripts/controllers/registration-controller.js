@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('RegistrationCtrl', function($scope, $state, session, bruteRequest, debounce, passwordStrengthComputations) {
+sc.controller('RegistrationCtrl', function($scope, $state, $timeout, $http, session, debounce, passwordStrengthComputations) {
   $scope.username             = '';
   $scope.email                = '';
   $scope.password             = '';
@@ -17,6 +17,8 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, bruteRequest
   $scope.emailErrors           = [];
   $scope.passwordErrors        = [];
   $scope.passwordConfirmErrors = [];
+
+  $scope.loading = false;
 
   // Remove default password requirements.
   delete passwordStrengthComputations.aspects.minimumLength;
@@ -39,18 +41,6 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, bruteRequest
     }
   };
 
-  var requestUsernameStatus = new bruteRequest({
-    url: Options.API_SERVER + '/user/validname',
-    type: 'POST',
-    dataType: 'json'
-  });
-
-  var requestRegistration = new bruteRequest({
-    url: Options.API_SERVER + '/user/register',
-    type: 'POST',
-    dataType: 'json'
-  });
-
   // Checks to see if the supplied username is available.
   // This function is debounced to prevent API calls before the user is finished typing.
   var checkUsername = debounce(2000, function(){
@@ -63,30 +53,24 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, bruteRequest
         $scope.usernameAvailable = false;
         return;
       }
-      requestUsernameStatus.send({username: $scope.username},
-        // Success
+      $http.post(Options.API_SERVER + '/user/validname', {username: $scope.username})
+      .success(
         function (response) {
-          $scope.$apply(function(){
-            console.log(response.status);
-            $scope.usernameAvailable = true;
-          });
-        },
-        // Fail
+          console.log(response.status);
+          $scope.usernameAvailable = true;
+        })
+      .error(
         function (response){
-          $scope.$apply(function() {
-            var responseJSON = response.responseJSON;
-            switch(responseJSON && responseJSON.code) {
-              case 'already_taken':
-                $scope.usernameErrors.push('This username is taken.');
-                $scope.usernameAvailable = false;
-                break;
-              default:
-                $scope.usernameErrors.push('An error occurred.');
-                $scope.usernameAvailable = null;
-            }
-          });
-        }
-      );
+          switch(response && response.code) {
+            case 'already_taken':
+              $scope.usernameErrors.push('This username is taken.');
+              $scope.usernameAvailable = false;
+              break;
+            default:
+              $scope.usernameErrors.push('An error occurred.');
+              $scope.usernameAvailable = null;
+          }
+        });
     }
   });
 
@@ -165,9 +149,10 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, bruteRequest
 
   // Validate the input before submitting the registration form.
   // This generates messages that help the user resolve their errors.
-  $scope.attemptRegistration = function() {
+  function validateInput() {
     // Remove any previous error messages.
     $scope.usernameErrors        = [];
+    $scope.emailErrors           = [];
     $scope.passwordErrors        = [];
     $scope.passwordConfirmErrors = [];
 
@@ -194,84 +179,96 @@ sc.controller('RegistrationCtrl', function($scope, $state, session, bruteRequest
       validInput = false;
       $scope.passwordConfirmErrors.push('The passwords do not match.');
     }
+    return validInput;
+  }
 
-    if(validInput){
-      var signingKeys = StellarWallet.generate();
+  function submitRegistration(data) {
 
-      // Keep this to spoof the address.
-      // packedKeys.address = 'gHb9CJAWyB4gj91VRWn96DkukG4bwdtyTh';
+  }
 
-      var data = {
-        alphaCode: session.get('alpha'),
-        username: $scope.username,
-        email: $scope.email,
-        address: signingKeys.address
-      };
-
-      // Submit the registration data to the server.
-      requestRegistration.send(data,
-        // Success
-        function (response) {
-          $scope.$apply(function () {
-            console.log(response.status);
-
-            var id = Wallet.deriveId($scope.username.toLowerCase(), $scope.password);
-            var key = Wallet.deriveKey(id, $scope.username.toLowerCase(), $scope.password);
-
-            var wallet = new Wallet({
-              id: id,
-              key: key,
-              recoveryId: response.data.recoveryId,
-              keychainData: {
-                authToken: response.data.authToken,
-                updateToken: response.data.updateToken,
-                signingKeys: signingKeys
-              },
-              mainData: {
-                username: $scope.username,
-                email: $scope.email,
-                server: Options.server
-              }
-            });
-
-            // Upload the new wallet to the server.
-            session.syncWallet(wallet, 'create');
-
-            // Initialize the session with the new wallet.
-            session.login(wallet);
-
-            // Take the user to the dashboard.
-            $state.go('dashboard');
-          });
-        },
-        // Fail
-        function (response) {
-          var responseJSON = response.responseJSON;
-          if (responseJSON && responseJSON.status == "fail") {
-            if (responseJSON.code == "validation_error") {
-              // TODO: iterate through the validation errors when we add server side validation
-              var error = responseJSON.data;
-              if (error.field == "username" && error.code == "already_taken") {
-                // Show an error stating the username is already taken.
-                $scope.usernameAvailable = false;
-                $scope.usernameErrors.push('The username "' + $scope.username + '" is taken.');
-              } else if (error.field == "username" && error.code == "invalid") {
-                $scope.usernameErrors.push("Username must start and end with a letter, and may contain \".\", \"_\", or \"-\"");
-              } else if (error.field == "email" && error.code == "already_taken") {
-                $scope.emailErrors.push('The email is taken.');
-              } else if (error.field == "email" && error.code == "invalid") {
-                $scope.emailErrors.push('The email is invalid.');
-              } else if (error.field == "alpha_code" && error.code == "already_taken") {
-                // TODO: ux for alpha code has already been used
-              } else if (error.field == "alpha_code" && error.code == "invalid") {
-                // TODO: ux for alpha code is invalid
-              }
-            }
-          } else {
-            $scope.usernameErrors.push('Registration error?');
-          }
-        }
-      );
+  $scope.attemptRegistration = function() {
+    if ($scope.loading) {
+      return;
     }
+
+    $scope.loading = true;
+
+    if (!validateInput()) {
+      $scope.loading = false;
+      return;
+    }
+
+    var signingKeys = StellarWallet.generate();
+
+    // Keep this to spoof the address.
+    // packedKeys.address = 'gHb9CJAWyB4gj91VRWn96DkukG4bwdtyTh';
+
+    var data = {
+      alphaCode: session.get('alpha'),
+      username: $scope.username,
+      email: $scope.email,
+      address: signingKeys.address
+    };
+    // Submit the registration data to the server.
+    $http.post(Options.API_SERVER + '/user/register', data)
+    .success(
+      function (response) {
+        console.log(response.status);
+
+        var id = Wallet.deriveId($scope.username.toLowerCase(), $scope.password);
+        var key = Wallet.deriveKey(id, $scope.username.toLowerCase(), $scope.password);
+
+        var wallet = new Wallet({
+          id: id,
+          key: key,
+          recoveryId: response.data.recoveryId,
+          keychainData: {
+            authToken: response.data.authToken,
+            updateToken: response.data.updateToken,
+            signingKeys: signingKeys
+          },
+          mainData: {
+            username: $scope.username,
+            email: $scope.email,
+            server: Options.server
+          }
+        });
+
+        // Upload the new wallet to the server.
+        session.syncWallet(wallet, 'create');
+
+        // Initialize the session with the new wallet.
+        session.login(wallet);
+
+        // Take the user to the dashboard.
+        $state.go('dashboard');
+      })
+    .error(
+      // Fail
+      function (response) {
+        if (response && response.status == "fail") {
+          if (response.code == "validation_error") {
+            // TODO: iterate through the validation errors when we add server side validation
+            var error = response.data;
+            if (error.field == "username" && error.code == "already_taken") {
+              // Show an error stating the username is already taken.
+              $scope.usernameAvailable = false;
+              $scope.usernameErrors.push('The username "' + $scope.username + '" is taken.');
+            } else if (error.field == "username" && error.code == "invalid") {
+              $scope.usernameErrors.push("Username must start and end with a letter, and may contain \".\", \"_\", or \"-\"");
+            } else if (error.field == "email" && error.code == "already_taken") {
+              $scope.emailErrors.push('The email is taken.');
+            } else if (error.field == "email" && error.code == "invalid") {
+              $scope.emailErrors.push('The email is invalid.');
+            } else if (error.field == "alpha_code" && error.code == "already_taken") {
+              // TODO: ux for alpha code has already been used
+            } else if (error.field == "alpha_code" && error.code == "invalid") {
+              // TODO: ux for alpha code is invalid
+            }
+          }
+        } else {
+          $scope.usernameErrors.push('Registration error?');
+        }
+      });
   };
 });

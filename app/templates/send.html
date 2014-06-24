@@ -1,8 +1,8 @@
 
-<div class="send-pane pane" ng-controller="SendPaneCtrl" ng-class="{'pane-error':isError(), 'pane-success':success}">
-<div class="close-tab" ng-click="closePane()">
+<div class="send-pane pane" ng-controller="SendPaneCtrl" ng-class="paneState()">
+<div class="pane-close" ng-click="closePane()">
     <span>Close</span>
-    <i class="glyphicon glyphicon-remove-circle"></i>
+    <i class="icon icon-times-circle-thin"></i>
 </div>
 <div l10n="l10n" class="literal title">Send Stellars</div>
 <group ng-show="mode=='disconnected'" class="send-error disconnected">
@@ -110,13 +110,16 @@
     </ul>  -->
     <div class="row">
         <div ng-show="send.currency_code == 'XTR'">
-            <button type="submit" ng-disabled="sendForm.$invalid || send.self || !send.recipient_resolved || account.max_spend.to_number() < send.amount * 1000000" l10n="l10n" class="btn btn-default submit col-sm-offset-3 col-sm-6 stellar-button">Send</button>
+            <button type="submit" ng-disabled="sendForm.$invalid || send.self || !send.recipient_resolved || account.max_spend.to_number() < send.amount * 1000000 || send.fund_status !== 'none'" l10n="l10n" class="btn btn-default submit col-sm-offset-3 col-sm-6 stellar-button">Send</button>
         </div>
     </div>
     <div class="remote">
         <p ng-show="send.fund_status == 'insufficient-xtr'" l10n="l10n" class="literal">
             Destination account is unfunded; send at least
             {{send.xtr_deficiency | rpamount}} XTR to fund it.<a href="https://wiki.gostellar.org/Reserves" target="_blank" l10n="l10n">More information</a>
+        </p>
+        <p ng-show="send.fund_status == 'invalid'" l10n="l10n" class="literal">
+            Send amount must be a number.
         </p>
         <p ng-show="account.max_spend.to_number() < send.amount * 1000000" l10n="l10n" class="literal">
             You need a reserve amount of 50 Stellars to send. <a href="https://wiki.gostellar.org/Reserves" target="_blank" l10n="l10n">More information</a>
@@ -229,14 +232,15 @@
     <button class="btn btn-default btn-stellar modalStatus-btn" ng-click="tryAgain()">Try again</button>
 </div>
 
-<group ng-show="mode=='status'" class="mode-status">
+<div ng-show="mode=='status'" class="modalStatus">
     <group ng-show="tx_result=='pending'" class="pending">
         <h2 l10n="l10n" class="tx-status">Your transaction has been submitted.</h2>
         <p l10n="l10n">Your account balance will update once the payment has cleared.</p>
     </group>
-    <group ng-show="tx_result=='cleared'" class="result-success">
-        <h2 l10n="l10n" class="tx-status">Transaction cleared!</h2>
-    </group>
+    <div ng-show="tx_result=='cleared'" class="result-success">
+        <i class="icon icon-check-circle-thin modalStatus-icon"></i>
+        <p class="modalStatus-title">Transaction cleared.</p>
+    </div>
     <group ng-show="tx_result=='partial'" class="result-partial">
         <h2 l10n="l10n" class="tx-status">Transaction partially valid!</h2>
         <p l10n="l10n">Your transaction could only be partially applied.</p>
@@ -270,12 +274,12 @@
         <h2 l10n="l10n" class="tx-status">Transaction failed!</h2>
         <p ng-switch on="engine_result"><span ng-switch-when="terNO_LINE" l10n="l10n">You have no trust line in this currency.</span><span ng-switch-default="ng-switch-default" l10n="l10n">Your transaction failed to clear, reason: {{engine_result_message}}</span></p>
     </group>
-    <group class="actions">
-        <hr/>
-        <div class="actionLink"><a href="" ng-click="reset()" l10n="l10n">Send another payment</a></div>
-        <hr/>
-    </group>
-</group>
+
+    <button class="btn btn-default btn-stellar modalStatus-btn" ng-click="reset()">
+        <i class="glyphicon glyphicon-upload"></i>
+        Send another payment
+    </button>
+</div>
 </div>
 
 

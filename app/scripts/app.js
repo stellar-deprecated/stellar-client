@@ -1,8 +1,10 @@
 'use strict';
 
-var stellarClient = angular.module('stellarClient', ['bruteRequest', 'ui.router', 'rt.debounce', 'vr.passwordStrength', 'ngTable', 'ngRoute', 'angularMoment','filters']);
+var stellarClient = angular.module('stellarClient', ['ui.router', 'rt.debounce', 'vr.passwordStrength', 'ngTable', 'ngRoute', 'angularMoment', 'filters', 'bruteRequest']);
 
-stellarClient.config(function($stateProvider, $urlRouterProvider) {
+stellarClient.config(function($httpProvider, $stateProvider, $urlRouterProvider) {
+
+  $httpProvider.interceptors.push('bruteRequestInterceptor');
 
   $stateProvider
     .state('login', {
@@ -35,7 +37,6 @@ stellarClient.config(function($stateProvider, $urlRouterProvider) {
   $urlRouterProvider.otherwise('/dashboard');
 
 });
-
 
 stellarClient.run(function($rootScope, $state, session){
   $rootScope.balance = 'loading...';

@@ -28,7 +28,7 @@ window.fbAsyncInit = function() {
  * @param {function} success callback
  * @param {function} error callback
  */
-function fbLoginStart(username, updateToken, success, error){
+function fbLoginStart(http, username, updateToken, success, error){
   console.log("fbAuth");
   FB.getLoginStatus(function (response) {
     var data = {
@@ -39,10 +39,10 @@ function fbLoginStart(username, updateToken, success, error){
     if (response.status === 'connected') {
       data.fbID = response.authResponse.userID;
       data.fbAccessToken = response.authResponse.accessToken;
-      claim(data, success, error);
+      claim(http, data, success, error);
     } else {
       FB.login(function(){
-        handleFBSessionResponse(data, success, error);
+        handleFBSessionResponse(http, data, success, error);
       }, {scope: 'user_status'});
     }
   });
@@ -57,12 +57,12 @@ function fbLoginStart(username, updateToken, success, error){
  * @param {function} success callback
  * @param {function} error callback
  */
-function handleFBSessionResponse(data, success, error) {
+function handleFBSessionResponse(http, data, success, error) {
   FB.getLoginStatus(function (response) {
     if (response.status === 'connected') {
       data.fbID = response.authResponse.userID;
       data.fbAccessToken = response.authResponse.accessToken;
-      claim(data, success, error);
+      claim(http, data, success, error);
     } else {
       error(response);
     }
@@ -80,8 +80,8 @@ function handleFBSessionResponse(data, success, error) {
  * @param {function} success callback
  * @param {function} error callback
  */
-function claim(data, success, error) {
-  $.post(Options.API_SERVER + "/claim/facebook", data, null, "json")
+function claim(http, data, success, error) {
+  http.post(Options.API_SERVER + "/claim/facebook", data)
     .success(
       function (response) {
         console.log(response.status);

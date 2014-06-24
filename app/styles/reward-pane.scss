@@ -3,10 +3,16 @@
   color: $dark-grey;
   padding-bottom: 30px !important;
 
-  .title {
-    margin-top: 0;
+  .reward-pane-title {
+   font-weight: $avenir-heavy;
     font-size: 20px;
-    padding: 24px 0;
+    height: 70px;
+    line-height: 70px;
+
+    i {
+      margin: 0 15px;
+      font-size: 20px;
+    }
   }
 
   .rewardProgress {
@@ -71,7 +77,6 @@
         font-size: 20px;
         list-style-type: none;
         cursor: pointer;
-        border: 1px solid rgba($stellar-blue, 0);
         position: relative;
         overflow: visible;
         white-space: nowrap;
@@ -87,6 +92,7 @@
 
         &.incomplete, &.unverified {
           background-color: white;
+          border: 1px solid rgba($stellar-blue, 0);
 
           i {
             color: $grey;
@@ -106,16 +112,14 @@
         }
 
         &.sent,
-        &.awaiting_payout, &.ineligible {
+        &.awaiting_payout,
+        &.ineligible {
           background-color: #F9F9F9;
           color: $info-grey;
+          cursor: default;
 
           i {
             color: $info-grey;
-          }
-
-          &:hover {
-            border: 1px solid rgba($grey, 0.5);
           }
         }
 
@@ -341,31 +345,6 @@
             margin-right: auto;
             margin-top: 40px;
           }
-      }
-
-      .close-reward {
-        float: right;
-        font-size: 16px;
-        margin: 5px 0;
-        cursor: pointer;
-        font-weight: $avenir-medium;
-        color: $info-grey;
-        @include transition(color 200ms ease-in-out);
-
-        &:hover {
-          color: $error;
-
-          i {
-            color: $error;
-          }
-        }
-
-        i {
-          font-size: 26px;
-          vertical-align: middle;
-          margin-left: 10px;
-          margin-top: -4px;
-        }
       }
     }
   }
