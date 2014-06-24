@@ -1,9 +1,9 @@
 'use strict';
 // generated on 2014-04-24 using generator-gulp-webapp 0.0.8
 
-var gulp = require('gulp');
-var plumber = require('gulp-plumber');
-var exec = require('child_process').exec;
+var gulp        = require('gulp');
+var plumber     = require('gulp-plumber');
+var exec        = require('child_process').exec;
 var mergeStream = require('merge-stream');
 
 // load plugins
