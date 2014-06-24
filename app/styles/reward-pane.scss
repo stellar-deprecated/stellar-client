@@ -3,10 +3,16 @@
   color: $dark-grey;
   padding-bottom: 30px !important;
 
-  .title {
-    margin-top: 0;
+  .reward-pane-title {
+   font-weight: $avenir-heavy;
     font-size: 20px;
-    padding: 24px 0;
+    height: 70px;
+    line-height: 70px;
+
+    i {
+      margin: 0 15px;
+      font-size: 20px;
+    }
   }
 
   .rewardProgress {
