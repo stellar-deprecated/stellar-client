@@ -67,10 +67,10 @@ gulp.task('images', function () {
         .pipe($.size());
 });
 
-gulp.task('fonts', function () {
+gulp.task('fonts', ['iconfont'], function () {
     return mergeStream(
             $.bowerFiles(),
-            gulp.src('app/fonts/**/*')
+            gulp.src('.tmp/fonts/**/*')
         )
         .pipe($.filter('**/*.{eot,svg,ttf,woff}'))
         .pipe($.flatten())
@@ -176,7 +176,7 @@ gulp.task('iconfont', function() {
             fontName: fontName,
             normalize: true
          }))
-        .pipe(gulp.dest('app/fonts/'));
+        .pipe(gulp.dest('.tmp/fonts/'));
 });
 
 
