@@ -230,7 +230,8 @@ sc.controller('RegistrationCtrl', function($scope, $state, $timeout, $http, sess
           mainData: {
             username: $scope.username,
             email: $scope.email,
-            server: Options.server
+            server: Options.server,
+            contacts: {}
           }
         });
 

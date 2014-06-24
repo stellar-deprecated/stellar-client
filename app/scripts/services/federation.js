@@ -10,7 +10,8 @@
 
 var module = angular.module('stellarClient');
 
-module.factory('rpFederation', ['$q', '$rootScope', '$http', 'rpStellarTxt', function ($q, $scope, $http, $txt) {
+module.factory('rpFederation', ['$q', '$rootScope', '$http', 'rpStellarTxt', 'session',
+        function ($q, $scope, $http, $txt, session) {
     var txts = {};
 
     function check_email(email) {
@@ -57,15 +58,17 @@ module.factory('rpFederation', ['$q', '$rootScope', '$http', 'rpStellarTxt', fun
                 });
                 return;
             }
-            var data = {
-                type: 'federation',
-                domain: domain,
-                destination: user,
-                // DEPRECATED "destination" is a more neutral name for this field
-                //   than "user"
-                user: user
+            var config = {
+                params: {
+                    type: 'federation',
+                    domain: domain,
+                    destination: user,
+                    // DEPRECATED "destination" is a more neutral name for this field
+                    //   than "user"
+                    user: user
+                }
             }
-            $http.post(txt.federation_url[0], data)
+            $http.get(txt.federation_url[0], config)
             .success(function (data) {
                 if ("object" === typeof data &&
                     "object" === typeof data.federation_json &&

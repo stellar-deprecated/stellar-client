@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('TransactionHistoryCtrl', ['$scope', 'stNetwork', 'ngTableParams', '$filter', function( $scope, $network, ngTableParams, $filter)
+sc.controller('TransactionHistoryCtrl', ['$scope', 'stNetwork', 'ngTableParams', '$filter', 'session', function( $scope, $network, ngTableParams, $filter, session)
 {
   $scope.typeIcons = {
     'sent': 'glyphicon glyphicon-upload',
@@ -26,4 +26,13 @@ sc.controller('TransactionHistoryCtrl', ['$scope', 'stNetwork', 'ngTableParams',
   $scope.$on('$paymentNotification', function(){
     $scope.tableParams.reload();
   });
+
+  $scope.addressToUsername=function(address) {
+    var wallet = session.get('wallet');
+    if (wallet.mainData.contacts[address]) {
+      var contact = wallet.mainData.contacts[address];
+      return contact.destination + "@" + contact.domain;
+    }
+    return address;
+  }
 }]);
