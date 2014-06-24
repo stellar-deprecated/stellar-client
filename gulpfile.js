@@ -4,6 +4,7 @@
 var gulp = require('gulp');
 var plumber = require('gulp-plumber');
 var exec = require('child_process').exec;
+var mergeStream = require('merge-stream');
 
 // load plugins
 var $ = require('gulp-load-plugins')();
@@ -67,7 +68,10 @@ gulp.task('images', function () {
 });
 
 gulp.task('fonts', function () {
-    return $.bowerFiles()
+    return mergeStream(
+            $.bowerFiles(),
+            gulp.src('app/fonts/**/*')
+        )
         .pipe($.filter('**/*.{eot,svg,ttf,woff}'))
         .pipe($.flatten())
         .pipe(gulp.dest('dist/fonts'))
@@ -174,3 +178,24 @@ gulp.task('iconfont', function() {
          }))
         .pipe(gulp.dest('app/fonts/'));
 });
+
+
+gulp.task('connect-dist', ['dist'], function() {
+    var connect = require('connect');
+    var app = connect()
+        .use(connect.static('dist'))
+        .use(connect.directory('dist'));
+
+    require('http').createServer(app)
+        .listen(9001)
+        .on('listening', function () {
+            console.log('Started connect web server on http://localhost:9001');
+        });
+})
+
+gulp.task('serve-dist', ['connect-dist'], function() {
+    require('opn')('http://localhost:9001');
+})
+
+
+
