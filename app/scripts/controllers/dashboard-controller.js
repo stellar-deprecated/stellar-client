@@ -31,6 +31,15 @@ sc.controller('DashboardCtrl', function($rootScope, $scope, $timeout, $state, se
         }
     };
 
+    $scope.statusMessage = function(){
+        switch($rootScope.accountStatus){
+          case 'connecting': return 'Connecting...';
+          case 'loaded':     return 'Connected!';
+          case 'unfunded':   return 'Get you stellars below!';
+          case 'error':      return 'Connection error!';
+        }
+    };
+
     var cleanupTimer = null;
 
     // Show a notification when new transactions are received.

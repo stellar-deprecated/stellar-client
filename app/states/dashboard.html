@@ -4,13 +4,13 @@
             <div class="img-container"><img src="images/wallet.png"></div>
             <div class="dash-balance-container">
                 <span ng-show="$root.balance" class="dash-balance" rp-tooltip="{{$root.balance  | rpamount}}  (reserve: {{ $root.reserve  | rpamount }} XTR)" ng-bind-html="$root.balance | rpamount:{rel_precision: 0} | shrinkText:84:6"></span>
-                <span ng-hide="$root.balance" class="dash-balance" ng-bind-html="'Get your stellars below!' | shrinkText:84:6"></span>
+                <span ng-hide="$root.balance" class="dash-balance" ng-bind-html="statusMessage() | shrinkText:84:6"></span>
             </div>
             <div class="img-container"><img src="images/rocket.png"></div>
         </div>
         <div class="row controls">
             <div class="dash-info-container">
-                <span class="dash-balance-info">Current Balance <b>Stellars</b></span>
+                <span ng-show="$root.balance" class="dash-balance-info ng-hide">Current Balance <b>Stellars</b></span>
             </div>
             <div class="dash-receive-container">
                 <button class="stellar-button btn btn-default" ng-click="toggleReceive()">
