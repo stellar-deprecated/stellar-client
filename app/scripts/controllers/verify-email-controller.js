@@ -40,9 +40,7 @@ sc.controller('VerifyEmailCtrl', function ($scope, $rootScope, $http, session) {
     }
 
     function verifyEmailDone() {
-      $scope.$apply(function() {
-        $scope.loading = false;
-      });
+      $scope.loading = false;
     }
   };
 
