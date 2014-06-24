@@ -13,7 +13,11 @@ module.filter('addressToUsername', function (session) {
         var wallet = session.get('wallet');
         if (wallet.mainData.contacts[input]) {
           var contact = wallet.mainData.contacts[input];
-          return contact.destination + "@" + contact.domain;
+          if (contact.domain == config.DEFAULT_FEDERATION_DOMAIN) {
+            return "@" + contact.destination;
+          } else {
+            return contact.destination + "@" + contact.domain;
+          }
         }
         return input;
     };
