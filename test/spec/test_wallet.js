@@ -11,7 +11,7 @@ describe('Wallet', function () {
         id:           1,
         key:          'key',
         recoveryId:   'recoveryId',
-        recoveryData: {contents: 'recoveryData'},
+        recoveryData: 'recoveryData',
         mainData:     {contents: 'mainData'},
         keychainData: {contents: 'keychainData'}
       };
@@ -29,8 +29,7 @@ describe('Wallet', function () {
     it('should use default wallet options', function () {
       var walletOptions = {
         id:           1,
-        key:          'key',
-        recoveryId:   'recoveryId'
+        key:          'key'
       };
 
       var wallet = new Wallet(walletOptions);
@@ -38,9 +37,9 @@ describe('Wallet', function () {
       expect(wallet.id).to.equal(walletOptions.id);
       expect(wallet.key).to.equal(walletOptions.key);
       expect(wallet.recoveryId).to.equal(walletOptions.recoveryId);
+      expect(wallet.recoveryData).to.equal('unrecoverable');
 
       expect(wallet.keychainData).to.deep.equal({});
-      expect(wallet.recoveryData).to.deep.equal({});
       expect(wallet.mainData).to.deep.equal({});
     });
   });
@@ -65,24 +64,24 @@ describe('Wallet', function () {
       var encryptedWallet = {
         id:               1,
         recoveryId:       'recoveryId',
+        recoveryData:     'recoveryData',
         authToken:        'authToken',
         updateToken:      'updateToken',
         mainData:         'encryptedMainData',
-        keychainData:     'encryptedKeychainData',
-        recoveryData:     'encryptedRecoveryData'
+        keychainData:     'encryptedKeychainData'
       };
 
       var wallet = Wallet.decrypt(encryptedWallet, 1, 'key');
 
-      expect(Wallet.decryptData.callCount).to.equal(3);
+      expect(Wallet.decryptData.callCount).to.equal(2);
       expect(Wallet.called).to.equal(true);
 
       var options = Wallet.args[0][0];
       expect(options.id).to.equal(1);
       expect(options.key).to.equal('key');
       expect(options.recoveryId).to.equal('recoveryId');
-      expect(options.mainData).to.equal('mainData');
       expect(options.recoveryData).to.equal('recoveryData');
+      expect(options.mainData).to.equal('mainData');
       expect(options.keychainData).to.deep.equal({authToken: 'authToken'});
     });
   });
@@ -96,7 +95,7 @@ describe('Wallet', function () {
       id:           1,
       key:          'key',
       recoveryId:   'recoveryId',
-      recoveryData: {contents: 'recoveryData'},
+      recoveryData: 'recoveryData',
       mainData:     {contents: 'mainData'},
       keychainData: {
         keys:        'signingKeys',
@@ -109,26 +108,24 @@ describe('Wallet', function () {
       wallet = new Wallet(walletOptions);
 
       sandbox.stub(Wallet, 'encryptData');
-      Wallet.encryptData.withArgs(walletOptions.recoveryData).returns('encryptedRecoveryData');
       Wallet.encryptData.withArgs(walletOptions.mainData).returns('encryptedMainData');
       Wallet.encryptData.withArgs(walletOptions.keychainData).returns('encryptedKeychainData');
 
       sandbox.stub(sjcl.hash.sha1, 'hash');
       sandbox.stub(sjcl.codec.hex, 'fromBits');
-      sjcl.hash.sha1.hash.withArgs('encryptedRecoveryData').returns('encryptedRecoveryDataHash');
+      sjcl.hash.sha1.hash.withArgs('recoveryData').returns('recoveryDataHash');
       sjcl.hash.sha1.hash.withArgs('encryptedMainData').returns('encryptedMainDataHash');
       sjcl.hash.sha1.hash.withArgs('encryptedKeychainData').returns('encryptedKeychainDataHash');
-      sjcl.codec.hex.fromBits.withArgs('encryptedRecoveryDataHash').returns('encryptedRecoveryDataHashHex');
+      sjcl.codec.hex.fromBits.withArgs('recoveryDataHash').returns('recoveryDataHashHex');
       sjcl.codec.hex.fromBits.withArgs('encryptedMainDataHash').returns('encryptedMainDataHashHex');
       sjcl.codec.hex.fromBits.withArgs('encryptedKeychainDataHash').returns('encryptedKeychainDataHashHex');
     });
 
-    it('should encrypt the mainData, recoveryData, and keychainData', function(){
+    it('should encrypt the mainData and keychainData', function(){
       var encryptedWallet = wallet.encrypt();
 
-      expect(Wallet.encryptData.callCount).to.equal(3);
+      expect(Wallet.encryptData.callCount).to.equal(2);
       expect(encryptedWallet.mainData).to.equal('encryptedMainData');
-      expect(encryptedWallet.recoveryData).to.equal('encryptedRecoveryData');
       expect(encryptedWallet.keychainData).to.equal('encryptedKeychainData');
     });
 
@@ -136,17 +133,18 @@ describe('Wallet', function () {
       var encryptedWallet = wallet.encrypt();
 
       expect(sjcl.hash.sha1.hash.callCount).to.equal(3);
+      expect(encryptedWallet.recoveryDataHash).to.equal('recoveryDataHashHex');
       expect(encryptedWallet.mainDataHash).to.equal('encryptedMainDataHashHex');
-      expect(encryptedWallet.recoveryDataHash).to.equal('encryptedRecoveryDataHashHex');
       expect(encryptedWallet.keychainDataHash).to.equal('encryptedKeychainDataHashHex');
     });
 
-    it('should return the id, authToken, and recoveryId', function(){
+    it('should return the id, authToken, recoveryId, and recoveryData', function(){
       var encryptedWallet = wallet.encrypt();
 
       expect(encryptedWallet.id).to.equal(1);
       expect(encryptedWallet.authToken).to.equal('authToken');
       expect(encryptedWallet.recoveryId).to.equal('recoveryId');
+      expect(encryptedWallet.recoveryData).to.equal('recoveryData');
     });
   });
 

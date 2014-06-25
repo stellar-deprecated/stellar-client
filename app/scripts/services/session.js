@@ -4,30 +4,17 @@ var sc = angular.module('stellarClient');
 
 var cache = {};
 
-sc.service('session', function($rootScope) {
+sc.service('session', function($rootScope, $http) {
   var Session = function() {};
 
   Session.prototype.get = function(name){ return cache[name]; };
   Session.prototype.put = function(name, value){ return cache[name] =  value; };
 
-  // TODO: Think about moving this.
-  Session.prototype.syncWallet = function(wallet, action, success, fail) {
-    // Send it to the server.
-    $.ajax({
-      url: Options.WALLET_SERVER + '/wallets/' + action,
-      method: 'POST',
-      data: JSON.stringify(wallet.encrypt()),
-      contentType: 'application/json; charset=UTF-8',
-      dataType: 'json',
-      success: function() {
-        if (Options.PERSISTENT_SESSION) {
-          localStorage.wallet = JSON.stringify(wallet);
-        }
-        if (success) {
-          success();
-        }
-      }
-    }).fail(fail || function(){});
+  Session.prototype.syncWallet = function(wallet, action) {
+    var url = Options.WALLET_SERVER + '/wallets/' + action;
+    var data = wallet.encrypt();
+
+    return $http.post(url, data);
   };
 
   Session.prototype.login = function(wallet) {
