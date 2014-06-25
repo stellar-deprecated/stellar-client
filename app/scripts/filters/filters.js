@@ -16,7 +16,7 @@ module.filter('addressToUsername', function (session) {
         }
         if (wallet.mainData.contacts[input]) {
           var contact = wallet.mainData.contacts[input];
-          if (contact.domain == config.DEFAULT_FEDERATION_DOMAIN) {
+          if (contact.domain == Options.DEFAULT_FEDERATION_DOMAIN) {
             return "@" + contact.destination;
           } else {
             return contact.destination + "@" + contact.domain;
