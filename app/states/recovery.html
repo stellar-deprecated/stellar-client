@@ -1,0 +1,27 @@
+<div class="recovery">
+    <h1 class="title">Password Recovery</h1>
+
+    <form role="form" class="form-horizontal stellar-form" ng-controller="RecoveryCtrl">
+        <div class="form-group">
+            <div class="errors col-sm-12">
+                <div class="tip col-sm-offset-6 col-sm-3">{{ recoveryError }}</div>
+            </div>
+            <label for="username" class="col-sm-3">USERNAME</label>
+            <div class="col-sm-6">
+                <input id="username" type="text" class="form-control" ng-model="username">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="errors col-sm-12"></div>
+            <label for="recovery-code" class="col-sm-3">RECOVERY CODE</label>
+            <div class="col-sm-6">
+                <input id="recovery-code" type="text" class="form-control" ng-model="userRecoveryCode">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-3 col-sm-6">
+                <button type="submit" class="stellar-button btn btn-default" ng-click="attemptRecovery()" ng-disabled="recovering">{{recovering ? 'Recovering...' : 'Recover my password'}}</button>
+            </div>
+        </div>
+    </form>
+</div>

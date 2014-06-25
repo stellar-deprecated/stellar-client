@@ -12,6 +12,11 @@ stellarClient.config(function($httpProvider, $stateProvider, $urlRouterProvider)
       templateUrl: 'states/login.html',
       authenticate: null
     })
+    .state('recovery', {
+      url:         '/recovery',
+      templateUrl: 'states/recovery.html',
+      authenticate: false
+    })
     .state('alpha', {
       url:         '/alpha',
       templateUrl: 'states/alpha.html',
