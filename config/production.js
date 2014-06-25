@@ -12,6 +12,13 @@ var Options = {
         "track": false
     },
 
+    stellar_contact: {
+        destination: "stellarfairy",
+        destination_address: "gpjh5ZsnpfLy1FYD8V9b7oNbwZqXMFF7Ha",
+        domain: "gostellar.org",
+        type: "federation_record"
+    },
+
     APP_ID: '703276886397629',
     DOMAIN_NAME: 'gostellar.org',
     DEFAULT_FEDERATION_DOMAIN: 'gostellar.org',

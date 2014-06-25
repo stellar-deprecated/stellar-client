@@ -235,6 +235,9 @@ sc.controller('RegistrationCtrl', function($scope, $state, $timeout, $http, sess
           }
         });
 
+        // add the default contact
+        wallet.mainData.contacts[Options.stellar_contact.destination_address] = Options.stellar_contact;
+
         // Upload the new wallet to the server.
         session.syncWallet(wallet, 'create');
 
