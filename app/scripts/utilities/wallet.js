@@ -2,7 +2,7 @@ var Wallet = function(options){
   this.id = options.id;
   this.key = options.key;
   this.recoveryId = options.recoveryId;
-  this.recoveryData = options.recoveryData || '';
+  this.recoveryData = options.recoveryData || 'unrecoverable';
 
   this.keychainData = options.keychainData || {};
   this.mainData = options.mainData || {};

@@ -37,7 +37,7 @@ describe('Wallet', function () {
       expect(wallet.id).to.equal(walletOptions.id);
       expect(wallet.key).to.equal(walletOptions.key);
       expect(wallet.recoveryId).to.equal(walletOptions.recoveryId);
-      expect(wallet.recoveryData).to.deep.equal('');
+      expect(wallet.recoveryData).to.equal('unrecoverable');
 
       expect(wallet.keychainData).to.deep.equal({});
       expect(wallet.mainData).to.deep.equal({});

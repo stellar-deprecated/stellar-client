@@ -221,7 +221,6 @@ sc.controller('RegistrationCtrl', function($scope, $state, $timeout, $http, sess
         var wallet = new Wallet({
           id: id,
           key: key,
-          recoveryId: response.data.recoveryId,
           keychainData: {
             authToken: response.data.authToken,
             updateToken: response.data.updateToken,
