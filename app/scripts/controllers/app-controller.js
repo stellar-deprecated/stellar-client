@@ -15,6 +15,8 @@ sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', function($scope, $r
     $scope.history = [];
 
     var account;
+    // implements account listener cleanup, added to $rootScope.account to be called in logout event
+    var listenerCleanupFn;
 
     function reset()
     {
@@ -51,6 +53,11 @@ sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', function($scope, $r
 
         accountObj.on('transaction', myHandleAccountEvent);
         accountObj.on('entry', myHandleAccountEntry);
+
+        listenerCleanupFn = function () {
+            accountObj.removeListener("transaction", myHandleAccountEvent);
+            accountObj.removeListener("entry", myHandleAccountEntry);
+        }
 
         accountObj.entry(function (err, entry) {
             if (err) {
@@ -157,6 +164,9 @@ sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', function($scope, $r
         var remote = $network.remote;
         $scope.$apply(function () {
             $rootScope.account = data;
+
+            // add a cleanup function to account to remove the listeners
+            $rootScope.account.cleanup = listenerCleanupFn;
 
             // As per json wire format convention, real ledger entries are CamelCase,
             // e.g. OwnerCount, additional convenience fields are lower case, e.g.
