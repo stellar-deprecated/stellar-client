@@ -53,7 +53,7 @@ sc.controller('VerifyEmailCtrl', function ($scope, $rootScope, $http, session) {
 
     var data = wallet.createRecoveryData(recoveryId, recoveryKey);
 
-    return $http.post(Options.WALLET_SERVER + '/recovery/create', data);
+    return $http.post(Options.WALLET_SERVER + '/wallets/create_recovery_data', data);
   }
 
   $scope.clear = function() {
