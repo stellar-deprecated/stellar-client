@@ -1,8 +1,6 @@
 var Wallet = function(options){
   this.id = options.id;
   this.key = options.key;
-  this.recoveryId = options.recoveryId;
-  this.recoveryData = options.recoveryData || 'unrecoverable';
 
   this.keychainData = options.keychainData || {};
   this.mainData = options.mainData || {};
@@ -13,10 +11,8 @@ var Wallet = function(options){
  *
  * @param {object} encryptedWallet
  * @param {string} encryptedWallet.id
- * @param {string} encryptedWallet.recoveryId
  * @param {string} encryptedWallet.mainData
  * @param {string} encryptedWallet.keychainData
- * @param {string} encryptedWallet.recoveryData
  * @param {string} id
  * @param {string} key
  *
@@ -31,8 +27,6 @@ Wallet.decrypt = function(encryptedWallet, id, key){
   var options = {
     id:           id,
     key:          key,
-    recoveryId:   encryptedWallet.recoveryId,
-    recoveryData: encryptedWallet.recoveryData,
     mainData:     mainData,
     keychainData: keychainData
   };
@@ -67,11 +61,17 @@ Wallet.recover = function(encryptedWallet, recoveryId, recoveryKey){
  * @param {string} recoveryId
  * @param {string} recoveryKey
  */
-Wallet.prototype.storeRecoveryData = function(recoveryId, recoveryKey){
+Wallet.prototype.createRecoveryData = function(recoveryId, recoveryKey){
   var rawRecoveryKey = sjcl.codec.hex.toBits(recoveryKey);
+  var recoveryData = Wallet.encryptData({id: this.id, key: this.key}, rawRecoveryKey);
 
-  this.recoveryId = recoveryId;
-  this.recoveryData = Wallet.encryptData({id: this.id, key: this.key}, rawRecoveryKey);
+  return {
+    id: this.id,
+    authToken: this.keychainData.authToken,
+    recoveryId: recoveryId,
+    recoveryData: recoveryData,
+    recoveryDataHash: sjcl.codec.hex.fromBits(sjcl.hash.sha1.hash(recoveryData))
+  }
 };
 
 /**
@@ -88,9 +88,6 @@ Wallet.prototype.encrypt = function(){
   return {
     id:               this.id,
     authToken:        this.keychainData.authToken,
-    recoveryId:       this.recoveryId,
-    recoveryData:     this.recoveryData,
-    recoveryDataHash: sjcl.codec.hex.fromBits(sjcl.hash.sha1.hash(this.recoveryData)),
     mainData:         encryptedMainData,
     mainDataHash:     sjcl.codec.hex.fromBits(sjcl.hash.sha1.hash(encryptedMainData)),
     keychainData:     encryptedKeychainData,

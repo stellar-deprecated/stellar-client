@@ -10,8 +10,6 @@ describe('Wallet', function () {
       var walletOptions = {
         id:           1,
         key:          'key',
-        recoveryId:   'recoveryId',
-        recoveryData: 'recoveryData',
         mainData:     {contents: 'mainData'},
         keychainData: {contents: 'keychainData'}
       };
@@ -20,8 +18,6 @@ describe('Wallet', function () {
 
       expect(wallet.id).to.equal(walletOptions.id);
       expect(wallet.key).to.equal(walletOptions.key);
-      expect(wallet.recoveryId).to.equal(walletOptions.recoveryId);
-      expect(wallet.recoveryData).to.equal(walletOptions.recoveryData);
       expect(wallet.mainData).to.equal(walletOptions.mainData);
       expect(wallet.keychainData).to.equal(walletOptions.keychainData);
     });
@@ -36,8 +32,6 @@ describe('Wallet', function () {
 
       expect(wallet.id).to.equal(walletOptions.id);
       expect(wallet.key).to.equal(walletOptions.key);
-      expect(wallet.recoveryId).to.equal(walletOptions.recoveryId);
-      expect(wallet.recoveryData).to.equal('unrecoverable');
 
       expect(wallet.keychainData).to.deep.equal({});
       expect(wallet.mainData).to.deep.equal({});
@@ -49,7 +43,6 @@ describe('Wallet', function () {
       var decrypt = Wallet.decrypt;
       var decryptData = sandbox.stub(Wallet, 'decryptData');
       Wallet.decryptData.withArgs('encryptedMainData').returns('mainData');
-      Wallet.decryptData.withArgs('encryptedRecoveryData').returns('recoveryData');
       Wallet.decryptData.withArgs('encryptedKeychainData').returns({authToken: 'authToken'});
 
       // Expose the required methods on the stubbed version of Wallet.
@@ -63,8 +56,6 @@ describe('Wallet', function () {
     it('should decrypt an existing wallet', function(){
       var encryptedWallet = {
         id:               1,
-        recoveryId:       'recoveryId',
-        recoveryData:     'recoveryData',
         authToken:        'authToken',
         updateToken:      'updateToken',
         mainData:         'encryptedMainData',
@@ -79,8 +70,6 @@ describe('Wallet', function () {
       var options = Wallet.args[0][0];
       expect(options.id).to.equal(1);
       expect(options.key).to.equal('key');
-      expect(options.recoveryId).to.equal('recoveryId');
-      expect(options.recoveryData).to.equal('recoveryData');
       expect(options.mainData).to.equal('mainData');
       expect(options.keychainData).to.deep.equal({authToken: 'authToken'});
     });
@@ -113,10 +102,8 @@ describe('Wallet', function () {
 
       sandbox.stub(sjcl.hash.sha1, 'hash');
       sandbox.stub(sjcl.codec.hex, 'fromBits');
-      sjcl.hash.sha1.hash.withArgs('recoveryData').returns('recoveryDataHash');
       sjcl.hash.sha1.hash.withArgs('encryptedMainData').returns('encryptedMainDataHash');
       sjcl.hash.sha1.hash.withArgs('encryptedKeychainData').returns('encryptedKeychainDataHash');
-      sjcl.codec.hex.fromBits.withArgs('recoveryDataHash').returns('recoveryDataHashHex');
       sjcl.codec.hex.fromBits.withArgs('encryptedMainDataHash').returns('encryptedMainDataHashHex');
       sjcl.codec.hex.fromBits.withArgs('encryptedKeychainDataHash').returns('encryptedKeychainDataHashHex');
     });
@@ -129,22 +116,19 @@ describe('Wallet', function () {
       expect(encryptedWallet.keychainData).to.equal('encryptedKeychainData');
     });
 
-    it('should hash the encrypted mainData, recoveryData, and keychainData', function(){
+    it('should hash the encrypted mainData and keychainData', function(){
       var encryptedWallet = wallet.encrypt();
 
-      expect(sjcl.hash.sha1.hash.callCount).to.equal(3);
-      expect(encryptedWallet.recoveryDataHash).to.equal('recoveryDataHashHex');
+      expect(sjcl.hash.sha1.hash.callCount).to.equal(2);
       expect(encryptedWallet.mainDataHash).to.equal('encryptedMainDataHashHex');
       expect(encryptedWallet.keychainDataHash).to.equal('encryptedKeychainDataHashHex');
     });
 
-    it('should return the id, authToken, recoveryId, and recoveryData', function(){
+    it('should return the id and authToken', function(){
       var encryptedWallet = wallet.encrypt();
 
       expect(encryptedWallet.id).to.equal(1);
       expect(encryptedWallet.authToken).to.equal('authToken');
-      expect(encryptedWallet.recoveryId).to.equal('recoveryId');
-      expect(encryptedWallet.recoveryData).to.equal('recoveryData');
     });
   });
 

@@ -51,9 +51,9 @@ sc.controller('VerifyEmailCtrl', function ($scope, $rootScope, $http, session) {
     var recoveryId = Wallet.deriveId(userRecoveryCode, serverRecoveryCode);
     var recoveryKey = Wallet.deriveKey(recoveryId, userRecoveryCode, serverRecoveryCode);
 
-    wallet.storeRecoveryData(recoveryId, recoveryKey);
+    var data = wallet.createRecoveryData(recoveryId, recoveryKey);
 
-    return session.syncWallet(wallet, 'update');
+    return $http.post(Options.WALLET_SERVER + '/wallets/create_recovery_data', data);
   }
 
   $scope.clear = function() {
