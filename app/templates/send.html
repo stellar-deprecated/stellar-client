@@ -28,26 +28,13 @@
             </div>
         </div>
         <label for="send_amount" l10n="l10n" class="col-sm-3">AMOUNT</label>
-        <div ng-if="!send.currency_force" class="row amount">
+        <div class="row amount">
             <div class="col-sm-6 send-amount right-inner-addon">
                 <input id="send_amount" name="send_amount" type="text" ng-model="send.amount" required="required" rp-autofill="$routeParams.amount" rp-autofill-amount="rp-autofill-amount" rp-amount="rp-amount" rp-amount-positive="rp-amount-positive" rp-amount-xtr-limit="rp-amount-xtr-limit" rp-amount-xtr-limit-currency="{{send.currency}}" class="form-control stellar-input"/>
                 <i>XTR</i>
             </div>
             <div class="col-sm-3 tip">Type in the amount to send.</div>
-            <!--
-                        <div class="col-xs-12 col-sm-6 col-md-3">
-                            <input id="send_amount_currency" name="send_amount_currency" type="text" rp-combobox="{{send.currency_choices}}" rp-combobox-select="rp-combobox-select" ng-model="send.currency" rp-autofill="$routeParams.amount" rp-autofill-currency="rp-autofill-currency" rp-restrict-currencies="{{send.restrict_currencies}}" class="form-control currency"/>
-                        </div>  -->
         </div>
-
-        <div ng-if="send.currency_force" class="row">
-            <div class="col-xs-12 col-sm-6 col-md-3 input-group currency_force">
-                <input id="send_amount" name="send_amount" type="text" ng-model="send.amount" required="required" ng-disabled="!!send.force_amount" rp-autofill="$routeParams.amount" rp-autofill-amount="rp-autofill-amount" rp-amount="rp-amount" rp-amount-positive="rp-amount-positive" rp-amount-xtr-limit="rp-amount-xtr-limit" rp-amount-xtr-limit-currency="{{send.currency}}" class="form-control"/><span ng-bind="send.currency_force" class="input-group-addon"></span>
-            </div>
-        </div>
-       <!-- <div rp-errors="send_amount_currency" class="errorGroup">
-            <div rp-error-on="rpRestrictCurrencies" l10n="l10n" class="error">{{send.recipient | rpcontactname}} can't receive this currency.</div>
-        </div>  -->
     </div>
     <div class="row form-group">
         <div rp-errors="send_destination" class="errors col-sm-12">

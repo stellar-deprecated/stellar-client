@@ -37,6 +37,11 @@ stellarClient.config(function($httpProvider, $stateProvider, $urlRouterProvider)
       templateUrl: 'states/settings.html',
       authenticate: true
     })
+    .state('browser_unsupported', {
+      url:         '/browser_unsupported',
+      templateUrl: 'states/browser_unsupported.html',
+      authenticate: null
+    })
   ;
 
   $urlRouterProvider.otherwise('/dashboard');
@@ -45,8 +50,14 @@ stellarClient.config(function($httpProvider, $stateProvider, $urlRouterProvider)
 
 stellarClient.run(function($rootScope, $state, session){
   $rootScope.balance = 'loading...';
+  $rootScope.unsupportedBrowser = !Modernizr.websockets;
 
   $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){
+
+    if($rootScope.unsupportedBrowser && toState.name !== "browser_unsupported") {
+      $state.transitionTo('browser_unsupported');
+      event.preventDefault();
+    }
 
     switch(toState.url){
 
