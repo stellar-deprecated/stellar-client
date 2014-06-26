@@ -1,4 +1,5 @@
 'use strict';
+var stellarClientRevision = '_GIT_REVISION_GOES_HERE_';
 
 var stellarClient = angular.module('stellarClient', ['ui.router', 'rt.debounce', 'vr.passwordStrength', 'ngTable', 'ngRoute', 'angularMoment', 'filters', 'bruteRequest']);
 
