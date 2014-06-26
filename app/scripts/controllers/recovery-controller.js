@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('RecoveryCtrl', function($scope, $state, $http, $timeout) {
+sc.controller('RecoveryCtrl', function($scope, $state, $http, $timeout, session) {
   $scope.username = null;
   $scope.userRecoveryCode = null;
   $scope.serverRecoveryCode = null;
@@ -64,7 +64,7 @@ sc.controller('RecoveryCtrl', function($scope, $state, $http, $timeout) {
   function recoverWallet(recoveryId){
     var data = {recoveryId: recoveryId};
 
-    return $http.post(Options.WALLET_SERVER + '/wallet/show', data)
+    return $http.post(Options.WALLET_SERVER + '/recovery/show', data)
       .success(function(body) {
         if (body.data) {
           var recoveryKey = Wallet.deriveKey(recoveryId, $scope.userRecoveryCode, $scope.serverRecoveryCode);
