@@ -5,6 +5,26 @@ var Base = stellar.Base;
 // TODO: var iso4217 = require('../data/iso4217');
 // TODO: var webutil = require('../utilities/web');
 
+/**
+* Turn a stellar address into a username
+*/
+module.filter('addressToUsername', function (session) {
+    return function (input, options) {
+        var wallet = session.get('wallet');
+        if (!wallet.mainData.contacts) {
+            wallet.mainData.contacts = {};
+        }
+        if (wallet.mainData.contacts[input]) {
+          var contact = wallet.mainData.contacts[input];
+          if (contact.domain == Options.DEFAULT_FEDERATION_DOMAIN) {
+            return "@" + contact.destination;
+          } else {
+            return contact.destination + "@" + contact.domain;
+          }
+        }
+        return input;
+    };
+});
 
 /**
  * Format a ripple.Amount.

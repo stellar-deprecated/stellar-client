@@ -10,6 +10,7 @@ var sc = angular.module('stellarClient');
 sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', function($scope, $rootScope, $network) {
 
     $rootScope.balance=0;
+    $rootScope.accountStatus = 'connecting';
     $scope.events = [];
     $scope.history = [];
 
@@ -18,6 +19,7 @@ sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', function($scope, $r
     function reset()
     {
         $rootScope.balance=0;
+        $rootScope.accountStatus = 'connecting';
         $scope.events = [];
         $scope.history = [];
         /*
@@ -52,8 +54,16 @@ sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', function($scope, $r
 
         accountObj.entry(function (err, entry) {
             if (err) {
-                // XXX: Our account does not exist, we should do something with that
-                //      knowledge.
+                switch(err.remote.error) {
+                    case 'actNotFound':
+                        // The account is unfunded.
+                        $rootScope.accountStatus = 'unfunded';
+                        break;
+                    default:
+                        $rootScope.accountStatus = 'error';
+                }
+            } else {
+                $rootScope.accountStatus = 'loaded';
             }
         });
 

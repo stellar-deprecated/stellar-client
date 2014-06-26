@@ -221,7 +221,6 @@ sc.controller('RegistrationCtrl', function($scope, $state, $timeout, $http, sess
         var wallet = new Wallet({
           id: id,
           key: key,
-          recoveryId: response.data.recoveryId,
           keychainData: {
             authToken: response.data.authToken,
             updateToken: response.data.updateToken,
@@ -230,9 +229,13 @@ sc.controller('RegistrationCtrl', function($scope, $state, $timeout, $http, sess
           mainData: {
             username: $scope.username,
             email: $scope.email,
-            server: Options.server
+            server: Options.server,
+            contacts: {}
           }
         });
+
+        // add the default contact
+        wallet.mainData.contacts[Options.stellar_contact.destination_address] = Options.stellar_contact;
 
         // Upload the new wallet to the server.
         session.syncWallet(wallet, 'create');

@@ -1,9 +1,9 @@
 'use strict';
 // generated on 2014-04-24 using generator-gulp-webapp 0.0.8
 
-var gulp = require('gulp');
-var plumber = require('gulp-plumber');
-var exec = require('child_process').exec;
+var gulp        = require('gulp');
+var plumber     = require('gulp-plumber');
+var exec        = require('child_process').exec;
 var mergeStream = require('merge-stream');
 
 // load plugins
@@ -36,12 +36,34 @@ gulp.task('scripts', function () {
         .pipe($.size());
 });
 
-gulp.task('html', ['config', 'styles', 'scripts'], function () {
+gulp.task('templateCache', function() {
+    var templates = gulp.src('app/templates/**/*.html')
+        .pipe($.angularTemplatecache({
+            filename: 'scripts/templates.js',
+            root: 'templates',
+            module: 'stellarClient'
+        }))
+        .pipe(gulp.dest('.tmp'));
+
+    var states = gulp.src('app/states/**/*.html')
+        .pipe($.angularTemplatecache({
+            filename: 'scripts/states.js',
+            root: 'states',
+            module: 'stellarClient'
+        }))
+        .pipe(gulp.dest('.tmp'));
+
+    return mergeStream(templates, states)
+});
+
+gulp.task('html', ['config', 'styles', 'scripts', 'templateCache'], function () {
     var jsFilter = $.filter('**/*.js');
     var cssFilter = $.filter('**/*.css');
 
     return gulp.src('app/**/*.html')
-        .pipe($.useref.assets())
+        .pipe($.useref.assets({
+            searchPath: ['.tmp', 'app']
+        }))
         .pipe(jsFilter)
         .pipe($.ngmin())
         .pipe($.uglify())
@@ -107,7 +129,7 @@ gulp.task('connect', function () {
         });
 });
 
-gulp.task('serve', ['connect', 'styles'], function () {
+gulp.task('serve', ['connect', 'styles', 'templateCache'], function () {
     require('opn')('http://localhost:9000');
 });
 
@@ -138,6 +160,7 @@ gulp.task('watch', ['connect', 'serve'], function () {
         'app/*.html',
         '.tmp/styles/**/*.css',
         'app/scripts/**/*.js',
+        '.tmp/scripts/**/*.js',
         'app/images/**/*'
     ]).on('change', function (file) {
         server.changed(file.path);
@@ -147,6 +170,8 @@ gulp.task('watch', ['connect', 'serve'], function () {
     gulp.watch('app/scripts/**/*.js', ['scripts']);
     gulp.watch('app/images/**/*', ['images']);
     gulp.watch('app/icons/**/*', ['iconfont']);
+    gulp.watch('app/templates/**/*', ['templateCache']);
+    gulp.watch('app/states/**/*', ['templateCache']);
     gulp.watch('bower.json', ['wiredep']);
 });
 

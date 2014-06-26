@@ -2,10 +2,10 @@ var Wallet = function(options){
   this.id = options.id;
   this.key = options.key;
   this.recoveryId = options.recoveryId;
+  this.recoveryData = options.recoveryData || 'unrecoverable';
 
   this.keychainData = options.keychainData || {};
   this.mainData = options.mainData || {};
-  this.recoveryData = options.recoveryData || {};
 };
 
 /**
@@ -26,19 +26,52 @@ Wallet.decrypt = function(encryptedWallet, id, key){
   var rawKey = sjcl.codec.hex.toBits(key);
 
   var mainData = Wallet.decryptData(encryptedWallet.mainData, rawKey);
-  var recoveryData = Wallet.decryptData(encryptedWallet.recoveryData, rawKey);
   var keychainData = Wallet.decryptData(encryptedWallet.keychainData, rawKey);
 
   var options = {
     id:           id,
     key:          key,
     recoveryId:   encryptedWallet.recoveryId,
-    recoveryData: recoveryData,
+    recoveryData: encryptedWallet.recoveryData,
     mainData:     mainData,
     keychainData: keychainData
   };
 
   return new Wallet(options);
+};
+
+/**
+ * Decrypts a wallet using the recovery data.
+ *
+ * @param {object} encryptedWallet
+ * @param {string} encryptedWallet.id
+ * @param {string} encryptedWallet.recoveryId
+ * @param {string} encryptedWallet.mainData
+ * @param {string} encryptedWallet.keychainData
+ * @param {string} encryptedWallet.recoveryData
+ * @param {string} recoveryId
+ * @param {string} recoveryKey
+ *
+ * @returns {Wallet}
+ */
+Wallet.recover = function(encryptedWallet, recoveryId, recoveryKey){
+  var rawRecoveryKey = sjcl.codec.hex.toBits(recoveryKey);
+  var recoveryData = Wallet.decryptData(encryptedWallet.recoveryData, rawRecoveryKey);
+
+  return Wallet.decrypt(encryptedWallet, recoveryData.id, recoveryData.key);
+};
+
+/**
+ * Encrypts the wallet's id and key into the recoveryData and sets its the recoveryId.
+ *
+ * @param {string} recoveryId
+ * @param {string} recoveryKey
+ */
+Wallet.prototype.storeRecoveryData = function(recoveryId, recoveryKey){
+  var rawRecoveryKey = sjcl.codec.hex.toBits(recoveryKey);
+
+  this.recoveryId = recoveryId;
+  this.recoveryData = Wallet.encryptData({id: this.id, key: this.key}, rawRecoveryKey);
 };
 
 /**
@@ -50,19 +83,18 @@ Wallet.prototype.encrypt = function(){
   var rawKey = sjcl.codec.hex.toBits(this.key);
 
   var encryptedMainData = Wallet.encryptData(this.mainData, rawKey);
-  var encryptedRecoveryData = Wallet.encryptData(this.recoveryData, rawKey);
   var encryptedKeychainData = Wallet.encryptData(this.keychainData, rawKey);
 
   return {
     id:               this.id,
     authToken:        this.keychainData.authToken,
     recoveryId:       this.recoveryId,
+    recoveryData:     this.recoveryData,
+    recoveryDataHash: sjcl.codec.hex.fromBits(sjcl.hash.sha1.hash(this.recoveryData)),
     mainData:         encryptedMainData,
     mainDataHash:     sjcl.codec.hex.fromBits(sjcl.hash.sha1.hash(encryptedMainData)),
     keychainData:     encryptedKeychainData,
-    keychainDataHash: sjcl.codec.hex.fromBits(sjcl.hash.sha1.hash(encryptedKeychainData)),
-    recoveryData:     encryptedRecoveryData,
-    recoveryDataHash: sjcl.codec.hex.fromBits(sjcl.hash.sha1.hash(encryptedRecoveryData))
+    keychainDataHash: sjcl.codec.hex.fromBits(sjcl.hash.sha1.hash(encryptedKeychainData))
   };
 };
 

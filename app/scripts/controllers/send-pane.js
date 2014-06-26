@@ -941,6 +941,18 @@ sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout'
         tx.on('success', function (res) {
             $scope.onTransactionSuccess(res, tx);
 
+            // add the recipient federation info to the user's wallet
+            var wallet = session.get('wallet');
+            if (!wallet.mainData.contacts) {
+                wallet.mainData.contacts = {};
+            }
+            var contacts = wallet.mainData.contacts;
+            var federation_record = send.federation_record;
+            if (!contacts[federation_record.destination_address]) {
+                contacts[federation_record.destination_address] = federation_record;
+                session.syncWallet(wallet, "update");
+            }
+
             $rpTracker.track('Send result', {
                 'Status': 'success',
                 'Currency': $scope.send.currency_code,
