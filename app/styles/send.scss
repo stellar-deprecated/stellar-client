@@ -110,3 +110,20 @@
     color: $success;
   }
 }
+
+.send-form-status {
+  border-style: solid;
+  border-width: 1px;
+  border-color: $in-progress;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  text-align: center;
+  background-color: lighten($in-progress, 50%);
+}
+
+// UGH:  due to the fact that we override padding on form inputs, thus 
+// destroying compatibility witht the bootstrap grid, we have to remove
+// padding here as well
+.send-form-status-container {
+  padding: 0;
+}

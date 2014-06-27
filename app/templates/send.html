@@ -11,7 +11,7 @@
 <div ng-show="mode=='unfunded'" class="send-error unfunded">
     <p l10n="l10n" class="literal">You have to be funded before you can send money</p>
 </div>
-<form name="sendForm" id="sendForm" role="form" ng-show="mode=='form'" ng-submit="send_prepared()" class="row-padding-small mode-form stellar-form">
+<form name="sendForm" role="form" ng-show="mode=='form'" ng-submit="send_prepared()" class="stellar-form">
     <div class="form-group">
         <div rp-errors="send_amount" class="errors col-sm-12">
             <div rp-error-on="required" l10n="l10n" class="tip col-sm-offset-6 col-sm-3">Please enter an amount.</div>
@@ -91,63 +91,38 @@
             </div>
         </div>
     </div>
-    <!--
-    <ul class="tagsLinks">
-        <li><a href="" ng-click="send.show_dt_field = true" ng-hide="send.show_dt_field || send.bitcoin || send.federation" l10n="l10n">Add Destination tag</a></li>
-    </ul>  -->
+    <div class="row">
+        <div class="col-sm-6 col-sm-offset-3 send-form-status-container">
+            <p ng-show="send.fund_status == 'insufficient-xtr'" class="send-form-status">
+                Destination account is unfunded; send at least
+                {{send.xtr_deficiency | rpamount}} XTR to fund it.
+                <a href="https://wiki.gostellar.org/Reserves" target="_blank" l10n="l10n">More information</a>
+            </p>
+            <p ng-show="account.max_spend.to_number() < send.amount * 1000000" l10n="l10n" class="send-form-status">
+                You need a reserve amount of 50 Stellars to send. <a href="https://wiki.gostellar.org/Reserves" target="_blank" l10n="l10n">More information</a>
+            </p>
+            <p ng-show="send.path_status == 'checking'" class="send-form-status">Checking</p>
+            <p ng-show="send.path_status == 'fed-check'" class="send-form-status">Analyzing address</p>
+            <p ng-show="send.path_status == 'bridge-quote'" class="send-form-status">Requesting quote</p>
+            <p ng-show="send.path_status == 'pending' && send.currency_code != 'XTR'" class="send-form-status">Calculating paths</p>
+
+            <p ng-show="send.path_status == 'no-path' && send.currency_code != 'XTR'" class="send-form-status">
+                Sorry! Cannot send {{send.amount}} {{send.currency}} to
+                {{send.recipient}}. Please make sure your account has enough funds,
+                and the recipient has enough trust to the currency issuer. If it still
+                doesn't work, try again later.
+            </p>
+
+            <p ng-show="send.path_status == 'error-quote'" class="send-form-status">Error while retrieving quote for outbound payment.<span ng-show="send.quote_error"> The outbound bridge reported: "{{send.quote_error | rpheavynormalize}}"</span></p>
+            <p ng-show="send.path_status == 'error'" class="send-form-status">Error while calculating path</p>
+        </div>
+    </div>
     <div class="row">
         <div ng-show="send.currency_code == 'XTR'">
             <button type="submit" ng-disabled="sendForm.$invalid || send.self || !send.recipient_resolved || account.max_spend.to_number() < send.amount * 1000000 || send.fund_status !== 'none'" l10n="l10n" class="btn btn-default submit col-sm-offset-3 col-sm-6 stellar-button">Send</button>
         </div>
     </div>
-    <div class="remote">
-        <p ng-show="send.fund_status == 'insufficient-xtr'" l10n="l10n" class="literal">
-            Destination account is unfunded; send at least
-            {{send.xtr_deficiency | rpamount}} XTR to fund it.<a href="https://wiki.gostellar.org/Reserves" target="_blank" l10n="l10n">More information</a>
-        </p>
-        <p ng-show="send.fund_status == 'invalid'" l10n="l10n" class="literal">
-            Send amount must be a number.
-        </p>
-        <p ng-show="account.max_spend.to_number() < send.amount * 1000000" l10n="l10n" class="literal">
-            You need a reserve amount of 50 Stellars to send. <a href="https://wiki.gostellar.org/Reserves" target="_blank" l10n="l10n">More information</a>
-        </p>
-        <p ng-show="send.path_status == 'checking'" rp-spinner="4" l10n="l10n" class="literal">Checking</p>
-        <p ng-show="send.path_status == 'fed-check'" rp-spinner="4" l10n="l10n" class="literal">Analyzing address</p>
-        <p ng-show="send.path_status == 'bridge-quote'" rp-spinner="4" l10n="l10n" class="literal">Requesting quote</p>
-        <p ng-show="send.path_status == 'pending' && send.currency_code != 'XTR'" rp-spinner="4" l10n="l10n" class="literal">Calculating paths</p>
-        <!--
-        <p ng-show="send.path_status == 'pending' && send.currency_code == 'XTR'" rp-spinner="4" l10n="l10n" class="literal">Calculating alternatives</p>
-        -->
-        <p ng-show="send.path_status == 'no-path' && send.currency_code != 'XTR'" l10n="l10n" class="literal">
-            Sorry! Cannot send {{send.amount}} {{send.currency}} to
-            {{send.recipient}}. Please make sure your account has enough funds,
-            and the recipient has enough trust to the currency issuer. If it still
-            doesn't work, try again later.
-        </p>
-        <p ng-show="send.path_status == 'error-quote'" l10n="l10n" class="literal">Error while retrieving quote for outbound payment.<span ng-show="send.quote_error"> The outbound bridge reported: "{{send.quote_error | rpheavynormalize}}"</span></p>
-        <p ng-show="send.path_status == 'error'" l10n="l10n" class="literal">Error while calculating path</p>
-        <div ng-if="send.path_status == 'done'" class="currency_sets">
-            <div class="row row-padding-small">
-                <div class="col-xs-12">
-                    <p ng-show="send.currency_code != 'XTR' || send.bitcoin" l10n="l10n" class="literal">You can send</p>
-                    <p ng-show="send.currency_code == 'XTR' && !send.bitcoin" l10n="l10n" class="literal">Or you can send</p>
-                </div>
-            </div>
-            <div ng-show="send.alternatives.length" class="row row-padding-small alternatives">
-                <div ng-repeat="alt in send.alternatives" class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-                    <div class="margin">
-                        <div class="am"><span class="amnt">{{alt.amount | rpamount:{rel_precision: 4, rel_min_precision: 2} }}</span><span class="currency">{{alt.amount | rpcurrency }}</span>
-                            <div class="ex">(<span class="rate">{{alt.rate | rpamount:{rel_precision: 4, rel_min_precision: 2} }}</span><span class="pair">{{send.currency_code}}/{{alt.amount | rpcurrency}}</span>)</div>
-                        </div>
-                        <button type="submit" ng-disabled="sendForm.$invalid" ng-click="send.alt = alt" l10n="l10n" class="btn btn-block btn-success">Send {{ alt.amount | rpcurrency }}</button>
-                    </div>
-                </div>
-            </div>
-            <div ng-show="send.alternatives.length && lastUpdate" class="row row-padding-small pathupdate">
-                <div l10n="l10n" class="col-xs-12">Paths last updated<span> {{lastUpdate}}</span><span ng-show="lastUpdate &gt; '1'" l10n-inc="l10n-inc"> seconds</span><span ng-show="lastUpdate == '1'" l10n-inc="l10n-inc"> second</span> ago</div>
-            </div>
-        </div>
-    </div>
+
 </form>
 <group ng-show="mode=='wait_path'" class="mode-wait-path">
     <p rp-spinner="4" l10n="l10n" class="literal">Stellar is calculating a path for your payment.</p>
