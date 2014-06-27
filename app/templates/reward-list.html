@@ -1,0 +1,8 @@
+<ul class="reward-list" ng-class="{active: selectedReward == null}">
+    <li ng-repeat="reward in sortedRewards" ng-class="reward.status" selected-index="selectedReward">
+        <div class="reward-body" ng-click="toggleReward($index, reward.status)">
+            <i ng-class="rewardStatusIcons[reward.status]"></i>
+            <span>{{ reward.error.panel || reward.title }}</span>
+        </div>
+    </li>
+</ul>

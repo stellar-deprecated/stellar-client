@@ -1,0 +1,124 @@
+.reward-list {
+  padding-left: 0;
+  margin-left: -110%;
+  @include transition(margin-left 350ms ease-in-out);
+
+  &.active {
+    margin-left: 0%;
+  }
+
+  li {
+    margin: 3px 0;
+    padding: 0 0;
+    font-weight: $avenir-medium;
+    font-size: 20px;
+    list-style-type: none;
+    cursor: pointer;
+    position: relative;
+    overflow: visible;
+    white-space: nowrap;
+    @include transition(border-color 350ms ease-in-out,
+            color 350ms ease-in-out,
+            background-color 350ms ease-in-out);
+
+    i {
+      padding-right: 20px;
+      font-size: 20px;
+      @include transition(color 200ms ease-in-out);
+    }
+
+    &.incomplete, &.unverified {
+      background-color: white;
+      border: 1px solid rgba($stellar-blue, 0);
+
+      i {
+        color: $grey;
+      }
+
+      &:hover {
+        border: 1px solid rgba($stellar-blue, 1);
+
+        i {
+          color: $stellar-blue;
+        }
+
+        .pop-action {
+          //display: block;
+        }
+      }
+    }
+
+    &.sent,
+    &.awaiting_payout,
+    &.ineligible {
+      background-color: #F9F9F9;
+      color: $info-grey;
+      cursor: default;
+
+      i {
+        color: $info-grey;
+      }
+    }
+
+    .reward-body {
+      padding: 28px 30px;
+    }
+
+    .pop-action {
+      border: 1px solid #D0D0D0;
+      border-radius: 3px;
+      width: 450px;
+      position: absolute;
+      right: 50px;
+      top: -10px;
+      z-index: 99;
+      cursor: default;
+      box-shadow: 0 0 5px 2px rgba($grey, 0.2);
+      display: none;
+      @include transition(opacity 200ms ease-in-out);
+
+      & > div {
+        padding: 15px 35px;
+      }
+
+      &:before,
+      &:after {
+        content: "";
+        position: absolute;
+        border-top: 10px solid transparent;
+        border-bottom: 10px solid transparent;
+        top: 42px;
+        left: 0;
+        margin-left: -10px;
+      }
+
+      &:before {
+        border-right: 10px solid #D0D0D0;
+      }
+
+      &:after {
+        border-right: 10px solid #FFF6D5;
+        padding-left: 2px;
+        z-index: 1;
+      }
+
+      .pop-top {
+        background-color: #FFF6D5;
+        border-top-left-radius: 3px;
+        border-top-right-radius: 3px;
+
+        .title {
+          font-weight: $avenir-heavy;
+          padding-top: 10px;
+          padding-bottom: 10px;
+          font-size: 16px;
+        }
+
+        .message {
+          font-weight: $avenir-medium;
+          font-size: 16px;
+        }
+      }
+    }
+  }
+}
