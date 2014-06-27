@@ -1,0 +1,40 @@
+.rewardProgress {
+  padding-left: 0;
+  width: 100%;
+  display: table;
+  margin: 10px auto 30px auto;
+  border: 1px solid $stellar-blue;
+  background-color: white;
+  border-radius: 31px;
+
+  li {
+    list-style-type: none;
+    display: inline-block;
+    width: 25%;
+    text-align: center;
+    padding: 5px 0;
+
+    &.sent,
+    &.awaiting_payout {
+      background-color: #DBF2F8;
+    }
+
+    &:first-child {
+      border-top-left-radius: 31px;
+      border-bottom-left-radius: 31px;
+    }
+
+    &:last-child {
+      border-top-right-radius: 31px;
+      border-bottom-right-radius: 31px;
+    }
+
+    &:not(:last-child) {
+      border-right: 1px solid $light-grey;
+    }
+
+    .glyphicon {
+      top: 3px;
+    }
+  }
+}

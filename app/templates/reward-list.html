@@ -1,14 +1,8 @@
-<ul class="rewards" ng-class="{active: selectedReward == null}">
+<ul class="reward-list" ng-class="{active: selectedReward == null}">
     <li ng-repeat="reward in sortedRewards" ng-class="reward.status" selected-index="selectedReward">
         <div class="reward-body" ng-click="toggleReward($index, reward.status)">
             <i ng-class="rewardStatusIcons[reward.status]"></i>
             <span>{{ reward.error.panel || reward.title }}</span>
-        </div>
-        <div class="pop-action" ng-if="reward.status == 'incomplete'">
-            <div class="pop-top">
-                <p class="title">{{ reward.title }}</p>
-                <p class="message">{{ reward.action.message }}</p>
-            </div>
         </div>
     </li>
 </ul>
