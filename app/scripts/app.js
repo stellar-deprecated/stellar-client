@@ -33,6 +33,11 @@ stellarClient.config(function($httpProvider, $stateProvider, $urlRouterProvider)
       templateUrl: 'states/dashboard.html',
       authenticate: true
     })
+    .state('change_password', {
+      url:         '/change_password',
+      templateUrl: 'states/change_password.html',
+      authenticate: true
+    })
     .state('settings', {
       url:         '/settings',
       templateUrl: 'states/settings.html',

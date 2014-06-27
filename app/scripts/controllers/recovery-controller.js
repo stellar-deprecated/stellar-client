@@ -71,7 +71,7 @@ sc.controller('RecoveryCtrl', function($scope, $state, $http, $timeout, session)
           var wallet = Wallet.recover(body.data, recoveryId, recoveryKey);
 
           session.login(wallet);
-          $state.go('dashboard');
+          $state.go('change_password');
         } else {
           $scope.recoveryError = 'An error occurred.';
         }

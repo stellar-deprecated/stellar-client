@@ -52,7 +52,11 @@ Wallet.recover = function(encryptedWallet, recoveryId, recoveryKey){
   var rawRecoveryKey = sjcl.codec.hex.toBits(recoveryKey);
   var recoveryData = Wallet.decryptData(encryptedWallet.recoveryData, rawRecoveryKey);
 
-  return Wallet.decrypt(encryptedWallet, recoveryData.id, recoveryData.key);
+  var wallet = Wallet.decrypt(encryptedWallet, recoveryData.id, recoveryData.key);
+  wallet.recoveryId = recoveryId;
+  wallet.recoveryKey = recoveryKey;
+
+  return wallet;
 };
 
 /**
