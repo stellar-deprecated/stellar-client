@@ -44,7 +44,7 @@ function fbLoginStart(http, username, updateToken, success, error){
       FB.login(function(){
         handleFBSessionResponse(http, data, success, error);
      // LATER }, {scope: 'user_status'});
-      }, {});  // TEMP while we aren't checking how old the account is
+      }, { auth_type: 'reauthenticate' });
     }
   });
 }
