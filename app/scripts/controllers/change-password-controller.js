@@ -65,11 +65,26 @@ sc.controller('ChangePasswordCtrl', function($scope, $state, $timeout, $http, se
       .then(function(){
         return replaceWallet(oldWallet, newWallet);
       })
+      .then(function(){
+        return copyRecoveryData(oldWallet, newWallet);
+      })
       .finally(function(){
+        session.logOut();
         session.login(newWallet);
         $state.go('dashboard');
       });
   };
+
+  function copyRecoveryData(oldWallet, newWallet){
+    if (!oldWallet.recoveryId || !oldWallet.recoveryKey) {
+      // TODO: Get the userRecoveryCode and serverRecoveryCode so that we can build the recoveryData
+      //   when a user is changing the password without going through password recovery.
+      return;
+    }
+
+    var data = newWallet.createRecoveryData(oldWallet.recoveryId, oldWallet.recoveryKey);
+    return $http.post(Options.WALLET_SERVER + '/wallets/create_recovery_data', data);
+  }
 
   function replaceWallet(oldWallet, newWallet){
     var data = {
