@@ -6,6 +6,7 @@ var plumber     = require('gulp-plumber');
 var exec        = require('child_process').exec;
 var mergeStream = require('merge-stream');
 var git         = require('git-rev');
+var karma       = require('karma').server;
 
 // load plugins
 var $ = require('gulp-load-plugins')();
@@ -230,5 +231,23 @@ gulp.task('serve-dist', ['connect-dist'], function() {
     require('opn')('http://localhost:9001');
 })
 
+
+gulp.task('test', function (done) {
+    karma.start({
+        browsers: ['PhantomJS'],
+        frameworks: ['mocha', 'sinon-chai'],
+        reporters: ['dots'],
+        files: [
+            'app/scripts/libraries/stellar-0.7.35.js',
+            'app/scripts/utilities/sjcl.js',
+            'app/scripts/libraries/sjcl-scrypt.js',
+
+            'app/scripts/utilities/wallet.js',
+            'test/helper.js',
+            'test/unit/**/*.spec.js'
+        ],
+        singleRun: true
+    }, done);
+});
 
 
