@@ -30,6 +30,9 @@ var Options = {
     PERSISTENT_SESSION : false,
     ALPHA_PHASE : true,
 
+
+    REPORT_ERRORS : true,
+
     // Number of transactions each page has in balance tab notifications
     transactions_per_page: 50
 };

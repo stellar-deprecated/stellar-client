@@ -21,6 +21,10 @@
     <link rel="stylesheet" href="styles/main.css">
     <!-- endbuild -->
 
+    <script src="https://cdn.ravenjs.com/1.1.15/jquery,native/raven.min.js"></script>
+    <script>
+        Raven.config('https://5c08986e949742d2bb29e1ffac78e50a@app.getsentry.com/26645', {}).install()
+    </script>
     <!-- build:js scripts/vendor/modernizr.js -->
     <script src="bower_components/modernizr/modernizr.js"></script>
     <!-- endbuild -->
@@ -99,6 +103,7 @@
 <script src="bower_components/moment/moment.js"></script>
 <script src="bower_components/angular-moment/angular-moment.js"></script>
 <script src="bower_components/lodash/dist/lodash.js"></script>
+<script src="bower_components/angular-raven/angular-raven.js"></script>
 <!-- endbuild -->
 
 <!-- build:js scripts/plugins.js -->
