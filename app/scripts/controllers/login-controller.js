@@ -9,7 +9,6 @@ sc.controller('LoginCtrl', function($scope, $state, $http, $timeout, session, si
 
   $scope.username   = null;
   $scope.password   = null;
-  $scope.loggingIn  = false;
   $scope.loginError = null;
 
   $scope.attemptLogin = singletonPromise(function() {
