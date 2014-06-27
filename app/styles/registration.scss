@@ -3,105 +3,12 @@ $input-border-color: #cccccc;
 $input-border-focus-color: #66afe9;
 
 .registration {
-  .title {
-
-  }
-
-  .info {
-    padding-left: 0;
-
-    .status {
-      width: 40px;
-      height: 40px;
-
-      &.glyphicon {
-        padding: 12px 12px;
-      }
-
-      &.glyphicon-none:before {
-        content: "\e013";
-        opacity: 0;
-      }
-    }
-  }
-
   .terms .tip {
     margin-top: 20px;
     margin-bottom: 10px;
 
     a {
       color: $stellar-blue;
-    }
-  }
-
-  .description {
-    display: inline-block;
-    float: right;
-    font-size: 11px;
-    color: $grey;
-    margin-top: 5px;
-  }
-
-  .password-strength {
-    display: inline-block;
-    width: 66%;
-
-    .block1,
-    .block2,
-    .block3,
-    .block4 {
-      @include transition(background-color 200ms ease-in-out, opacity 200ms ease-in-out);
-      margin-right: 2px;
-      background-color: white;
-    }
-
-    &.null {
-      .block1,
-      .block2,
-      .block3,
-      .block4 {
-        opacity: 0;
-      }
-    }
-
-    &.level1 {
-      .block1 {
-        background-color: $error;
-      }
-    }
-
-    &.level2 {
-      .block1,
-      .block2 {
-        background-color: orange;
-      }
-    }
-
-    &.level3 {
-      .block1,
-      .block2,
-      .block3 {
-        background-color: $success;
-      }
-    }
-
-    &.level4 {
-      .block1,
-      .block2,
-      .block3,
-      .block4 {
-        background-color: $stellar-blue;
-      }
-    }
-
-    .block1,
-    .block2,
-    .block3,
-    .block4 {
-      display: inline-block;
-      padding: 0;
-      width: 22%;
-      height: 4px;
     }
   }
 

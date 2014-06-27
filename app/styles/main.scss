@@ -15,6 +15,7 @@ $mobile-width: 950px;
 @import "dashboard.scss";
 @import "registration.scss";
 @import "browser_unsupported.scss";
+@import "password.scss";
 @import "transactionHistory.scss";
 @import "reward-pane.scss";
 @import "pane.scss";
@@ -115,6 +116,24 @@ body {
       font-size: 14px;
       color: $info-grey;
       line-height: 42px;
+    }
+
+    .info {
+      padding-left: 0;
+
+      .status {
+        width: 40px;
+        height: 40px;
+
+        &.glyphicon {
+          padding: 12px 12px;
+        }
+
+        &.glyphicon-none:before {
+          content: "\e013";
+          opacity: 0;
+        }
+      }
     }
 
     button {
