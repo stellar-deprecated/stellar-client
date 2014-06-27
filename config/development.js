@@ -12,6 +12,7 @@ var Options = {
         "track": false
     },
 
+
     stellar_contact: {
         destination: "stellarfairy",
         destination_address: "gpjh5ZsnpfLy1FYD8V9b7oNbwZqXMFF7Ha",
@@ -29,6 +30,9 @@ var Options = {
     // intended for developers, be careful about using this in a real setting.
     PERSISTENT_SESSION : true,
     ALPHA_PHASE : true,
+
+
+    REPORT_ERRORS : false,
 
     // Number of transactions each page has in balance tab notifications
     transactions_per_page: 50
