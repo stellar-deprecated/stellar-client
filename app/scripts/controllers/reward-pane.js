@@ -289,7 +289,7 @@ sc.controller('RewardPaneCtrl', ['$http', '$scope', '$rootScope', 'session', 'st
             data.transactions.forEach(function (e) {
               var processedTxn = JsonRewriter.processTxn(e.tx, e.meta, account);
               var transaction = processedTxn.transaction;
-              if (transaction.type == "sent" && $scope.rewards[3].status == "incomplete" && requestStellars) {
+              if (transaction && transaction.type == "sent" && $scope.rewards[3].status == "incomplete" && requestStellars) {
                 requestSentStellarsReward();
                 requestStellars = false;
               }

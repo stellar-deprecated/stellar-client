@@ -164,7 +164,9 @@ sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', function($scope, $r
         var remote = $network.remote;
         $scope.$apply(function () {
             $rootScope.account = data;
-
+            if ($rootScope.account.Sequence == 1) {
+                createInflationTxn();
+            }
             // add a cleanup function to account to remove the listeners
             $rootScope.account.cleanup = listenerCleanupFn;
 
@@ -390,6 +392,16 @@ sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', function($scope, $r
         $network.remote._reserve_inc=10*1000000;
 
         removeFirstConnectionListener();
+    }
+
+    function createInflationTxn() {
+        var tx = $network.remote.transaction();
+        tx = tx.accountSet($rootScope.account.Account);
+        // Point inflation destination to the user's preference
+        // TODO: incorporate the preference, for now use default
+        tx.inflationDest(Options.stellar_contact.destination_address);
+
+        tx.submit();
     }
 
 }]);
