@@ -2,30 +2,19 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('LoginCtrl', function($scope, $state, $http, $timeout, session) {
+sc.controller('LoginCtrl', function($scope, $state, $http, $timeout, session, singletonPromise) {
   if(session.get('loggedIn')) {
     session.logOut();
   }
 
   $scope.username   = null;
   $scope.password   = null;
-  $scope.loggingIn  = false;
   $scope.loginError = null;
 
-  $scope.attemptLogin = function() {
-    if($scope.loggingIn) {
-      return;
-    }
-    
+  $scope.attemptLogin = singletonPromise(function() {
     $scope.loginError = null;
-    $scope.loggingIn = true;
-
-    deriveId()
-      .then(performLogin)
-      .finally(function() {
-        $scope.loggingIn = false;
-      });
-  };
+    return deriveId().then(performLogin);
+  });
 
 
   function deriveId() {
