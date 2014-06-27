@@ -1,56 +1,8 @@
 <div class="reward-container ng-hide" ng-show="showRewards" ng-controller="RewardPaneCtrl">
-    <div>
-        <div>
-            <div class="reward-container-title">Receive new Stellars</div>
-            <ul class="rewardProgress">
-                <li ng-repeat="item in rewardProgress track by $index" ng-class="item" >
-                    <i ng-class="rewardStatusIcons[item]"></i>
-                </li>
-            </ul>
-            <div class="reward-pane">
-                <ul class="rewards" ng-class="{active: selectedReward == null}">
-                    <li ng-repeat="reward in sortedRewards" ng-class="reward.status" selected-index="selectedReward">
-                        <div class="reward-body" ng-click="toggleReward($index, reward.status)">
-                            <i ng-class="rewardStatusIcons[reward.status]"></i>
-                            <span>{{ reward.error.panel || reward.title }}</span>
-                        </div>
-                        <div class="pop-action" ng-if="reward.status == 'incomplete'">
-                            <div class="pop-top">
-                                <p class="title">{{ reward.title }}</p>
-                                <p class="message">{{ reward.action.message }}</p>
-                            </div>
-                        </div>
-                    </li>
-                </ul>
-                <div ng-repeat="reward in sortedRewards" class="reward-page" ng-class="{active: selectedReward == $index, error: !!reward.error}">
-                    <div class="pane-close" ng-click="closeReward()">
-                        <span>Close</span>
-                        <i class="icon icon-times-circle-thin"></i>
-                    </div>
-                    <div class="reward-container-title">
-                        <i class="glyphicon glyphicon-lock"></i>
-                        {{ reward.title }}
-                    </div>
-                    <div class="content" ng-class="{active: !reward.error}">
-                        <div class="body">
-                            {{ reward.action.message }}
-                        </div>
-                        <div class="info">
-                            {{ reward.action.info }}
-                        </div>
-                        <div ng-include="reward.action.template"></div>
-                    </div>
-                    <div class="error" ng-class="{active: !!reward.error}">
-                        <div class="body">
-                            {{ reward.error.body }}
-                        </div>
-                        <div class="info">
-                            {{ reward.error.info }}
-                        </div>
-                        <ng-include src="'templates/reward-error-button.html'"/>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="reward-container-title">Receive new Stellars</div>
+    <div ng-include="'templates/reward-progress.html'"></div>
+    <div class="reward-pane">
+        <div ng-include src="'templates/reward-list.html'"></div>
+        <div ng-include="'templates/reward-pages.html'"></div>
     </div>
 </div>
