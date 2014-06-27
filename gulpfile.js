@@ -5,6 +5,7 @@ var gulp        = require('gulp');
 var plumber     = require('gulp-plumber');
 var exec        = require('child_process').exec;
 var mergeStream = require('merge-stream');
+var git         = require('git-rev');
 
 // load plugins
 var $ = require('gulp-load-plugins')();
@@ -56,26 +57,33 @@ gulp.task('templateCache', function() {
     return mergeStream(templates, states)
 });
 
-gulp.task('html', ['config', 'styles', 'scripts', 'templateCache'], function () {
-    var jsFilter = $.filter('**/*.js');
-    var cssFilter = $.filter('**/*.css');
+gulp.task('html', ['config', 'styles', 'scripts', 'templateCache'], function (done) {
+    git.long(function (revision) {
 
-    return gulp.src('app/**/*.html')
-        .pipe($.useref.assets({
-            searchPath: ['.tmp', 'app']
-        }))
-        .pipe(jsFilter)
-        .pipe($.ngmin())
-        .pipe($.uglify())
-        .pipe(jsFilter.restore())
-        .pipe(cssFilter)
-        .pipe($.replace('bower_components/bootstrap-sass-official/vendor/assets/fonts/bootstrap','fonts'))
-        .pipe($.csso())
-        .pipe(cssFilter.restore())
-        .pipe($.useref.restore())
-        .pipe($.useref())
-        .pipe(gulp.dest('dist'))
-        .pipe($.size());
+        var jsFilter = $.filter('**/*.js');
+        var cssFilter = $.filter('**/*.css');
+
+        gulp.src('app/**/*.html')
+            .pipe($.useref.assets({
+                searchPath: ['.tmp', 'app']
+            }))
+
+            .pipe(jsFilter)
+            .pipe($.replace('_GIT_REVISION_GOES_HERE_',revision))
+            .pipe($.ngmin())
+            .pipe($.uglify())
+            .pipe(jsFilter.restore())
+            .pipe(cssFilter)
+            .pipe($.replace('bower_components/bootstrap-sass-official/vendor/assets/fonts/bootstrap','fonts'))
+            .pipe($.csso())
+            .pipe(cssFilter.restore())
+            .pipe($.useref.restore())
+            .pipe($.useref())
+
+            .pipe(gulp.dest('dist'))
+            .pipe($.size())
+            .once('end', done);
+    });
 });
 
 gulp.task('images', function () {
