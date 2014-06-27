@@ -1,13 +1,13 @@
-<div class="reward-pane ng-hide" ng-show="showRewards" ng-controller="RewardPaneCtrl">
+<div class="reward-container ng-hide" ng-show="showRewards" ng-controller="RewardPaneCtrl">
     <div>
         <div>
-            <div class="title">Receive new Stellars</div>
+            <div class="reward-container-title">Receive new Stellars</div>
             <ul class="rewardProgress">
                 <li ng-repeat="item in rewardProgress track by $index" ng-class="item" >
                     <i ng-class="rewardStatusIcons[item]"></i>
                 </li>
             </ul>
-            <div class="slider-pane">
+            <div class="reward-pane">
                 <ul class="rewards" ng-class="{active: selectedReward == null}">
                     <li ng-repeat="reward in sortedRewards" ng-class="reward.status" selected-index="selectedReward">
                         <div class="reward-body" ng-click="toggleReward($index, reward.status)">
@@ -22,13 +22,12 @@
                         </div>
                     </li>
                 </ul>
-                <div ng-repeat="reward in sortedRewards" class="reward-page"
-                    ng-class="{active: selectedReward == $index, error: !!reward.error}">
+                <div ng-repeat="reward in sortedRewards" class="reward-page" ng-class="{active: selectedReward == $index, error: !!reward.error}">
                     <div class="pane-close" ng-click="closeReward()">
                         <span>Close</span>
                         <i class="icon icon-times-circle-thin"></i>
                     </div>
-                    <div class="reward-pane-title">
+                    <div class="reward-container-title">
                         <i class="glyphicon glyphicon-lock"></i>
                         {{ reward.title }}
                     </div>

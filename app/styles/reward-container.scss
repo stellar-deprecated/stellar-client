@@ -1,10 +1,10 @@
-.reward-pane {
+.reward-container {
   background-color: #F4F5F7;
   color: $dark-grey;
   padding-bottom: 30px !important;
 
-  .reward-pane-title {
-   font-weight: $avenir-heavy;
+  .reward-container-title {
+    font-weight: $avenir-heavy;
     font-size: 20px;
     height: 70px;
     line-height: 70px;
@@ -56,7 +56,7 @@
     }
   }
 
-  .slider-pane {
+  .reward-pane {
     position: relative;
     overflow: hidden;
     padding: 1px;
