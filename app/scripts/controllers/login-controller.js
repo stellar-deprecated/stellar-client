@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('LoginCtrl', function($scope, $state, $http, $timeout, session, singletonPromise) {
+sc.controller('LoginCtrl', function($scope, $state, $http, $timeout, $q, session, singletonPromise) {
   if(session.get('loggedIn')) {
     session.logOut();
   }
@@ -13,9 +13,11 @@ sc.controller('LoginCtrl', function($scope, $state, $http, $timeout, session, si
 
   $scope.attemptLogin = singletonPromise(function() {
     $scope.loginError = null;
+    if (!$scope.username || !$scope.password) {
+      return $q.reject("Username or password cannot be blank");
+    }
     return deriveId().then(performLogin);
   });
-
 
   function deriveId() {
     //TODO: actually make Wallet.deriveId Promiseable
