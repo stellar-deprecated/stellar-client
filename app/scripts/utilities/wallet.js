@@ -138,7 +138,7 @@ Wallet.SETTINGS = {
 
 Wallet.deriveId = function(username, password){
   var credentials = username.toLowerCase() + password;
-  var salt = credentials;
+  var salt = sjcl.codec.utf8String.toBits(credentials);
 
   var id = sjcl.misc.scrypt(
     credentials,
@@ -154,7 +154,7 @@ Wallet.deriveId = function(username, password){
 
 Wallet.deriveKey = function(id, username, password){
   var credentials = username.toLowerCase() + password;
-  var salt = credentials;
+  var salt = sjcl.codec.utf8String.toBits(credentials);
 
   var key = sjcl.misc.scrypt(
     id + credentials,
