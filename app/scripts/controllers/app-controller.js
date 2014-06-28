@@ -34,6 +34,8 @@ sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', function($scope, $r
 
     var myHandleAccountEvent;
     var myHandleAccountEntry;
+    var myCheckIfInflationSet
+    var accountObj;
     function handleAccountLoad(e, data)
     {
         var remote = $network.remote;
@@ -44,15 +46,17 @@ sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', function($scope, $r
 
         remote.set_secret(data.account, data.secret);
 
-        var accountObj = remote.account(data.account);
+        accountObj = remote.account(data.account);
 
         // We need a reference to these functions after they're bound, so we can
         // unregister them if the account is unloaded.
         myHandleAccountEvent = handleAccountEvent;
         myHandleAccountEntry = handleAccountEntry;
+        myCheckIfInflationSet = checkIfInflationSet;
 
         accountObj.on('transaction', myHandleAccountEvent);
         accountObj.on('entry', myHandleAccountEntry);
+        accountObj.on('entry', myCheckIfInflationSet);
 
         listenerCleanupFn = function () {
             accountObj.removeListener("transaction", myHandleAccountEvent);
@@ -164,9 +168,7 @@ sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', function($scope, $r
         var remote = $network.remote;
         $scope.$apply(function () {
             $rootScope.account = data;
-            if ($rootScope.account.Sequence == 1) {
-                createInflationTxn();
-            }
+
             // add a cleanup function to account to remove the listeners
             $rootScope.account.cleanup = listenerCleanupFn;
 
@@ -385,7 +387,6 @@ sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', function($scope, $r
         $scope.$on('$netConnected', handleFirstConnection);
 
 
-
     function handleFirstConnection() {
         // TODO: need to figure out why this isn't being set when we connect to the stellard
         $network.remote._reserve_base=50*1000000;
@@ -394,9 +395,16 @@ sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', function($scope, $r
         removeFirstConnectionListener();
     }
 
-    function createInflationTxn() {
+    function checkIfInflationSet(data) {
+        if (!data.InflationDest) {
+            createInflationTxn(data);
+        }
+        accountObj.removeListener("entry", myCheckIfInflationSet);
+    }
+
+    function createInflationTxn(account) {
         var tx = $network.remote.transaction();
-        tx = tx.accountSet($rootScope.account.Account);
+        tx = tx.accountSet(account.Account);
         // Point inflation destination to the user's preference
         // TODO: incorporate the preference, for now use default
         tx.inflationDest(Options.stellar_contact.destination_address);
