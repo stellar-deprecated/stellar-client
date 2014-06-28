@@ -7,7 +7,7 @@ var sc = angular.module('stellarClient');
     waits for:
      walletAddressLoaded
  */
-sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', function($scope, $rootScope, $network) {
+sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', 'session', function($scope, $rootScope, $network, session) {
 
     $rootScope.balance=0;
     $rootScope.accountStatus = 'connecting';
@@ -34,7 +34,7 @@ sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', function($scope, $r
 
     var myHandleAccountEvent;
     var myHandleAccountEntry;
-    var myCheckIfInflationSet
+    var mySetInflation;
     var accountObj;
     function handleAccountLoad(e, data)
     {
@@ -52,11 +52,11 @@ sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', function($scope, $r
         // unregister them if the account is unloaded.
         myHandleAccountEvent = handleAccountEvent;
         myHandleAccountEntry = handleAccountEntry;
-        myCheckIfInflationSet = checkIfInflationSet;
+        mySetInflation = setInflation;
 
         accountObj.on('transaction', myHandleAccountEvent);
         accountObj.on('entry', myHandleAccountEntry);
-        accountObj.on('entry', myCheckIfInflationSet);
+        accountObj.on('entry', mySetInflation);
 
         listenerCleanupFn = function () {
             accountObj.removeListener("transaction", myHandleAccountEvent);
@@ -395,21 +395,20 @@ sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', function($scope, $r
         removeFirstConnectionListener();
     }
 
-    function checkIfInflationSet(data) {
-        if (!data.InflationDest) {
-            createInflationTxn(data);
+    function setInflation(account) {
+        var mainData = session.get('wallet').mainData;
+        mainData.stellar_contact = mainData.stellar_contact || Options.stellar_contact;
+        var destination_address = mainData.stellar_contact.destination_address;
+
+        if (account.InflationDest !== destination_address) {
+          var tx = $network.remote.transaction();
+          tx = tx.accountSet(account.Account);
+          tx.inflationDest(destination_address);
+
+          tx.submit();
         }
-        accountObj.removeListener("entry", myCheckIfInflationSet);
-    }
 
-    function createInflationTxn(account) {
-        var tx = $network.remote.transaction();
-        tx = tx.accountSet(account.Account);
-        // Point inflation destination to the user's preference
-        // TODO: incorporate the preference, for now use default
-        tx.inflationDest(Options.stellar_contact.destination_address);
-
-        tx.submit();
+        accountObj.removeListener("entry", mySetInflation);
     }
 
 }]);
