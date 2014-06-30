@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('CreateRewardCtrl', function ($scope, session) {
+sc.controller('RegistrationRewardCtrl', function ($scope, session) {
   $scope.index = 0;
   $scope.reward = $scope.rewards[$scope.index];
 
