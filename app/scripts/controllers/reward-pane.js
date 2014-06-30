@@ -30,6 +30,7 @@ sc.controller('RewardPaneCtrl', ['$http', '$scope', '$rootScope', 'session', 'st
       $scope.selectedReward = null;
     } else {
       $scope.selectedReward = index;
+      $scope.rewards[index].error = null;
     }
   };
 
