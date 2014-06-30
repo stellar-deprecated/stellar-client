@@ -6,9 +6,20 @@ sc.controller('RewardPaneCtrl', ['$http', '$scope', '$rootScope', 'session', 'st
   $scope.showRewards = false;
   $scope.selectedReward = null;
 
-  var wallet = session.get('wallet');
+  $scope.rewardStatusIcons = {
+    'incomplete': 'glyphicon glyphicon-lock',
+    'awaiting_payout': 'glyphicon glyphicon-time',
+    'sent': 'glyphicon glyphicon-ok-circle',
+    'unverified': 'glyphicon glyphicon-warning-sign',
+    'ineligible': 'glyphicon glyphicon-warning-sign'
+  };
 
-  $rootScope.emailToVerify = wallet.mainData.email;
+  $scope.rewards = [
+    {title: 'Create a new wallet', status: 'sent', action: {}},
+    {title: 'Get your first stellars.', status: 'incomplete', action: {}},
+    {title: 'Confirm your email.', status: 'incomplete', action: {}},
+    {title: 'Learn to send stellars.', status: 'incomplete', action: {}}
+  ];
 
   $scope.toggleReward = function (index, status) {
     if (status !== 'incomplete' && status !== 'unverified') {
@@ -56,13 +67,6 @@ sc.controller('RewardPaneCtrl', ['$http', '$scope', '$rootScope', 'session', 'st
     }
   };
 
-  var createAction = {
-    message: 'Enable rewards by registering for a Stellar account',
-    info: 'You have unlocked rewards...',
-    start: function () {
-    }
-  };
-
   function getPlaceInLine() {
     // Load the status of the user's rewards.
     var config = {
@@ -87,21 +91,6 @@ sc.controller('RewardPaneCtrl', ['$http', '$scope', '$rootScope', 'session', 'st
     });
   }
 
-  $scope.rewardStatusIcons = {
-    'incomplete': 'glyphicon glyphicon-lock',
-    'awaiting_payout': 'glyphicon glyphicon-time',
-    'sent': 'glyphicon glyphicon-ok-circle',
-    'unverified': 'glyphicon glyphicon-warning-sign',
-    'ineligible': 'glyphicon glyphicon-warning-sign'
-  };
-
-  $scope.rewards = [
-    {title: 'Create a new wallet', status: 'sent', action: {}},
-    {title: 'Get your first stellars.', status: 'incomplete', action: {}},
-    {title: 'Confirm your email.', status: 'incomplete', action: {}},
-    {title: 'Learn to send stellars.', status: 'incomplete', action: {}}
-  ];
-
   $scope.computeRewardProgress = function() {
     var order = ['sent', 'awaiting_payout', 'incomplete', 'unverified', 'ineligible'];
 
@@ -119,7 +108,7 @@ sc.controller('RewardPaneCtrl', ['$http', '$scope', '$rootScope', 'session', 'st
     var config = {
       params: {
         username: session.get('username'),
-        updateToken: wallet.keychainData.updateToken
+        updateToken: session.get('wallet').keychainData.updateToken
       }
     };
     // Load the status of the user's rewards.
@@ -156,9 +145,9 @@ sc.controller('RewardPaneCtrl', ['$http', '$scope', '$rootScope', 'session', 'st
       });
       $scope.computeRewardProgress();
       $scope.fbGiveawayAmount = response.data.giveawayAmount;
-      //fbAction.info = 'You will receive ' + $scope.fbGiveawayAmount + ' stellas.';
-      //emailAction.info = 'You will receive ' + $scope.fbGiveawayAmount * .2 + ' stellas.';
-      //sendAction.info = 'Send stellars to a friend and get ' + $scope.fbGiveawayAmount * .2 + ' stellars for learning.';
+      $scope.rewards[1].action.info = 'You will receive ' + $scope.fbGiveawayAmount + ' stellas.';
+      $scope.rewards[2].action.info = 'You will receive ' + $scope.fbGiveawayAmount * .2 + ' stellas.';
+      $scope.rewards[3].action.info = 'Send stellars to a friend and get ' + $scope.fbGiveawayAmount * .2 + ' stellars for learning.';
       $scope.showRewards = (count < 3);
       if ($scope.rewards[3].status == "incomplete") {
         checkSentTransactions();
