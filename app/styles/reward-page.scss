@@ -1,5 +1,7 @@
-  .reward-page {
-    height: 353px;
+@import "fbconnect.scss";
+
+.reward-page {
+    height: 366px;
     width: 100%;
     background-color: white;
     position: absolute;
@@ -89,7 +91,11 @@
         font-weight: $avenir-medium;
         font-size: 20px;
         text-align: center;
-        margin: 30px 0;
+        line-height: 40px;
+      }
+
+      .body {
+        margin-top: 10px;
       }
 
       .verify-email {
@@ -159,18 +165,23 @@
     }
 
     .error {
+      text-align: center;
+
       .body {
         color: $error;
         font-size: 35px;
+        line-height: 70px;
+      }
+
+      .info {
+        font-size: 22px;
+        line-height: 70px;
       }
 
       .errorButton button {
         color:#000000;
         width: 270px;
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
-        margin-top: 40px;
+        margin-top: 20px;
       }
     }
   }
