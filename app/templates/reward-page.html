@@ -1,0 +1,52 @@
+<div class="reward-page" ng-class="{active: selectedReward == index, error: reward.error}">
+    <div class="reward-page-close" ng-click="closeReward()">
+        <span>Close</span>
+        <i class="icon icon-times-circle-thin"></i>
+    </div>
+    <div class="reward-container-title">
+        <i class="glyphicon glyphicon-lock"></i>
+        {{ reward.title }}
+    </div>
+
+    <div class="content" ng-class="{active: !reward.error}">
+        <div class="content" ng-class="{active: reward.status != 'sent' && reward.status != 'awaiting_payout'}">
+            <div class="body">
+                {{ reward.action.message }}
+            </div>
+            <div class="info">
+                {{ reward.action.info }}
+            </div>
+            <div ng-include="reward.action.template"></div>
+        </div>
+
+        <div class="content awaiting-payout" ng-class="{active: reward.status == 'awaiting_payout'}">
+            <div class="body">
+                Oh, happy day.
+            </div>
+            <div class="info">
+                You need to complete the previous reward to get your coins.
+            </div>
+            <button class="stellar-button btn btn-default" ng-click="closeReward()">Unlock previous?</button>
+        </div>
+
+        <div class="content sent" ng-class="{active: reward.status == 'sent'}">
+            <div class="body">
+                Oh, happy day.
+            </div>
+            <div class="info">
+                You did it.
+            </div>
+            <button class="stellar-button btn btn-default" ng-click="closeReward()">Unlock next ... ?</button>
+        </div>
+    </div>
+
+    <div class="error" ng-class="{active: reward.error}">
+        <div class="body">
+            {{ reward.error.body }}
+        </div>
+        <div class="info">
+            {{ reward.error.info }}
+        </div>
+        <div ng-include src="'templates/reward-error-button.html'"></div>
+    </div>
+</div>

@@ -1,5 +1,7 @@
-  .reward-page {
-    height: 353px;
+@import "fbconnect.scss";
+
+.reward-page {
+    height: 366px;
     width: 100%;
     background-color: white;
     position: absolute;
@@ -16,9 +18,43 @@
       border-bottom: 6px solid $error;
     }
 
-    .title {
+    .reward-page-close {
+      float: right;
+      font-size: 16px;
+      cursor: pointer;
+      font-weight: $avenir-book;
+      color: $info-grey;
+      height: 50px;
+      line-height: 50px;
+
+      @include transition(color 200ms ease-in-out);
+
+      i {
+        font-size: 26px;
+        margin-top: 5px;
+        margin-left: 8px;
+      }
+
+      span, i {
+        display: inline-block;
+        vertical-align: middle;
+        line-height: normal;
+      }
+
+      &:hover {
+        color: $error;
+
+        i {
+          color: $error;
+        }
+      }
+    }
+
+    .reward-container-title {
       font-weight: $avenir-heavy;
-      padding-top: 10px;
+      font-size: 20px;
+      height: 50px;
+      line-height: 50px;
 
       i {
         margin: 0 15px;
@@ -26,8 +62,7 @@
       }
     }
 
-
-    .content, .error {
+    .content {
       margin: 0 57px;
       display: none;
 
@@ -35,44 +70,33 @@
         display: inherit;
       }
 
+      &.sent,
+      &.awaiting-payout {
+        text-align: center;
+
+        .body {
+          font-size: 36px;
+          color: $happy;
+        }
+
+        .stellar-button {
+          margin-top: 20px;
+          width: 260px;
+          background-color: white;
+          color: black;
+        }
+      }
+
       .body,
       .info {
         font-weight: $avenir-medium;
         font-size: 20px;
         text-align: center;
+        line-height: 70px;
       }
 
-      .fbconnect {
-        margin-top: 30px;
-        text-align: center;
-
-        .fbbutton {
-          width: 270px;
-          line-height: 24px;
-          color: white;
-          background-color: #3C569B;
-          cursor: pointer;
-          padding: 10px 20px;
-          border-radius: 2px;
-          border: none;
-          font-family: "lucida grande","tahoma","verdana","arial","sans-serif";
-
-          .fblogo {
-            font-size: 26px;
-            font-weight: bold;
-            display: inline-block;
-            margin-left: 6px;
-            margin-right: 18px;
-            vertical-align: middle;
-          }
-
-          .fblabel {
-            font-size: 16px;
-            display: inline-block;
-            vertical-align: middle;
-            text-align: center;
-          }
-        }
+      .body {
+        margin-top: 10px;
       }
 
       .verify-email {
@@ -142,20 +166,21 @@
     }
 
     .error {
-      display: none;
+      text-align: center;
 
       .body {
         color: $error;
         font-size: 35px;
       }
 
+      .info {
+        font-size: 22px;
+      }
+
       .errorButton button {
         color:#000000;
         width: 270px;
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
-        margin-top: 40px;
+        margin-top: 20px;
       }
     }
   }
