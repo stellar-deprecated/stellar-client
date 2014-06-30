@@ -70,7 +70,8 @@
         display: inherit;
       }
 
-      &.sent {
+      &.sent,
+      &.awaiting-payout {
         text-align: center;
 
         .body {
@@ -79,7 +80,7 @@
         }
 
         .stellar-button {
-          margin-top: 10px;
+          margin-top: 20px;
           width: 260px;
           background-color: white;
           color: black;
@@ -91,7 +92,7 @@
         font-weight: $avenir-medium;
         font-size: 20px;
         text-align: center;
-        line-height: 40px;
+        line-height: 70px;
       }
 
       .body {
@@ -170,12 +171,10 @@
       .body {
         color: $error;
         font-size: 35px;
-        line-height: 70px;
       }
 
       .info {
         font-size: 22px;
-        line-height: 70px;
       }
 
       .errorButton button {

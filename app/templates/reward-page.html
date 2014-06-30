@@ -9,7 +9,7 @@
     </div>
 
     <div class="content" ng-class="{active: !reward.error}">
-        <div class="content" ng-class="{active: reward.status != 'sent'}">
+        <div class="content" ng-class="{active: reward.status != 'sent' && reward.status != 'awaiting_payout'}">
             <div class="body">
                 {{ reward.action.message }}
             </div>
@@ -17,6 +17,16 @@
                 {{ reward.action.info }}
             </div>
             <div ng-include="reward.action.template"></div>
+        </div>
+
+        <div class="content awaiting-payout" ng-class="{active: reward.status == 'awaiting_payout'}">
+            <div class="body">
+                Oh, happy day.
+            </div>
+            <div class="info">
+                You need to complete the previous reward to get your coins.
+            </div>
+            <button class="stellar-button btn btn-default" ng-click="closeReward()">Unlock previous?</button>
         </div>
 
         <div class="content sent" ng-class="{active: reward.status == 'sent'}">
