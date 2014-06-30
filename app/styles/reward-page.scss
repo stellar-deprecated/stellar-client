@@ -68,6 +68,22 @@
         display: inherit;
       }
 
+      &.sent {
+        text-align: center;
+
+        .body {
+          font-size: 36px;
+          color: $happy;
+        }
+
+        .stellar-button {
+          margin-top: 10px;
+          width: 260px;
+          background-color: white;
+          color: black;
+        }
+      }
+
       .body,
       .info {
         font-weight: $avenir-medium;
