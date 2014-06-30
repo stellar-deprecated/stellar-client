@@ -23,37 +23,3 @@ $status-strip-width: 8px;
 .pane-in-progress {
   border-bottom: $status-strip-width solid $in-progress;
 }
-
-
-.pane-close {
-  float: right;
-  font-size: 16px;
-  cursor: pointer;
-  font-weight: $avenir-book;
-  color: $info-grey;
-  height: 70px;
-  line-height: 70px;
-
-  @include transition(color 200ms ease-in-out);
-
-  i {
-    font-size: 26px;
-    margin-top: 5px;
-    margin-left: 8px;
-  }
-
-  span, i {
-    display: inline-block;
-    vertical-align: middle;
-    line-height: normal;
-  }
-
-  &:hover {
-    color: $error;
-
-    i {
-      color: $error;
-    }
-  }
-
-}
