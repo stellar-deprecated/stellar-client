@@ -1,6 +1,19 @@
 //var module = angular.module('directives', ['popup']);
 var module = angular.module('stellarClient');
 
+module.directive('stEnter', function() {
+    return function(scope, element, attrs) {
+        element.bind("keydown keypress", function(event) {
+            if (event.which === 13) {
+                scope.$apply(function() {
+                    scope.$eval(attrs.ngEnter, {'event': event});
+                });
+                event.preventDefault();
+            }
+        })
+    }
+})
+
 /*
  * Defines the rp-if tag. This removes/adds an element from the dom depending on a condition
  * Originally created by @tigbro, for the @jquery-mobile-angular-adapter
