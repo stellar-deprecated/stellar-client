@@ -8,13 +8,25 @@ sc.controller('RecoveryCtrl', function($scope, $state, $http, $timeout, session)
   $scope.serverRecoveryCode = null;
   $scope.recovering = false;
   $scope.recoveryError = null;
-
+  $scope.usernameError = null;
   $scope.attemptRecovery = function(){
     if($scope.recovering) {
       return;
     }
 
+    if (!$scope.serverRecoveryCode) {
+      $scope.recoveryError = "Please enter your recovery code.";
+    }
+    if (!$scope.username) {
+      $scope.usernameError = "Please enter your username.";
+    }
+
+    if ($scope.recoverError || $scope.usernameError) {
+      return;
+    }
+
     $scope.recoveryError = null;
+    $scope.usernameError = null;
     $scope.recovering = true;
 
     getServerRecoveryCode()
@@ -41,7 +53,7 @@ sc.controller('RecoveryCtrl', function($scope, $state, $http, $timeout, session)
       })
       .error(function(body, status) {
         switch(status) {
-          case 404:
+          case 400:
             $scope.recoveryError = 'Invalid username or recovery code.';
             break;
           case 0:
