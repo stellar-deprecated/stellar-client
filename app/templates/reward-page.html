@@ -9,7 +9,7 @@
     </div>
 
     <div class="content" ng-class="{active: !reward.error}">
-        <div class="content" ng-class="{active: reward.status == 'incomplete'}">
+        <div class="content" ng-class="{active: reward.status != 'sent'}">
             <div class="body">
                 {{ reward.action.message }}
             </div>
