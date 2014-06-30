@@ -1,9 +1,4 @@
-var sandbox = sinon.sandbox.create();
-
 describe('Wallet', function () {
-  afterEach(function(){
-    sandbox.restore();
-  });
 
   describe('constructor', function(){
     it('should use the supplied wallet options', function () {
@@ -41,16 +36,16 @@ describe('Wallet', function () {
   describe('decrypt()', function(){
     beforeEach(function(){
       var decrypt = Wallet.decrypt;
-      var decryptData = sandbox.stub(Wallet, 'decryptData');
+      var decryptData = this.sinon.stub(Wallet, 'decryptData');
       Wallet.decryptData.withArgs('encryptedMainData').returns('mainData');
       Wallet.decryptData.withArgs('encryptedKeychainData').returns({authToken: 'authToken'});
 
       // Expose the required methods on the stubbed version of Wallet.
-      sandbox.stub(window, 'Wallet');
+      this.sinon.stub(window, 'Wallet');
       Wallet.decrypt = decrypt;
       Wallet.decryptData = decryptData;
 
-      sandbox.stub(sjcl.codec.hex, 'toBits').returns([0, 1, 2, 3, 4, 5, 6, 7])
+      this.sinon.stub(sjcl.codec.hex, 'toBits').returns([0, 1, 2, 3, 4, 5, 6, 7])
     });
 
     it('should decrypt an existing wallet', function(){
@@ -76,32 +71,30 @@ describe('Wallet', function () {
   });
 
   describe('encrypt()', function(){
-    var wallet;
-
-    sandbox.stub(sjcl.codec.hex, 'toBits').returns([0, 1, 2, 3, 4, 5, 6, 7]);
-
-    var walletOptions = {
-      id:           1,
-      key:          'key',
-      recoveryId:   'recoveryId',
-      recoveryData: 'recoveryData',
-      mainData:     {contents: 'mainData'},
-      keychainData: {
-        keys:        'signingKeys',
-        authToken:   'authToken',
-        updateToken: 'updateToken'
-      }
-    };
-
     beforeEach(function(){
-      wallet = new Wallet(walletOptions);
+      this.sinon.stub(sjcl.codec.hex, 'toBits').returns([0, 1, 2, 3, 4, 5, 6, 7]);
 
-      sandbox.stub(Wallet, 'encryptData');
-      Wallet.encryptData.withArgs(walletOptions.mainData).returns('encryptedMainData');
-      Wallet.encryptData.withArgs(walletOptions.keychainData).returns('encryptedKeychainData');
+      this.walletOptions = {
+        id:           1,
+        key:          'key',
+        recoveryId:   'recoveryId',
+        recoveryData: 'recoveryData',
+        mainData:     {contents: 'mainData'},
+        keychainData: {
+          keys:        'signingKeys',
+          authToken:   'authToken',
+          updateToken: 'updateToken'
+        }
+      };
 
-      sandbox.stub(sjcl.hash.sha1, 'hash');
-      sandbox.stub(sjcl.codec.hex, 'fromBits');
+      this.wallet = new Wallet(this.walletOptions);
+
+      this.sinon.stub(Wallet, 'encryptData');
+      Wallet.encryptData.withArgs(this.walletOptions.mainData).returns('encryptedMainData');
+      Wallet.encryptData.withArgs(this.walletOptions.keychainData).returns('encryptedKeychainData');
+
+      this.sinon.stub(sjcl.hash.sha1, 'hash');
+      this.sinon.stub(sjcl.codec.hex, 'fromBits');
       sjcl.hash.sha1.hash.withArgs('encryptedMainData').returns('encryptedMainDataHash');
       sjcl.hash.sha1.hash.withArgs('encryptedKeychainData').returns('encryptedKeychainDataHash');
       sjcl.codec.hex.fromBits.withArgs('encryptedMainDataHash').returns('encryptedMainDataHashHex');
@@ -109,7 +102,7 @@ describe('Wallet', function () {
     });
 
     it('should encrypt the mainData and keychainData', function(){
-      var encryptedWallet = wallet.encrypt();
+      var encryptedWallet = this.wallet.encrypt();
 
       expect(Wallet.encryptData.callCount).to.equal(2);
       expect(encryptedWallet.mainData).to.equal('encryptedMainData');
@@ -117,7 +110,7 @@ describe('Wallet', function () {
     });
 
     it('should hash the encrypted mainData and keychainData', function(){
-      var encryptedWallet = wallet.encrypt();
+      var encryptedWallet = this.wallet.encrypt();
 
       expect(sjcl.hash.sha1.hash.callCount).to.equal(2);
       expect(encryptedWallet.mainDataHash).to.equal('encryptedMainDataHashHex');
@@ -125,7 +118,7 @@ describe('Wallet', function () {
     });
 
     it('should return the id and authToken', function(){
-      var encryptedWallet = wallet.encrypt();
+      var encryptedWallet = this.wallet.encrypt();
 
       expect(encryptedWallet.id).to.equal(1);
       expect(encryptedWallet.authToken).to.equal('authToken');
