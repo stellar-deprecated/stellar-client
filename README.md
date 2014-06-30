@@ -6,10 +6,12 @@ and manage their account and wallet.
 ## Setting up your dev server
 **TODO:** Script setup with makefile.
 
+```bash
+
+# Install bower and gulp
+
 npm install -g bower
 npm install -g gulp
-
-```bash
 
 # Install dev dependencies
 npm install
@@ -20,6 +22,10 @@ bower install
 # set your initial (development) configuration
 
 gulp config
+
+# (optional) install phantomjs for automated testing
+brew install phantomjs
+
 ```
 
 ## Starting your dev server
