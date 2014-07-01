@@ -83,7 +83,8 @@ gulp.task('html', ['config', 'styles', 'scripts', 'templateCache'], function (do
 
             .pipe(gulp.dest('dist'))
             .pipe($.size())
-            .once('end', done);
+            .once('end', done)
+            .once('finish', done);
     });
 });
 
