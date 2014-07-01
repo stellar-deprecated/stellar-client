@@ -101,8 +101,6 @@ sc.controller('RegistrationCtrl', function($scope, $state, $timeout, $http, $q, 
   // Validate the input before submitting the registration form.
   // This generates messages that help the user resolve their errors.
   function validateInput() {
-    var deferred = $q.defer();
-
     // Remove any previous error messages.
     $scope.errors.usernameErrors        = [];
     $scope.errors.emailErrors           = [];
@@ -123,12 +121,10 @@ sc.controller('RegistrationCtrl', function($scope, $state, $timeout, $http, $q, 
     });
 
     if(validInput){
-      deferred.resolve();
+      return $q.when();
     } else {
-      deferred.reject();
+      return $q.reject();
     }
-
-    return deferred.promise;
   }
 
   $scope.attemptRegistration = singletonPromise(function() {
