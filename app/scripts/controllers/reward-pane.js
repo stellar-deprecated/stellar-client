@@ -15,11 +15,13 @@ sc.controller('RewardPaneCtrl', ['$http', '$scope', '$rootScope', 'session', 'st
   };
 
   $scope.rewards = [
-    {title: 'Create a new wallet', status: 'sent', action: {}},
-    {title: 'Get your first stellars.', status: 'incomplete', action: {}},
-    {title: 'Confirm your email.', status: 'incomplete', action: {}},
-    {title: 'Learn to send stellars.', status: 'incomplete', action: {}}
+    {index: 0, title: 'Create a new wallet', status: 'sent', action: {}},
+    {index: 1, title: 'Get your first stellars.', status: 'incomplete', action: {}},
+    {index: 2, title: 'Confirm your email.', status: 'incomplete', action: {}},
+    {index: 3, title: 'Learn to send stellars.', status: 'incomplete', action: {}}
   ];
+
+  $scope.sortedRewards = $scope.rewards.slice();
 
   $scope.toggleReward = function (index, status) {
     if (status !== 'incomplete' && status !== 'unverified') {
@@ -93,10 +95,24 @@ sc.controller('RewardPaneCtrl', ['$http', '$scope', '$rootScope', 'session', 'st
   }
 
   $scope.computeRewardProgress = function() {
-    var order = ['sent', 'awaiting_payout', 'incomplete', 'unverified', 'ineligible'];
+    var order = {
+      'incomplete': 0,
+      'awaiting_payout': 1,
+      'unverified': 1,
+      'sent': 2,
+      'ineligible': 2
+    };
+
+    $scope.sortedRewards.sort(function (a, b) {
+      return order[a.status] - order[b.status];
+    });
 
     $scope.rewardProgress = $scope.rewards.map(function (reward) {
       return reward.status;
+    });
+
+    $scope.rewardProgress.sort(function (a, b) {
+      return order[b] - order[a];
     });
 
     var completedRewards = $scope.rewards.filter(function (reward) {
