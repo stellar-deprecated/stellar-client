@@ -137,7 +137,7 @@ sc.controller('RegistrationCtrl', function($scope, $state, $timeout, $http, $q, 
     return validateInput()
       .then(submitRegistration)
       .then(createWallet)
-      .finally(function(){
+      .then(function(){
         // Initialize the session with the new wallet.
         session.login(wallet);
 
