@@ -7,7 +7,7 @@ var sc = angular.module('stellarClient');
     waits for:
      walletAddressLoaded
  */
-sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', function($scope, $rootScope, $network) {
+sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', 'session', function($scope, $rootScope, $network, session) {
 
     $rootScope.balance=0;
     $rootScope.accountStatus = 'connecting';
@@ -15,6 +15,8 @@ sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', function($scope, $r
     $scope.history = [];
 
     var account;
+    // implements account listener cleanup, added to $rootScope.account to be called in logout event
+    var listenerCleanupFn;
 
     function reset()
     {
@@ -32,6 +34,8 @@ sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', function($scope, $r
 
     var myHandleAccountEvent;
     var myHandleAccountEntry;
+    var mySetInflation;
+    var accountObj;
     function handleAccountLoad(e, data)
     {
         var remote = $network.remote;
@@ -42,15 +46,22 @@ sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', function($scope, $r
 
         remote.set_secret(data.account, data.secret);
 
-        var accountObj = remote.account(data.account);
+        accountObj = remote.account(data.account);
 
         // We need a reference to these functions after they're bound, so we can
         // unregister them if the account is unloaded.
         myHandleAccountEvent = handleAccountEvent;
         myHandleAccountEntry = handleAccountEntry;
+        mySetInflation = setInflation;
 
         accountObj.on('transaction', myHandleAccountEvent);
         accountObj.on('entry', myHandleAccountEntry);
+        accountObj.on('entry', mySetInflation);
+
+        listenerCleanupFn = function () {
+            accountObj.removeListener("transaction", myHandleAccountEvent);
+            accountObj.removeListener("entry", myHandleAccountEntry);
+        }
 
         accountObj.entry(function (err, entry) {
             if (err) {
@@ -157,6 +168,9 @@ sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', function($scope, $r
         var remote = $network.remote;
         $scope.$apply(function () {
             $rootScope.account = data;
+
+            // add a cleanup function to account to remove the listeners
+            $rootScope.account.cleanup = listenerCleanupFn;
 
             // As per json wire format convention, real ledger entries are CamelCase,
             // e.g. OwnerCount, additional convenience fields are lower case, e.g.
@@ -373,13 +387,28 @@ sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', function($scope, $r
         $scope.$on('$netConnected', handleFirstConnection);
 
 
-
     function handleFirstConnection() {
         // TODO: need to figure out why this isn't being set when we connect to the stellard
         $network.remote._reserve_base=50*1000000;
         $network.remote._reserve_inc=10*1000000;
 
         removeFirstConnectionListener();
+    }
+
+    function setInflation(account) {
+        var mainData = session.get('wallet').mainData;
+        mainData.stellar_contact = mainData.stellar_contact || Options.stellar_contact;
+        var destination_address = mainData.stellar_contact.destination_address;
+
+        if (account.InflationDest !== destination_address) {
+          var tx = $network.remote.transaction();
+          tx = tx.accountSet(account.Account);
+          tx.inflationDest(destination_address);
+
+          tx.submit();
+        }
+
+        accountObj.removeListener("entry", mySetInflation);
     }
 
 }]);

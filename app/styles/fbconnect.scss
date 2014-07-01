@@ -1,0 +1,32 @@
+.fbconnect {
+  margin-top: 30px;
+  text-align: center;
+
+  .fbbutton {
+    width: 270px;
+    line-height: 24px;
+    color: white;
+    background-color: #3C569B;
+    cursor: pointer;
+    padding: 10px 20px;
+    border-radius: 2px;
+    border: none;
+    font-family: "lucida grande","tahoma","verdana","arial","sans-serif";
+
+    .fblogo {
+      font-size: 26px;
+      font-weight: bold;
+      display: inline-block;
+      margin-left: 6px;
+      margin-right: 18px;
+      vertical-align: middle;
+    }
+
+    .fblabel {
+      font-size: 16px;
+      display: inline-block;
+      vertical-align: middle;
+      text-align: center;
+    }
+  }
+}

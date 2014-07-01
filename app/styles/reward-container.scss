@@ -1,0 +1,28 @@
+@import "reward-progress.scss";
+@import "reward-list.scss";
+@import "reward-page.scss";
+
+.reward-container {
+  background-color: #F4F5F7;
+  color: $dark-grey;
+  padding-bottom: 30px !important;
+
+  .reward-container-title {
+    font-weight: $avenir-heavy;
+    font-size: 20px;
+    height: 50px;
+    line-height: 50px;
+
+    i {
+      margin: 0 15px;
+      font-size: 20px;
+    }
+  }
+
+  .reward-pane {
+    height: 382px;
+    position: relative;
+    overflow: hidden;
+    padding: 1px;
+  }
+}

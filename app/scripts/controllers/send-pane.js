@@ -189,11 +189,11 @@ sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout'
 
                     send.dt = ("number" === typeof result.dt) ? result.dt : undefined;
 
-                    if (result.destination_address) {
+                    if (result.destination_address &&
+                            stellar.UInt160.is_valid(result.destination_address)) {
                         // Federation record specifies destination
                         send.recipient_name = recipient;
                         send.recipient_address = result.destination_address;
-
                         $scope.check_destination();
                     } else if (result.quote_url) {
                         // Federation destination requires us to request a quote
@@ -422,7 +422,7 @@ sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout'
         }
 
         // Validate the send amount.
-        if (!stellar.Amount.is_valid(amount)) {
+        if (!stellar.Amount.is_valid(amount) || amount.is_negative()) {
             send.fund_status = 'invalid';
             return;
         }

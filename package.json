@@ -5,6 +5,7 @@
   "devDependencies": {
     "connect": "^2.14.4",
     "connect-livereload": "^0.4.0",
+    "git-rev": "^0.2.1",
     "gulp": "^3.6.0",
     "gulp-angular-templatecache": "^1.2.1",
     "gulp-autoprefixer": "^0.0.6",
@@ -29,7 +30,13 @@
     "gulp-uglify": "^0.2.1",
     "gulp-useref": "^0.4.4",
     "jshint-stylish": "^0.1.5",
+    "karma": "^0.12.16",
+    "karma-mocha": "^0.1.4",
+    "karma-phantomjs-launcher": "^0.1.4",
+    "karma-sinon-chai": "^0.2.0",
+    "lodash": "^2.4.1",
     "merge-stream": "^0.1.1",
+    "mocha": "^1.20.1",
     "opn": "^0.1.1",
     "wiredep": "^1.4.3"
   },

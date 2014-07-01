@@ -52,7 +52,11 @@ Wallet.recover = function(encryptedWallet, recoveryId, recoveryKey){
   var rawRecoveryKey = sjcl.codec.hex.toBits(recoveryKey);
   var recoveryData = Wallet.decryptData(encryptedWallet.recoveryData, rawRecoveryKey);
 
-  return Wallet.decrypt(encryptedWallet, recoveryData.id, recoveryData.key);
+  var wallet = Wallet.decrypt(encryptedWallet, recoveryData.id, recoveryData.key);
+  wallet.recoveryId = recoveryId;
+  wallet.recoveryKey = recoveryKey;
+
+  return wallet;
 };
 
 /**
@@ -134,7 +138,7 @@ Wallet.SETTINGS = {
 
 Wallet.deriveId = function(username, password){
   var credentials = username.toLowerCase() + password;
-  var salt = credentials;
+  var salt = sjcl.codec.utf8String.toBits(credentials);
 
   var id = sjcl.misc.scrypt(
     credentials,
@@ -150,7 +154,7 @@ Wallet.deriveId = function(username, password){
 
 Wallet.deriveKey = function(id, username, password){
   var credentials = username.toLowerCase() + password;
-  var salt = credentials;
+  var salt = sjcl.codec.utf8String.toBits(credentials);
 
   var key = sjcl.misc.scrypt(
     id + credentials,

@@ -4,18 +4,20 @@
     <form role="form" class="form-horizontal stellar-form" ng-controller="RecoveryCtrl">
         <div class="form-group">
             <div class="errors col-sm-12">
-                <div class="tip col-sm-offset-6 col-sm-3">{{ recoveryError }}</div>
+                <div class="tip col-sm-offset-6 col-sm-3">{{ usernameError }}</div>
             </div>
             <label for="username" class="col-sm-3">USERNAME</label>
             <div class="col-sm-6">
-                <input id="username" type="text" class="form-control" ng-model="username">
+                <input id="username" type="text" class="form-control" ng-model="username" ng-change="usernameError = null">
             </div>
         </div>
         <div class="form-group">
-            <div class="errors col-sm-12"></div>
+            <div class="errors col-sm-12">
+                <div class="tip col-sm-offset-6 col-sm-3">{{ recoveryError }}</div>
+            </div>
             <label for="recovery-code" class="col-sm-3">RECOVERY CODE</label>
             <div class="col-sm-6">
-                <input id="recovery-code" type="text" class="form-control" ng-model="userRecoveryCode">
+                <input id="recovery-code" type="text" class="form-control" ng-model="userRecoveryCode" ng-change="recoveryError = null">
             </div>
         </div>
         <div class="form-group">

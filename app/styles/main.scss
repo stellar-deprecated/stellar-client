@@ -15,8 +15,9 @@ $mobile-width: 950px;
 @import "dashboard.scss";
 @import "registration.scss";
 @import "browser_unsupported.scss";
+@import "password.scss";
 @import "transactionHistory.scss";
-@import "reward-pane.scss";
+@import "reward-container.scss";
 @import "pane.scss";
 @import "modalStatus.scss";
 
@@ -97,7 +98,7 @@ body {
         }
       }
 
-      &.error {
+      &.input-error {
         border-color: $error;
 
         &:focus {
@@ -115,6 +116,24 @@ body {
       font-size: 14px;
       color: $info-grey;
       line-height: 42px;
+    }
+
+    .info {
+      padding-left: 0;
+
+      .status {
+        width: 40px;
+        height: 40px;
+
+        &.glyphicon {
+          padding: 12px 12px;
+        }
+
+        &.glyphicon-none:before {
+          content: "\e013";
+          opacity: 0;
+        }
+      }
     }
 
     button {
@@ -301,6 +320,38 @@ body {
 
   input {
     padding-right: 30px;
+  }
+}
+
+.pane-close {
+  float: right;
+  font-size: 16px;
+  cursor: pointer;
+  font-weight: $avenir-book;
+  color: $info-grey;
+  height: 50px;
+  line-height: 50px;
+
+  @include transition(color 200ms ease-in-out);
+
+  i {
+    font-size: 26px;
+    margin-top: 5px;
+    margin-left: 8px;
+  }
+
+  span, i {
+    display: inline-block;
+    vertical-align: middle;
+    line-height: normal;
+  }
+
+  &:hover {
+    color: $error;
+
+    i {
+      color: $error;
+    }
   }
 }
 

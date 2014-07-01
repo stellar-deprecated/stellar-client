@@ -1,8 +1,13 @@
 'use strict';
+var STELLAR_CLIENT_REVISION = '_GIT_REVISION_GOES_HERE_';
 
-var stellarClient = angular.module('stellarClient', ['ui.router', 'rt.debounce', 'vr.passwordStrength', 'ngTable', 'ngRoute', 'angularMoment', 'filters', 'bruteRequest']);
+var stellarClient = angular.module('stellarClient', ['ui.router', 'rt.debounce', 'vr.passwordStrength', 'ngTable', 'ngRoute', 'angularMoment', 'filters', 'bruteRequest',  'singletonPromise', 'ngRaven']);
 
-stellarClient.config(function($httpProvider, $stateProvider, $urlRouterProvider) {
+stellarClient.config(function($httpProvider, $stateProvider, $urlRouterProvider, RavenProvider) {
+
+  if(Options.REPORT_ERRORS !== true) {
+    RavenProvider.development(true);
+  }
 
   $httpProvider.interceptors.push('bruteRequestInterceptor');
 
@@ -10,7 +15,7 @@ stellarClient.config(function($httpProvider, $stateProvider, $urlRouterProvider)
     .state('login', {
       url:         '/login',
       templateUrl: 'states/login.html',
-      authenticate: null
+      authenticate: false
     })
     .state('recovery', {
       url:         '/recovery',
@@ -27,9 +32,18 @@ stellarClient.config(function($httpProvider, $stateProvider, $urlRouterProvider)
       templateUrl: 'states/register.html',
       authenticate: false
     })
+    .state('logout', {
+      url:         '/logout',
+      authenticate: true
+    })
     .state('dashboard', {
       url:         '/dashboard',
       templateUrl: 'states/dashboard.html',
+      authenticate: true
+    })
+    .state('change_password', {
+      url:         '/change_password',
+      templateUrl: 'states/change_password.html',
       authenticate: true
     })
     .state('settings', {
@@ -73,6 +87,12 @@ stellarClient.run(function($rootScope, $state, session){
             event.preventDefault();
             return;
           }
+        }
+        break;
+
+      case '/logout':
+        if(session.get('loggedIn')) {
+          session.logOut();
         }
         break;
 

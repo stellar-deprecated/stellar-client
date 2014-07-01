@@ -14,7 +14,8 @@
     "ng-table": "~0.3.2",
     "angular-moment": "~0.7.0",
     "fontawesome": "~4.1.0",
-    "lodash": "~2.4.1"
+    "lodash": "~2.4.1",
+    "angular-raven": "~0.5.6"
   },
   "devDependencies": {},
   "resolutions": {
