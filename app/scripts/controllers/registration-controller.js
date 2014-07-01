@@ -28,6 +28,8 @@ sc.controller('RegistrationCtrl', function($scope, $state, $timeout, $http, $q, 
 
   var wallet = null;
   var signingKeys = null;
+  var updateToken = null;
+  var authToken = null;
 
   // Checks to see if the supplied username is available.
   // This function is debounced to prevent API calls before the user is finished typing.
@@ -101,6 +103,8 @@ sc.controller('RegistrationCtrl', function($scope, $state, $timeout, $http, $q, 
   // Validate the input before submitting the registration form.
   // This generates messages that help the user resolve their errors.
   function validateInput() {
+    var deferred = $q.defer();
+
     // Remove any previous error messages.
     $scope.errors.usernameErrors        = [];
     $scope.errors.emailErrors           = [];
@@ -120,15 +124,26 @@ sc.controller('RegistrationCtrl', function($scope, $state, $timeout, $http, $q, 
       validInput = validator() && validInput;
     });
 
-    return validInput;
+    if(validInput){
+      deferred.resolve();
+    } else {
+      deferred.reject();
+    }
+
+    return deferred.promise;
   }
 
   $scope.attemptRegistration = singletonPromise(function() {
-    if (!validateInput()) {
-      $q.reject('Input invalid');
-    }
+    return validateInput()
+      .then(submitRegistration)
+      .then(createWallet)
+      .finally(function(){
+        // Initialize the session with the new wallet.
+        session.login(wallet);
 
-    return submitRegistration();
+        // Take the user to the dashboard.
+        $state.go('dashboard');
+      });
   });
 
   function submitRegistration() {
@@ -144,14 +159,8 @@ sc.controller('RegistrationCtrl', function($scope, $state, $timeout, $http, $q, 
     // Submit the registration data to the server.
     return $http.post(Options.API_SERVER + '/user/register', data)
       .success(function(response){
-        return createWallet(response.data.authToken, response.data.updateToken)
-          .finally(function(){
-            // Initialize the session with the new wallet.
-            session.login(wallet);
-
-            // Take the user to the dashboard.
-            $state.go('dashboard');
-          });
+        authToken = response.data.authToken;
+        updateToken = response.data.updateToken;
       })
       .error(showRegistrationErrors);
   }
@@ -194,7 +203,7 @@ sc.controller('RegistrationCtrl', function($scope, $state, $timeout, $http, $q, 
     }
   }
 
-  function createWallet(authToken, updateToken) {
+  function createWallet() {
     var id = Wallet.deriveId($scope.data.username.toLowerCase(), $scope.data.password);
     var key = Wallet.deriveKey(id, $scope.data.username.toLowerCase(), $scope.data.password);
 
