@@ -28,8 +28,6 @@ sc.controller('RegistrationCtrl', function($scope, $state, $timeout, $http, $q, 
 
   var wallet = null;
   var signingKeys = null;
-  var updateToken = null;
-  var authToken = null;
 
   // Checks to see if the supplied username is available.
   // This function is debounced to prevent API calls before the user is finished typing.
@@ -158,10 +156,6 @@ sc.controller('RegistrationCtrl', function($scope, $state, $timeout, $http, $q, 
 
     // Submit the registration data to the server.
     return $http.post(Options.API_SERVER + '/user/register', data)
-      .success(function(response){
-        authToken = response.data.authToken;
-        updateToken = response.data.updateToken;
-      })
       .error(showRegistrationErrors);
   }
 
@@ -203,7 +197,7 @@ sc.controller('RegistrationCtrl', function($scope, $state, $timeout, $http, $q, 
     }
   }
 
-  function createWallet() {
+  function createWallet(response) {
     var id = Wallet.deriveId($scope.data.username.toLowerCase(), $scope.data.password);
     var key = Wallet.deriveKey(id, $scope.data.username.toLowerCase(), $scope.data.password);
 
@@ -211,8 +205,8 @@ sc.controller('RegistrationCtrl', function($scope, $state, $timeout, $http, $q, 
       id: id,
       key: key,
       keychainData: {
-        authToken: authToken,
-        updateToken: updateToken,
+        authToken: response.data.data.authToken,
+        updateToken: response.data.data.updateToken,
         signingKeys: signingKeys
       },
       mainData: {
