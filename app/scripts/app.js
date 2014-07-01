@@ -15,7 +15,7 @@ stellarClient.config(function($httpProvider, $stateProvider, $urlRouterProvider,
     .state('login', {
       url:         '/login',
       templateUrl: 'states/login.html',
-      authenticate: null
+      authenticate: false
     })
     .state('recovery', {
       url:         '/recovery',
@@ -31,6 +31,10 @@ stellarClient.config(function($httpProvider, $stateProvider, $urlRouterProvider,
       url:         '/register',
       templateUrl: 'states/register.html',
       authenticate: false
+    })
+    .state('logout', {
+      url:         '/logout',
+      authenticate: true
     })
     .state('dashboard', {
       url:         '/dashboard',
@@ -83,6 +87,12 @@ stellarClient.run(function($rootScope, $state, session){
             event.preventDefault();
             return;
           }
+        }
+        break;
+
+      case '/logout':
+        if(session.get('loggedIn')) {
+          session.logOut();
         }
         break;
 

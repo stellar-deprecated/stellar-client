@@ -3,10 +3,6 @@
 var sc = angular.module('stellarClient');
 
 sc.controller('LoginCtrl', function($scope, $state, $http, $timeout, $q, session, singletonPromise) {
-  if(session.get('loggedIn')) {
-    session.logOut();
-  }
-
   $scope.username   = null;
   $scope.password   = null;
   $scope.loginError = null;
