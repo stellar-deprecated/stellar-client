@@ -169,7 +169,7 @@ Wallet.deriveKey = function(id, username, password){
 };
 
 /**
- * Encrypt data using 256bit AES in CBC mode with HMAC-SHA256 integrity checking.
+ * Encrypt data using 256bit AES in CCM mode with HMAC-SHA256 integrity checking.
  *
  * @param {object} data The data to encrypt.
  * @param {Array.<bits>} key The key used to encrypt the data.
@@ -183,8 +183,8 @@ Wallet.encryptData = function(data, key) {
   // Initialize the cipher algorithm with the key.
   var cipher = new sjcl.cipher[Wallet.SETTINGS.CIPHER_NAME](key);
 
-  // Encrypt the blob data in CBC mode using AES and a random 128bit IV.
-  var rawIV = sjcl.random.randomWords(4);
+  // Encrypt the blob data in CCM mode using AES and a random 96bit IV.
+  var rawIV = sjcl.random.randomWords(3);
   var rawCipherText = sjcl.mode[Wallet.SETTINGS.MODE].encrypt(cipher, rawData, rawIV);
 
   // Base 64 encode.
@@ -204,7 +204,7 @@ Wallet.encryptData = function(data, key) {
 };
 
 /**
- * Decrypt data using 256bit AES in CBC mode with HMAC-SHA256 integrity checking.
+ * Decrypt data using 256bit AES in CCM mode with HMAC-SHA256 integrity checking.
  *
  * @param {string} encryptedData The encrypted data encoded as base64.
  * @param {Array.<bits>} key The key used to decrypt the blob.
@@ -231,7 +231,7 @@ Wallet.decryptData = function(encryptedData, key) {
   // Initialize the cipher algorithm with the key.
   var cipher = new sjcl.cipher[cipherName](key);
 
-  // Decrypt the data in CBC mode using AES and the given IV.
+  // Decrypt the data in CCM mode using AES and the given IV.
   var rawData = sjcl.mode[mode].decrypt(cipher, rawCipherText, rawIV);
   var data = sjcl.codec.utf8String.fromBits(rawData);
 
