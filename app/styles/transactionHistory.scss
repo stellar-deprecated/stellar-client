@@ -55,26 +55,6 @@
           color: $grey;
           text-align: center;
         }
-
-        &.other-party {
-          padding: 13px 8px;
-
-          .avatar {
-            width: 40px;
-            height: 40px;
-            display: inline-block;
-            vertical-align: middle;
-            background-color: $grey;
-            border-radius: 40px;
-            overflow: hidden;
-            margin-right: 10px;
-
-            img {
-              width: 40px;
-              height: 40px;
-            }
-          }
-        }
       }
     }
   }
