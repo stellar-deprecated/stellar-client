@@ -253,7 +253,7 @@ body {
   }
 
   & > div {
-    padding: 20px 40px 15px 40px;
+    padding: 20px 20px 15px 20px;
     border-top: 3px solid $stellar-blue;
     border-bottom: 1px solid $grey-border;
     background-color: $grey-background;
@@ -366,15 +366,16 @@ body {
 .footer {
   left: auto;
   right: auto;
-  height: 70px;
   background-color: $white-grey;
   background-image: url(../images/rainbow.png);
   background-repeat: repeat-x;
-  padding: 25px 40px;
+  padding: 25px 20px;
 
   .summary {
     color: $info-grey;
+    float: left;
     font-size: 14px;
+    line-height: 56px;
     display: inline-block;
 
     i {
@@ -385,19 +386,34 @@ body {
     }
   }
 
-  .links {
+  .links-container {
     display: inline-block;
     float: right;
 
-    a {
-      margin-left: 20px;
-      font-size: 13px;
-      color: $info-grey;
-      @include transition(color 200ms ease-in-out);
+    .links {
+      display: block;
+      text-align: right;
+      right: 0;
+      padding-left: 0;
 
-      &:hover {
-        color: $stellar-blue;
-        text-decoration: none;
+      li {
+        display: inline-block;
+
+        &:last-child a {
+          margin-right: 0;
+        }
+
+        a {
+          margin-right: 20px;
+          font-size: 13px;
+          color: $info-grey;
+          @include transition(color 200ms ease-in-out);
+
+          &:hover {
+            color: $stellar-blue;
+            text-decoration: none;
+          }
+        }
       }
     }
   }
@@ -420,6 +436,11 @@ body {
 }
 
 @media (min-width: $mobile-width) {
+  .client-nav > div {
+
+    padding: 20px 105px 15px 105px;
+  }
+
   .client-container > div > * {
     padding: 0 105px;
   }
@@ -430,5 +451,14 @@ body {
 
   .footer {
     padding: 25px 105px;
+
+    .links-container {
+      display: inline-block;
+      line-height: 56px;
+
+      .links {
+        display: inline-block;
+      }
+    }
   }
 }
