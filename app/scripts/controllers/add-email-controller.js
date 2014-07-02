@@ -31,7 +31,7 @@ sc.controller('AddEmailCtrl', function ($scope, $rootScope, $http, session) {
         session.syncWallet(wallet, 'update');
 
         // Switch to the verify overlay.
-        $rootScope.emailToVerify = $scope.email;
+        $scope.rewards[2].status = "unverified";
       }
 
       function addEmailError(response) {
