@@ -29,7 +29,7 @@
             </label>
             <div class="col-sm-6">
                 <div class="input-icon-wrapper">
-                    <input id="email" type="email" class="form-control" ng-model="data.email">
+                    <input id="email" type="email" class="form-control" ng-model="data.email" ng-change="errors.emailErrors = []">
                     <i class="glyphicon glyphicon-envelope"></i>
                 </div>
             </div>
