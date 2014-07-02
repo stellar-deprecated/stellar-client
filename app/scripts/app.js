@@ -1,7 +1,7 @@
 'use strict';
 var STELLAR_CLIENT_REVISION = '_GIT_REVISION_GOES_HERE_';
 
-var stellarClient = angular.module('stellarClient', ['ui.router', 'rt.debounce', 'vr.passwordStrength', 'ngTable', 'ngRoute', 'angularMoment', 'filters', 'bruteRequest',  'singletonPromise', 'ngRaven']);
+var stellarClient = angular.module('stellarClient', ['ui.router', 'rt.debounce', 'vr.passwordStrength', 'ngRoute', 'angularMoment', 'filters', 'bruteRequest',  'singletonPromise', 'ngRaven']);
 
 stellarClient.config(function($httpProvider, $stateProvider, $urlRouterProvider, RavenProvider) {
 
