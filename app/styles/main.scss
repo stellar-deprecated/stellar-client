@@ -24,7 +24,6 @@ $mobile-width: 950px;
 body {
   height: 100%;
   width: 100%;
-  padding-top: 89px;
   color: $dark-grey;
   font-family: $avenir;
 }
@@ -232,6 +231,8 @@ body {
 }
 
 .client-nav {
+  margin-bottom: 0;
+
   ul {
     font-weight: $avenir-medium;
     font-size: 15px;
