@@ -35,8 +35,13 @@ sc.controller('VerifyEmailCtrl', function ($scope, $rootScope, $http, session) {
       .error(function(response) {
         if (response && response.status == 'fail') {
           if (response.code == 'validation_error') {
-            // TODO: invalid credentials, send to login page?
-            $scope.errors.push('Please login again.');
+            var error = response.data;
+            if (error.code == "invalid") {
+              $scope.errors.push("Invalid code.");
+            } else {
+              // TODO: invalid credentials, send to login page?
+              $scope.errors.push('Please login again.');
+            }
           } else if (response.code == 'already_claimed') {
             // TODO: this user has already claimed the verify_email reward
           }
