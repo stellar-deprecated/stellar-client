@@ -1,34 +1,68 @@
 .transaction-history {
   color: $dark-grey;
+  margin-bottom: 50px;
+  width: 100%;
 
-  .title {
+  .tx-title {
     font-size: 20px;
     margin-top: 35px;
     margin-bottom: 25px;
     display: inline-block;
   }
 
-  .table {
-    th {
-      text-align: left;
-      padding: 24px 24px 24px 0;
-      margin-right: 3px;
-      border-bottom-width: 1px;
-
-      &.sort-desc,
-      &.sort-asc {
-        background-color: transparent;
-      }
-    }
-
-    tr.tx {
+  .tx-table {
+    .tx-container {
       font-weight: $avenir-medium;
+      border-bottom: 1px solid $grey-border;
 
-      td {
+      div {
         line-height: 32px;
-        padding: 16px 8px;
-        font-size: 16px;
+        padding: 12px 0;
+        font-size: 12px;
         white-space: nowrap;
+        vertical-align: middle;
+
+        &.tx-type-icon {
+          width: 5%;
+          display: inline-block;
+        }
+
+        &.tx-type {
+          display: none;
+        }
+
+        &.tx-amount {
+          width: 15%;
+          display: inline-block;
+          text-align: right;
+          padding-right: 5px;
+        }
+
+        &.tx-currency {
+          width: 7%;
+          display: inline-block;
+        }
+
+        &.tx-date {
+          text-align: right;
+          display: none;
+        }
+
+        &.tx-direction {
+          width: 13%;
+          min-width: 80px;
+          text-align: center;
+          color: $grey;
+          display: inline-block;
+        }
+
+        &.tx-other-party {
+          width: 40%;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          display: inline-block;
+        }
 
         i {
           font-size: 20px;
@@ -50,12 +84,42 @@
           font-size: 13px;
           letter-spacing: 3px;
         }
-
-        &.direction {
-          color: $grey;
-          text-align: center;
-        }
       }
+    }
+  }
+}
+
+@media (min-width: $mobile-width) {
+  .transaction-history .tx-table .tx-container div {
+    font-size: 16px;
+    padding: 24px 0;
+
+    &.tx-type {
+      width: 28%;
+      display: inline-block;
+    }
+
+    &.tx-amount {
+      width: 8%;
+    }
+
+    &.tx-currency {
+      width: 5%;
+    }
+
+    &.tx-date {
+      width: 14%;
+    }
+
+    &.tx-direction {
+      display: inline-block;
+      padding-right: 0;
+      width: 15%;
+    }
+
+    &.tx-other-party {
+      display: inline-block;
+      width: 35%;
     }
   }
 }
