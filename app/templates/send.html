@@ -93,6 +93,9 @@
     </div>
     <div class="row">
         <div class="col-sm-6 col-sm-offset-3 send-form-status-container">
+            <p ng-show="send.fund_status == 'invalid'" class="send-form-status">
+                Amount is invalid
+            </p>
             <p ng-show="send.fund_status == 'insufficient-xtr'" class="send-form-status">
                 Destination account is unfunded; send at least
                 {{send.xtr_deficiency | rpamount}} XTR to fund it.
