@@ -7,6 +7,11 @@ sc.controller('AddEmailCtrl', function ($scope, $rootScope, $http, session) {
       $scope.loading = true;
       $scope.errors = [];
 
+      if (!Util.validateEmail($scope.email)) {
+        $scope.errors.push("Please enter a valid email.");
+        $scope.loading = false;
+        return;
+      }
       var wallet = session.get('wallet');
 
       var data = {
@@ -37,6 +42,8 @@ sc.controller('AddEmailCtrl', function ($scope, $rootScope, $http, session) {
               // TODO: send them to login screen?
               $scope.errors.push('Login expired');
             }
+          } else if (response.code == "already_taken") {
+            $scope.errors.push("This email is already taken.");
           }
         } else {
           $scope.errors.push('An error occured');
