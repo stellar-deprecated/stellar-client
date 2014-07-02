@@ -24,9 +24,9 @@
                 Oh, happy day.
             </div>
             <div class="info">
-                You need to complete the previous reward to get your coins.
+                You need to authenticate with facebook to get your coins.
             </div>
-            <button class="stellar-button btn btn-default" ng-click="closeReward()">Unlock previous?</button>
+            <button class="stellar-button btn btn-default" ng-click="toggleReward(1, rewards[1].status)">Get your first Stellars</button>
         </div>
 
         <div class="content sent" ng-class="{active: reward.status == 'sent'}">
