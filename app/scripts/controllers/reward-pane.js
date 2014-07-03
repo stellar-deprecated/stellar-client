@@ -16,9 +16,9 @@ sc.controller('RewardPaneCtrl', ['$http', '$scope', '$rootScope', 'session', 'st
 
   $scope.rewards = [
     {index: 0, title: 'Create a new wallet', status: 'sent', action: {}},
-    {index: 1, title: 'Get your first stellars.', status: 'incomplete', action: {}},
-    {index: 2, title: 'Confirm your email.', status: 'incomplete', action: {}},
-    {index: 3, title: 'Learn to send stellars.', status: 'incomplete', action: {}}
+    {index: 1, title: 'Receive your first stellars on us! Log in with Facebook', innerTitle: 'Receive your first stellars.', status: 'incomplete', action: {}},
+    {index: 2, title: 'Set up password recovery.', status: 'incomplete', action: {}},
+    {index: 3, title: 'Send stellars to a friend.', status: 'incomplete', action: {}}
   ];
 
   $scope.sortedRewards = $scope.rewards.slice();
@@ -162,9 +162,10 @@ sc.controller('RewardPaneCtrl', ['$http', '$scope', '$rootScope', 'session', 'st
       });
       $scope.computeRewardProgress();
       $scope.fbGiveawayAmount = response.data.giveawayAmount;
-      $scope.rewards[1].action.info = 'You will receive ' + $scope.fbGiveawayAmount + ' stellas.';
-      $scope.rewards[2].action.info = 'You will receive ' + $scope.fbGiveawayAmount * .2 + ' stellas.';
-      $scope.rewards[3].action.info = 'Send stellars to a friend and get ' + $scope.fbGiveawayAmount * .2 + ' stellars for learning.';
+      $scope.rewards[1].action.info = 'Hello World - receive ' + $scope.fbGiveawayAmount + ' stellars on us!';
+      $scope.rewards[2].action.info = 'Verify your email address to activate your password recovery feature and receive ' + $scope.fbGiveawayAmount * .2 + ' stellars. Find your activation code in your welcome email.';
+      $scope.rewards[3].action.info = 'Send ' + $scope.fbGiveawayAmount * .2 + ' stellars to a friend and receive ' + $scope.fbGiveawayAmount * .2 + ' stellars on us.';
+
       $scope.showRewards = (count < 3);
       if ($scope.rewards[3].status == "incomplete") {
         checkSentTransactions();

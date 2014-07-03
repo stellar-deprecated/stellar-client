@@ -2,7 +2,8 @@
     <div>
         <h1 class="title">Welcome to the Stellar Alpha Test</h1>
         <p class="info">
-            Only available to people we have mailed an Alpha code to. If you haven't gotten a code just *hang on*. We will have a general beta soon! <a href="http://www.gostellar.org/sign-up">Click here to sign up</a>!
+            Only available to Alpha testers. If you signed up to be an Alpha tester, please check your email. If you are not an Alpha tester, <a href="http://www.gostellar.org/sign-up">click here to sign up</a> for the wait list.
+
         </p>
         <form role="form" class="form-horizontal stellar-form" ng-controller="AlphaCtrl">
             <div class="form-group">
@@ -11,7 +12,7 @@
                 </div>
                 <label for="code" class="col-sm-3">ALPHA CODE</label>
                 <div class="input-icon-wrapper col-sm-6">
-                    <input id="code" type="text" class="form-control" ng-class="{'input-error': alphaCodeErrors.length}" ng-model="alphaCode" placeholder="Alpha Tester Code emailed to you" ng-change="clearErrors()">
+                    <input id="code" type="text" class="form-control" ng-class="{'input-error': alphaCodeErrors.length}" ng-model="alphaCode" placeholder="Check email for your code" ng-change="clearErrors()">
                 </div>
             </div>
             <div class="form-group">

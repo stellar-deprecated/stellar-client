@@ -22,7 +22,7 @@ var Options = {
     },
 
     stellar_contact: {
-        destination: "stellarfairy",
+        destination: "StellarFoundation",
         destination_address: "gpjh5ZsnpfLy1FYD8V9b7oNbwZqXMFF7Ha",
         domain: "gostellar.org",
         type: "federation_record"
