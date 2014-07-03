@@ -44,7 +44,6 @@
         }
 
         &.tx-date {
-          text-align: right;
           display: none;
         }
 
@@ -95,7 +94,7 @@
     padding: 24px 0;
 
     &.tx-type {
-      width: 28%;
+      width: 20%;
       display: inline-block;
     }
 
@@ -104,11 +103,13 @@
     }
 
     &.tx-currency {
-      width: 5%;
+      width: 8%;
     }
 
     &.tx-date {
-      width: 14%;
+      width: 10%;
+      text-align: right;
+      display: inline-block;
     }
 
     &.tx-direction {
@@ -119,7 +120,7 @@
 
     &.tx-other-party {
       display: inline-block;
-      width: 35%;
+      width: 30%;
     }
   }
 }
