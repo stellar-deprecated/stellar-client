@@ -459,6 +459,10 @@ body {
 
       .links {
         display: inline-block;
+
+        li:last-child a {
+          margin-right: 20px;
+        }
       }
     }
   }
