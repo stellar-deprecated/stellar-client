@@ -68,7 +68,7 @@ sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', 'session', function
                 switch(err.remote.error) {
                     case 'actNotFound':
                         // The account is unfunded.
-                        $rootScope.accountStatus = 'unfunded';
+                        $rootScope.accountStatus = 'loaded';
                         break;
                     default:
                         $rootScope.accountStatus = 'error';
