@@ -1,26 +1,23 @@
 <div class="transaction-history" ng-controller="TransactionHistoryCtrl" ng-show="history.length">
     <div>
-        <span class="title">My transactions</span><br>
-        <table ng-table="tableParams" class="table">
-            <colgroup>
-                <col width="250px">
-                <col width="225px">
-                <col width="200px">
-                <col width="100px">
-                <col width="450px">
-            </colgroup>
-            <tr class="tx" ng-repeat="tx in $data">
-                <td data-title="'Type'">
+        <span class="tx-title">My transactions</span><br>
+        <div class="tx-table">
+            <div class="tx-container"></div>
+            <div class="tx tx-container" ng-repeat="tx in history">
+                <div class="tx-type-icon tx-column">
                     <i ng-class="typeIcons[tx.transaction.type]"></i>
+                </div>
+                <div class="tx-type tx-column">
                     <span class="type">{{ tx.transaction.type }}</span>
-                </td>
-                <td data-title="'Date'" sortable="'date'" am-time-ago="tx.date"></td>
-                <td data-title="'Amount'" sortable="'transaction.amount.to_number()'">{{ tx.transaction.amount.to_human() }} XTR</td>
-                <td class="direction">{{ tx.transaction.type === 'sent' ? 'to' : 'from' }}</td>
-                <td class="other-party">
+                </div>
+                <div class="tx-amount tx-column">{{ tx.transaction.amount.to_human() }}</div>
+                <div class="tx-currency tx-column">XTR</div>
+                <div class="tx-date tx-column" am-time-ago="tx.date"></div>
+                <div class="tx-direction tx-column">{{ tx.transaction.type === 'sent' ? 'to' : 'from' }}</div>
+                <div class="tx-other-party tx-column">
                     <span class="address">{{ tx.transaction.counterparty | addressToUsername }}</span>
-                </td>
-            </tr>
-        </table>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

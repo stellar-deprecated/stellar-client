@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <title>stellar client</title>
     <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width">
     <link rel="icon" type="image/png" href="/images/favicon.png">
 
     <link rel="stylesheet" href="https://fast.fonts.net/cssapi/d96d4bc8-5740-4ee1-b1ab-eafb3bdf7f1e.css">
@@ -12,7 +12,6 @@
 
     <!-- build:css styles/vendor.css -->
     <!-- bower:css -->
-    <link rel="stylesheet" href="bower_components/ng-table/ng-table.css" />
     <link rel="stylesheet" href="bower_components/fontawesome/css/font-awesome.css" />
     <!-- endbower -->
     <!-- endbuild -->
@@ -31,7 +30,7 @@
 </head>
 <body ng-controller="AppCtrl">
 <div class="app-wrapper">
-    <nav class="client-nav navbar navbar-fixed-top" role="navigation" ng-controller="NavCtrl">
+    <nav class="client-nav navbar" role="navigation" ng-controller="NavCtrl">
         <div class="container-fluid navbar-default">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
@@ -67,13 +66,17 @@
             <i class="glyphicon glyphicon-heart"></i>
             Stellar is a not-for-profit
         </div>
-        <div class="links info">
-            <a href="https://www.gostellar.org/about" target="_blank">About</a>
-            <a href="https://wiki.gostellar.org" target="_blank">Wiki</a>
-            <a href="https://www.gostellar.org/faq" target="_blank">FAQ</a>
-            <a href="https://www.gostellar.org/jobs" target="_blank">Jobs</a>
-            <a href="https://www.gostellar.org/tos" target="_blank">Terms of Service</a>
-            <a href="https://www.gostellar.org/privacy" target="_blank">Privacy Policy</a>
+        <div class="links-container">
+            <ul class="links info">
+                <li><a href="https://www.gostellar.org/about" target="_blank">About</a></li>
+                <li><a href="https://wiki.gostellar.org" target="_blank">Wiki</a></li>
+                <li><a href="https://www.gostellar.org/faq" target="_blank">FAQ</a></li>
+                <li><a href="https://www.gostellar.org/jobs" target="_blank">Jobs</a></li>
+            </ul>
+            <ul class="links info">
+                <li><a href="https://www.gostellar.org/tos" target="_blank">Terms of Service</a></li>
+                <li><a href="https://www.gostellar.org/privacy" target="_blank">Privacy Policy</a></li>
+            </ul>
         </div>
     </div>
 </div>
@@ -97,7 +100,6 @@
 <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
 <script src="bower_components/angular-debounce/dist/angular-debounce.min.js"></script>
 <script src="bower_components/angular-password-strength/build/angular-password-strength.min.js"></script>
-<script src="bower_components/ng-table/ng-table.min.js"></script>
 <script src="bower_components/crypto-js/components/core.js"></script>
 <script src="bower_components/crypto-js/components/ripemd160.js"></script>
 <script src="bower_components/moment/moment.js"></script>
