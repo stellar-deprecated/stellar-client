@@ -1,11 +1,17 @@
-<div class="reward-container ng-hide" ng-show="showRewards" ng-controller="RewardPaneCtrl">
-    <div class="reward-container-title">Get Started</div>
-    <div ng-include="'templates/reward-progress.html'"></div>
-    <div class="reward-pane">
-        <div ng-include src="'templates/reward-list.html'"></div>
-        <div ng-include="'templates/reward-page.html'" ng-controller="RegistrationRewardCtrl"></div>
-        <div ng-include="'templates/reward-page.html'" ng-controller="FacebookRewardCtrl"></div>
-        <div ng-include="'templates/reward-page.html'" ng-controller="EmailRewardCtrl" class="email-reward-page"></div>
-        <div ng-include="'templates/reward-page.html'" ng-controller="SendRewardCtrl"></div>
+<div class="reward-container" ng-controller="RewardPaneCtrl">
+    <div class="rewards-incomplete ng-hide" ng-show="showRewards">
+        <div class="reward-container-title">Get Started</div>
+        <div ng-include="'templates/reward-progress.html'"></div>
+        <div class="reward-pane">
+            <div ng-include src="'templates/reward-list.html'"></div>
+            <div ng-include="'templates/reward-page.html'" ng-controller="RegistrationRewardCtrl"></div>
+            <div ng-include="'templates/reward-page.html'" ng-controller="FacebookRewardCtrl"></div>
+            <div ng-include="'templates/reward-page.html'" ng-controller="EmailRewardCtrl" class="email-reward-page"></div>
+            <div ng-include="'templates/reward-page.html'" ng-controller="SendRewardCtrl"></div>
+        </div>
+    </div>
+    <div class="rewards-complete" ng-click="showRewardsComplete = false" ng-show="showRewardsComplete">
+        <i class="glyphicon glyphicon-ok-circle"></i>
+        <span class="rewards-complete-message">You unlocked all the rewards!</span>
     </div>
 </div>
