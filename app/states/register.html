@@ -66,7 +66,7 @@
         <div class="form-group">
             <div class="col-sm-offset-3 col-sm-6">
                 <button type="submit" class="btn btn-default stellar-button" ng-click="attemptRegistration()"
-                    ng-disabled="loading">{{loading ? 'Sending...' : 'Submit'}}</button>
+                    ng-disabled="loading">{{attemptRegistration.isLoading() ? 'Sending...' : 'Submit'}}</button>
             </div>
         </div>
     </form>
