@@ -15,7 +15,7 @@
       font-weight: $avenir-medium;
       border-bottom: 1px solid $grey-border;
 
-      div {
+      .tx-column {
         line-height: 32px;
         padding: 12px 0;
         font-size: 12px;
@@ -89,7 +89,7 @@
 }
 
 @media (min-width: $mobile-width) {
-  .transaction-history .tx-table .tx-container div {
+  .transaction-history .tx-table .tx-container .tx-column {
     font-size: 16px;
     padding: 24px 0;
 
