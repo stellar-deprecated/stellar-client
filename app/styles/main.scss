@@ -157,7 +157,7 @@ body {
   height: 45px;
   font-weight: $avenir-heavy;
   font-size: 17px;
-  color: $info-grey;
+  color: black;
   background-color: $white-grey;
   border-bottom-color: $grey;
   border-radius: 2px;
@@ -182,7 +182,7 @@ body {
   &:focus {
     outline: none;
     background-color: $white-grey;
-    color: $dark-grey;
+    color: black;
 
     &:hover {
       color: white;
