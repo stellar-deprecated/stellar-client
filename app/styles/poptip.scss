@@ -1,0 +1,82 @@
+.poptip {
+  border: 1px solid #D0D0D0;
+  border-radius: 3px;
+  width: 450px;
+  position: absolute;
+  left: 60%;
+  top: -30px;
+  z-index: 99;
+  cursor: default;
+  box-shadow: 0 0 5px 2px rgba($grey, 0.2);
+
+  @include transition(opacity 200ms ease-in-out);
+
+  & > div {
+    padding: 15px 35px;
+  }
+
+  &:before,
+  &:after {
+    content: "";
+    position: absolute;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    top: 42px;
+    left: 0;
+    margin-left: -10px;
+  }
+
+  &:before {
+    border-right: 10px solid #D0D0D0;
+  }
+
+  &:after {
+    border-right: 10px solid #FEEBE5;
+    padding-left: 2px;
+    z-index: 1;
+  }
+
+  .poptip-top {
+    background-color: #FEEBE5;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+
+    .title {
+      font-family: $avenir-heavy;
+      padding-top: 10px;
+      padding-bottom: 10px;
+      font-size: 16px;
+    }
+
+    .message {
+      font-family: $avenir-medium;
+      font-size: 16px;
+    }
+  }
+
+  .poptip-bottom {
+    background-color: white;
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+
+    .stellar-button {
+      margin: 0;
+      width: 62%;
+      font-size: 16px;
+      height: 40px;
+    }
+
+    .poptip-ignore {
+      display: inline-block;
+      margin: 12px 0;
+      float: right;
+      color: $grey;
+      cursor: pointer;
+      @include transition(color 200ms ease-in-out);
+
+      &:hover {
+        color: $error;
+      }
+    }
+  }
+}
