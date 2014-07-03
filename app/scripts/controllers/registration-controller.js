@@ -133,6 +133,16 @@ sc.controller('RegistrationCtrl', function($scope, $state, $timeout, $http, $q, 
     }
   }
 
+  $scope.addEmail = function(){
+    $scope.noEmailWarning = false;
+    $('#email').focus();
+  };
+
+  $scope.ignoreEmail = function(){
+    $scope.noEmailWarning = null;
+    $scope.attemptRegistration();
+  };
+
   $scope.attemptRegistration = singletonPromise(function() {
     return validateInput()
       .then(submitRegistration)
