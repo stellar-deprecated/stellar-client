@@ -25,6 +25,7 @@ sc.controller('RegistrationCtrl', function($scope, $state, $timeout, $http, $q, 
   };
 
   $scope.validators = [];
+  $scope.noEmailWarning = false;
 
   var wallet = null;
   var signingKeys = null;
@@ -116,6 +117,11 @@ sc.controller('RegistrationCtrl', function($scope, $state, $timeout, $http, $q, 
       $scope.errors.usernameErrors.push('This username is taken.');
     }
 
+    if(!$scope.data.email && $scope.noEmailWarning == false) {
+      validInput = false;
+      $scope.noEmailWarning = true;
+    }
+
     $scope.validators.forEach(function(validator){
       validInput = validator() && validInput;
     });
@@ -126,6 +132,16 @@ sc.controller('RegistrationCtrl', function($scope, $state, $timeout, $http, $q, 
       return $q.reject();
     }
   }
+
+  $scope.addEmail = function(){
+    $scope.noEmailWarning = false;
+    $('#email').focus();
+  };
+
+  $scope.ignoreEmail = function(){
+    $scope.noEmailWarning = null;
+    $scope.attemptRegistration();
+  };
 
   $scope.attemptRegistration = singletonPromise(function() {
     return validateInput()
