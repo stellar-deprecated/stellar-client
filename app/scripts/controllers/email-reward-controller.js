@@ -7,7 +7,6 @@ sc.controller('EmailRewardCtrl', function ($scope, $rootScope, session) {
   $scope.reward = $scope.rewards[$scope.index];
 
   var action = $scope.reward.action;
-  action.message = '';
   action.template = 'templates/verify-email.html';
 
   action.success = function (event, status) {

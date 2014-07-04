@@ -7,7 +7,6 @@ sc.controller('FacebookRewardCtrl', function ($scope, $http, session) {
   $scope.reward = $scope.rewards[$scope.index];
 
   var action = $scope.reward.action;
-  action.message = 'We are using Facebook to confirm that each person is funded only once. We will not post on your Facebook.';
   action.template = 'templates/facebook-button.html';
 
   action.start = function () {
