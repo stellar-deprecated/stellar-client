@@ -5,6 +5,7 @@ var sc = angular.module('stellarClient');
 sc.controller('RewardPaneCtrl', ['$http', '$scope', '$rootScope', 'session', 'stNetwork', function ($http, $scope, $rootScope, session, stNetwork) {
   $scope.showRewards = false;
   $scope.selectedReward = null;
+    $scope.fbGiveawayAmount=0;
 
   $scope.rewardStatusIcons = {
     'incomplete': 'glyphicon glyphicon-lock',
@@ -52,7 +53,7 @@ sc.controller('RewardPaneCtrl', ['$http', '$scope', '$rootScope', 'session', 'st
         };
         break;
       case 'ineligible':
-        info = "Your Facebook acount is too new to qualify. Stay tuned for new ways to grab stellars.";
+        info = "Your Facebook account is too new to qualify. Stay tuned for new ways to grab stellars.";
         panel = "Sorry, your Facebook account is too new."
         action = null;
         break;
@@ -162,9 +163,8 @@ sc.controller('RewardPaneCtrl', ['$http', '$scope', '$rootScope', 'session', 'st
       });
       $scope.computeRewardProgress();
       $scope.fbGiveawayAmount = response.data.giveawayAmount;
-      $scope.rewards[1].action.info = 'Hello World - receive ' + $scope.fbGiveawayAmount + ' stellars on us!';
-      $scope.rewards[2].action.info = 'Verify your email address to activate your password recovery feature and receive ' + $scope.fbGiveawayAmount * .2 + ' stellars. Find your activation code in your welcome email.';
-      $scope.rewards[3].action.info = 'Send ' + $scope.fbGiveawayAmount * .2 + ' stellars to a friend and receive ' + $scope.fbGiveawayAmount * .2 + ' stellars on us.';
+            //console.log($scope.data.fbGiveawayAmount);
+
 
       $scope.showRewards = (count < 3);
       if ($scope.rewards[3].status == "incomplete") {
