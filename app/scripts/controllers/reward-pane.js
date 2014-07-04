@@ -4,6 +4,7 @@ var sc = angular.module('stellarClient');
 
 sc.controller('RewardPaneCtrl', ['$http', '$scope', '$rootScope', 'session', 'stNetwork', function ($http, $scope, $rootScope, session, stNetwork) {
   $scope.showRewards = false;
+  $scope.showRewardsComplete = null;
   $scope.selectedReward = null;
     $scope.fbGiveawayAmount=0;
 
@@ -120,9 +121,13 @@ sc.controller('RewardPaneCtrl', ['$http', '$scope', '$rootScope', 'session', 'st
       return reward.status == 'sent';
     });
     $scope.showRewards = (completedRewards.length !== $scope.rewards.length);
+
+    $scope.showRewardsComplete = (completedRewards.length == $scope.rewards.length);
   };
 
-  function updateRewards() {
+  function updateRewards(success) {
+    success = success || function(){};
+
     var config = {
       params: {
         username: session.get('username'),
@@ -161,14 +166,15 @@ sc.controller('RewardPaneCtrl', ['$http', '$scope', '$rootScope', 'session', 'st
                 count++;
         }
       });
-      $scope.computeRewardProgress();
       $scope.fbGiveawayAmount = response.data.giveawayAmount;
             //console.log($scope.data.fbGiveawayAmount);
 
 
       $scope.showRewards = (count < 3);
       if ($scope.rewards[3].status == "incomplete") {
-        checkSentTransactions();
+        checkSentTransactions(success);
+      } else {
+        success();
       }
     })
     .error(function (response) {
@@ -187,7 +193,9 @@ sc.controller('RewardPaneCtrl', ['$http', '$scope', '$rootScope', 'session', 'st
 
   var offFn;
   // checks if the user has any "sent" transactions, requests send reward if so
-  function checkSentTransactions() {
+  function checkSentTransactions(success) {
+    success = success || function(){};
+
     var remote = stNetwork.remote;
     var account = $rootScope.account;
     var requestStellars = true;
@@ -222,6 +230,8 @@ sc.controller('RewardPaneCtrl', ['$http', '$scope', '$rootScope', 'session', 'st
               });
             }
           }
+
+          success();
         });
       })
       .on('error', function () {
@@ -243,6 +253,10 @@ sc.controller('RewardPaneCtrl', ['$http', '$scope', '$rootScope', 'session', 'st
       });
   }
 
-  updateRewards();
-  $scope.computeRewardProgress();
+  updateRewards(function(){
+    $scope.computeRewardProgress();
+
+    // Don't show the reward complete message if completed on the first load.
+    $scope.showRewardsComplete = false;
+  });
 }]);

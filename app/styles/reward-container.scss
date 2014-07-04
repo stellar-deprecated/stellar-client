@@ -5,7 +5,6 @@
 .reward-container {
   background-color: #F4F5F7;
   color: $dark-grey;
-  padding-bottom: 30px !important;
 
   .reward-container-title {
     font-weight: $avenir-heavy;
@@ -24,5 +23,36 @@
     position: relative;
     overflow: hidden;
     padding: 1px;
+  }
+
+  .rewards-incomplete {
+    padding-bottom: 30px;
+  }
+
+  .rewards-complete {
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+    padding: 28px 0;
+    background-color: #DCF2F8;
+    border: 1px solid #1CB4E5;
+    border-radius: 2px;
+    margin: 30px 0;
+
+    i {
+      color: #1CB4E5;
+      font-size: 32px;
+      vertical-align: middle;
+      margin-right: 16px;
+      top: 0;
+    }
+
+    .rewards-complete-message {
+      display: inline-block;
+      vertical-align: middle;
+      color: #1CB4E5;
+      font-size: 22px;
+      margin-top: 2px;
+    }
   }
 }
