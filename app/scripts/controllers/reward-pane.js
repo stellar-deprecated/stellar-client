@@ -10,7 +10,7 @@ sc.controller('RewardPaneCtrl', ['$http', '$scope', '$rootScope', 'session', 'st
     'incomplete': 'glyphicon glyphicon-lock',
     'awaiting_payout': 'glyphicon glyphicon-time',
     'sent': 'glyphicon glyphicon-ok-circle',
-    'unverified': 'glyphicon glyphicon-warning-sign',
+    'unverified': 'glyphicon glyphicon-lock',
     'ineligible': 'glyphicon glyphicon-warning-sign'
   };
 
