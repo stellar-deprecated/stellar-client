@@ -148,7 +148,9 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
   // checks if the user has any "sent" transactions, requests send reward if so
   function checkSentTransactions() {
     var promise = $q.defer();
-    if ($scope.rewards[3].status != "incomplete") return promise.resolve();
+    if ($scope.rewards[3].status != "incomplete") {
+      return promise.resolve();
+    }
 
     var sendRewardRequested = false;
 
