@@ -6,7 +6,7 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
   $scope.showRewards = false;
   $scope.showRewardsComplete = null;
   $scope.selectedReward = null;
-    $scope.fbGiveawayAmount=0;
+  $scope.giveawayAmount=0;
 
   $scope.rewardStatusIcons = {
     'incomplete': 'glyphicon glyphicon-lock',
@@ -139,7 +139,7 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
           $scope.rewards[reward.rewardType].status = reward.status;
         });
 
-        $scope.fbGiveawayAmount = response.data.giveawayAmount;
+        $scope.giveawayAmount = response.data.giveawayAmount;
 
         $scope.computeRewardProgress();
       });
