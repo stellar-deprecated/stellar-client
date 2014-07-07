@@ -125,9 +125,7 @@ sc.controller('RewardPaneCtrl', ['$http', '$scope', '$rootScope', 'session', 'st
     $scope.showRewardsComplete = (completedRewards.length == $scope.rewards.length);
   };
 
-  function updateRewards(success) {
-    success = success || function(){};
-
+  $scope.updateRewards = function() {
     var config = {
       params: {
         username: session.get('username'),
@@ -189,7 +187,7 @@ sc.controller('RewardPaneCtrl', ['$http', '$scope', '$rootScope', 'session', 'st
           // TODO: error
       }
     });
-  }
+  };
 
   var offFn;
   // checks if the user has any "sent" transactions, requests send reward if so
@@ -253,7 +251,7 @@ sc.controller('RewardPaneCtrl', ['$http', '$scope', '$rootScope', 'session', 'st
       });
   }
 
-  updateRewards(function(){
+  $scope.updateRewards(function(){
     $scope.computeRewardProgress();
 
     // Don't show the reward complete message if completed on the first load.
