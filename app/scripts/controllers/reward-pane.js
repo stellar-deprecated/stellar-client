@@ -150,7 +150,7 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
     var promise = $q.defer();
     if ($scope.rewards[3].status != "incomplete") return promise.resolve();
 
-    var requestStellars = true;
+    var sendRewardRequested = false;
 
     var remote = stNetwork.remote;
     var account = $rootScope.account;
@@ -174,12 +174,12 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
 
             if (transaction && transaction.type == "sent") {
               requestSentStellarsReward();
-              requestStellars = false;
+              sendRewardRequested = true;
               break;
             }
           }
 
-          if (requestStellars) {
+          if (!sendRewardRequested) {
             setupSendTxListener();
           }
 
