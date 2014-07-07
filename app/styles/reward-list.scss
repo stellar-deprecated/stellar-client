@@ -60,6 +60,10 @@
       }
     }
 
+    &.sent {
+      text-decoration: line-through;
+    }
+
     .reward-body {
       padding: 30px 30px;
     }
