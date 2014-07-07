@@ -5,12 +5,12 @@
     </div>
     <div class="reward-container-title">
         <i class="glyphicon glyphicon-lock"></i>
-        {{ reward.title }}
+        {{ reward.innerTitle }}
     </div>
 
     <div class="content" ng-class="{active: !reward.error}">
         <div class="content" ng-class="{active: reward.status != 'sent' && reward.status != 'awaiting_payout'}">
-            <div ng-include="reward.action.template"></div>
+            <div ng-include="reward.template"></div>
         </div>
 
         <div class="content awaiting-payout" ng-class="{active: reward.status == 'awaiting_payout'}">
