@@ -43,8 +43,6 @@ module.filter('rpamount', function () {
             opts = {};
         }
 
-        if (isNaN(input)) return "n/a";
-
         if (opts.xtr_human && input === ("" + parseInt(input, 10))) {
             input = input + ".0";
         }
