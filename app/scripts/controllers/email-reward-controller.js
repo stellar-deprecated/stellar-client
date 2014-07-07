@@ -11,7 +11,7 @@ sc.controller('EmailRewardCtrl', function ($scope, $rootScope, session) {
 
   action.success = function (event, status) {
     $scope.rewards[$scope.index].status = status;
-    $scope.computeRewardProgress();
+    $scope.updateRewards();
   };
 
   $rootScope.$on('emailVerified', action.success);

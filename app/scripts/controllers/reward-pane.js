@@ -2,11 +2,11 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('RewardPaneCtrl', ['$http', '$scope', '$rootScope', 'session', 'stNetwork', function ($http, $scope, $rootScope, session, stNetwork) {
+sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session, stNetwork) {
   $scope.showRewards = false;
   $scope.showRewardsComplete = null;
   $scope.selectedReward = null;
-    $scope.fbGiveawayAmount=0;
+  $scope.giveawayAmount=0;
 
   $scope.rewardStatusIcons = {
     'incomplete': 'glyphicon glyphicon-lock',
@@ -80,20 +80,18 @@ sc.controller('RewardPaneCtrl', ['$http', '$scope', '$rootScope', 'session', 'st
           username: session.get('username')
         }
     };
-    $http.get(Options.API_SERVER + '/claim/placeInLine', config)
-    .success(function (result) {
-      if (result.message > 1) {
-        $scope.rewards[1].title = "You are on the waiting list! Approximate waiting time: " + result.message + " days.";
-      } else {
-        $scope.rewards[1].title = "You are on the waiting list! You will get your stellars tomorrow.";
-      }
 
-      $scope.rewards[1].action = function () {
-      };
-    })
-    .error(function (response) {
-        // TODO: error
-    });
+    $http.get(Options.API_SERVER + '/claim/placeInLine', config)
+      .success(function (result) {
+        if (result.message > 1) {
+          $scope.rewards[1].title = "You are on the waiting list! Approximate waiting time: " + result.message + " days.";
+        } else {
+          $scope.rewards[1].title = "You are on the waiting list! You will get your stellars tomorrow.";
+        }
+
+        $scope.rewards[1].action = function () {
+        };
+      });
   }
 
   $scope.computeRewardProgress = function() {
@@ -125,138 +123,107 @@ sc.controller('RewardPaneCtrl', ['$http', '$scope', '$rootScope', 'session', 'st
     $scope.showRewardsComplete = (completedRewards.length == $scope.rewards.length);
   };
 
-  function updateRewards(success) {
-    success = success || function(){};
-
+  $scope.updateRewards = function() {
     var config = {
       params: {
         username: session.get('username'),
         updateToken: session.get('wallet').keychainData.updateToken
       }
     };
+
     // Load the status of the user's rewards.
-    $http.get(Options.API_SERVER + '/user/rewards', config)
-    .success(function (response) {
-      // Only show the rewards pane if there are rewards left to complete.
-      var count = 0;
+    return $http.get(Options.API_SERVER + '/user/rewards', config)
+      .success(function (response) {
+        // Update the status of the user's rewards.
+        response.data.rewards.forEach(function (reward) {
+          $scope.rewards[reward.rewardType].status = reward.status;
+        });
 
-      // Update the status of the user's rewards.
-      var rewardsGiven = response.data.rewards;
-      rewardsGiven.forEach(function (reward) {
-        $scope.rewards[reward.rewardType].status = reward.status;
-        switch (reward.status) {
-            case 'pending':
-              $scope.rewards[reward.rewardType].status = 'incomplete';
-              break;
-            case 'unverified':
-              if (reward.rewardType == 1) {
-                rewardError($scope.rewards[reward.rewardType], "unverified");
-              }
-              break;
-            case 'ineligible':
-              rewardError($scope.rewards[reward.rewardType], "ineligible");
-              break;
-            case 'awaiting_payout':
-                if (reward.rewardType == 1) {
-                  // this guy is on the waiting list
-                  getPlaceInLine();
-                }
-                break;
-            case 'sent':
-                count++;
-        }
+        $scope.giveawayAmount = response.data.giveawayAmount;
+
+        $scope.computeRewardProgress();
       });
-      $scope.fbGiveawayAmount = response.data.giveawayAmount;
-            //console.log($scope.data.fbGiveawayAmount);
+  };
 
-
-      $scope.showRewards = (count < 3);
-      if ($scope.rewards[3].status == "incomplete") {
-        checkSentTransactions(success);
-      } else {
-        success();
-      }
-    })
-    .error(function (response) {
-      if (response && response.status == 'fail') {
-        if (response.code == 'validation_error') {
-          var error = response.data;
-          if (error.field == "update_token" && error.code == "invalid") {
-              // TODO: invalid update token error
-          }
-        }
-      } else {
-          // TODO: error
-      }
-    });
-  }
-
-  var offFn;
   // checks if the user has any "sent" transactions, requests send reward if so
-  function checkSentTransactions(success) {
-    success = success || function(){};
+  function checkSentTransactions() {
+    var promise = $q.defer();
+    if ($scope.rewards[3].status != "incomplete") {
+      return promise.resolve();
+    }
+
+    var sendRewardRequested = false;
 
     var remote = stNetwork.remote;
     var account = $rootScope.account;
-    var requestStellars = true;
-    // Transactions
-    remote.request_account_tx({
+    var params = {
       'account': account,
       'ledger_index_min': 0,
       'ledger_index_max': 9999999,
       'descending': true,
       'count': true
-    })
+    };
+
+    // Transactions
+    remote.request_account_tx(params)
       .on('success', function (data) {
+        data.transactions = data.transactions || [];
+
         $scope.$apply(function () {
-          if (data.transactions) {
-            data.transactions.forEach(function (e) {
-              var processedTxn = JsonRewriter.processTxn(e.tx, e.meta, account);
-              var transaction = processedTxn.transaction;
-              if (transaction && transaction.type == "sent" && $scope.rewards[3].status == "incomplete" && requestStellars) {
-                requestSentStellarsReward();
-                requestStellars = false;
-              }
-            });
-            if (requestStellars) {
-              if (offFn) {
-                offFn();
-              }
-              offFn = $scope.$on('$appTxNotification', function (event, tx) {
-                if (tx.type == 'sent' && $scope.rewards[3].status == "incomplete") {
-                  requestSentStellarsReward();
-                  offFn();
-                }
-              });
+          for(var i = 0; i < data.transactions.length; i++){
+            var processedTxn = JsonRewriter.processTxn(data.transactions[i].tx, data.transactions[i].meta, account);
+            var transaction = processedTxn.transaction;
+
+            if (transaction && transaction.type == "sent") {
+              requestSentStellarsReward();
+              sendRewardRequested = true;
+              break;
             }
           }
 
-          success();
+          if (!sendRewardRequested) {
+            setupSendTxListener();
+          }
+
+          promise.resolve();
         });
       })
       .on('error', function () {
-
+        promise.reject();
       })
       .request();
+
+    return promise;
+  }
+
+  var sendTxListener;
+  function setupSendTxListener(){
+    if (sendTxListener) {
+      sendTxListener();
+    }
+
+    sendTxListener = $scope.$on('$appTxNotification', function (event, tx) {
+      if (tx.type == 'sent' && $scope.rewards[3].status == "incomplete") {
+        requestSentStellarsReward();
+        sendTxListener();
+      }
+    });
   }
 
   function requestSentStellarsReward() {
-    var username = session.get('username');
-    $http.post(Options.API_SERVER + "/claim/sendStellars", {"username": username})
-      .success(function (response) {
-        console.log(response.status);
-        $scope.rewards[3].status = response.message;
-        $scope.computeRewardProgress();
-      })
-      .error(function (response) {
+    var data = {username: session.get('username')};
 
+    return $http.post(Options.API_SERVER + "/claim/sendStellars", data)
+      .success(function (response) {
+        $scope.rewards[3].status = response.message;
+        $scope.updateRewards();
       });
   }
 
-  updateRewards(function(){
-    $scope.computeRewardProgress();
-
-    // Don't show the reward complete message if completed on the first load.
-    $scope.showRewardsComplete = false;
-  });
-}]);
+  $scope.updateRewards()
+    .then(checkSentTransactions)
+    .then(function(){
+      // Don't show the reward complete message if completed on the first load.
+      $scope.showRewardsComplete = false;
+    });
+});

@@ -18,7 +18,7 @@ sc.controller('FacebookRewardCtrl', function ($scope, $http, session) {
 
   action.success = function (status) {
     $scope.rewards[1].status = status;
-    $scope.computeRewardProgress();
+    $scope.updateRewards();
   };
 
   action.error = function (response) {
@@ -52,7 +52,7 @@ sc.controller('FacebookRewardCtrl', function ($scope, $http, session) {
       if (response.code == 'transaction_error') {
         // we've stored the reward but there was an error sending the transaction
         $scope.rewards[1].status = 'awaiting_payout';
-        $scope.computeRewardProgress();
+        $scope.updateRewards();
       }
     } else {
       $scope.rewards[1].status = 'incomplete';

@@ -17,6 +17,6 @@ sc.controller('SendRewardCtrl', function ($scope, session) {
 
   action.success = function () {
     $scope.rewards[$scope.index].status = "sent";
-    $scope.computeRewardProgress();
+    $scope.updateRewards();
   };
 });
