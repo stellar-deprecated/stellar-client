@@ -17,10 +17,10 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
   };
 
   $scope.rewards = [
-    {index: 0, title: 'Create a new wallet', status: 'sent', action: {}},
-    {index: 1, title: 'Receive your first stellars on us! Log in with Facebook', innerTitle: 'Receive your first stellars.', status: 'incomplete', action: {}},
-    {index: 2, title: 'Set up password recovery.', status: 'incomplete', action: {}},
-    {index: 3, title: 'Send stellars to a friend.', status: 'incomplete', action: {}}
+    {index: 0, title: 'Create a new wallet', innerTitle: 'Create a new wallet', status: 'sent'},
+    {index: 1, title: 'Receive your first stellars on us! Log in with Facebook', innerTitle: 'Receive your first stellars.', status: 'incomplete'},
+    {index: 2, title: 'Set up password recovery', innerTitle: 'Set up password recovery', status: 'incomplete'},
+    {index: 3, title: 'Send stellars to a friend', innerTitle: 'Send stellars to a friend', status: 'incomplete'}
   ];
 
   $scope.sortedRewards = $scope.rewards.slice();
