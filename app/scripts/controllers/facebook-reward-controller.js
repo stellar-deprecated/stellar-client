@@ -6,22 +6,21 @@ sc.controller('FacebookRewardCtrl', function ($scope, $http, session) {
   $scope.index = 1;
   $scope.reward = $scope.rewards[$scope.index];
 
-  var action = $scope.reward.action;
-  action.template = 'templates/facebook-button.html';
+  $scope.reward.template = 'templates/facebook-button.html';
 
-  action.start = function () {
+  $scope.facebookLogin = function () {
     var username = session.get('username');
     var updateToken = session.get('wallet').keychainData.updateToken;
     $scope.loading = true;
-    fbLoginStart($http, username, updateToken, action.success, action.error);
+    fbLoginStart($http, username, updateToken, facebookLoginSuccess, facebookLoginError);
   };
 
-  action.success = function (status) {
+  function facebookLoginSuccess(status) {
     $scope.rewards[1].status = status;
     $scope.updateRewards();
-  };
+  }
 
-  action.error = function (response) {
+  function facebookLoginError(response) {
     $scope.loading = false;
     if (response && response.status == 'fail') {
       switch (response.code) {
