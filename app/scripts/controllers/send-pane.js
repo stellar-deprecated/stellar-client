@@ -50,7 +50,7 @@ sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout'
     $scope.currencies_all = StellarDefaultCurrencyList;
     // XRP currency object.
     // {name: "XRP - Ripples", order: 146, value: "XRP"}
-    $scope.xtr = _.where($scope.currencies_all, {value: "XTR"})[0];
+    $scope.xtr = _.where($scope.currencies_all, {value: "STR"})[0];
 
     $scope.$watch('send.recipient', function () {
         // raw address without any parameters
@@ -80,7 +80,7 @@ sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout'
     }, true);
 
     $scope.$watch('send.currency', function () {
-        $scope.send.currency_code = $scope.send.currency ? $scope.send.currency.slice(0, 3).toUpperCase() : "XTR";
+        $scope.send.currency_code = $scope.send.currency ? $scope.send.currency.slice(0, 3).toUpperCase() : "STR";
         $scope.update_currency();
     }, true);
 
@@ -140,8 +140,8 @@ sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout'
 
         $scope.reset_destination_deps();
 
-        // Trying to send XTR to self.
-        // This is used to disable 'Send XTR' button
+        // Trying to send STR to self.
+        // This is used to disable 'Send STR' button
         send.self = recipient === $scope.address;
 
         // Trying to send to a Bitcoin address
@@ -222,7 +222,7 @@ sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout'
         }
     };
 
-    // Check destination for XTR sufficiency and flags
+    // Check destination for STR sufficiency and flags
     $scope.check_destination = function () {
         var send = $scope.send;
         var recipient = send.recipient_actual || send.recipient_address;
@@ -341,9 +341,9 @@ sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout'
                                 return currency;
                             })));
 
-                            // Add XTR if they allow it
+                            // Add STR if they allow it
                             if (!send.recipient_info.disallow_xtr) {
-                                send.currency_choices.unshift("XTR");
+                                send.currency_choices.unshift("STR");
                             }
                         });
                     }
@@ -360,10 +360,10 @@ sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout'
 
             // Do nothing
         } else {
-            // If the account doesn't exist, we can only send XTR
-            send.currency_choices = ["XTR"];
-            send.currency_force = "XTR";
-            send.currency = "XTR";
+            // If the account doesn't exist, we can only send STR
+            send.currency_choices = ["STR"];
+            send.currency_force = "STR";
+            send.currency = "STR";
         }
 
         $scope.update_currency();
@@ -459,7 +459,7 @@ sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout'
                 return;
             }
 
-            // Cannot make XTR payment if the sender does not have enough XTR
+            // Cannot make STR payment if the sender does not have enough STR
             send.sender_insufficient_xtr = send.amount_feedback.is_native()
                 && $scope.account.max_spend
                 && $scope.account.max_spend.to_number() > 1
@@ -635,7 +635,7 @@ sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout'
                         if (raw.source_amount.currency) {
                             if (raw.source_amount.currency === $scope.send.currency_code)
                                 currentKey = key;
-                        } else if ($scope.send.currency_code === 'XTR') {
+                        } else if ($scope.send.currency_code === 'STR') {
                             currentKey = key;
                         }
 
@@ -747,7 +747,7 @@ sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout'
             amount_prev: new Amount(),
             currency: $scope.xtr.name,
             currency_choices: $scope.currencies_all,
-            currency_code: "XTR",
+            currency_code: "STR",
             path_status: 'waiting',
             fund_status: 'none',
             sender_insufficient_xtr: false
