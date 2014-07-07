@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('RewardPaneCtrl', ['$http', '$scope', '$rootScope', '$q', 'session', 'stNetwork', function ($http, $scope, $rootScope, $q, session, stNetwork) {
+sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session, stNetwork) {
   $scope.showRewards = false;
   $scope.showRewardsComplete = null;
   $scope.selectedReward = null;
@@ -224,4 +224,4 @@ sc.controller('RewardPaneCtrl', ['$http', '$scope', '$rootScope', '$q', 'session
       // Don't show the reward complete message if completed on the first load.
       $scope.showRewardsComplete = false;
     });
-}]);
+});
