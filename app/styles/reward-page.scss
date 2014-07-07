@@ -23,6 +23,7 @@
     font-size: 20px;
     height: 50px;
     line-height: 50px;
+    margin-bottom: 42px;
 
     i {
       margin: 0 15px;
@@ -31,7 +32,7 @@
   }
 
   .content {
-    margin: 0 57px;
+    margin: 0 15px;
     display: none;
 
     &.active {
@@ -60,7 +61,6 @@
       font-weight: $avenir-medium;
       font-size: 20px;
       text-align: center;
-      line-height: 70px;
     }
 
     .body {
@@ -139,20 +139,17 @@
     .body {
       color: $error;
       font-size: 35px;
+      margin-bottom: 20px;
     }
 
     .info {
       font-size: 22px;
+      margin-bottom: 20px;
     }
 
     .errorButton button {
-      color:#000000;
       width: 270px;
       margin-top: 20px;
     }
   }
-}
-
-.email-reward-page .reward-page .content .info {
-  line-height: 5px;
 }

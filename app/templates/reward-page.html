@@ -8,7 +8,7 @@
         {{ reward.innerTitle }}
     </div>
 
-    <div class="content" ng-class="{active: !reward.error}">
+    <div ng-hide="reward.error">
         <div class="content" ng-class="{active: reward.status != 'sent' && reward.status != 'awaiting_payout'}">
             <div ng-include="reward.template"></div>
         </div>
