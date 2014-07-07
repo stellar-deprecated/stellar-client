@@ -88,9 +88,6 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
         } else {
           $scope.rewards[1].title = "You are on the waiting list! You will get your stellars tomorrow.";
         }
-
-        $scope.rewards[1].action = function () {
-        };
       });
   }
 
