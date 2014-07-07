@@ -19,9 +19,9 @@
             <div rp-error-on="rpAmountPositive" l10n="l10n" class="tip col-sm-offset-6 col-sm-3">Amount must be greater than zero.</div>
             <div rp-error-on="rpMaxAmount" l10n="l10n" class="tip col-sm-offset-6 col-sm-3">
                 This transaction exceeds your balance, you can send
-                a max. of {{account.max_spend | rpamount:{rel_precision: 0} }} XTR
+                a max. of {{account.max_spend | rpamount:{rel_precision: 0} }} STR
             </div>
-            <div ng-show="send.recipient_info.disallow_xtr && send.currency_code=='XTR'" l10n="l10n" class="tip col-sm-offset-6 col-sm-3">Recipient does not allow XTR payments. Are you sure you want to send XTR anyway?</div>
+            <div ng-show="send.recipient_info.disallow_xtr && send.currency_code=='STR'" l10n="l10n" class="tip col-sm-offset-6 col-sm-3">Recipient does not allow STR payments. Are you sure you want to send STR anyway?</div>
             <div ng-show="send.trust_limit" l10n="l10n" class="success tip col-sm-offset-6 col-sm-3">
                 {{send.recipient | rpcontactname}}
                 trusts you for {{send.trust_limit | rpamount}} {{send.trust_limit | rpcurrency}}.
@@ -31,7 +31,7 @@
         <div class="row amount">
             <div class="col-sm-6 send-amount right-inner-addon">
                 <input id="send_amount" name="send_amount" type="text" ng-model="send.amount" required="required" rp-autofill="$routeParams.amount" rp-autofill-amount="rp-autofill-amount" rp-amount="rp-amount" rp-amount-positive="rp-amount-positive" rp-amount-xtr-limit="rp-amount-xtr-limit" rp-amount-xtr-limit-currency="{{send.currency}}" class="form-control stellar-input"/>
-                <i>XTR</i>
+                <i>STR</i>
             </div>
             <div class="col-sm-3 tip">Type in the amount to send.</div>
         </div>
@@ -98,7 +98,7 @@
             </p>
             <p ng-show="send.fund_status == 'insufficient-xtr'" class="send-form-status">
                 Destination account is unfunded; send at least
-                {{send.xtr_deficiency | rpamount}} XTR to fund it.
+                {{send.xtr_deficiency | rpamount}} STR to fund it.
                 <a href="https://wiki.gostellar.org/Reserves" target="_blank" l10n="l10n">More information</a>
             </p>
             <p ng-show="account.max_spend.to_number() < send.amount * 1000000" l10n="l10n" class="send-form-status">
@@ -107,9 +107,9 @@
             <p ng-show="send.path_status == 'checking'" class="send-form-status">Checking</p>
             <p ng-show="send.path_status == 'fed-check'" class="send-form-status">Analyzing address</p>
             <p ng-show="send.path_status == 'bridge-quote'" class="send-form-status">Requesting quote</p>
-            <p ng-show="send.path_status == 'pending' && send.currency_code != 'XTR'" class="send-form-status">Calculating paths</p>
+            <p ng-show="send.path_status == 'pending' && send.currency_code != 'STR'" class="send-form-status">Calculating paths</p>
 
-            <p ng-show="send.path_status == 'no-path' && send.currency_code != 'XTR'" class="send-form-status">
+            <p ng-show="send.path_status == 'no-path' && send.currency_code != 'STR'" class="send-form-status">
                 Sorry! Cannot send {{send.amount}} {{send.currency}} to
                 {{send.recipient}}. Please make sure your account has enough funds,
                 and the recipient has enough trust to the currency issuer. If it still
@@ -121,7 +121,7 @@
         </div>
     </div>
     <div class="row">
-        <div ng-show="send.currency_code == 'XTR'">
+        <div ng-show="send.currency_code == 'STR'">
             <button type="submit" ng-disabled="sendForm.$invalid || send.self || !send.recipient_resolved || account.max_spend.to_number() < send.amount * 1000000 || send.fund_status !== 'none'" l10n="l10n" class="btn btn-default submit col-sm-offset-3 col-sm-6 stellar-button">Send</button>
         </div>
     </div>
@@ -233,7 +233,7 @@
     </group>
     <group ng-show="tx_result=='claim'" class="result-malformed">
         <h2 l10n="l10n" class="tx-status">Transaction failed!</h2>
-        <p ng-switch on="engine_result"><span ng-switch-when="tecNO_DST" l10n="l10n">The destination account does not exist.</span><span ng-switch-when="tecNO_DST_INSUF_XRP" l10n="l10n">The destination account does not exist. Too little XTR sent to create it.</span><span ng-switch-default="ng-switch-default" l10n="l10n">Error: {{engine_result_message}}</span></p>
+        <p ng-switch on="engine_result"><span ng-switch-when="tecNO_DST" l10n="l10n">The destination account does not exist.</span><span ng-switch-when="tecNO_DST_INSUF_XRP" l10n="l10n">The destination account does not exist. Too little STR sent to create it.</span><span ng-switch-default="ng-switch-default" l10n="l10n">Error: {{engine_result_message}}</span></p>
     </group>
     <group ng-show="tx_result=='failed'" class="result-failed">
         <h2 l10n="l10n" class="tx-status">Transaction failed!</h2>

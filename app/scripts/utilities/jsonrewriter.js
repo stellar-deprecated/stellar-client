@@ -4,20 +4,20 @@
  * Ripple trading default currency pairs.
  *
  * This list is a bit arbitrary, but it's basically the Majors [1] from forex
- * trading with some XTR pairs added.
+ * trading with some STR pairs added.
  *
  * [1] http://en.wikipedia.org/wiki/Currency_pair#The_Majors
  */
 var pairs = [
-    {name: 'BTC/XTR', order: 1},
-    {name: 'XTR/USD', order: 1},
-    {name: 'XTR/EUR', order: 1},
-    {name: 'XTR/JPY', order: 0},
-    {name: 'XTR/GBP', order: 0},
-    {name: 'XTR/AUD', order: 0},
-    {name: 'XTR/CHF', order: 0},
-    {name: 'XTR/CAD', order: 0},
-    {name: 'XTR/CNY', order: 0},
+    {name: 'BTC/STR', order: 1},
+    {name: 'STR/USD', order: 1},
+    {name: 'STR/EUR', order: 1},
+    {name: 'STR/JPY', order: 0},
+    {name: 'STR/GBP', order: 0},
+    {name: 'STR/AUD', order: 0},
+    {name: 'STR/CHF', order: 0},
+    {name: 'STR/CAD', order: 0},
+    {name: 'STR/CNY', order: 0},
     {name: 'BTC/USD', order: 0},
     {name: 'BTC/EUR', order: 0},
     {name: 'EUR/USD', order: 0},
@@ -289,7 +289,7 @@ JsonRewriter = {
               };
             }
 
-            // Updated XTR Balance
+            // Updated STR Balance
             if (tx.Fee != node.fieldsPrev.Balance - node.fields.Balance) {
               if (feeEff)
                 balance = balance.subtract(feeEff.amount);
@@ -300,7 +300,7 @@ JsonRewriter = {
 
               // balance_changer is set to true if the transaction / effect has changed one of the account balances
               obj.balance_changer = effect.balance_changer = true;
-              affected_currencies.push('XTR');
+              affected_currencies.push('STR');
             }
           }
         }

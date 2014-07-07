@@ -11,7 +11,7 @@
                     <span class="type">{{ tx.transaction.type }}</span>
                 </div>
                 <div class="tx-amount tx-column">{{ tx.transaction.amount.to_human() }}</div>
-                <div class="tx-currency tx-column">XTR</div>
+                <div class="tx-currency tx-column">STR</div>
                 <div class="tx-date tx-column" am-time-ago="tx.date"></div>
                 <div class="tx-direction tx-column">{{ tx.transaction.type === 'sent' ? 'to' : 'from' }}</div>
                 <div class="tx-other-party tx-column">
