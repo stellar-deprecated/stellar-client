@@ -396,14 +396,11 @@ sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', 'session', function
     }
 
     function setInflation(account) {
-        var mainData = session.get('wallet').mainData;
-        mainData.stellar_contact = mainData.stellar_contact || Options.stellar_contact;
-        var destination_address = mainData.stellar_contact.destination_address;
-
-        if (account.InflationDest !== destination_address) {
+        // TODO: later we should make this not change their inflationdest if it is already set
+        if (account.InflationDest !== Options.INFLATION_DEST) {
           var tx = $network.remote.transaction();
           tx = tx.accountSet(account.Account);
-          tx.inflationDest(destination_address);
+          tx.inflationDest(Options.INFLATION_DEST);
 
           tx.submit();
         }

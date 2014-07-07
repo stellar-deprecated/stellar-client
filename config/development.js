@@ -20,6 +20,8 @@ var Options = {
         type: "federation_record"
     },
 
+    INFLATION_DEST: 'gJB1W4wbxvMVawvXeo4hz3bwaf2qnWHL2x',
+
     APP_ID: '706937569364894',
     DOMAIN_NAME: 'stellar.local.dev',
     DEFAULT_FEDERATION_DOMAIN: 'gostellar.org',
