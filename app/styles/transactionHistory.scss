@@ -2,11 +2,71 @@
   color: $dark-grey;
   margin-bottom: 50px;
   width: 100%;
+  color: black;
 
   .tx-title {
     font-size: 20px;
     margin-top: 35px;
     margin-bottom: 25px;
     display: inline-block;
+  }
+
+  .tx-grid {
+    background-color: transparent;
+
+    .ngVerticalBar {
+      display: none;
+    }
+
+    .ngTopPanel {
+      background-color: transparent;
+      line-height: 70px;
+
+      .ngHeaderCell:hover {
+        background-color: rgba($light-grey, 0.5);
+      }
+    }
+
+    .ngRow {
+
+      line-height: 70px;
+
+      i {
+        font-size: 20px;
+        padding-bottom: 4px;
+        vertical-align: middle;
+        margin-right: 10px;
+
+        &.glyphicon-download {
+          color: $success;
+        }
+
+        &.glyphicon-upload {
+          color: $error;
+        }
+      }
+
+      .tx-type {
+        text-transform: uppercase;
+        font-size: 12px;
+        letter-spacing: 3px;
+      }
+
+      .tx-direction {
+        color: $grey;
+      }
+
+      &.odd,
+      &.even {
+        background-color: transparent;
+      }
+    }
+
+    .ngSortButtonUp,
+    .ngSortButtonDown {
+      top: 37px;
+      left: auto;
+      right: 10px;
+    }
   }
 }
