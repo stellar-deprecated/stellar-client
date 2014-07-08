@@ -31,6 +31,7 @@
 
   .rewards-complete {
     display: inline-block;
+    position: relative;
     width: 100%;
     text-align: center;
     padding: 28px 0;
@@ -39,12 +40,22 @@
     border-radius: 2px;
     margin: 30px 0;
 
-    i {
+    .rewards-complete-badge {
       color: #1CB4E5;
       font-size: 32px;
       vertical-align: middle;
       margin-right: 16px;
       top: 0;
+    }
+
+    .close-rewards-complete {
+      color: #1CB4E5;
+      font-size: 12px;
+      position: absolute;
+      top: 0;
+      right: 0;
+      padding: 6px;
+      cursor: pointer;
     }
 
     .rewards-complete-message {
