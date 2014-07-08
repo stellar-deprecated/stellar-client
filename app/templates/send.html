@@ -38,7 +38,7 @@
     </div>
     <div class="row form-group">
         <div rp-errors="send_destination" class="errors col-sm-12">
-            <div rp-error-valid ng-show="send.recipient != send.recipient_address" class="success tip col-sm-offset-6 col-sm-3">{{send.recipient_address}}</div>
+            <div rp-error-valid ng-show="send.recipient != send.recipient_address" class="success tip col-sm-offset-3 col-sm-6">{{send.recipient_address}}</div>
             <div rp-error-on="required" l10n="l10n" class="tip col-sm-offset-6 col-sm-3">Please enter a recipient.</div>
             <div rp-error-on="rpDest" l10n="l10n" class="tip col-sm-offset-6 col-sm-3">Recipient should be either a name from your contact list or Stellar/Bitcoin address.</div>
             <div rp-error-on="federation" l10n="l10n" class="tip col-sm-offset-6 col-sm-3">This person isn't on Stellar yet.</div>
