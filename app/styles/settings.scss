@@ -1,0 +1,15 @@
+.settings > .settings-section {
+	padding-top:50px;
+	padding-bottom:50px;
+}
+
+.settings-section {
+	.title {
+		font-size: 18px;
+		font-weight: bold;
+	}
+	button[type="submit"] {
+		float:left;
+		margin:auto;
+	}
+}
