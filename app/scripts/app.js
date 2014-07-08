@@ -2,16 +2,16 @@
 var STELLAR_CLIENT_REVISION = '_GIT_REVISION_GOES_HERE_';
 
 var stellarClient = angular.module('stellarClient', [
-  'ui.router',
-  'rt.debounce',
-  'vr.passwordStrength',
-  'ngRoute',
   'angularMoment',
-  'filters',
   'bruteRequest',
-  'singletonPromise',
+  'filters',
+  'ngGrid',
   'ngRaven',
-  'ngGrid'
+  'ngRoute',
+  'rt.debounce',
+  'singletonPromise',
+  'ui.router',
+  'vr.passwordStrength'
 ]);
 
 stellarClient.config(function($httpProvider, $stateProvider, $urlRouterProvider, RavenProvider) {
