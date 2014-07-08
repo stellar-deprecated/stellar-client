@@ -66,7 +66,7 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
     }
     reward.error = {
       panel: panel,
-      body: "Ooops!",
+      body: "Oops!",
       info: info,
       action: action
     }

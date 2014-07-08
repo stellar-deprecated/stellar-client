@@ -15,19 +15,19 @@
 
         <div class="content awaiting-payout" ng-class="{active: reward.status == 'awaiting_payout'}">
             <div class="body">
-                Oh, happy day.
+                Oh, happy day!
             </div>
             <div class="info">
-                You need to authenticate with facebook to get your coins.
+                Almost there - log in with Facebook to get these stellars.
             </div>
-            <button class="stellar-button btn btn-default" ng-click="toggleReward(1, rewards[1].status)">Get your first Stellars</button>
+            <button class="stellar-button btn btn-default" ng-click="toggleReward(1, rewards[1].status)">Continue</button>
         </div>
 
         <div class="content sent" ng-class="{active: reward.status == 'sent'}">
             <div class="body">
                 You did it!
             </div>
-            <button class="stellar-button btn btn-default" ng-click="closeReward()">Unlock next ... ?</button>
+            <button class="stellar-button btn btn-default" ng-click="closeReward()">Continue</button>
         </div>
     </div>
 
