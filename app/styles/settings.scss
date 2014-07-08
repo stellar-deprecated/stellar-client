@@ -7,9 +7,24 @@
 	.title {
 		font-size: 18px;
 		font-weight: bold;
+		padding-bottom:15px;
+		.glyphicon {
+			padding-right:5px;
+		}
 	}
 	button[type="submit"] {
 		float:left;
 		margin:auto;
 	}
+	> .row {
+		padding: 15px 0 15px 0;
+	}
+}
+
+.secondary-action {
+	padding-top:15px;
+}
+
+#button-icon {
+	line-height: 45px;
 }
