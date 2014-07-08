@@ -2,6 +2,7 @@
   color: $dark-grey;
   margin-bottom: 50px;
   width: 100%;
+  color: black;
 
   .tx-title {
     font-size: 20px;
@@ -10,117 +11,62 @@
     display: inline-block;
   }
 
-  .tx-table {
-    .tx-container {
-      font-weight: $avenir-medium;
-      border-bottom: 1px solid $grey-border;
+  .tx-grid {
+    background-color: transparent;
 
-      .tx-column {
-        line-height: 32px;
-        padding: 12px 0;
-        font-size: 12px;
-        white-space: nowrap;
-        vertical-align: middle;
+    .ngVerticalBar {
+      display: none;
+    }
 
-        &.tx-type-icon {
-          width: 5%;
-          display: inline-block;
-        }
+    .ngTopPanel {
+      background-color: transparent;
+      line-height: 70px;
 
-        &.tx-type {
-          display: none;
-        }
-
-        &.tx-amount {
-          width: 15%;
-          display: inline-block;
-          text-align: right;
-          padding-right: 5px;
-        }
-
-        &.tx-currency {
-          width: 7%;
-          display: inline-block;
-        }
-
-        &.tx-date {
-          display: none;
-        }
-
-        &.tx-direction {
-          width: 13%;
-          min-width: 80px;
-          text-align: center;
-          color: $grey;
-          display: inline-block;
-        }
-
-        &.tx-other-party {
-          width: 40%;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          display: inline-block;
-        }
-
-        i {
-          font-size: 20px;
-          margin-right: 12px;
-          vertical-align: middle;
-          padding-bottom: 4px;
-
-          &.glyphicon-download {
-            color: $success;
-          }
-
-          &.glyphicon-upload {
-            color: $error;
-          }
-        }
-
-        .type {
-          text-transform: uppercase;
-          font-size: 13px;
-          letter-spacing: 3px;
-        }
+      .ngHeaderCell:hover {
+        background-color: rgba($light-grey, 0.5);
       }
     }
-  }
-}
 
-@media (min-width: $mobile-width) {
-  .transaction-history .tx-table .tx-container .tx-column {
-    font-size: 16px;
-    padding: 24px 0;
+    .ngRow {
 
-    &.tx-type {
-      width: 20%;
-      display: inline-block;
+      line-height: 70px;
+
+      i {
+        font-size: 20px;
+        padding-bottom: 4px;
+        vertical-align: middle;
+        margin-right: 10px;
+
+        &.glyphicon-download {
+          color: $success;
+        }
+
+        &.glyphicon-upload {
+          color: $error;
+        }
+      }
+
+      .tx-type {
+        text-transform: uppercase;
+        font-size: 12px;
+        letter-spacing: 3px;
+      }
+
+      .tx-direction {
+        color: $grey;
+      }
+
+      &.odd,
+      &.even {
+        background-color: transparent;
+      }
     }
 
-    &.tx-amount {
-      width: 8%;
-    }
-
-    &.tx-currency {
-      width: 8%;
-    }
-
-    &.tx-date {
-      width: 10%;
-      text-align: right;
-      display: inline-block;
-    }
-
-    &.tx-direction {
-      display: inline-block;
-      padding-right: 0;
-      width: 15%;
-    }
-
-    &.tx-other-party {
-      display: inline-block;
-      width: 30%;
+    .ngSortButtonUp,
+    .ngSortButtonDown {
+      top: 37px;
+      left: auto;
+      right: 10px;
     }
   }
 }

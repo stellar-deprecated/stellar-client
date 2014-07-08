@@ -1,23 +1,6 @@
 <div class="transaction-history" ng-controller="TransactionHistoryCtrl" ng-show="history.length">
     <div>
         <span class="tx-title">My transactions</span><br>
-        <div class="tx-table">
-            <div class="tx-container"></div>
-            <div class="tx tx-container" ng-repeat="tx in history">
-                <div class="tx-type-icon tx-column">
-                    <i ng-class="typeIcons[tx.transaction.type]"></i>
-                </div>
-                <div class="tx-type tx-column">
-                    <span class="type">{{ tx.transaction.type }}</span>
-                </div>
-                <div class="tx-amount tx-column">{{ tx.transaction.amount.to_human() }}</div>
-                <div class="tx-currency tx-column">STR</div>
-                <div class="tx-date tx-column" am-time-ago="tx.date"></div>
-                <div class="tx-direction tx-column">{{ tx.transaction.type === 'sent' ? 'to' : 'from' }}</div>
-                <div class="tx-other-party tx-column">
-                    <span class="address">{{ tx.transaction.counterparty | addressToUsername }}</span>
-                </div>
-            </div>
-        </div>
+        <div class="tx-grid" ng-grid="transactionGrid"></div>
     </div>
 </div>
