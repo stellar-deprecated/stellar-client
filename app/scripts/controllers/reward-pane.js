@@ -25,8 +25,8 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
 
   $scope.sortedRewards = $scope.rewards.slice();
 
-  $scope.toggleReward = function (index, status) {
-    if (status !== 'incomplete' && status !== 'unverified') {
+  $scope.toggleReward = function (index) {
+    if ($scope.rewards[index].status == 'sent') {
       return;
     }
 
