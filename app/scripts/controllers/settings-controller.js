@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('SettingsCtrl', function($scope, session){
+sc.controller('SettingsCtrl', function($scope, $http, session){
   var settings = session.get('wallet').mainData;
 
   // Account settings.
@@ -35,20 +35,64 @@ sc.controller('SettingsCtrl', function($scope, session){
   }
 
   $scope.toggle = {
-    recovery: recoveryToggle,
-    email: sendEmailToggle,
-    federation: federationToggle
+    recovery: {
+      click: recoveryToggle,
+      on: false
+    },
+    email: {
+      click: sendEmailToggle,
+      on: false
+    },
+    federation: {
+      click: federationToggle,
+      on: false
+    }
   }
 
-  function recoveryToggle() {
+  var toggleRequestData = {
+    username: session.get('username'),
+    updateToken: session.get('wallet').keychainData.updateToken
+  };
 
+  function recoveryToggle() {
+    // switch the toggle
+    $scope.toggle.recovery.on = !$scope.toggle.recovery.on;
+    // add the current toggle value to the request
+    toggleRequestData.on = $scope.toggle.recovery.on;
+    $http.post(Options.API_SERVER + '/user/allowrecovery', toggleRequestData)
+    .success(function (res) {
+      // TODO
+    })
+    .error(function (err) {
+      // TODO
+    });
   }
 
   function sendEmailToggle() {
-
+    // switch the toggle
+    $scope.toggle.email.on = !$scope.toggle.email.on;
+    // add the current toggle value to the request
+    toggleRequestData.on = $scope.toggle.email.on;
+    $http.post(Options.API_SERVER + '/user/allowemail', toggleRequestData)
+    .success(function (res) {
+      // TODO
+    })
+    .error(function (err) {
+      // TODO
+    });
   }
 
   function federationToggle() {
-
+    // switch the toggle
+    $scope.toggle.federation.on = !$scope.toggle.federation.on;
+    // add the current toggle value to the request
+    toggleRequestData.on = $scope.toggle.federation.on;
+    $http.post(Options.API_SERVER + '/user/allowfederate', toggleRequestData)
+    .success(function (res) {
+      // TODO
+    })
+    .error(function (err) {
+      // TODO
+    });
   }
 });
