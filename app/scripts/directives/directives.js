@@ -5,8 +5,12 @@ var module = angular.module('stellarClient');
 * A directive that includes the toggle template.
 */
 module.directive('stToggle', function() {
+
     return {
-        templateUrl: 'templates/toggle.html'
+        templateUrl: 'templates/toggle.html',
+        scope: {
+            ctrl: '='
+        }
     };
 });
 

@@ -33,4 +33,22 @@ sc.controller('SettingsCtrl', function($scope, session){
     // Save the updated blob to the server.
     session.storeBlob();
   }
+
+  $scope.toggle = {
+    recovery: recoveryToggle,
+    email: sendEmailToggle,
+    federation: federationToggle
+  }
+
+  function recoveryToggle() {
+
+  }
+
+  function sendEmailToggle() {
+
+  }
+
+  function federationToggle() {
+
+  }
 });
