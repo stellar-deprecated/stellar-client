@@ -2,8 +2,8 @@
 set -e
 
 export NODE_ENV=production
+export CI=true
 
-npm install -g gulp
 npm install
-bower install
-gulp dist
+./node_modules/.bin/bower install
+./node_modules/.bin/gulp dist
