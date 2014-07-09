@@ -114,6 +114,15 @@
   .result-success .modalStatus-icon {
     color: $success;
   }
+
+  .pending {
+    text-align: center;
+
+    .sending-rocket {
+      display: block;
+      margin: 50px auto;
+    }
+  }
 }
 
 .send-form-status {
