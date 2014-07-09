@@ -1,0 +1,36 @@
+.toggle {
+	.switch {
+		position: relative;
+		display: inline-block;
+		height:20px;
+		width:35px;
+		border-radius: 20px;
+
+		.circle {
+			position: absolute;
+			margin: 1px 1px 0px 1px;
+			height:18px;
+			width:18px;
+			border-radius:9px;
+			background-color:white;
+		}
+		.circle.on {
+			left:auto;
+		}
+		.circle.off {
+			right:0;
+		}
+	}
+	.switch.on {
+	background-color: #76EE00;
+	}
+	.switch.off {
+		background-color: #C0C0C0
+	}
+	.status {
+		vertical-align: top;
+		line-height: 22px;
+		margin-left:5px;
+		font-size: 18px;
+	}
+}
