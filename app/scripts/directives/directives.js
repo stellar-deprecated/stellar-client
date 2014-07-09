@@ -1,6 +1,15 @@
 //var module = angular.module('directives', ['popup']);
 var module = angular.module('stellarClient');
 
+/**
+* A directive that includes the toggle template.
+*/
+module.directive('stToggle', function() {
+    return {
+        templateUrl: 'templates/toggle.html'
+    };
+});
+
 /*
  * Defines the rp-if tag. This removes/adds an element from the dom depending on a condition
  * Originally created by @tigbro, for the @jquery-mobile-angular-adapter
