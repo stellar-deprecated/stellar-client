@@ -2,34 +2,36 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('AlphaCtrl', function ($scope, $state, $http, session) {
+sc.controller('AlphaCtrl', function ($scope, $state, $http, $q, session, singletonPromise) {
   $scope.alphaCode = '';
-  $scope.alphaCodeErrors = [];
+  $scope.alphaCodeError = '';
 
   // Remove errors now that the code has changed.
   $scope.clearErrors = function(){
-    $scope.alphaCodeErrors = [];
+    $scope.alphaCodeError = '';
   };
 
-  // Validate the input before submitting the registration form.
-  // This generates messages that help the user resolve their errors.
-  $scope.attemptAlpha = function () {
+  $scope.validateInput = function(){
     // Remove any previous error messages.
-    $scope.alphaCodeErrors = [];
-
+    $scope.clearErrors();
     var validInput = true;
 
     if (!$scope.alphaCode) {
       validInput = false;
-      $scope.alphaCodeErrors.push('The Alpha Code field is required.');
+      $scope.alphaCodeError = 'The Alpha Code field is required.';
+      return $q.reject();
     }
 
-    if (validInput) {
-      var data = {
-        alphaCode: $scope.alphaCode
-      };
-      // Submit the registration data to the server.
-      $http.post(Options.API_SERVER + '/user/checkAlphaCode', data)
+    return $q.when();
+  };
+
+  function submitAlphaCode(){
+    var data = {
+      alphaCode: $scope.alphaCode
+    };
+
+    // Submit the registration data to the server.
+    return $http.post(Options.API_SERVER + '/user/checkAlphaCode', data)
       .success(function (response) {
         // Save code for the registration page
         session.put('alpha', $scope.alphaCode);
@@ -40,15 +42,20 @@ sc.controller('AlphaCtrl', function ($scope, $state, $http, session) {
           if (response.code == "validation_error") {
             var error = response.data;
             if (error.code == "already_taken") {
-              $scope.alphaCodeErrors.push('This Alpha Code is already taken.');
+              $scope.alphaCodeError = 'This Alpha Code is already taken.';
             } else {
-              $scope.alphaCodeErrors.push('This Alpha Code is invalid.');
+              $scope.alphaCodeError = 'This Alpha Code is invalid.';
             }
           }
         } else {
-            $scope.alphaCodeErrors.push('An error occured.');
+          $scope.alphaCodeError = 'An error occured.';
         }
       });
-    }
-  };
+  }
+
+  // Validate the input before submitting the registration form.
+  // This generates messages that help the user resolve their errors.
+  $scope.attemptAlpha = singletonPromise(function() {
+    return $scope.validateInput().then(submitAlphaCode);
+  });
 });
