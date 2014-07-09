@@ -16,10 +16,11 @@ sc.controller('TransactionHistoryCtrl', function($scope)
   $scope.transactionGrid = {
     data: 'history',
     enableRowSelection: false,
+    enableHighlighting: true,
     plugins: [new ngGridFlexibleHeightPlugin()],
     headerRowHeight: '70',
     rowHeight: '70',
-    rowTemplate: '<div ng-style="{ \'cursor\': row.cursor }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell {{col.cellClass}}"><div class="ngVerticalBar" ng-style="{height: rowHeight}">&nbsp;</div><div ng-cell></div></div>',
+    rowTemplate: '<div ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell {{col.cellClass}}"><div class="ngVerticalBar" ng-style="{height: rowHeight}">&nbsp;</div><div ng-cell></div></div>',
     columnDefs: [
       {
         field: 'transaction.type',
