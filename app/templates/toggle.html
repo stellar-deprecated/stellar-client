@@ -1,6 +1,6 @@
 <div class="toggle">
-	<div class="switch on">
-		<div class="circle on" ng-click="ctrl()"></div>
+	<div class="switch" ng-class="{'on': ctrl.on, 'off': !ctrl.on}" ng-click="ctrl.click()">
+		<div class="circle on" ng-class="{'on': ctrl.on, 'off': !ctrl.on}"></div>
 	</div>
-	<span class="status on">ON</span>
+	<span class="status">{{ctrl.on ? "ON" : "OFF"}}</span>
 </div>
