@@ -14,7 +14,7 @@
             <div ng-include="reward.template"></div>
         </div>
 
-        <div class="content awaiting-payout" ng-class="{active: reward.status != 'awaiting_payout' || reward.status == 'needs_fbauth'}">
+        <div class="content awaiting-payout" ng-class="{active: reward.status == 'awaiting_payout' || reward.status == 'needs_fbauth'}">
             <div class="body">
                 Oh, happy day!
             </div>
