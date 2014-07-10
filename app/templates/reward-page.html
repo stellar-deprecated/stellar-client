@@ -9,11 +9,12 @@
     </div>
 
     <div ng-hide="reward.error">
-        <div class="content" ng-class="{active: reward.status != 'sent' && reward.status != 'awaiting_payout'}">
+        <!-- TODO 314 -->
+        <div class="content" ng-class="{active: reward.status != 'sent' && reward.status != 'awaiting_payout' && reward.status != 'needs_fbauth' && reward.status != 'reward_queued'}">
             <div ng-include="reward.template"></div>
         </div>
 
-        <div class="content awaiting-payout" ng-class="{active: reward.status == 'awaiting_payout'}">
+        <div class="content awaiting-payout" ng-class="{active: reward.status != 'awaiting_payout' || reward.status == 'needs_fbauth'}">
             <div class="body">
                 Oh, happy day!
             </div>
@@ -21,6 +22,13 @@
                 Almost there - log in with Facebook to get these stellars.
             </div>
             <button class="stellar-button btn btn-default" ng-click="toggleReward(1)">Continue</button>
+        </div>
+
+        <div class="content sent" ng-class="{active: reward.status == 'reward_queued'}">
+            <div class="body">
+                You're on the queue and should receive your reward soon!
+            </div>
+            <button class="stellar-button btn btn-default" ng-click="closeReward()">Continue</button>
         </div>
 
         <div class="content sent" ng-class="{active: reward.status == 'sent'}">

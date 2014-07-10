@@ -10,7 +10,10 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
 
   $scope.rewardStatusIcons = {
     'incomplete': 'glyphicon glyphicon-lock',
+    // TODO 314
     'awaiting_payout': 'glyphicon glyphicon-time',
+    'reward_queued': 'glyphicon glyphicon-time',
+    'needs_fbauth': 'glyphicon glyphicon-time',
     'sent': 'glyphicon glyphicon-ok-circle',
     'unverified': 'glyphicon glyphicon-lock',
     'ineligible': 'glyphicon glyphicon-warning-sign'
@@ -94,7 +97,10 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
   $scope.computeRewardProgress = function() {
     var order = {
       'incomplete': 0,
+      // TODO 314
       'awaiting_payout': 1,
+      'reward_queued': 1,
+      'needs_fbauth': 1,
       'unverified': 1,
       'sent': 2,
       'ineligible': 2
