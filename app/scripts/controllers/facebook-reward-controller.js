@@ -50,7 +50,7 @@ sc.controller('FacebookRewardCtrl', function ($scope, $http, session) {
     } else if (response && response.status == 'error') {
       if (response.code == 'transaction_error') {
         // we've stored the reward but there was an error sending the transaction
-        $scope.rewards[1].status = 'awaiting_payout';
+        $scope.rewards[1].status = 'reward_queued';
         $scope.updateRewards();
       }
     } else {
