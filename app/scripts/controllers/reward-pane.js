@@ -12,6 +12,7 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
     'incomplete': 'glyphicon glyphicon-lock',
     'reward_queued': 'glyphicon glyphicon-time',
     'needs_fbauth': 'glyphicon glyphicon-time',
+    'sending': 'glyphicon glyphicon-time',
     'sent': 'glyphicon glyphicon-ok-circle',
     'unverified': 'glyphicon glyphicon-lock',
     'ineligible': 'glyphicon glyphicon-warning-sign'
@@ -98,6 +99,7 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
       'reward_queued': 1,
       'needs_fbauth': 1,
       'unverified': 1,
+      'sending': 1,
       'sent': 2,
       'ineligible': 2
     };
