@@ -9,7 +9,7 @@
     </div>
 
     <div ng-hide="reward.error">
-        <div class="content" ng-class="{active: reward.status != 'sent' && reward.status != 'needs_fbauth' && reward.status != 'reward_queued'}">
+        <div class="content" ng-class="{active: reward.status != 'sent' && reward.status != 'needs_fbauth' && reward.status != 'reward_queued' && reward.status != 'sending'}">
             <div ng-include="reward.template"></div>
         </div>
 
@@ -23,7 +23,7 @@
             <button class="stellar-button btn btn-default" ng-click="toggleReward(1)">Continue</button>
         </div>
 
-        <div class="content sent" ng-class="{active: reward.status == 'reward_queued'}">
+        <div class="content sent" ng-class="{active: reward.status == 'reward_queued' || reward.status == 'sending'}">
             <div class="body">
                 You're on the queue and should receive your reward soon!
             </div>

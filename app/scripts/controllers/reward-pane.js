@@ -12,6 +12,7 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
     'incomplete': 'glyphicon glyphicon-lock',
     'reward_queued': 'glyphicon glyphicon-time',
     'needs_fbauth': 'glyphicon glyphicon-time',
+    'sending': 'glyphicon glyphicon-time',
     'sent': 'glyphicon glyphicon-ok-circle',
     'unverified': 'glyphicon glyphicon-lock',
     'ineligible': 'glyphicon glyphicon-warning-sign'
@@ -98,6 +99,7 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
       'reward_queued': 1,
       'needs_fbauth': 1,
       'unverified': 1,
+      'sending': 1,
       'sent': 2,
       'ineligible': 2
     };
@@ -141,6 +143,10 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
         $scope.giveawayAmount = response.data.giveawayAmount;
 
         $scope.computeRewardProgress();
+
+        if (hasCompletedRewards()) {
+          removeFairyTxListener();
+        }
       });
   };
 
@@ -180,10 +186,6 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
             }
           }
 
-          if (!sendRewardRequested) {
-            setupSendTxListener();
-          }
-
           promise.resolve();
         });
       })
@@ -195,18 +197,26 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
     return promise;
   }
 
-  var sendTxListener;
-  function setupSendTxListener(){
-    if (sendTxListener) {
-      sendTxListener();
+  var turnOffFairyTxListener;
+  function setupFairyTxListener() {
+    var promise = $q.defer();
+    if (hasCompletedRewards()) {
+      return promise.resolve();
     }
 
-    sendTxListener = $scope.$on('$appTxNotification', function (event, tx) {
+    turnOffFairyTxListener = $scope.$on('$appTxNotification', function (event, tx) {
       if (tx.type == 'sent' && $scope.rewards[3].status == "incomplete") {
         requestSentStellarsReward();
-        sendTxListener();
+      } else if (tx.counterparty == Options.stellar_contact.destination_address) {
+        $scope.updateRewards();
       }
     });
+  }
+
+  function removeFairyTxListener() {
+    if (turnOffFairyTxListener) {
+      turnOffFairyTxListener();
+    }
   }
 
   function requestSentStellarsReward() {
@@ -219,7 +229,12 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
       });
   }
 
+  function hasCompletedRewards() {
+    return $scope.showRewardsComplete;
+  }
+
   $scope.updateRewards()
+    .then(setupFairyTxListener)
     .then(checkSentTransactions)
     .then(function(){
       // Don't show the reward complete message if completed on the first load.
