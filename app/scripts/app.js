@@ -8,6 +8,7 @@ var stellarClient = angular.module('stellarClient', [
   'ngGrid',
   'ngRaven',
   'ngRoute',
+  'ngCookies',
   'rt.debounce',
   'singletonPromise',
   'ui.router',
@@ -73,7 +74,7 @@ stellarClient.config(function($httpProvider, $stateProvider, $urlRouterProvider,
 
 });
 
-stellarClient.run(function($rootScope, $state, session){
+stellarClient.run(function($rootScope, $state, $cookies, session){
   $rootScope.balance = 'loading...';
   $rootScope.unsupportedBrowser = !Modernizr.websockets;
 
@@ -99,6 +100,13 @@ stellarClient.run(function($rootScope, $state, session){
             return;
           }
         }
+
+        // if the user has never visited the app before, send to alpha
+        if (!$cookies.weve_been_here_before) {
+          $state.transitionTo('register');
+          event.preventDefault();
+          return;
+        }
         break;
 
       case '/logout':
@@ -114,8 +122,8 @@ stellarClient.run(function($rootScope, $state, session){
 
           // Prevent the original destination state from loading.
           event.preventDefault();
-          return;
         }
+        $cookies.weve_been_here_before = true;
         break;
     }
 
