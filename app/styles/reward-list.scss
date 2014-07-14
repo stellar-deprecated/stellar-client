@@ -57,6 +57,12 @@
 
     .reward-body {
       padding: 30px 30px;
+
+      .subtitle {
+        color: $info-grey;
+        font-weight: $avenir-book;
+        font-size: 17px;
+      }
     }
 
     .pop-action {

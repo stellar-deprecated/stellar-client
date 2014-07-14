@@ -3,8 +3,17 @@
 var sc = angular.module('stellarClient');
 
 sc.controller('EmailRewardCtrl', function ($scope, $rootScope, session) {
-  $scope.index = 2;
-  $scope.reward = $scope.rewards[$scope.index];
+  $scope.reward = {
+    rewardType: 2,
+    title: 'Set up password recovery',
+    innerTitle: 'Set up password recovery',
+    status: 'incomplete',
+    updateReward: function (status) {
+      $scope.reward.status = status;
+    }
+  }
+  // add this reward to the parent scope's reward array
+  $scope.rewards.push($scope.reward);
 
   $scope.reward.template = 'templates/verify-email.html';
 
