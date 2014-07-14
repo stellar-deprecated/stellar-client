@@ -6,16 +6,19 @@
   border: 1px solid $stellar-blue;
   background-color: white;
   border-radius: 31px;
+  height: 34px;
 
   li {
     list-style-type: none;
     display: inline-block;
+    height: 34px;
+    line-height: 28px;
     width: 25%;
     text-align: center;
-    padding: 5px 0;
 
     &.sent {
       background-color: #DBF2F8;
+      color: $stellar-blue;
     }
 
     &:first-child {
@@ -32,8 +35,9 @@
       border-right: 1px solid $light-grey;
     }
 
-    .glyphicon {
-      top: 3px;
+    .icon {
+      display: inline-block;
+      padding-top: 3px;
     }
   }
 }

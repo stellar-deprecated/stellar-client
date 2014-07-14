@@ -22,8 +22,10 @@
             background-color 350ms ease-in-out);
 
     i {
+      display: inline-block;
+      vertical-align: middle;
       padding-right: 20px;
-      font-size: 20px;
+      font-size: 24px;
       @include transition(color 200ms ease-in-out);
     }
 
@@ -46,17 +48,16 @@
 
     &.sent {
       background-color: #F9F9F9;
-      text-decoration: line-through;
-      color: $info-grey;
+      color: #A0ABB1;
       cursor: default;
 
-      i {
-        color: $info-grey;
+      span {
+        text-decoration: line-through;
       }
     }
 
     .reward-body {
-      padding: 30px 30px;
+      padding: 22px 30px;
 
       .subtitle {
         color: $info-grey;
