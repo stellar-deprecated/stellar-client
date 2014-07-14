@@ -14,7 +14,7 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
     'needs_fbauth': 'glyphicon glyphicon-time',
     'sending': 'glyphicon glyphicon-time',
     'sent': 'glyphicon glyphicon-ok-circle',
-    'unverified': 'glyphicon glyphicon-lock',
+    'unverified': 'glyphicon glyphicon-time',
     'ineligible': 'glyphicon glyphicon-warning-sign'
   };
 
@@ -77,7 +77,6 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
     $scope.rewardProgress.sort(function (a, b) {
       return order[b] - order[a];
     });
-
     var completedRewards = $scope.rewards.filter(function (reward) {
       return reward.status == 'sent';
     });
