@@ -13,6 +13,9 @@ sc.controller('FacebookRewardCtrl', function ($scope, $http, session) {
     updateReward: function (status) {
       $scope.reward.status = status;
       switch (status) {
+        case 'sent':
+          $scope.reward.title = 'Receive your first stellars on us! Log in with Facebook',
+          $scope.reward.subtitle = null;
         case 'reward_queued':
           getPlaceInLine();
           break;
