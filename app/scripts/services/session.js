@@ -14,7 +14,12 @@ sc.service('session', function($rootScope, $http) {
     var url = Options.WALLET_SERVER + '/wallets/' + action;
     var data = wallet.encrypt();
 
-    return $http.post(url, data);
+    return $http.post(url, data)
+      .success(function (response) {
+        if (Options.PERSISTENT_SESSION) {
+          localStorage.wallet = JSON.stringify(wallet);
+        }
+      });
   };
 
   Session.prototype.login = function(wallet) {
@@ -30,6 +35,9 @@ sc.service('session', function($rootScope, $http) {
     this.put('username', wallet.mainData.username);
     this.put('signingKeys', signingKeys);
     this.put('address', signingKeys.address);
+
+    // check for the most up to date fairy address
+    checkFairyAddress.bind(this)();
 
     $rootScope.$broadcast('walletAddressLoaded', {account: signingKeys.address, secret: signingKeys.secret});
 
@@ -63,6 +71,29 @@ sc.service('session', function($rootScope, $http) {
 
     this.put('loggedIn', false);
   };
+
+  function checkFairyAddress() {
+    var session = this;
+    var config = {
+      params: {
+        destination: "stellarfoundation",
+        domain: Options.DEFAULT_FEDERATION_DOMAIN
+      }
+    }
+    $http.get(Options.API_SERVER + "/federation", config)
+    .success(function (response) {
+      var wallet = session.get('wallet');
+      var contacts = wallet.mainData.contacts;
+      var federation_record = response.federation_json;
+      if (wallet.mainData.stellar_contact.destination_address != federation_record.destination_address) {
+        // add it as the stellar contact
+        wallet.mainData.stellar_contact = federation_record;
+        // add this record to the contacts list
+        contacts[federation_record.destination_address] = federation_record;
+        session.syncWallet(wallet, 'update');
+      }
+    });
+  }
 
   return new Session();
 });
