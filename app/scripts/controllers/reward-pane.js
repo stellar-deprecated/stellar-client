@@ -109,6 +109,8 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
         if (hasCompletedRewards()) {
           removeFairyTxListener();
         }
+
+        $scope.$broadcast("onRewardsUpdated");
       });
   };
 

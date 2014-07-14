@@ -37,10 +37,6 @@ sc.controller('SendRewardCtrl', function ($rootScope, $scope, $http, stNetwork, 
 
   // checks if the user has any "sent" transactions, requests send reward if so
   function checkSentTransactions() {
-    if ($scope.rewards[3].status != "incomplete") {
-      return;
-    }
-
     var sendRewardRequested = false;
 
     var remote = stNetwork.remote;
@@ -59,6 +55,7 @@ sc.controller('SendRewardCtrl', function ($rootScope, $scope, $http, stNetwork, 
         data.transactions = data.transactions || [];
 
         $scope.$apply(function () {
+          var sendRewardRequested = false;
           for(var i = 0; i < data.transactions.length; i++){
             var processedTxn = JsonRewriter.processTxn(data.transactions[i].tx, data.transactions[i].meta, account);
             var transaction = processedTxn.transaction;
@@ -68,6 +65,10 @@ sc.controller('SendRewardCtrl', function ($rootScope, $scope, $http, stNetwork, 
               sendRewardRequested = true;
               break;
             }
+          }
+
+          if (!sendRewardRequested) {
+            setupSentTxListener();
           }
         });
       })
@@ -85,8 +86,10 @@ sc.controller('SendRewardCtrl', function ($rootScope, $scope, $http, stNetwork, 
       });
   }
 
-  if ($scope.reward.status == 'incomplete') {
-  	checkSentTransactions()
-  	setupSentTxListener();
-  }
+  var turnOffListener = $scope.$on("onRewardsUpdated", function () {
+    if ($scope.reward.status == 'incomplete') {
+      checkSentTransactions();
+      turnOffListener();
+    }
+  });
 });
