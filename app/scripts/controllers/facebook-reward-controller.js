@@ -16,11 +16,13 @@ sc.controller('FacebookRewardCtrl', function ($scope, $http, session) {
         case 'sent':
           $scope.reward.title = 'Receive your first stellars on us! Log in with Facebook',
           $scope.reward.subtitle = null;
+          break;
         case 'reward_queued':
           getPlaceInLine();
           break;
         case 'sending':
           $scope.reward.subtitle = "You should be receiving your reward shortly!";
+          break;
         case 'unverified':
           $scope.error.info = "Please verify your Facebook account and try again.";
           $scope.error.panel = "Almost there! Verify your Facebook account.";
@@ -40,6 +42,7 @@ sc.controller('FacebookRewardCtrl', function ($scope, $http, session) {
           $scope.error.action = function () {
             reward.error = null
           };
+          break;
         case 'fake':
           // TODO: their account is fake
         default:
