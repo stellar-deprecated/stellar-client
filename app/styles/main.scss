@@ -125,11 +125,13 @@ body {
         width: 40px;
         height: 40px;
 
-        &.glyphicon {
+        &.glyphicon,
+        &.icon {
           padding: 12px 12px;
         }
 
-        &.glyphicon-none:before {
+        &.glyphicon-none:before,
+        &.icon-none:before {
           content: "\e013";
           opacity: 0;
         }
@@ -318,11 +320,13 @@ body {
 .input-icon-wrapper {
   position: relative;
 
-  .glyphicon {
+  .glyphicon,
+  .icon {
     font-size: 10pt;
     padding: 14px 12px;
     position: absolute;
     right: 0px;
+    top: 0px;
   }
 
   input {
