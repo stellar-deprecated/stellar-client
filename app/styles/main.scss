@@ -167,6 +167,11 @@ body {
                       color 200ms ease-in-out,
                       box-shadow 200ms ease-in-out);
 
+  i {
+    color: $grey;
+    @include transition(color 200ms ease-in-out);
+  }
+
   &:hover {
     border-color: $stellar-blue;
     background-color: $stellar-blue;
