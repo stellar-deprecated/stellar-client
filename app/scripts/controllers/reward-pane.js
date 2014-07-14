@@ -14,16 +14,27 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
     'needs_fbauth': 'glyphicon glyphicon-time',
     'sending': 'glyphicon glyphicon-time',
     'sent': 'glyphicon glyphicon-ok-circle',
-    'unverified': 'glyphicon glyphicon-lock',
+    'unverified': 'glyphicon glyphicon-time',
     'ineligible': 'glyphicon glyphicon-warning-sign'
   };
 
+  var walletReward = {
+    rewardType: 0,
+    title: 'Create a new wallet',
+    innerTitle: 'Create a new wallet',
+    status: 'sent'
+  }
+
+  /**
+  * Holds each reward object.
+  */
   $scope.rewards = [
-    {index: 0, title: 'Create a new wallet', innerTitle: 'Create a new wallet', status: 'sent'},
-    {index: 1, title: 'Receive your first stellars on us! Log in with Facebook', innerTitle: 'Receive your first stellars.', status: 'incomplete'},
-    {index: 2, title: 'Set up password recovery', innerTitle: 'Set up password recovery', status: 'incomplete'},
-    {index: 3, title: 'Send stellars to a friend', innerTitle: 'Send stellars to a friend', status: 'incomplete'}
-  ];
+    walletReward
+  ]
+
+  $scope.$watch($scope.rewards, function (newValue, oldValue, scope) {
+    $scope.sortedRewards = $scope.rewards.slice();
+  });
 
   $scope.sortedRewards = $scope.rewards.slice();
 
@@ -43,55 +54,6 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
   $scope.closeReward = function () {
     $scope.selectedReward = null;
   };
-
-  $scope.rewardError = function(reward, error) {
-    console.log("error: " + error);
-    var info, panel, action;
-    switch (error) {
-      case 'unverified':
-        info = "Please verify your Facebook account and try again.";
-        panel = "Almost there! Verify your Facebook account.";
-        action = function () {
-          reward.error = null
-        };
-        break;
-      case 'ineligible':
-        info = "Your Facebook account is too new to qualify. Stay tuned for new ways to grab stellars.";
-        panel = "Sorry, your Facebook account is too new."
-        action = null;
-        break;
-      case 'already_taken':
-        info = "This Facebook account is already in use.";
-        action = function () {
-          reward.error = null
-        };
-    }
-    reward.error = {
-      panel: panel,
-      body: "Oops!",
-      info: info,
-      action: action
-    }
-  };
-
-  function getPlaceInLine() {
-    // Load the status of the user's rewards.
-    var config = {
-      params:
-        {
-          username: session.get('username')
-        }
-    };
-
-    $http.get(Options.API_SERVER + '/claim/placeInLine', config)
-      .success(function (result) {
-        if (result.message > 1) {
-          $scope.rewards[1].title = "You are on the waiting list! Approximate waiting time: " + result.message + " days.";
-        } else {
-          $scope.rewards[1].title = "You are on the waiting list! You will get your stellars tomorrow.";
-        }
-      });
-  }
 
   $scope.computeRewardProgress = function() {
     var order = {
@@ -115,7 +77,6 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
     $scope.rewardProgress.sort(function (a, b) {
       return order[b] - order[a];
     });
-
     var completedRewards = $scope.rewards.filter(function (reward) {
       return reward.status == 'sent';
     });
@@ -137,7 +98,7 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
       .success(function (response) {
         // Update the status of the user's rewards.
         response.data.rewards.forEach(function (reward) {
-          $scope.rewards[reward.rewardType].status = reward.status;
+          $scope.rewards[reward.rewardType].updateReward(reward.status);
         });
 
         $scope.giveawayAmount = response.data.giveawayAmount;
@@ -147,55 +108,10 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
         if (hasCompletedRewards()) {
           removeFairyTxListener();
         }
+
+        $scope.$broadcast("onRewardsUpdated");
       });
   };
-
-  // checks if the user has any "sent" transactions, requests send reward if so
-  function checkSentTransactions() {
-    var promise = $q.defer();
-    if ($scope.rewards[3].status != "incomplete") {
-      return promise.resolve();
-    }
-
-    var sendRewardRequested = false;
-
-    var remote = stNetwork.remote;
-    var account = $rootScope.account;
-    var params = {
-      'account': account,
-      'ledger_index_min': 0,
-      'ledger_index_max': 9999999,
-      'descending': true,
-      'count': true
-    };
-
-    // Transactions
-    remote.request_account_tx(params)
-      .on('success', function (data) {
-        data.transactions = data.transactions || [];
-
-        $scope.$apply(function () {
-          for(var i = 0; i < data.transactions.length; i++){
-            var processedTxn = JsonRewriter.processTxn(data.transactions[i].tx, data.transactions[i].meta, account);
-            var transaction = processedTxn.transaction;
-
-            if (transaction && transaction.type == "sent") {
-              requestSentStellarsReward();
-              sendRewardRequested = true;
-              break;
-            }
-          }
-
-          promise.resolve();
-        });
-      })
-      .on('error', function () {
-        promise.reject();
-      })
-      .request();
-
-    return promise;
-  }
 
   var turnOffFairyTxListener;
   function setupFairyTxListener() {
@@ -205,9 +121,7 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
     }
 
     turnOffFairyTxListener = $scope.$on('$appTxNotification', function (event, tx) {
-      if (tx.type == 'sent' && $scope.rewards[3].status == "incomplete") {
-        requestSentStellarsReward();
-      } else if (tx.counterparty == Options.stellar_contact.destination_address) {
+      if (tx.counterparty == Options.stellar_contact.destination_address) {
         $scope.updateRewards();
       }
     });
@@ -219,23 +133,12 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
     }
   }
 
-  function requestSentStellarsReward() {
-    var data = {username: session.get('username')};
-
-    return $http.post(Options.API_SERVER + "/claim/sendStellars", data)
-      .success(function (response) {
-        $scope.rewards[3].status = response.message;
-        $scope.updateRewards();
-      });
-  }
-
   function hasCompletedRewards() {
     return $scope.showRewardsComplete;
   }
 
   $scope.updateRewards()
     .then(setupFairyTxListener)
-    .then(checkSentTransactions)
     .then(function(){
       // Don't show the reward complete message if completed on the first load.
       $scope.showRewardsComplete = false;
