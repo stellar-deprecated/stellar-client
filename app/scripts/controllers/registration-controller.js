@@ -157,7 +157,7 @@ sc.controller('RegistrationCtrl', function($scope, $state, $timeout, $http, $q, 
   });
 
   function submitRegistration() {
-    signingKeys = StellarWallet.generate();
+    signingKeys = new SigningKeys();
 
     var data = {
       alphaCode: session.get('alpha'),
