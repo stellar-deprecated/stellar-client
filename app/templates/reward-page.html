@@ -1,4 +1,4 @@
-<div class="reward-page" ng-class="{active: selectedReward == index, error: reward.error}">
+<div class="reward-page" ng-class="{active: selectedReward == reward.rewardType, error: reward.error}">
     <div class="pane-close" ng-click="closeReward()">
         <span>Close</span>
         <i class="icon icon-times-circle-thin"></i>
@@ -9,18 +9,25 @@
     </div>
 
     <div ng-hide="reward.error">
-        <div class="content" ng-class="{active: reward.status != 'sent' && reward.status != 'awaiting_payout'}">
+        <div class="content" ng-class="{active: reward.status != 'sent' && reward.status != 'needs_fbauth' && reward.status != 'reward_queued' && reward.status != 'sending'}">
             <div ng-include="reward.template"></div>
         </div>
 
-        <div class="content awaiting-payout" ng-class="{active: reward.status == 'awaiting_payout'}">
+        <div class="content awaiting-payout" ng-class="{active: reward.status == 'needs_fbauth'}">
             <div class="body">
                 Oh, happy day!
             </div>
             <div class="info">
                 Almost there - log in with Facebook to get these stellars.
             </div>
-            <button class="stellar-button btn btn-default" ng-click="toggleReward(1, rewards[1].status)">Continue</button>
+            <button class="stellar-button btn btn-default" ng-click="toggleReward(1)">Continue</button>
+        </div>
+
+        <div class="content sent" ng-class="{active: reward.status == 'reward_queued' || reward.status == 'sending'}">
+            <div class="body">
+                You're on the queue and should receive your reward soon!
+            </div>
+            <button class="stellar-button btn btn-default" ng-click="closeReward()">Continue</button>
         </div>
 
         <div class="content sent" ng-class="{active: reward.status == 'sent'}">
@@ -31,9 +38,9 @@
         </div>
     </div>
 
-    <div class="error" ng-class="{active: reward.error}">
+    <div class="error" ng-class="{active: reward.error}" ng-show="reward.error">
         <div class="body">
-            {{ reward.error.body }}
+            Oops!
         </div>
         <div class="info">
             {{ reward.error.info }}

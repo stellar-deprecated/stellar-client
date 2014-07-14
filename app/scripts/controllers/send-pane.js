@@ -8,11 +8,9 @@ sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout'
 {
     var timer;
 
-
-    $scope.closePane = function(){
-      $scope.reset();
-      $rootScope.tab = 'none';
-    };
+    $scope.$on('resetSendPane', function() {
+        $scope.reset();
+    });
 
     $scope.changeMode = function(targetMode) {
         if (!$rootScope.connected) {

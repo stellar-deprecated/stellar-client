@@ -8,16 +8,16 @@
         <form role="form" class="form-horizontal stellar-form" ng-controller="AlphaCtrl">
             <div class="form-group">
                 <div class="errors col-sm-12">
-                    <div class="tip col-sm-offset-6 col-sm-3">{{ alphaCodeErrors.join('\n') }}</div>
+                    <div class="tip col-sm-offset-3 col-sm-6">{{ alphaCodeError }}</div>
                 </div>
                 <label for="code" class="col-sm-3">ALPHA CODE</label>
                 <div class="input-icon-wrapper col-sm-6">
-                    <input id="code" type="text" class="form-control" ng-class="{'input-error': alphaCodeErrors.length}" ng-model="alphaCode" placeholder="Check email for your code" ng-change="clearErrors()">
+                    <input id="code" type="text" class="form-control" ng-class="{'input-error': alphaCodeError}" ng-model="alphaCode" placeholder="Check email for your code" ng-change="clearErrors()">
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-offset-3 col-sm-6">
-                    <button type="submit" class="btn btn-default stellar-button" ng-click="attemptAlpha()">Submit</button>
+                    <button type="submit" class="btn btn-default stellar-button" ng-click="attemptAlpha()">{{attemptAlpha.isLoading() ? 'Loading...' : 'Submit'}}</button>
                 </div>
             </div>
         </form>

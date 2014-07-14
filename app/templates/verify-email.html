@@ -3,7 +3,7 @@
     Your activation code is in your welcome email.
 </div>
 <div class="verify-email">
-    <div class="add-email-item" ng-class="{active: reward.status != 'unverified'}">
+    <div class="add-email-item" ng-class="{active: reward.status == 'incomplete'}">
         <form role="form" class="stellar-form" ng-controller="AddEmailCtrl" ng-submit="addEmail()">
             <div class="form-group">
                 <div class="errors col-sm-12">

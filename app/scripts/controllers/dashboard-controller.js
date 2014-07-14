@@ -15,20 +15,13 @@ sc.controller('DashboardCtrl', function($rootScope, $scope, $timeout, $state, se
       $rootScope.tab = 'none';
     };
 
-    $scope.toggleSend = function() {
-        if ($rootScope.tab!='send') {
-            $rootScope.tab='send';
-        } else {
-            $rootScope.tab='none';
-        }
+    $scope.openSend = function() {
+        $scope.$broadcast('resetSendPane');
+        $rootScope.tab = 'send';
     };
 
-    $scope.toggleReceive = function() {
-        if ($rootScope.tab!='receive') {
-            $rootScope.tab='receive';
-        } else {
-            $rootScope.tab='none';
-        }
+    $scope.openReceive = function() {
+        $rootScope.tab = 'receive';
     };
 
     $scope.statusMessage = function(){

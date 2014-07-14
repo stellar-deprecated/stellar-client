@@ -27,7 +27,7 @@
       @include transition(color 200ms ease-in-out);
     }
 
-    &.incomplete, &.unverified {
+    &:not(.sent) {
       background-color: white;
       border: 1px solid rgba($stellar-blue, 0);
 
@@ -41,17 +41,12 @@
         i {
           color: $stellar-blue;
         }
-
-        .pop-action {
-          //display: block;
-        }
       }
     }
 
-    &.sent,
-    &.awaiting_payout,
-    &.ineligible {
+    &.sent {
       background-color: #F9F9F9;
+      text-decoration: line-through;
       color: $info-grey;
       cursor: default;
 
@@ -60,12 +55,14 @@
       }
     }
 
-    &.sent {
-      text-decoration: line-through;
-    }
-
     .reward-body {
       padding: 30px 30px;
+
+      .subtitle {
+        color: $info-grey;
+        font-weight: $avenir-book;
+        font-size: 17px;
+      }
     }
 
     .pop-action {

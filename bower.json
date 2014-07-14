@@ -7,6 +7,7 @@
     "jquery": "~1.11.0",
     "angular": "~1.2.17",
     "angular-route": "*",
+    "angular-cookies": "*",
     "angular-ui-router": "~0.2.10",
     "angular-debounce": "~0.0.3",
     "angular-password-strength": "~0.0.4",
