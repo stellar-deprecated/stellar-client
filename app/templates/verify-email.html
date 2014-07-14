@@ -1,6 +1,6 @@
 <div class="info">
     Verify your email address to activate your password recovery feature and receive {{giveawayAmount * .2}} stellars.<br>
-    Your activation code is in your welcome email.
+    Your recovery code is in your welcome email.
 </div>
 <div class="verify-email">
     <div class="add-email-item" ng-class="{active: reward.status == 'incomplete'}">
@@ -24,7 +24,7 @@
                 <div class="errors col-sm-12">
                     <div class="tip col-sm-offset-6 col-sm-6">{{ errors.join('\n') }}</div>
                 </div>
-                <input id="emailActivationCode" type="text" class="form-control" ng-class="{'input-error': errors.length}" placeholder="Email Activation Code" ng-model="emailActivationCode" ng-change="errors = []">
+                <input id="emailActivationCode" type="text" class="form-control" ng-class="{'input-error': errors.length}" placeholder="Recovery Code" ng-model="emailActivationCode" ng-change="errors = []">
             </div>
             <div class="form-group">
                 <button type="button" class="cancel stellar-button btn btn-default" ng-click="cancel()">Cancel</button>
