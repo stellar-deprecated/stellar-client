@@ -14,14 +14,16 @@ sc.controller('FacebookRewardCtrl', function ($scope, $http, session) {
       $scope.reward.status = status;
       switch (status) {
         case 'sent':
-          $scope.reward.title = 'Receive your first stellars on us! Log in with Facebook',
+          $scope.reward.title = 'You connected your Facebook!';
           $scope.reward.subtitle = null;
           break;
         case 'reward_queued':
+          $scope.reward.title = "You connected your Facebook!";
           getPlaceInLine();
           break;
         case 'sending':
-          $scope.reward.subtitle = "You should be receiving your reward shortly!";
+          $scope.reward.title = "You connected your Facebook!";
+          $scope.reward.subtitle = "...you should be receiving your reward shortly!";
           break;
         case 'unverified':
           $scope.reward.error = {};
