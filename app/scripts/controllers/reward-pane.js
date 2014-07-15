@@ -10,11 +10,11 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
 
   $scope.rewardStatusIcons = {
     'incomplete': 'icon icon-lock',
-    'reward_queued': 'icon icon-lock', // TODO: Use clock icon.
-    'needs_fbauth': 'icon icon-lock', // TODO: Use clock icon.
-    'sending': 'icon icon-lock', // TODO: Use clock icon.
+    'reward_queued': 'icon icon-clock',
+    'needs_fbauth': 'icon icon-clock',
+    'sending': 'icon icon-clock',
     'sent': 'icon icon-tick',
-    'unverified': 'icon icon-lock', // TODO: Use clock icon.
+    'unverified': 'icon icon-clock',
     'ineligible': 'icon icon-lock' // TODO: Use yeild sign icon.
   };
 
