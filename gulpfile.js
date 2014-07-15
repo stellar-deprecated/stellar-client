@@ -25,7 +25,10 @@ gulp.task('dist',    ['build']);
 gulp.task('styles', ['iconfont'], function () {
     return gulp.src('app/styles/main.scss')
         .pipe(plumber({errorHandler: console.log}))
-        .pipe($.sass({outputStyle: 'expanded'}))
+        .pipe($.sass({
+            outputStyle: 'expanded',
+            includePaths: ['app/styles', '.tmp/styles']
+        }))
         .pipe($.autoprefixer('last 1 version'))
         .pipe(gulp.dest('.tmp/styles'))
         .pipe($.size());
@@ -204,8 +207,9 @@ gulp.task('iconfont', function() {
     return gulp.src(['app/icons/*.svg'])
         .pipe($.iconfontCss({
             fontName: fontName,
-            targetPath: '../styles/icons.scss',
-            fontPath: '../fonts/'
+            targetPath: '../styles/_icons.scss',
+            fontPath: '../fonts/',
+            path: 'scss'
         }))
         .pipe($.iconfont({
             fontName: fontName,
