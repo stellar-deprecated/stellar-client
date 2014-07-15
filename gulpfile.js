@@ -133,14 +133,14 @@ gulp.task('connect', function () {
         .use(connect.directory('app'));
 
     require('http').createServer(app)
-        .listen(9000)
+        .listen(8000)
         .on('listening', function () {
-            console.log('Started connect web server on http://localhost:9000');
+            console.log('Started connect web server on http://localhost:8000');
         });
 });
 
 gulp.task('serve', ['connect', 'styles', 'templateCache'], function () {
-    require('opn')('http://localhost:9000');
+    require('opn')('http://localhost:8000');
 });
 
 // inject bower components
@@ -222,14 +222,14 @@ gulp.task('connect-dist', ['dist'], function() {
         .use(connect.directory('dist'));
 
     require('http').createServer(app)
-        .listen(9001)
+        .listen(8001)
         .on('listening', function () {
-            console.log('Started connect web server on http://localhost:9001');
+            console.log('Started connect web server on http://localhost:8001');
         });
 })
 
 gulp.task('serve-dist', ['connect-dist'], function() {
-    require('opn')('http://localhost:9001');
+    require('opn')('http://localhost:8001');
 })
 
 
