@@ -14,7 +14,10 @@
 
     i {
       margin: 0 15px;
-      font-size: 20px;
+      font-size: 24px;
+      display: inline-block;
+      vertical-align: middle;
+      color: $grey;
     }
   }
 
@@ -43,6 +46,7 @@
     .rewards-complete-badge {
       color: #1CB4E5;
       font-size: 32px;
+      display: inline-block;
       vertical-align: middle;
       margin-right: 16px;
       top: 0;

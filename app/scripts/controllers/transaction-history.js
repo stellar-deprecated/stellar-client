@@ -5,8 +5,8 @@ var sc = angular.module('stellarClient');
 sc.controller('TransactionHistoryCtrl', function($scope)
 {
   $scope.typeIcons = {
-    'sent': 'glyphicon glyphicon-upload',
-    'received': 'glyphicon glyphicon-download'
+    'sent': 'icon icon-send',
+    'received': 'icon icon-receive'
   };
 
   function sortAmount(a, b){

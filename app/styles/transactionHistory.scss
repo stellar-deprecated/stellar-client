@@ -37,11 +37,11 @@
         vertical-align: middle;
         margin-right: 10px;
 
-        &.glyphicon-download {
+        &.icon-receive {
           color: $success;
         }
 
-        &.glyphicon-upload {
+        &.icon-send {
           color: $error;
         }
       }

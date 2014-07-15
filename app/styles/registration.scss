@@ -14,6 +14,19 @@ $input-border-focus-color: #66afe9;
     }
   }
 
+  .input-icon-wrapper {
+    .icon {
+      color: #D8D8D8;
+      @include transition(color 200ms ease-in-out);
+    }
+
+    .icon-user {
+      font-size: 16px;
+      padding: 10px 12px;
+      color: #C8C8C8
+    }
+  }
+
   .form-group.terms {
     margin-bottom: 0;
   }

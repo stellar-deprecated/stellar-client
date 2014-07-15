@@ -14,13 +14,13 @@
             </div>
             <div class="dash-receive-container">
                 <button class="stellar-button btn btn-default" ng-click="openReceive()">
-                    <i class="glyphicon glyphicon-download"></i>
+                    <i class="icon icon-receive"></i>
                     Receive
                 </button>
             </div>
             <div class="dash-send-container">
                 <button class="stellar-button btn btn-default" ng-click="openSend()">
-                    <i class="glyphicon glyphicon-upload"></i>
+                    <i class="icon icon-send"></i>
                     Send
                 </button>
             </div>
@@ -29,7 +29,7 @@
     <div class="row tx-tip-container">
         <div>
             <div class="tx-tip" ng-show="showTransaction" ng-click="clearNotification()">
-                <div class="tx-type"><i class="glyphicon glyphicon-download"></i></div><!-- Prevent space between inline blocks
+                <div class="tx-type"><i class="icon icon-receive"></i></div><!-- Prevent space between inline blocks
              --><div class="tx-message">You received <span class="amount">
                     {{ newTransaction.amount.to_human() }} {{ newTransaction.currency }}</span>
                 </div>

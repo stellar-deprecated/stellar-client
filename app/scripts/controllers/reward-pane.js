@@ -9,13 +9,13 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
   $scope.giveawayAmount=0;
 
   $scope.rewardStatusIcons = {
-    'incomplete': 'glyphicon glyphicon-lock',
-    'reward_queued': 'glyphicon glyphicon-time',
-    'needs_fbauth': 'glyphicon glyphicon-time',
-    'sending': 'glyphicon glyphicon-time',
-    'sent': 'glyphicon glyphicon-ok-circle',
-    'unverified': 'glyphicon glyphicon-time',
-    'ineligible': 'glyphicon glyphicon-warning-sign'
+    'incomplete': 'icon icon-lock',
+    'reward_queued': 'icon icon-lock', // TODO: Use clock icon.
+    'needs_fbauth': 'icon icon-lock', // TODO: Use clock icon.
+    'sending': 'icon icon-lock', // TODO: Use clock icon.
+    'sent': 'icon icon-tick',
+    'unverified': 'icon icon-lock', // TODO: Use clock icon.
+    'ineligible': 'icon icon-lock' // TODO: Use yeild sign icon.
   };
 
   var walletReward = {
