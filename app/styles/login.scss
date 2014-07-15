@@ -1,3 +1,23 @@
 .login {
   padding-bottom: 80px;
+
+  .col-sm-6 {
+    padding-left: 0;
+    padding-right: 0;
+
+    .icon {
+      color: #D8D8D8;
+    }
+
+    .icon-user {
+      font-size: 16px;
+      padding: 10px 12px;
+      color: #C8C8C8
+    }
+
+    .icon-key {
+	  font-size: 10px;
+      padding: 16px 12px;
+    }
+  }
 }
