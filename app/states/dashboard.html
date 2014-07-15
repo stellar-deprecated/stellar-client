@@ -1,24 +1,24 @@
 <div class="dashboard" ng-controller="DashboardCtrl">
     <div class="controls-container">
         <div class="row controls top-row">
-            <div class="img-container"><img src="images/wallet.png"></div>
-            <div class="dash-balance-container">
+            <div class="img-container col-md-3"><img src="images/wallet.png"></div>
+            <div class="dash-balance-container col-xs-12 col-md-6">
                 <span ng-show="$root.accountStatus == 'loaded'" class="dash-balance" rp-tooltip="{{$root.balance  | rpamount}}  (reserve: {{ $root.reserve  | rpamount }} STR)" ng-bind-html="$root.balance | rpamount:{rel_precision: 0} | shrinkText:84:6"></span>
                 <span ng-hide="$root.accountStatus == 'loaded'" class="dash-balance" ng-bind-html="statusMessage() | shrinkText:84:6"></span>
             </div>
-            <div class="img-container"><img src="images/rocket.png"></div>
+            <div class="img-container col-md-3"><img src="images/rocket.png"></div>
         </div>
         <div class="row controls">
-            <div class="dash-info-container">
+            <div class="dash-info-container col-xs-12 col-md-6 col-md-push-3">
                 <span ng-show="$root.accountStatus == 'loaded'" class="dash-balance-info ng-hide">Current Balance <b>Stellars</b></span>
             </div>
-            <div class="dash-receive-container">
+            <div class="dash-receive-container col-xs-12 col-md-3 col-md-pull-6">
                 <button class="stellar-button btn btn-default" ng-click="openReceive()">
                     <i class="icon icon-receive"></i>
                     Receive
                 </button>
             </div>
-            <div class="dash-send-container">
+            <div class="dash-send-container col-xs-12 col-md-3">
                 <button class="stellar-button btn btn-default" ng-click="openSend()">
                     <i class="icon icon-send"></i>
                     Send

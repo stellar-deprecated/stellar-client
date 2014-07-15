@@ -23,7 +23,6 @@
         padding-right: 0;
 
         &.dash-balance-container {
-          width: 100%;
           padding-top: 20px;
         }
 
@@ -33,17 +32,12 @@
 
         &.dash-receive-container,
         &.dash-send-container {
-          width: 100%;
           margin-top: 25px;
         }
 
         &.img-container {
           display: none;
         }
-      }
-
-      .dash-title {
-
       }
 
       .dash-balance {
@@ -80,38 +74,29 @@
 
   @media (min-width: $mobile-width) {
     .controls-container {
+
       .controls {
-        display: flex;
 
         > div {
+          display: inline;
+
+          &.dash-receive-container,
+          &.dash-send-container {
+            margin-top: 0;
+          }
+
           &.dash-info-container {
-            order: 2;
-            flex-grow: 2;
             line-height: 45px;
             margin-top: 0;
           }
 
-          &.dash-receive-container {
-            width: 220px;
-            min-width: 220px;
-            margin-top: 0;
-            order: 1;
-          }
-
-          &.dash-send-container {
-            width: 220px;
-            min-width: 220px;
-            margin-top: 0;
-            order: 3;
-          }
-
           &.img-container {
             display: inline-block;
-            width: 220px;
-            min-width: 220px;
           }
         }
       }
+
+
     }
   }
 
