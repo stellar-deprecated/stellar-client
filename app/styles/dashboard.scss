@@ -58,7 +58,7 @@
         }
       }
 
-      button {
+      button, .no-button {
         padding: 6px 24px;
         width: 100%;
 
@@ -69,11 +69,22 @@
           margin-top: -6px;
         }
       }
+
+      .no-button {
+        font-weight: 800;
+        font-size: 17px;
+        color: $stellar-blue;
+
+        i {
+          margin-right: 10px;
+        }
+      }
     }
   }
 
   @media (min-width: $mobile-width) {
     .controls-container {
+      padding-bottom: 0px;
 
       .controls {
 
@@ -96,7 +107,19 @@
         }
       }
 
+      .arrow-row {
 
+        height:25px;
+
+        .arrow {
+          margin:auto;
+          width: 0;
+          height: 0;
+          border-left: 20px solid transparent;
+          border-right: 20px solid transparent;
+          border-bottom: 26px solid white;
+        }
+      }
     }
   }
 
