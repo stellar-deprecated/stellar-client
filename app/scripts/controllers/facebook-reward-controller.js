@@ -24,23 +24,26 @@ sc.controller('FacebookRewardCtrl', function ($scope, $http, session) {
           $scope.reward.subtitle = "You should be receiving your reward shortly!";
           break;
         case 'unverified':
-          $scope.error.info = "Please verify your Facebook account and try again.";
-          $scope.error.panel = "Almost there! Verify your Facebook account.";
-          $scope.error.action = function () {
-            reward.error = null
+          $scope.reward.error = {};
+          $scope.reward.error.info = "Please verify your Facebook account and try again.";
+          $scope.reward.error.panel = "Almost there! Verify your Facebook account.";
+          $scope.reward.error.action = function () {
+            $scope.reward.error = null
           };
           break;
         case 'ineligible':
-          $scope.title = "Your Facebook account is not eligible.";
-          $scope.subtitle = "Please check back for other ways to participate soon.";
-          $scope.error.info = "Your Facebook account is too new to qualify. Stay tuned for new ways to grab stellars.";
-          $scope.error.panel = "Sorry, your Facebook account is too new."
-          $scope.error.action = null;
+          $scope.reward.error = {};
+          $scope.reward.title = "Your Facebook account is not eligible.";
+          $scope.reward.subtitle = "Please check back for other ways to participate soon.";
+          $scope.reward.error.info = "Your Facebook account is too new to qualify. Stay tuned for new ways to grab stellars.";
+          $scope.reward.error.panel = "Sorry, your Facebook account is too new."
+          $scope.reward.error.action = null;
           break;
         case 'already_taken':
-          $scope.error.info = "This Facebook account is already in use.";
-          $scope.error.action = function () {
-            reward.error = null
+          $scope.reward.error = {};
+          $scope.reward.error.info = "This Facebook account is already in use.";
+          $scope.reward.error.action = function () {
+            $scope.reward.error = null
           };
           break;
         case 'fake':

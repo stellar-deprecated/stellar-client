@@ -121,7 +121,7 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
     }
 
     turnOffFairyTxListener = $scope.$on('$appTxNotification', function (event, tx) {
-      if (tx.counterparty == Options.stellar_contact.destination_address) {
+      if (tx.counterparty == session.get('wallet').mainData.stellar_contact.destination_address) {
         $scope.updateRewards();
       }
     });
