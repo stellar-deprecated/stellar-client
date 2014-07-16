@@ -46,10 +46,14 @@
       }
     }
 
-    &.sent {
+    &.sent .reward-body {
       background-color: #F9F9F9;
       color: #A0ABB1;
       cursor: default;
+
+      .subtitle {
+        color: #C0CBD1
+      }
 
       span {
         text-decoration: line-through;
@@ -57,13 +61,27 @@
     }
 
     .reward-body {
-      padding: 22px 30px;
+      padding: 10px 30px;
+      height: 83px;
 
       .subtitle {
         color: $info-grey;
         font-weight: $avenir-book;
         font-size: 17px;
+        display: block;
+        margin-left: 51px;
       }
+    }
+  }
+}
+
+@media (min-width: $mobile-width) {
+  .reward-list li .reward-body {
+    padding: 22px 30px;
+
+    .subtitle {
+      display: inline-block;
+      margin-left: 0;
     }
   }
 }
