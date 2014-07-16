@@ -21,7 +21,8 @@ sc.controller('SendRewardCtrl', function ($rootScope, $scope, $http, stNetwork, 
   $scope.reward.template = 'templates/send-stellar.html';
 
   function validateTransaction(tx){
-    return tx && tx.type == "sent" && tx.amount.to_number() >= $scope.giveawayAmount * .2 * 1000000;
+    var minAmount = $scope.giveawayAmount * .2 * 1000000;
+    return tx && tx.type == "sent" && tx.amount.to_number() >= minAmount;
   }
 
   var turnOffTxListener;
