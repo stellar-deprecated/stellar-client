@@ -1,5 +1,5 @@
 <div class="dashboard" ng-controller="DashboardCtrl">
-    <div class="controls-container">
+    <div class="controls-container client-section">
         <div class="row controls top-row">
             <div class="img-container col-md-3"><img src="images/wallet.png"></div>
             <div class="dash-balance-container col-xs-12 col-md-6">
@@ -37,7 +37,7 @@
         </div>
     </div>
     <div class="row tx-tip-container">
-        <div>
+        <div class="client-section">
             <div class="tx-tip" ng-show="showTransaction" ng-click="clearNotification()">
                 <div class="tx-type"><i class="icon icon-receive"></i></div><!-- Prevent space between inline blocks
              --><div class="tx-message">You received <span class="amount">
@@ -46,8 +46,8 @@
             </div>
         </div>
     </div>
-    <div class="send-container" ng-include="'templates/send.html'" ng-show="tab==='send'"></div>
-    <div class="receive-container" ng-include="'templates/receive.html'" ng-show="$root.tab==='receive'"></div>
+    <div class="send-container client-section" ng-include="'templates/send.html'" ng-show="tab==='send'"></div>
+    <div class="receive-container client-section" ng-include="'templates/receive.html'" ng-show="$root.tab==='receive'"></div>
 </div>
 <div ng-include="'templates/reward-container.html'"></div>
 <div ng-include="'templates/transaction-history.html'"></div>

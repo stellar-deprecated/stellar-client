@@ -260,8 +260,9 @@ body {
     }
   }
 
-  & > div {
-    padding: 20px 20px 15px 20px;
+  .client-inner-nav {
+    padding-top: 20px;
+    padding-bottom: 15px;
     border-top: 3px solid $stellar-blue;
     border-bottom: 1px solid $grey-border;
     background-color: $grey-background;
@@ -429,8 +430,9 @@ body {
   }
 }
 
-.client-container > div > * {
-  padding: 0 20px;
+.client-section {
+  padding-left: 20px;
+  padding-right: 20px;
 
   &:not(:last-child){
     border-bottom: $grey-border-bottom;
@@ -446,13 +448,9 @@ body {
 }
 
 @media (min-width: $mobile-width) {
-  .client-nav > div {
-
-    padding: 20px 105px 15px 105px;
-  }
-
-  .client-container > div > * {
-    padding: 0 105px;
+  .client-section {
+    padding-left: 105px;
+    padding-right: 105px;
   }
 
   .client-nav ul > div {
