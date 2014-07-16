@@ -117,12 +117,9 @@ sc.controller('RegistrationCtrl', function($scope, $state, $timeout, $http, $q, 
       $scope.errors.usernameErrors.push('This username is taken.');
     }
 
-    if(!registration.email.value && $scope.noEmailWarning == false) {
+    if(!$scope.data.email && $scope.noEmailWarning == false) {
       validInput = false;
       $scope.noEmailWarning = true;
-    } else if(registration.email.value && !$scope.email) {
-      validInput = false;
-      $scope.errors.emailErrors.push('Invalid email address.');
     }
 
     $scope.validators.forEach(function(validator){
