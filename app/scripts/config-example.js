@@ -28,7 +28,7 @@ var Options = {
         type: "federation_record"
     },
 
-    APP_ID: '703276886397629',
+    APP_ID: '1411202179109031',
     DOMAIN_NAME: 'gostellar.org',
     DEFAULT_FEDERATION_DOMAIN: 'gostellar.org',
     API_SERVER: 'http://localhost:80',
