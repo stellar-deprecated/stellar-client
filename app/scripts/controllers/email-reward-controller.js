@@ -5,7 +5,8 @@ var sc = angular.module('stellarClient');
 sc.controller('EmailRewardCtrl', function ($scope, $rootScope, session) {
   $scope.reward = {
     rewardType: 2,
-    title: 'Set up password recovery',
+    title: 'Set up password recovery!',
+    subtitle: 'Verify your email',
     innerTitle: 'Set up password recovery',
     status: 'incomplete',
     updateReward: function (status) {

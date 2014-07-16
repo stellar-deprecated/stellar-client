@@ -18,19 +18,10 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
     'ineligible': 'icon icon-lock' // TODO: Use yeild sign icon.
   };
 
-  var walletReward = {
-    rewardType: 0,
-    title: 'Create a new wallet',
-    innerTitle: 'Create a new wallet',
-    status: 'sent'
-  }
-
   /**
   * Holds each reward object.
   */
-  $scope.rewards = [
-    walletReward
-  ]
+  $scope.rewards = [];
 
   $scope.$watch($scope.rewards, function (newValue, oldValue, scope) {
     $scope.sortedRewards = $scope.rewards.slice();

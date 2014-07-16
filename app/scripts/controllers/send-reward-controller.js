@@ -5,7 +5,8 @@ var sc = angular.module('stellarClient');
 sc.controller('SendRewardCtrl', function ($rootScope, $scope, $http, stNetwork, session) {
   $scope.reward = {
     rewardType: 3,
-    title: 'Send stellars to a friend',
+    title: 'Send stellars to a friend!',
+    subtitle: 'Learn to send',
     innerTitle: 'Send stellars to a friend',
     status: 'incomplete',
     updateReward: function (status) {
