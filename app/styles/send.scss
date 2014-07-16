@@ -115,7 +115,8 @@
     color: $success;
   }
 
-  .pending {
+  .pending,
+  .mode-sending {
     text-align: center;
 
     .sending-rocket {
