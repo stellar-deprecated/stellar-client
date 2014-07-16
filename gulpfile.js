@@ -81,9 +81,11 @@ gulp.task('html', ['config', 'styles', 'scripts', 'templateCache'], function (do
             .pipe($.replace('bower_components/bootstrap-sass-official/vendor/assets/fonts/bootstrap','fonts'))
             .pipe($.csso())
             .pipe(cssFilter.restore())
+            .pipe($.rev())   
             .pipe($.useref.restore())
             .pipe($.useref())
 
+            .pipe($.revReplace())
             .pipe(gulp.dest('dist'))
             .pipe($.size())
             .once('end', done)
