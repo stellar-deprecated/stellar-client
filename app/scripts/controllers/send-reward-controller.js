@@ -20,10 +20,15 @@ sc.controller('SendRewardCtrl', function ($rootScope, $scope, $http, stNetwork, 
 
   $scope.reward.template = 'templates/send-stellar.html';
 
+  function validateTransaction(tx){
+    var minAmount = $scope.giveawayAmount * .2 * 1000000;
+    return tx && tx.type == "sent" && tx.amount.to_number() >= minAmount;
+  }
+
   var turnOffTxListener;
   function setupSentTxListener() {
   	turnOffTxListener = $scope.$on('$appTxNotification', function (event, tx) {
-      if (tx.type == 'sent' && $scope.reward.status == "incomplete") {
+      if (validateTransaction(tx)) {
         requestSentStellarsReward();
       }
     });
@@ -60,7 +65,7 @@ sc.controller('SendRewardCtrl', function ($rootScope, $scope, $http, stNetwork, 
             var processedTxn = JsonRewriter.processTxn(data.transactions[i].tx, data.transactions[i].meta, account);
             var transaction = processedTxn.transaction;
 
-            if (transaction && transaction.type == "sent") {
+            if (validateTransaction(transaction)) {
               requestSentStellarsReward();
               sendRewardRequested = true;
               break;
