@@ -53,7 +53,7 @@ sc.controller('TransactionHistoryCtrl', function($scope)
       {
         field: 'transaction.counterparty',
         displayName: '',
-        width: '35%',
+        width: '*',
         cellTemplate: '<span class="address">{{ row.getProperty(col.field) | addressToUsername }}</span>'
       }
     ]
