@@ -63,6 +63,10 @@ sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', 'session', function
             accountObj.removeListener("entry", myHandleAccountEntry);
         }
 
+        remote.on('disconnected', function () {
+            listenerCleanupFn();
+        });
+
         accountObj.entry(function (err, entry) {
             if (err) {
                 switch(err.remote.error) {
