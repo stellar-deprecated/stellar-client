@@ -1,7 +1,7 @@
 <div class="registration">
     <h1 class="title">Create Your Account</h1>
 
-    <form role="form" class="form-horizontal stellar-form" ng-controller="RegistrationCtrl" novalidate>
+    <form role="form" name="registration" class="form-horizontal stellar-form" ng-controller="RegistrationCtrl" novalidate>
         <div class="form-group">
             <div class="errors col-sm-12">
                 <div class="tip col-sm-offset-6 col-sm-3">{{ errors.usernameErrors.join('\n') }}</div>
@@ -29,7 +29,7 @@
             </label>
             <div class="col-sm-6">
                 <div class="input-icon-wrapper">
-                    <input id="email" type="email" class="form-control" ng-model="data.email" ng-change="errors.emailErrors = []">
+                    <input id="email" name="email" type="email" class="form-control" ng-model="data.email" ng-change="errors.emailErrors = []">
                     <i class="icon icon-email"></i>
                 </div>
                 <div class="poptip ng-hide" ng-show="noEmailWarning">
