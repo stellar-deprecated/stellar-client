@@ -31,16 +31,16 @@ module.factory('stNetwork', function($rootScope)
         });
     };
 
+
+    self.remote.on('connected', handleConnect);
+    self.remote.on('disconnected', handleDisconnect);
+
     self.init = function () {
-        self.remote.on('connected', handleConnect);
-        self.remote.on('disconnected', handleDisconnect);
         self.remote.connect();
     };
 
 
     self.shutdown = function () {
-        self.remote.removeListener('connected', handleConnect);
-        self.remote.removeListener('disconnected', handleDisconnect);
         self.remote.disconnect();
     };
 
