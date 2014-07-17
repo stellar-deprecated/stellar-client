@@ -19,7 +19,7 @@ var Options = {
         type: "federation_record"
     },
 
-    INFLATION_DEST: 'gJB1W4wbxvMVawvXeo4hz3bwaf2qnWHL2x',
+    INFLATION_DEST: 'g4eRqgZfzfj3132y17iaf2fp6HQj1gofjt',
 
     APP_ID: '1411202179109031',
     DOMAIN_NAME: 'gostellar.org',
