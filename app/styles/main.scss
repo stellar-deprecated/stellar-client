@@ -440,15 +440,7 @@ body {
   }
 }
 
-@media (min-width: 1440px) {
-  body,
-  .client-nav {
-    width: 1440px;
-    margin: 0 auto;
-  }
-}
-
-@media (min-width: $mobile-width) {
+@media (min-width: $phone-width) {
   .client-section {
     padding-left: 105px;
     padding-right: 105px;
@@ -457,6 +449,9 @@ body {
   .client-nav ul > div {
     padding: 20px 105px 15px 105px;
   }
+}
+
+@media (min-width: $mobile-width) {
 
   .footer {
     padding: 25px 105px;
@@ -473,5 +468,13 @@ body {
         }
       }
     }
+  }
+}
+
+@media (min-width: 1440px) {
+  body,
+  .client-nav {
+    width: 1440px;
+    margin: 0 auto;
   }
 }
