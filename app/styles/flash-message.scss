@@ -1,0 +1,76 @@
+.flash-message-container {
+  background-color: $grey-background;
+  padding-top: 28px;
+  padding-bottom: 28px;
+
+  &:empty {
+    display: none;
+  }
+
+  .flash-message {
+    border: 1px solid $stellar-blue;
+    border-radius: 2px;
+    padding-top: 8px;
+    margin-bottom: 20px;
+    position: relative;
+    background-color: white;
+    box-shadow: 0 1px 6px 6px rgba($grey, 0.1),
+                0 1px 2px 2px rgba($grey, 0.2);
+
+    &.error {
+      border-color: $error;
+
+      .flash-title {
+        color: $error;
+      }
+
+      .flash-accent {
+        background-color: $error;
+      }
+    }
+
+    &.success {
+      border-color: $success;
+
+      .flash-title {
+        color: $success;
+      }
+
+      .flash-accent {
+        background-color: $success;
+      }
+    }
+
+    .flash-title,
+    .flash-info {
+      display: block;
+      margin: 6px 40px;
+    }
+
+    .flash-title {
+      font-size: 20px;
+      font-weight: $avenir-medium;
+      color: $stellar-blue;
+    }
+
+    .flash-info {
+      font-size: 16px;
+      margin-bottom: 14px;
+    }
+
+    .icon-close {
+      font-size: 26px;
+      color: $grey;
+      position: absolute;
+      padding: 18px 20px;
+      right: 0;
+      cursor: pointer;
+    }
+
+    .flash-accent {
+      width: 100%;
+      height: 4px;
+      background-color: $stellar-blue;
+    }
+  }
+}
