@@ -59,17 +59,17 @@ body {
       height: 40px;
 
       .tip {
+        margin-right: 15px;
+        display: inline;
+        position: absolute;
+        right: 0px;
+        bottom: 8px;
         font-weight: $avenir-heavy;
         font-size: 14px;
         background-color: $error;
         color: white;
-        top: -5px;
-        right: 7px;
-        line-height: 32px;
-        height: 32px;
-        padding: 0 12px;
-        text-align: center;
-        margin-right: 15px;
+        line-height: 20px;
+        padding: 4px 12px;
         border-radius: 2px;
         @include transition(opacity 200ms ease-in-out);
 
@@ -79,11 +79,10 @@ body {
 
         &:before {
           border: solid;
-          border-color: $error transparent;
+          border-color: #D41B32 transparent;
           border-width: 6px 6px 0 6px;
           bottom: -6px;
           content: "";
-          left: 26px;
           position: absolute;
         }
 
