@@ -97,20 +97,17 @@
             margin-bottom: 20px;
           }
 
+          .button-col-left {
+            padding-right:5px;
+          }
+          .button-col-right {
+            padding-left:5px;
+          }
           button {
             margin: 0 0;
 
             &:not(:hover) {
               color: #474747;
-            }
-
-            &.cancel {
-              width: 25%;
-            }
-
-            &.submit {
-              width: calc(75% - 20px);
-              float: right;
             }
           }
 

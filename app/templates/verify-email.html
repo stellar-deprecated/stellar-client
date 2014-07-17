@@ -6,15 +6,25 @@
     <div class="add-email-item" ng-class="{active: reward.status == 'incomplete'}">
         <form role="form" class="stellar-form" ng-controller="AddEmailCtrl" ng-submit="addEmail()">
             <div class="form-group">
-                <div class="errors col-sm-12">
-                    <div class="tip col-sm-offset-6 col-sm-6">{{ errors.join('\n') }}</div>
+                <div class="row">
+                    <div class="errors col-sm-12">
+                        <div class="tip">{{ errors.join('\n') }}</div>
+                    </div>
                 </div>
-                <input id="email" type="text" class="form-control" ng-class="{'input-error': errors.length}" placeholder="Email Address" ng-model="email" ng-change="errors = []">
-            </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <input id="email" type="text" class="form-control" ng-class="{'input-error': errors.length}" placeholder="Email Address" ng-model="email" ng-change="errors = []">
+                    </div>
+                </div>
             <div class="form-group">
-                <button type="button" class="cancel stellar-button btn btn-default" ng-click="cancel()">Cancel</button>
-                <button type="submit" class="submit stellar-button btn btn-default" ng-hide="loading">Submit</button>
-                <button class="loading submit stellar-button btn btn-default ng-hide" ng-show="loading" disabled>Loading...</button>
+                <div class="row">
+                    <div class="col-xs-3 button-col-left">
+                        <button type="button" class="cancel stellar-button btn btn-default" ng-click="cancel()">Cancel</button>
+                    </div>
+                    <div class="col-xs-9 button-col-right">
+                        <button type="submit" class="submit stellar-button btn btn-default" ng-class="{loading: loading}" ng-disabled="loading">{{loading ? 'Loading...' : 'Submit' }}</button>
+                    </div>
+                </div>
             </div>
         </form>
     </div>
