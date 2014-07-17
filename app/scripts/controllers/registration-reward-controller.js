@@ -3,8 +3,15 @@
 var sc = angular.module('stellarClient');
 
 sc.controller('RegistrationRewardCtrl', function ($scope, session) {
-  $scope.index = 0;
-  $scope.reward = $scope.rewards[$scope.index];
+  $scope.reward = {
+    rewardType: 0,
+    title: 'Create a new wallet!',
+    subtitle: 'Complete registration',
+    innerTitle: 'Create a new wallet',
+    status: 'sent'
+  };
+
+  $scope.rewards.push($scope.reward);
 
   var action = $scope.reward.action;
 });

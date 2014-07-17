@@ -5,8 +5,8 @@ var sc = angular.module('stellarClient');
 sc.controller('FacebookRewardCtrl', function ($scope, $http, session) {
   $scope.reward = {
     rewardType: 1,
-    title: 'Receive your first stellars on us! Log in with Facebook',
-    subtitle: null,
+    title: 'Receive your first stellars on us!',
+    subtitle: 'Log in with Facebook',
     innerTitle: 'Receive your first stellars.',
     status: 'incomplete',
     error: null,
