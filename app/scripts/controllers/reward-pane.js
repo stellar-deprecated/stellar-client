@@ -8,6 +8,8 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
   $scope.selectedReward = null;
   $scope.giveawayAmount=0;
 
+  var firstRequest = true;
+
   $scope.rewardStatusIcons = {
     'incomplete': 'icon icon-lock',
     'reward_queued': 'icon icon-clock',
@@ -74,6 +76,16 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
     $scope.showRewards = (completedRewards.length !== $scope.rewards.length);
 
     $scope.showRewardsComplete = (completedRewards.length == $scope.rewards.length);
+
+    if($scope.showRewardsComplete && !firstRequest) {
+      $rootScope.$broadcast('flashMessage', {
+        title: 'Oh, happy day!',
+        info: 'You unlocked all the rewards.',
+        type: 'success'
+      });
+    } else {
+      firstRequest = false;
+    }
   };
 
   $scope.updateRewards = function() {
@@ -128,10 +140,5 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
     return $scope.showRewardsComplete;
   }
 
-  $scope.updateRewards()
-    .then(setupFairyTxListener)
-    .then(function(){
-      // Don't show the reward complete message if completed on the first load.
-      $scope.showRewardsComplete = false;
-    });
+  $scope.updateRewards().then(setupFairyTxListener);
 });
