@@ -9,8 +9,6 @@ sc.controller('DashboardCtrl', function($rootScope, $scope, $timeout, $state, se
     $scope.newTransaction = null;
     $scope.username = session.get('username');
 
-    stNetwork.init();
-
     $scope.closePane = function(){
       $rootScope.tab = 'none';
     };

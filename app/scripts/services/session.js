@@ -4,7 +4,7 @@ var sc = angular.module('stellarClient');
 
 var cache = {};
 
-sc.service('session', function($rootScope, $http) {
+sc.service('session', function($rootScope, $http, stNetwork) {
   var Session = function() {};
 
   Session.prototype.get = function(name){ return cache[name]; };
@@ -40,6 +40,7 @@ sc.service('session', function($rootScope, $http) {
     checkFairyAddress.bind(this)();
 
     $rootScope.$broadcast('walletAddressLoaded', {account: signingKeys.address, secret: signingKeys.secret});
+    stNetwork.init();
 
     // Set loggedIn to be true to signify that it is safe to use the session variables.
     this.put('loggedIn', true);
@@ -68,8 +69,10 @@ sc.service('session', function($rootScope, $http) {
       $rootScope.account.cleanup();
     }
     delete $rootScope.account;
+    stNetwork.shutdown();
 
     this.put('loggedIn', false);
+
   };
 
   function checkFairyAddress() {
