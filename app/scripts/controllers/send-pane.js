@@ -4,7 +4,7 @@ var Amount = stellar.Amount;
 
 var sc = angular.module('stellarClient');
 
-sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout','session','stNetwork', 'rpFederation', 'rpTracker', function($rootScope, $scope, $routeParams, $timeout, session, $network, $federation, $rpTracker )
+sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout','session','stNetwork', 'rpFederation', 'rpReverseFederation', 'rpTracker', function($rootScope, $scope, $routeParams, $timeout, session, $network, $federation, $reverseFederation, $rpTracker )
 {
     var timer;
 
@@ -216,8 +216,63 @@ sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout'
             ;
         }
         else {
-            $scope.check_destination();
+            send.path_status = "fed-check";
+            $reverseFederation.check_address(recipient)
+                .then(function (result) {
+                    // Check if this request is still current, exit if not
+                    var now_recipient = send.recipient_actual || send.recipient_address;
+                    if (recipient !== now_recipient) return;
+
+                    send.federation_record = result;
+
+                    if (result.extra_fields) {
+                        send.extra_fields = result.extra_fields;
+                    }
+
+                    send.dt = ("number" === typeof result.dt) ? result.dt : undefined;
+
+                    if (result.destination) {
+                        // Federation record specifies destination
+                        send.recipient_name = result.destination;
+                        send.recipient_address = recipient;
+                        $scope.check_destination();
+                    } else if (result.quote_url) {
+                        // Federation destination requires us to request a quote
+                        send.quote_url = result.quote_url;
+                        send.quote_destination = result.destination;
+                        send.path_status = "waiting";
+                        $scope.update_currency_constraints();
+                    } else {
+                        // Invalid federation result
+                        send.path_status = "waiting";
+                        $scope.sendForm.send_destination.$setValidity("federation", false);
+                        // XXX Show specific error message
+                    }
+                }, function () {
+                    // Check if this request is still current, exit if not
+                    var now_recipient = send.recipient_actual || send.recipient_address;
+                    if (recipient !== now_recipient) return;
+
+                    send.path_status = "waiting";
+                    $scope.sendForm.send_destination.$setValidity("federation", false);
+                })
+                .then($scope.check_destination)
+            ;
         }
+    };
+
+    $scope.recipientFederation = function(){
+        var send = $scope.send;
+
+        if (send.recipient != send.recipient_address) {
+            return send.recipient_address;
+        }
+
+        if (send.recipient != send.recipient_name) {
+            return send.recipient_name;
+        }
+
+        return '';
     };
 
     // Check destination for STR sufficiency and flags
