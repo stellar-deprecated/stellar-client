@@ -60,6 +60,7 @@ module.factory('rpStellarTxt', ['$q', '$rootScope',
             }
         }
 
+        // TODO: Consider using JSON.
         function parse(txt) {
             txt = txt.replace('\r\n', '\n');
             txt = txt.replace('\r', '\n');
