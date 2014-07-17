@@ -27,7 +27,7 @@ sc.controller('FacebookRewardCtrl', function ($scope, $http, session) {
           break;
         case 'unverified':
           $scope.reward.error = {};
-          $scope.reward.error.info = "Please verify your Facebook account and try again.";
+          $scope.reward.error.template = "templates/facebook-verify-error.html";
           $scope.reward.error.panel = "Almost there! Verify your Facebook account.";
           $scope.reward.error.action = function () {
             $scope.reward.error = null
