@@ -43,11 +43,11 @@ module.factory('rpReverseFederation', ['$q', '$rootScope', '$http', 'rpStellarTx
         }
 
         function processTxt(txt) {
-            if (!txt.federation_url) {
+            if (!txt.reverse_federation_url) {
                 reverseFederationPromise.reject({
                     result: "error",
-                    error: "noFederation",
-                    error_message: "Federation is not available on the requested domain."
+                    error: "noReverseFederation",
+                    error_message: "Reverse federation is not available on the requested domain."
                 });
                 return;
             }
