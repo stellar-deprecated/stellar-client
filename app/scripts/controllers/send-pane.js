@@ -228,21 +228,15 @@ sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout'
                         // Federation record specifies destination
                         send.recipient_name = result.destination;
                         send.recipient_address = recipient;
-                        $scope.check_destination();
-                    } else {
-                        // Invalid federation result
-                        send.path_status = "waiting";
-                        $scope.sendForm.send_destination.$setValidity("federation", false);
-                        // XXX Show specific error message
                     }
+
+                    $scope.check_destination();
                 }, function () {
                     // Check if this request is still current, exit if not
                     if (recipient !== send.recipient_address) return;
 
-                    send.path_status = "waiting";
-                    $scope.sendForm.send_destination.$setValidity("federation", false);
+                    $scope.check_destination();
                 })
-                .then($scope.check_destination)
             ;
         }
     };
