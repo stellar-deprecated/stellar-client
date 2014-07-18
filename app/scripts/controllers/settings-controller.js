@@ -2,8 +2,9 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('SettingsCtrl', function($scope, $http, session){
-  var settings = session.get('wallet').mainData;
+sc.controller('SettingsCtrl', function($scope, $http, session) {
+  var wallet = session.get('wallet');
+  var settings = wallet.mainData;
 
   // Account settings.
   $scope.username = session.get('username');
@@ -16,6 +17,7 @@ sc.controller('SettingsCtrl', function($scope, $http, session){
   // Security settings.
   $scope.email = settings.email;
   $scope.password = null;
+  $scope.secretKey = wallet.keychainData.signingKeys.secret;
 
   // Apply the new setting to the session blob and save it to the server.
   // TODO: Change password.
@@ -33,6 +35,8 @@ sc.controller('SettingsCtrl', function($scope, $http, session){
     // Save the updated blob to the server.
     session.storeBlob();
   }
+
+  $scope.changingPassword = false;
 
   $scope.toggle = {
     recovery: {
