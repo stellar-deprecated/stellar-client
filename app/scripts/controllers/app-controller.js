@@ -11,33 +11,29 @@ sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', 'session', 'rpRever
 
     $rootScope.balance=0;
     $rootScope.accountStatus = 'connecting';
-    $scope.events = [];
     $scope.history = [];
 
     var account;
     // implements account listener cleanup, added to $rootScope.account to be called in logout event
     var listenerCleanupFn;
 
-    function reset()
-    {
-        $rootScope.balance=0;
-        $rootScope.accountStatus = 'connecting';
-        $scope.events = [];
-        $scope.history = [];
-        /*
-        $scope.account = {};
-        $scope.lines = {};
-        $scope.offers = {};
-        $scope.balances = {};
-        */
-    }
-
     var myHandleAccountEvent;
     var myHandleAccountEntry;
     var mySetInflation;
     var accountObj;
-    function handleAccountLoad(e, data)
+
+    function reset()
     {
+        $rootScope.balance=0;
+        $rootScope.accountStatus = 'connecting';
+        $scope.history = [];
+        /*
+        $scope.account = {};
+        */
+
+    }
+
+    function handleAccountLoad(e, data) {
         var remote = $network.remote;
 
         account=data.account;
@@ -82,11 +78,6 @@ sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', 'session', 'rpRever
             }
         });
 
-        // Ripple credit lines
-        remote.request_account_lines(data.account)
-            .on('success', handleRippleLines)
-            .on('error', handleRippleLinesError).request();
-
         // Transactions
         remote.request_account_tx({
             'account': data.account,
@@ -98,11 +89,6 @@ sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', 'session', 'rpRever
         })
             .on('success', handleAccountTx)
             .on('error', handleAccountTxError).request();
-
-        // Outstanding offers
-        remote.request_account_offers(data.account)
-            .on('success', handleOffers)
-            .on('error', handleOffersError).request();
     };
 
     $scope.$on('walletAddressLoaded', function (e, data) {
@@ -120,50 +106,6 @@ sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', 'session', 'rpRever
         });
     });
 
-    function handleRippleLines(data)
-    {
-        $scope.$apply(function () {
-            $scope.lines = {};
-
-            for (var n=0, l=data.lines.length; n<l; n++) {
-                var line = data.lines[n];
-
-                // XXX: This reinterpretation of the server response should be in the
-                //      library upstream.
-                line = $.extend({}, line, {
-                    limit: ripple.Amount.from_json({value: line.limit, currency: line.currency, issuer: line.account}),
-                    limit_peer: ripple.Amount.from_json({value: line.limit_peer, currency: line.currency, issuer: account}),
-                    balance: ripple.Amount.from_json({value: line.balance, currency: line.currency, issuer: account})
-                });
-
-                $scope.lines[line.account+line.currency] = line;
-                updateRippleBalance(line.currency, line.account, line.balance);
-            }
-        });
-    }
-
-    function handleRippleLinesError(data)
-    {
-    }
-
-    function handleOffers(data)
-    {
-        $scope.$apply(function () {
-            data.offers.forEach(function (offerData) {
-                var offer = {
-                    seq: +offerData.seq,
-                    gets: ripple.Amount.from_json(offerData.taker_gets),
-                    pays: ripple.Amount.from_json(offerData.taker_pays)
-                };
-
-                updateOffer(offer);
-            });
-        });
-    }
-
-    function handleOffersError(data)
-    {
-    }
 
     function handleAccountEntry(data)
     {
@@ -235,11 +177,6 @@ sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', 'session', 'rpRever
                 $scope.$broadcast('$appTxNotification', transaction);
             }
 
-            // Add to recent notifications
-            if (processedTxn.tx_result === "tesSUCCESS") {
-                $scope.events.unshift(processedTxn);
-            }
-
             // Add to payments history
             if (processedTxn.tx_type === "Payment" &&
                 processedTxn.tx_result === "tesSUCCESS" &&
@@ -263,143 +200,9 @@ sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', 'session', 'rpRever
                 $scope.history.unshift(processedTxn);
                 $scope.$broadcast('$paymentNotification', transaction);
             }
-
-            // Update Ripple lines
-            if (processedTxn.effects && !is_historic) {
-                updateLines(processedTxn.effects);
-            }
-
-            // Update my offers
-            if (processedTxn.effects && !is_historic) {
-                // Iterate on each effect to find offers
-                processedTxn.effects.forEach(function (effect) {
-                    // Only these types are offers
-                    if (_.contains([
-                        'offer_created',
-                        'offer_funded',
-                        'offer_partially_funded',
-                        'offer_cancelled'], effect.type))
-                    {
-                        var offer = {
-                            seq: +effect.seq,
-                            gets: effect.gets,
-                            pays: effect.pays,
-                            deleted: effect.deleted
-                        };
-
-                        updateOffer(offer);
-                    }
-                });
-            }
         }
     }
 
-    function updateOffer(offer)
-    {
-        var reverseOrder = null;
-        var pairs = $scope.pairs;
-        for (var i = 0, l = pairs.length; i < l; i++) {
-            var pair = pairs[i].name;
-            if (pair.slice(0,3) == offer.gets.currency().to_json() &&
-                pair.slice(4,7) == offer.pays.currency().to_json()) {
-                reverseOrder = false;
-                break;
-            } else if (pair.slice(0,3) == offer.pays.currency().to_json() &&
-                pair.slice(4,7) == offer.gets.currency().to_json())  {
-                reverseOrder = true;
-                break;
-            }
-        }
-
-        // TODO: Sensible default for undefined pairs
-        if (reverseOrder === null) {
-            reverseOrder = false;
-        }
-
-        if (reverseOrder) {
-            offer.type = 'buy';
-            offer.first = offer.pays;
-            offer.second = offer.gets;
-        } else {
-            offer.type = 'sell';
-            offer.first = offer.gets;
-            offer.second = offer.pays;
-        }
-
-        if (!offer.deleted) {
-            $scope.offers[""+offer.seq] = offer;
-        } else {
-            delete $scope.offers[""+offer.seq];
-        }
-    }
-    function updateLines(effects)
-    {
-        if (!$.isArray(effects)) return;
-
-        $.each(effects, function () {
-            if (_.contains([
-                'trust_create_local',
-                'trust_create_remote',
-                'trust_change_local',
-                'trust_change_remote',
-                'trust_change_balance'], this.type))
-            {
-                var effect = this,
-                    line = {},
-                    index = effect.counterparty + effect.currency;
-
-                line.currency = effect.currency;
-                line.account = effect.counterparty;
-
-                if (effect.balance) {
-                    line.balance = effect.balance;
-                    updateRippleBalance(effect.currency,
-                        effect.counterparty,
-                        effect.balance);
-                }
-
-                if (effect.deleted) {
-                    delete $scope.lines[index];
-                    return;
-                }
-
-                if (effect.limit) {
-                    line.limit = effect.limit;
-                }
-
-                if (effect.limit_peer) {
-                    line.limit_peer = effect.limit_peer;
-                }
-
-                $scope.lines[index] = $.extend($scope.lines[index], line);
-            }
-        });
-    }
-
-    function updateRippleBalance(currency, new_account, new_balance)
-    {
-        // Ensure the balances entry exists first
-        if (!$scope.balances[currency]) {
-            $scope.balances[currency] = {components: {}, total: null};
-        }
-
-        var balance = $scope.balances[currency];
-
-        if (new_account) {
-            balance.components[new_account] = new_balance;
-        }
-
-        $(balance.components).sort(function(a,b){
-            debugger
-            return a.compareTo(b);
-        });
-
-        balance.total = null;
-        for (var counterparty in balance.components) {
-            var amount = balance.components[counterparty];
-            balance.total = balance.total ? balance.total.add(amount) : amount;
-        }
-    }
 
     var removeFirstConnectionListener =
         $scope.$on('$netConnected', handleFirstConnection);
