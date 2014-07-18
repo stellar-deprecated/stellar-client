@@ -3,11 +3,11 @@ sc.controller('AddEmailCtrl', function ($scope, $rootScope, $http, session) {
   $scope.errors = [];
 
   $scope.addEmail = function() {
-    if ($scope.email) {
+    if (addEmailForm.email.value) {
       $scope.loading = true;
       $scope.errors = [];
 
-      if (!Util.validateEmail($scope.email)) {
+      if(!$scope.email) {
         $scope.errors.push("Please enter a valid email.");
         $scope.loading = false;
         return;
