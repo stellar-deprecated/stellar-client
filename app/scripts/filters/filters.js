@@ -11,6 +11,10 @@ var Base = stellar.Base;
 module.filter('addressToUsername', function (session) {
     return function (input, options) {
         var wallet = session.get('wallet');
+        if(!wallet) {
+            return input;
+        }
+
         if (!wallet.mainData.contacts) {
             wallet.mainData.contacts = {};
         }
