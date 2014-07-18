@@ -2,41 +2,36 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('SettingsCtrl', function($scope, $http, session) {
+sc.controller('SettingsCtrl', function($scope, $http, $q, session) {
   var wallet = session.get('wallet');
-  var settings = wallet.mainData;
+  $scope.settings = wallet.mainData;
 
-  // Account settings.
-  $scope.username = session.get('username');
-  $scope.dateFormat = settings.dateFormat;
-  $scope.detectTimezone = settings.detectTimezone;
-  $scope.receivedSound = settings.receivedSound;
-  $scope.sentSound = settings.sentSound;
-  $scope.contacts = settings.contacts;
-
-  // Security settings.
-  $scope.email = settings.email;
-  $scope.password = null;
   $scope.secretKey = wallet.keychainData.signingKeys.secret;
 
-  // Apply the new setting to the session blob and save it to the server.
-  // TODO: Change password.
-  // TODO: Load contacts from facebook.
-  // TODO: Validate input.
+  $scope.errors = {
+    emailError:           null,
+    passwordError:        null,
+    passwordConfirmError: null
+  };
+
   $scope.saveSettings = function(){
-    // Store the new setting in the blob.
-    settings.dateFormat = $scope.dateFormat;
-    settings.detectTimezone = $scope.detectTimezone;
-    settings.receivedSound = $scope.receivedSound;
-    settings.sentSound = $scope.sentSound;
-    settings.contacts = $scope.contacts;
-    settings.email = $scope.email;
+    /*
+    var email = $scope.newEmail;
+    updateEmail(email)
+    .then(function (success) {
+      $scope.settings.email = email;
+      return updatePassword;
+    }, function (error) {
+      $scope.errors.emailError = error;
+      return updatePassword;
+    })
+    .then(function (success) {
 
-    // Save the updated blob to the server.
-    session.storeBlob();
+    }, function (error) {
+
+    })
+    */
   }
-
-  $scope.changingPassword = false;
 
   $scope.toggle = {
     recovery: {
@@ -61,42 +56,71 @@ sc.controller('SettingsCtrl', function($scope, $http, session) {
   function recoveryToggle() {
     // switch the toggle
     $scope.toggle.recovery.on = !$scope.toggle.recovery.on;
+    var on = $scope.toggle.recovery.on;
     // add the current toggle value to the request
-    toggleRequestData.on = $scope.toggle.recovery.on;
+    toggleRequestData.on = on;
     $http.post(Options.API_SERVER + '/user/allowrecovery', toggleRequestData)
     .success(function (res) {
-      // TODO
+      $scope.toggle.recovery.on = on;
     })
     .error(function (err) {
-      // TODO
+      $scope.toggle.recovery.on = !on;
     });
   }
 
   function sendEmailToggle() {
     // switch the toggle
-    $scope.toggle.email.on = !$scope.toggle.email.on;
+    $scope.toggle.email.on = !$scope.toggle.recovery.on;
+    var on = $scope.toggle.email.on;
     // add the current toggle value to the request
-    toggleRequestData.on = $scope.toggle.email.on;
+    toggleRequestData.on = on;
     $http.post(Options.API_SERVER + '/user/allowemail', toggleRequestData)
     .success(function (res) {
-      // TODO
+      $scope.toggle.email.on = on;
     })
     .error(function (err) {
-      // TODO
+      $scope.toggle.email.on = !on;
     });
   }
 
   function federationToggle() {
     // switch the toggle
-    $scope.toggle.federation.on = !$scope.toggle.federation.on;
+    $scope.toggle.federation.on = !$scope.toggle.recovery.on;
+    var on = $scope.toggle.federation.on;
     // add the current toggle value to the request
-    toggleRequestData.on = $scope.toggle.federation.on;
+    toggleRequestData.on = on;
     $http.post(Options.API_SERVER + '/user/allowfederate', toggleRequestData)
     .success(function (res) {
-      // TODO
+      $scope.toggle.federation.on = on;
     })
     .error(function (err) {
-      // TODO
+      $scope.toggle.federation.on = !on;
     });
+  }
+
+  function updateEmail(email) {
+    var promise = $q.defer();
+    if ($scope.newEmail == '') {
+      promise.resolve();
+    }
+    if (!Util.validateEmail($scope.newEmail)) {
+      promise.reject("Invalid email");
+    }
+    var data = {
+      email: email,
+      username: session.get('username'),
+      updateToken: wallet.keychainData.updateToken
+    };
+    return $http.post(Options.API_SERVER + '/user/email', data)
+    .success(function (response) {
+      promise.resolve();
+    })
+    .error(function (response) {
+      promise.reject(response.message);
+    });
+  }
+
+  function updatePassword(password) {
+    // TODO
   }
 });
