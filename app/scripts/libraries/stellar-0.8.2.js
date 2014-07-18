@@ -3839,9 +3839,6 @@ var stellar =
 	  if (fraction_part.length || !opts.skip_empty_fraction) {
 	    // Enforce the maximum number of decimal digits (precision)
 	    if (typeof opts.precision === 'number') {
-	      if (opts.precision === 0 && fraction_part.charCodeAt(0) >= 53) {
-	        int_part = (Number(int_part) + 1).toString();
-	      }
 	      fraction_part = fraction_part.slice(0, opts.precision);
 	    }
 
@@ -23730,8 +23727,8 @@ var stellar =
 	 * Module dependencies.
 	 */
 
-	var Emitter = __webpack_require__(67);
-	var reduce = __webpack_require__(68);
+	var Emitter = __webpack_require__(68);
+	var reduce = __webpack_require__(67);
 
 	/**
 	 * Root reference for iframes.
@@ -28092,6 +28089,35 @@ var stellar =
 
 	
 	/**
+	 * Reduce `arr` with `fn`.
+	 *
+	 * @param {Array} arr
+	 * @param {Function} fn
+	 * @param {Mixed} initial
+	 *
+	 * TODO: combatible error handling?
+	 */
+
+	module.exports = function(arr, fn, initial){  
+	  var idx = 0;
+	  var len = arr.length;
+	  var curr = arguments.length == 3
+	    ? initial
+	    : arr[idx++];
+
+	  while (idx < len) {
+	    curr = fn.call(null, curr, arr[idx], ++idx, arr);
+	  }
+	  
+	  return curr;
+	};
+
+/***/ },
+/* 68 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	/**
 	 * Expose `Emitter`.
 	 */
 
@@ -28255,35 +28281,6 @@ var stellar =
 	  return !! this.listeners(event).length;
 	};
 
-
-/***/ },
-/* 68 */
-/***/ function(module, exports, __webpack_require__) {
-
-	
-	/**
-	 * Reduce `arr` with `fn`.
-	 *
-	 * @param {Array} arr
-	 * @param {Function} fn
-	 * @param {Mixed} initial
-	 *
-	 * TODO: combatible error handling?
-	 */
-
-	module.exports = function(arr, fn, initial){  
-	  var idx = 0;
-	  var len = arr.length;
-	  var curr = arguments.length == 3
-	    ? initial
-	    : arr[idx++];
-
-	  while (idx < len) {
-	    curr = fn.call(null, curr, arr[idx], ++idx, arr);
-	  }
-	  
-	  return curr;
-	};
 
 /***/ },
 /* 69 */
