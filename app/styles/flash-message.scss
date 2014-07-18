@@ -8,6 +8,7 @@
   }
 
   .flash-message {
+    height: 90px;
     border: 1px solid $stellar-blue;
     border-radius: 2px;
     padding-top: 8px;
@@ -71,6 +72,8 @@
       width: 100%;
       height: 4px;
       background-color: $stellar-blue;
+      position: absolute;
+      bottom: 0;
     }
   }
 }
