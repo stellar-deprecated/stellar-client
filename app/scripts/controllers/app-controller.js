@@ -139,7 +139,6 @@ sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', 'session', function
                 $scope.lines[line.account+line.currency] = line;
                 updateRippleBalance(line.currency, line.account, line.balance);
             }
-            console.log('lines updated:', $scope.lines);
         });
     }
 
@@ -159,7 +158,6 @@ sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', 'session', function
 
                 updateOffer(offer);
             });
-            console.log('offers updated:', $scope.offers);
         });
     }
 
