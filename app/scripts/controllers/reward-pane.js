@@ -83,9 +83,9 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
         info: 'You unlocked all the rewards.',
         type: 'success'
       });
-    } else {
-      firstRequest = false;
     }
+
+    firstRequest = false;
   };
 
   $scope.updateRewards = function() {
