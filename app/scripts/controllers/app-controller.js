@@ -7,7 +7,7 @@ var sc = angular.module('stellarClient');
     waits for:
      walletAddressLoaded
  */
-sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', 'session', function($scope, $rootScope, $network, session) {
+sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', 'session', 'rpReverseFederation', function($scope, $rootScope, $network, session, $reverseFederation) {
 
     $rootScope.balance=0;
     $rootScope.accountStatus = 'connecting';
@@ -244,6 +244,22 @@ sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', 'session', function
             if (processedTxn.tx_type === "Payment" &&
                 processedTxn.tx_result === "tesSUCCESS" &&
                 processedTxn.transaction) {
+                var wallet = session.get('wallet');
+                var contacts = wallet.mainData.contacts;
+                var address = processedTxn.transaction.counterparty;
+
+                if (!contacts[address]) {
+                    $reverseFederation.check_address(address)
+                        .then(function (result) {
+                            if (result) {
+                                // add the reverse federation info to the user's wallet
+                                contacts[address] = result;
+                                session.syncWallet(wallet, "update");
+                            }
+                        })
+                    ;
+                }
+
                 $scope.history.unshift(processedTxn);
                 $scope.$broadcast('$paymentNotification', transaction);
             }

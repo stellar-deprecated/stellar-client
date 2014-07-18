@@ -4,7 +4,7 @@ var Amount = stellar.Amount;
 
 var sc = angular.module('stellarClient');
 
-sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout','session','stNetwork', 'rpFederation', 'rpTracker', function($rootScope, $scope, $routeParams, $timeout, session, $network, $federation, $rpTracker )
+sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout','session','stNetwork', 'rpFederation', 'rpReverseFederation', 'rpTracker', function($rootScope, $scope, $routeParams, $timeout, session, $network, $federation, $reverseFederation, $rpTracker )
 {
     var timer;
 
@@ -216,8 +216,49 @@ sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout'
             ;
         }
         else {
-            $scope.check_destination();
+            send.path_status = "fed-check";
+            $reverseFederation.check_address(recipient)
+                .then(function (result) {
+                    // Check if this request is still current, exit if not
+                    if (recipient !== send.recipient_address) return;
+
+                    send.federation_record = result;
+
+                    if (result.destination) {
+                        // Federation record specifies destination
+                        send.recipient_name = result.destination;
+                        send.recipient_address = recipient;
+                        $scope.check_destination();
+                    } else {
+                        // Invalid federation result
+                        send.path_status = "waiting";
+                        $scope.sendForm.send_destination.$setValidity("federation", false);
+                        // XXX Show specific error message
+                    }
+                }, function () {
+                    // Check if this request is still current, exit if not
+                    if (recipient !== send.recipient_address) return;
+
+                    send.path_status = "waiting";
+                    $scope.sendForm.send_destination.$setValidity("federation", false);
+                })
+                .then($scope.check_destination)
+            ;
         }
+    };
+
+    $scope.recipientFederation = function(){
+        var send = $scope.send;
+
+        if (send.recipient != send.recipient_address) {
+            return send.recipient_address;
+        }
+
+        if (send.recipient != send.recipient_name) {
+            return send.recipient_name;
+        }
+
+        return '';
     };
 
     // Check destination for STR sufficiency and flags
