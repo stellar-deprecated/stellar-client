@@ -57,11 +57,10 @@ sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', 'session', 'rpRever
         listenerCleanupFn = function () {
             accountObj.removeListener("transaction", myHandleAccountEvent);
             accountObj.removeListener("entry", myHandleAccountEntry);
+            accountObj.removeListener("entry", mySetInflation);
         }
 
-        remote.on('disconnected', function () {
-            listenerCleanupFn();
-        });
+        remote.once('disconnected', listenerCleanupFn);
 
         accountObj.entry(function (err, entry) {
             if (err) {
@@ -201,19 +200,6 @@ sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', 'session', 'rpRever
                 $scope.$broadcast('$paymentNotification', transaction);
             }
         }
-    }
-
-
-    var removeFirstConnectionListener =
-        $scope.$on('$netConnected', handleFirstConnection);
-
-
-    function handleFirstConnection() {
-        // TODO: need to figure out why this isn't being set when we connect to the stellard
-        $network.remote._reserve_base=50*1000000;
-        $network.remote._reserve_inc=10*1000000;
-
-        removeFirstConnectionListener();
     }
 
     function setInflation(account) {

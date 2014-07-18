@@ -65,9 +65,7 @@ sc.service('session', function($rootScope, $http, stNetwork) {
     if (Options.PERSISTENT_SESSION){
       delete localStorage.wallet;
     }
-    if ($rootScope.account.cleanup) {
-      $rootScope.account.cleanup();
-    }
+
     delete $rootScope.account;
     stNetwork.shutdown();
 
