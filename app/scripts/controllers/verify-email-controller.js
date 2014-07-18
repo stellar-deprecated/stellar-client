@@ -66,8 +66,8 @@ sc.controller('VerifyEmailCtrl', function ($scope, $rootScope, $http, session) {
     $scope.loading = false;
   };
 
-  $scope.cancel = function() {
+  $scope.back = function() {
     $scope.clear();
-    $scope.closeReward();
+    $scope.reward.status = 'incomplete';
   };
 });
