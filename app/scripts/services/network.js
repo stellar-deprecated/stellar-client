@@ -9,10 +9,10 @@
 
 var sc = angular.module('stellarClient');
 
-module.factory('stNetwork', function($rootScope)
-{
+module.factory('stNetwork', function($rootScope) {
+
     var self   = {};
-    self.remote    = new stellar.Remote(Options.server, true);
+    self.remote    = null;
     self.connected = false;
 
     var handleDisconnect = function(e) {
@@ -31,17 +31,16 @@ module.factory('stNetwork', function($rootScope)
         });
     };
 
-
-    self.remote.on('connected', handleConnect);
-    self.remote.on('disconnected', handleDisconnect);
-
     self.init = function () {
+        self.remote = new stellar.Remote(Options.server, true);
         self.remote.connect();
+        self.remote.on('connected', handleConnect);
+        self.remote.on('disconnected', handleDisconnect);
     };
-
 
     self.shutdown = function () {
         self.remote.disconnect();
+        // self.remote = null;
     };
 
     return self;
