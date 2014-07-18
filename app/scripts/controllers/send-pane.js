@@ -220,28 +220,15 @@ sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout'
             $reverseFederation.check_address(recipient)
                 .then(function (result) {
                     // Check if this request is still current, exit if not
-                    var now_recipient = send.recipient_actual || send.recipient_address;
-                    if (recipient !== now_recipient) return;
+                    if (recipient !== send.recipient_address) return;
 
                     send.federation_record = result;
-
-                    if (result.extra_fields) {
-                        send.extra_fields = result.extra_fields;
-                    }
-
-                    send.dt = ("number" === typeof result.dt) ? result.dt : undefined;
 
                     if (result.destination) {
                         // Federation record specifies destination
                         send.recipient_name = result.destination;
                         send.recipient_address = recipient;
                         $scope.check_destination();
-                    } else if (result.quote_url) {
-                        // Federation destination requires us to request a quote
-                        send.quote_url = result.quote_url;
-                        send.quote_destination = result.destination;
-                        send.path_status = "waiting";
-                        $scope.update_currency_constraints();
                     } else {
                         // Invalid federation result
                         send.path_status = "waiting";
@@ -250,8 +237,7 @@ sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout'
                     }
                 }, function () {
                     // Check if this request is still current, exit if not
-                    var now_recipient = send.recipient_actual || send.recipient_address;
-                    if (recipient !== now_recipient) return;
+                    if (recipient !== send.recipient_address) return;
 
                     send.path_status = "waiting";
                     $scope.sendForm.send_destination.$setValidity("federation", false);
