@@ -4,7 +4,8 @@ var sc = angular.module('stellarClient');
 
 sc.controller('SettingsCtrl', function($scope, $http, $q, session) {
   var wallet = session.get('wallet');
-  $scope.settings = wallet.mainData;
+
+  $scope.email = wallet.mainData.email;
 
   $scope.secretKey = wallet.keychainData.signingKeys.secret;
 
