@@ -1,6 +1,8 @@
 <div class="settings" ng-controller="SettingsCtrl">
-    <h1 class="title">Settings</h1>
-    <div class="settings-section">
+    <div class="client-section">
+        <h1 class="title">Settings</h1>
+    </div>
+    <div class="client-section settings-section">
         <div class="row">
             <div class="settings-label col-sm-3">
                 <img id="picture" src="http://i.imgur.com/h6R4Bhp.jpg"/>
@@ -18,117 +20,118 @@
             </div>
         </div>
     </div>
+    <div class="client-section">
+        <div class="settings-section">
+            <div class="title">
+                <span class="glyphicon glyphicon-credit-card"/>
+                <span>Account</span>
+            </div>
+            <div class="row">
+                <div class="settings-label col-sm-3">EMAIL</div>
+                <div class="settings-control col-sm-4 row">
+                    <div class="col-sm-1">
+                        <span class="icon icon-user"/>
+                    </div>
+                    <div class="col-sm-6">
+                        <span>andrew@gostellar.org</span>
+                    </div>
+                    <div class="col-sm-4">
+                        <span class="icon icon-tick"/>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="settings-label col-sm-3">RECOVERY TOKEN</div>
+                <div class="settings-control col-sm-4 row">
+                    <div class="col-sm-1">
+                        <span class="icon icon-key"/>
+                    </div>
+                    <div class="col-sm-8">
+                        <span st-toggle ctrl="toggle.recovery"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="settings-label col-sm-3">SEND EMAILS</div>
+                <div class="settings-control col-sm-4 row">
+                    <div class="col-sm-1">
+                        <span class="icon icon-email"/>
+                    </div>
+                    <div class="col-sm-8">
+                        <span st-toggle ctrl="toggle.email"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="settings-label col-sm-3">FEDERATION</div>
+                <div class="settings-control col-sm-4 row">
+                    <div class="col-sm-1"/>
+                    <div class="col-sm-10">
+                        <span st-toggle ctrl="toggle.federation"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-    <div class="settings-section">
-        <div class="title">
-            <span class="glyphicon glyphicon-credit-card"/>
-            <span>Account</span>
-        </div>
-        <div class="row">
-            <div class="settings-label col-sm-3">EMAIL</div>
-            <div class="settings-control col-sm-4 row">
-                <div class="col-sm-1">
-                    <span class="glyphicon glyphicon-user"/>
-                </div>
-                <div class="col-sm-6">
-                    <span>andrew@gostellar.org</span>
-                </div>
-                <div class="col-sm-4">
-                    <span class="glyphicon glyphicon-ok"/>
-                </div>
+        <div class="settings-section">
+            <div class="title">
+                <span class="glyphicon glyphicon-tasks"/>
+                <span>Security</span>
             </div>
-        </div>
-        <div class="row">
-            <div class="settings-label col-sm-3">RECOVERY TOKEN</div>
-            <div class="settings-control col-sm-4 row">
-                <div class="col-sm-1">
-                    <span class="glyphicon glyphicon-minus"/>
-                </div>
-                <div class="col-sm-8">
-                    <span st-toggle ctrl="toggle.recovery"></span>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="settings-label col-sm-3">SEND EMAILS</div>
-            <div class="settings-control col-sm-4 row">
-                <div class="col-sm-1">
-                    <span class="glyphicon glyphicon-envelope"/>
-                </div>
-                <div class="col-sm-8">
-                    <span st-toggle ctrl="toggle.email"></span>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="settings-label col-sm-3">FEDERATION</div>
-            <div class="settings-control col-sm-4 row">
-                <div class="col-sm-1"/>
-                <div class="col-sm-10">
-                    <span st-toggle ctrl="toggle.federation"></span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="settings-section">
-        <div class="title">
-            <span class="glyphicon glyphicon-tasks"/>
-            <span>Security</span>
-        </div>
-        <div class="row">
-            <div class="settings-label col-sm-3">EMAIL</div>
-            <div class="settings-control col-sm-4 row">
-                <div class="col-sm-1">
-                    <span class="glyphicon glyphicon-envelope"/>
-                </div>
-                <div class="col-sm-10">
-                    <span>andrew@gostellar.org</span>
-                    <div class="secondary-action">
-                        <a href="#">Change Email</a>
+            <div class="row">
+                <div class="settings-label col-sm-3">EMAIL</div>
+                <div class="settings-control col-sm-4 row">
+                    <div class="col-sm-1">
+                        <span class="icon icon-email"/>
+                    </div>
+                    <div class="col-sm-10">
+                        <span>andrew@gostellar.org</span>
+                        <div class="secondary-action">
+                            <a href="#">Change Email</a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="settings-label col-sm-3">PASSWORD</div>
-            <div class="settings-control col-sm-4 row">
-                <div class="col-sm-1">
-                    <span class="glyphicon glyphicon-minus"/>
-                </div>
-                <div class="col-sm-10">
-                    <span>***********************</span>
-                    <div class="secondary-action">
-                        <a href="#">Change Password</a>
+            <div class="row">
+                <div class="settings-label col-sm-3">PASSWORD</div>
+                <div class="settings-control col-sm-4 row">
+                    <div class="col-sm-1">
+                        <span class="icon icon-key"/>
+                    </div>
+                    <div class="col-sm-10">
+                        <span>***********************</span>
+                        <div class="secondary-action">
+                            <a href="#">Change Password</a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="settings-label col-sm-3">SECRET KEY</div>
-            <div class="settings-control col-sm-4 row">
-                <div class="col-sm-1">
-                    <span class="glyphicon glyphicon-minus"/>
-                </div>
-                <div class="col-sm-10">
-                    <span>***********************</span>
-                    <div class="secondary-action">
-                        <a href="#">Reveal</a>
+            <div class="row">
+                <div class="settings-label col-sm-3">SECRET KEY</div>
+                <div class="settings-control col-sm-4 row">
+                    <div class="col-sm-1">
+                        <span class="icon icon-key"/>
+                    </div>
+                    <div class="col-sm-10">
+                        <span>***********************</span>
+                        <div class="secondary-action">
+                            <a href="#">Reveal</a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="settings-label col-sm-3">BACK UP</div>
-            <div class="settings-control col-sm-4 row">
-                <div class="col-sm-1">
-                    <span class="glyphicon glyphicon-download"/>
+            <div class="row">
+                <div class="settings-label col-sm-3">BACK UP</div>
+                <div class="settings-control col-sm-4 row">
+                    <div class="col-sm-1">
+                        <span class="glyphicon glyphicon-download"/>
+                    </div>
+                    <a href="#" class="icon col-sm-8">Backup your wallet</a>
                 </div>
-                <a href="#" class="icon col-sm-8">Backup your wallet</a>
             </div>
-        </div>
-        <div class="row col-md-offset-3">
-            <button class="stellar-button btn btn-default ng-binding col-sm-6 col-md-offset-4" ng-click="saveSettings()" type="submit">Save</button>
+            <div class="row col-md-offset-3">
+                <button class="stellar-button btn btn-default ng-binding col-sm-6 col-md-offset-4" ng-click="saveSettings()" type="submit">Save</button>
+            </div>
         </div>
     </div>
 </div>
