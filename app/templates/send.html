@@ -12,6 +12,20 @@
     <p l10n="l10n" class="literal">You have to be funded before you can send money</p>
 </div>
 <form name="sendForm" role="form" ng-show="mode=='form'" ng-submit="send_prepared()" class="stellar-form">
+    <div class="row form-group">
+        <div rp-errors="send_destination" class="errors col-sm-12">
+            <div rp-error-valid ng-show="recipientFederation()" class="success tip col-sm-offset-3 col-sm-6">{{ recipientFederation() }}</div>
+            <div rp-error-on="required" l10n="l10n" class="tip col-sm-offset-6 col-sm-3">Please enter a recipient.</div>
+            <div rp-error-on="rpDest" l10n="l10n" class="tip col-sm-offset-6 col-sm-3">Recipient should be either a name from your contact list or Stellar/Bitcoin address.</div>
+            <div rp-error-on="federation" l10n="l10n" class="tip col-sm-offset-6 col-sm-3">This person isn't on Stellar yet.</div>
+        </div>
+        <label for="send_destination" l10n="l10n" class="col-sm-3">SEND TO</label>
+        <div class="col-sm-6 send-address right-inner-addon">
+            <input id="send_destination" name="send_destination" type="text" rp-combobox="recipient_query" ng-class="{error: required || rpDest || federation}" ng-model="send.recipient" rp-dest="rp-dest" rp-dest-address="rp-dest-address" rp-dest-contact="rp-dest-contact" rp-dest-bitcoin="rp-dest-bitcoin" rp-dest-email="rp-dest-email" required="required" rp-autofill="$routeParams.to" rp-focus="rp-focus" class="form-control stellar-input"/>
+            <i class="glyphicon glyphicon-globe"></i>
+        </div>
+        <div class="col-sm-3 tip">Stellar name or address.</div>
+    </div>
     <div class="form-group">
         <div rp-errors="send_amount" class="errors col-sm-12">
             <div rp-error-on="required" l10n="l10n" class="tip col-sm-offset-6 col-sm-3">Please enter an amount.</div>
@@ -35,20 +49,6 @@
             </div>
             <div class="col-sm-3 tip">Type in the amount to send.</div>
         </div>
-    </div>
-    <div class="row form-group">
-        <div rp-errors="send_destination" class="errors col-sm-12">
-            <div rp-error-valid ng-show="recipientFederation()" class="success tip col-sm-offset-3 col-sm-6">{{ recipientFederation() }}</div>
-            <div rp-error-on="required" l10n="l10n" class="tip col-sm-offset-6 col-sm-3">Please enter a recipient.</div>
-            <div rp-error-on="rpDest" l10n="l10n" class="tip col-sm-offset-6 col-sm-3">Recipient should be either a name from your contact list or Stellar/Bitcoin address.</div>
-            <div rp-error-on="federation" l10n="l10n" class="tip col-sm-offset-6 col-sm-3">This person isn't on Stellar yet.</div>
-        </div>
-        <label for="send_destination" l10n="l10n" class="col-sm-3">SEND TO</label>
-        <div class="col-sm-6 send-address right-inner-addon">
-            <input id="send_destination" name="send_destination" type="text" rp-combobox="recipient_query" ng-class="{error: required || rpDest || federation}" ng-model="send.recipient" rp-dest="rp-dest" rp-dest-address="rp-dest-address" rp-dest-contact="rp-dest-contact" rp-dest-bitcoin="rp-dest-bitcoin" rp-dest-email="rp-dest-email" required="required" rp-autofill="$routeParams.to" rp-focus="rp-focus" class="form-control stellar-input"/>
-            <i class="glyphicon glyphicon-globe"></i>
-        </div>
-        <div class="col-sm-3 tip">Stellar name or address.</div>
     </div>
     <div ng-show="send.show_dt_field" class="row form-group">
         <label for="send_dt" l10n="l10n" class="col-sm-3">Destination tag</label>
