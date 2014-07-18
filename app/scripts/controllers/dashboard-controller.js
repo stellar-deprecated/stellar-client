@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('DashboardCtrl', function($rootScope, $scope, $timeout, $state, session, stNetwork) {
+sc.controller('DashboardCtrl', function($rootScope, $scope, $timeout, $state, session) {
     $rootScope.tab = 'none';
 
     $scope.showTransaction = false;
