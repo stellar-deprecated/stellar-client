@@ -87,7 +87,8 @@ sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', 'session', 'rpRever
             'ledger_index_min': 0,
             'ledger_index_max': 9999999,
             'descending': true,
-            'limit': Options.transactions_per_page,
+            // TODO: Only request the first page of transactions.
+            'limit': 9999999, // Options.transactions_per_page,
             'count': true
         })
             .on('success', handleAccountTx)

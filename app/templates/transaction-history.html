@@ -2,5 +2,9 @@
     <div>
         <span class="tx-title">My transactions</span><br>
         <div class="tx-grid" ng-grid="transactionGrid"></div>
+        <div class="tx-paging" ng-show="lastPage > 1">
+            <button ng-click="previousPage()" class="btn btn-default stellar-button previous-page" ng-class="{disabled: pagingOptions.currentPage == 1}">Previous</button>
+            <button ng-click="nextPage()" class="btn btn-default stellar-button next-page" ng-class="{disabled: pagingOptions.currentPage == lastPage}">Next</button>
+        </div>
     </div>
 </div>
