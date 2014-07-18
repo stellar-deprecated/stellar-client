@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('SettingsCtrl', function($scope, $http, $q, session) {
+sc.controller('SettingsCtrl', function($scope, $http, $q, $timeout, session) {
   var wallet = session.get('wallet');
 
   $scope.email = wallet.mainData.email;
@@ -14,6 +14,25 @@ sc.controller('SettingsCtrl', function($scope, $http, $q, session) {
     passwordError:        null,
     passwordConfirmError: null
   };
+
+  function getSettings() {
+    var data = {
+      username: session.get('username'),
+      updateToken: session.get('wallet').keychainData.updateToken
+    }
+    $http.get(Options.API_SERVER + "/settings", data)
+    .success(function (response) {
+      $scope.toggle.recovery.on = response.data.recovery;
+      $scope.toggle.email.on = response.data.email;
+      $scope.toggle.email.federation = response.data.federation;
+    })
+    .error(function (response) {
+      $scope.toggle.disableToggles = true;
+      $timeout(function() {
+        getSettings();
+      }, 5000);
+    });
+  }
 
   $scope.saveSettings = function(){
     /*
@@ -35,6 +54,7 @@ sc.controller('SettingsCtrl', function($scope, $http, $q, session) {
   }
 
   $scope.toggle = {
+    disableToggles: false,
     recovery: {
       click: recoveryToggle,
       on: false
@@ -55,6 +75,9 @@ sc.controller('SettingsCtrl', function($scope, $http, $q, session) {
   };
 
   function recoveryToggle() {
+    if ($scope.toggle.disableToggles) {
+      return;
+    }
     // switch the toggle
     $scope.toggle.recovery.on = !$scope.toggle.recovery.on;
     var on = $scope.toggle.recovery.on;
@@ -70,12 +93,19 @@ sc.controller('SettingsCtrl', function($scope, $http, $q, session) {
   }
 
   function sendEmailToggle() {
+    if ($scope.toggle.disableToggles) {
+      return;
+    }
     // switch the toggle
     $scope.toggle.email.on = !$scope.toggle.recovery.on;
     var on = $scope.toggle.email.on;
-    // add the current toggle value to the request
-    toggleRequestData.on = on;
-    $http.post(Options.API_SERVER + '/user/allowemail', toggleRequestData)
+    var config = {
+      params: {
+        email: $scope.email
+      }
+    };
+    var endpoint = on ? '/subscribe' : '/unsubscribe';
+    $http.get(Options.API_SERVER + endpoint, config)
     .success(function (res) {
       $scope.toggle.email.on = on;
     })
@@ -85,6 +115,9 @@ sc.controller('SettingsCtrl', function($scope, $http, $q, session) {
   }
 
   function federationToggle() {
+    if ($scope.toggle.disableToggles) {
+      return;
+    }
     // switch the toggle
     $scope.toggle.federation.on = !$scope.toggle.recovery.on;
     var on = $scope.toggle.federation.on;
@@ -124,4 +157,6 @@ sc.controller('SettingsCtrl', function($scope, $http, $q, session) {
   function updatePassword(password) {
     // TODO
   }
+
+  getSettings();
 });
