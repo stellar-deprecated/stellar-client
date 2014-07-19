@@ -110,36 +110,26 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
 
         $scope.computeRewardProgress();
 
-        if (hasCompletedRewards()) {
-          removeFairyTxListener();
-        }
-
         $scope.$broadcast("onRewardsUpdated");
       });
   };
 
-  var turnOffFairyTxListener;
+  var turnOffTxListener;
   function setupFairyTxListener() {
-    var promise = $q.defer();
-    if (hasCompletedRewards()) {
-      return promise.resolve();
-    }
-
-    turnOffFairyTxListener = $scope.$on('$appTxNotification', function (event, tx) {
+    turnOffTxListener = $scope.$on('$appTxNotification', function (event, tx) {
       if (tx.counterparty == session.get('wallet').mainData.stellar_contact.destination_address) {
         $scope.updateRewards();
       }
     });
   }
 
-  function removeFairyTxListener() {
-    if (turnOffFairyTxListener) {
-      turnOffFairyTxListener();
-    }
-  }
-
   function hasCompletedRewards() {
-    return $scope.showRewardsComplete;
+    for (var i = 0; i < $scope.rewards; i++) {
+      if ($scope.rewards[i].status != 'sent') {
+        return false;
+      }
+    }
+    return true;
   }
 
   $scope.updateRewards().then(setupFairyTxListener);
