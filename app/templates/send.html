@@ -239,10 +239,10 @@
         <p ng-switch on="engine_result"><span ng-switch-when="terNO_LINE" l10n="l10n">You have no trust line in this currency.</span><span ng-switch-default="ng-switch-default" l10n="l10n">Your transaction failed to clear, reason: {{engine_result_message}}</span></p>
     </group>
 
-    <button class="btn btn-default btn-stellar modalStatus-btn" ng-click="reset()">
+    <button ng-show="tx_result=='cleared'" class="btn btn-default btn-stellar modalStatus-btn" ng-click="reset()">
         <i class="icon icon-send"></i>
         Send another payment
-    </button>
+    </button> 
 </div>
 </div>
 
