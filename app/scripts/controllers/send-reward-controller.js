@@ -46,7 +46,7 @@ sc.controller('SendRewardCtrl', function ($rootScope, $scope, $http, stNetwork, 
     var sendRewardRequested = false;
 
     var remote = stNetwork.remote;
-    var account = $rootScope.account;
+    var account = session.get('address');
     var params = {
       'account': account,
       'ledger_index_min': 0,

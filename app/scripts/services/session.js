@@ -38,7 +38,7 @@ sc.service('session', function($rootScope, $http, stNetwork) {
 
     // check for the most up to date fairy address
     checkFairyAddress.bind(this)();
-
+    $rootScope.account = {}
     $rootScope.$broadcast('walletAddressLoaded', {account: signingKeys.address, secret: signingKeys.secret});
     stNetwork.init();
 

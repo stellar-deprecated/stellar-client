@@ -12,8 +12,6 @@ sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', 'session', 'rpRever
     $rootScope.balance=0;
     $rootScope.accountStatus = 'connecting';
     $scope.history = [];
-
-    var account;
     // implements account listener cleanup, added to $rootScope.account to be called in logout event
     var listenerCleanupFn;
 
@@ -22,27 +20,33 @@ sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', 'session', 'rpRever
     var mySetInflation;
     var accountObj;
 
+
+    $scope.$on('$netConnected', handleAccountLoad); 
+    $scope.$on('walletAddressLoaded', function() {
+        if ($network.connected) {
+            handleAccountLoad();
+        }
+    }); 
+
     function reset()
     {
         $rootScope.balance=0;
         $rootScope.accountStatus = 'connecting';
         $scope.history = [];
-        /*
-        $scope.account = {};
-        */
-
     }
 
-    function handleAccountLoad(e, data) {
+    function handleAccountLoad() {
         var remote = $network.remote;
-
-        account=data.account;
+        var keys = session.get('signingKeys');
+        if(!keys) {
+            return;
+        }
 
         reset();
 
-        remote.set_secret(data.account, data.secret);
+        remote.set_secret(keys.address, keys.secret);
 
-        accountObj = remote.account(data.account);
+        accountObj = remote.account(keys.address);
 
         // We need a reference to these functions after they're bound, so we can
         // unregister them if the account is unloaded.
@@ -79,7 +83,7 @@ sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', 'session', 'rpRever
 
         // Transactions
         remote.request_account_tx({
-            'account': data.account,
+            'account': keys.address,
             'ledger_index_min': 0,
             'ledger_index_max': 9999999,
             'descending': true,
@@ -90,37 +94,18 @@ sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', 'session', 'rpRever
             .on('error', handleAccountTxError).request();
     };
 
-    $scope.$on('walletAddressLoaded', function (e, data) {
-        $rootScope.account=data.account;
-
-        // Server is connected
-        if ($network.connected) {
-            handleAccountLoad(e, data);
-        }
-
-
-        // Server is not connected yet. Handle account load after server response
-        $scope.$on('$netConnected', function(){
-            handleAccountLoad(e, data);
-        });
-    });
-
-
     function handleAccountEntry(data)
     {
         var remote = $network.remote;
         $scope.$apply(function () {
             $rootScope.account = data;
 
-            // add a cleanup function to account to remove the listeners
-            $rootScope.account.cleanup = listenerCleanupFn;
-
             // As per json wire format convention, real ledger entries are CamelCase,
             // e.g. OwnerCount, additional convenience fields are lower case, e.g.
             // reserve, max_spend.
             var reserve_base = Amount.from_json(""+remote._reserve_base),
                 reserve_inc  = Amount.from_json(""+remote._reserve_inc),
-                owner_count  = $scope.account.OwnerCount || "0";
+                owner_count  = $rootScope.account.OwnerCount || "0";
             $rootScope.account.reserve_base = reserve_base;
             $rootScope.account.reserve = reserve_base.add(reserve_inc.product_human(owner_count));
             $rootScope.account.reserve_to_add_trust = reserve_base.add(reserve_inc.product_human(owner_count+1));
@@ -128,8 +113,8 @@ sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', 'session', 'rpRever
             // Maximum amount user can spend
             var bal = Amount.from_json(data.Balance);
             $rootScope.balance=data.Balance;
-            $rootScope.reserve=$scope.account.reserve;
-            $rootScope.account.max_spend = bal.subtract($scope.account.reserve);
+            $rootScope.reserve=$rootScope.account.reserve;
+            $rootScope.account.max_spend = bal.subtract($rootScope.account.reserve);
             $rootScope.$broadcast("accountLoaded", $rootScope.account);
         });
     }
@@ -164,7 +149,7 @@ sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', 'session', 'rpRever
      */
     function processTxn(tx, meta, is_historic)
     {
-        var processedTxn = JsonRewriter.processTxn(tx, meta, account);
+        var processedTxn = JsonRewriter.processTxn(tx, meta, session.get("address"));
 
         if (processedTxn) {
             var transaction = processedTxn.transaction;
