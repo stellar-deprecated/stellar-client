@@ -1,0 +1,75 @@
+.settings > .settings-section {
+    padding-top:30px;
+    padding-bottom:30px;
+}
+
+.settings-section {
+    .title {
+        font-size: 18px;
+        font-weight: bold;
+        padding-bottom:15px;
+        .glyphicon {
+            padding-right:5px;
+        }
+    }
+    button[type="submit"] {
+        float:left;
+        margin:auto;
+    }
+    > .row {
+        padding: 15px 0 15px 0;
+    }
+
+    .settings-control {
+        .change-email-control {
+            height:34px;
+        }
+
+        .change-password-control {
+            .row:first-of-type {
+                margin-top:0px;
+            }
+            .row {
+                margin-top: 15px;
+                margin-bottom: 15px;
+            }
+        }
+
+        .verified-email-status {
+            margin-left: 10px;
+        }
+
+        .icon-col {
+            max-width: 20px;
+        }
+
+        .icon-key {
+            font-size: 10px;
+        }
+
+        .icon-email {
+            font-size: 12px;
+        }
+    }
+}
+
+.secondary-action {
+    padding-top:15px;
+}
+
+#picture {
+    border: 1px solid #aaaaaa;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+}
+
+#button-icon {
+    line-height: 40px;
+}
+
+#photo-upload {
+    height: 40px;
+    font-size: 16px;
+    width:200px;
+}

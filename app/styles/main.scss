@@ -22,6 +22,8 @@ $mobile-width: 992px;
 @import "pane.scss";
 @import "modalStatus.scss";
 @import "flash-message.scss";
+@import "settings.scss";
+@import "toggle.scss";
 
 body {
   height: 100%;
@@ -283,7 +285,7 @@ body {
 
 .client-container {
   > div {
-    > .title {
+     .title {
       font-size: 21px;
       padding-top: 15px;
       padding-bottom: 20px;
