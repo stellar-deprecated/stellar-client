@@ -238,6 +238,20 @@ gulp.task('serve-dist', ['connect-dist'], function() {
     require('opn')('http://localhost:8001');
 })
 
+gulp.task('serve-dist-without-build', [], function() {
+    var connect = require('connect');
+    var app = connect()
+        .use(connect.static('dist'))
+        .use(connect.directory('dist'));
+
+    require('http').createServer(app)
+        .listen(8001)
+        .on('listening', function () {
+            console.log('Started connect web server on http://localhost:8001');
+            require('opn')('http://localhost:8001');
+        });
+})
+
 
 gulp.task('test', function (done) {
     karma.start({
