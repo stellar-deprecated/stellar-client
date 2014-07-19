@@ -19,6 +19,7 @@ gulp.task('default', ['clean'], function () {
 gulp.task('develop', ['watch']);
 gulp.task('build',   ['html', 'images', 'fonts']);
 gulp.task('dist',    ['build']);
+gulp.task('scripts', ['scripts:lint', 'scripts:templateCache', 'scripts:unminified']);
 
 
 //component tasks
@@ -34,14 +35,27 @@ gulp.task('styles', ['iconfont'], function () {
         .pipe($.size());
 });
 
-gulp.task('scripts', function () {
+
+gulp.task('scripts:lint', function () {
     return gulp.src('app/scripts/**/*.js')
         .pipe($.jshint())
         .pipe($.jshint.reporter($.jshintStylish))
         .pipe($.size());
 });
 
-gulp.task('templateCache', function() {
+gulp.task('scripts:unminified', ['scripts:templateCache'], function () {
+    return gulp.src('app/**/*.html')
+        .pipe($.useref.assets({
+            searchPath: ['.tmp', 'app'],
+            types:["js"]
+        }))
+        .pipe($.useref.restore())
+        .pipe($.filter('**/*.js'))
+        .pipe($.ngAnnotate())
+        .pipe(gulp.dest('dist'))
+});
+
+gulp.task('scripts:templateCache', function() {
     var templates = gulp.src('app/templates/**/*.html')
         .pipe($.angularTemplatecache({
             filename: 'scripts/templates.js',
@@ -61,7 +75,7 @@ gulp.task('templateCache', function() {
     return mergeStream(templates, states)
 });
 
-gulp.task('html', ['config', 'styles', 'scripts', 'templateCache'], function (done) {
+gulp.task('html', ['config', 'styles', 'scripts'], function (done) {
     git.long(function (revision) {
 
         var jsFilter = $.filter('**/*.js');
@@ -73,19 +87,22 @@ gulp.task('html', ['config', 'styles', 'scripts', 'templateCache'], function (do
             }))
 
             .pipe(jsFilter)
+            .pipe($.sourcemaps.init())
             .pipe($.replace('_GIT_REVISION_GOES_HERE_',revision))
-            .pipe($.ngmin())
+            .pipe($.ngAnnotate())
             .pipe($.uglify())
+            .pipe($.rev())
             .pipe(jsFilter.restore())
             .pipe(cssFilter)
             .pipe($.replace('bower_components/bootstrap-sass-official/vendor/assets/fonts/bootstrap','fonts'))
             .pipe($.csso())
+            .pipe($.rev())  
             .pipe(cssFilter.restore())
-            .pipe($.rev())   
             .pipe($.useref.restore())
             .pipe($.useref())
 
             .pipe($.revReplace())
+            .pipe($.sourcemaps.write("./", {sourceRoot: "/", includeContent: false}))
             .pipe(gulp.dest('dist'))
             .pipe($.size())
             .once('end', done)
@@ -144,7 +161,7 @@ gulp.task('connect', function () {
         });
 });
 
-gulp.task('serve', ['connect', 'styles', 'templateCache'], function () {
+gulp.task('serve', ['connect', 'styles', 'scripts'], function () {
     require('opn')('http://localhost:8000');
 });
 
@@ -185,8 +202,8 @@ gulp.task('watch', ['connect', 'serve'], function () {
     gulp.watch('app/scripts/**/*.js', ['scripts']);
     gulp.watch('app/images/**/*', ['images']);
     gulp.watch('app/icons/**/*', ['iconfont']);
-    gulp.watch('app/templates/**/*', ['templateCache']);
-    gulp.watch('app/states/**/*', ['templateCache']);
+    gulp.watch('app/templates/**/*', ['scripts:templateCache']);
+    gulp.watch('app/states/**/*', ['scripts:templateCache']);
     gulp.watch('bower.json', ['wiredep']);
 });
 
