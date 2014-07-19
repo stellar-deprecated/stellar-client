@@ -84,10 +84,11 @@ sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', 'session', 'rpRever
         // Transactions
         remote.request_account_tx({
             'account': keys.address,
-            'ledger_index_min': 0,
-            'ledger_index_max': 9999999,
+            'ledger_index_min': -1,
+            'ledger_index_max': -1,
             'descending': true,
-            'limit': Options.transactions_per_page,
+            // TODO: Only request the first page of transactions.
+            // 'limit': Options.transactions_per_page,
             'count': true
         })
             .on('success', handleAccountTx)
