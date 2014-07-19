@@ -26,6 +26,10 @@ module.factory('stNetwork', function($rootScope) {
     var handleConnect = function (e) {
         $rootScope.$apply(function () {
             self.connected = true;
+            // TODO: need to figure out why this isn't being set when we connect to the stellard
+            self.remote._reserve_base=50*1000000;
+            self.remote._reserve_inc=10*1000000;
+
             $rootScope.connected = true;
             $rootScope.$broadcast('$netConnected');
         });
