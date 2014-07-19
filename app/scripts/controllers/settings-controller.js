@@ -17,20 +17,21 @@ sc.controller('SettingsCtrl', function($scope, $http, $q, $timeout, session) {
 
   function getSettings() {
     var data = {
-      username: session.get('username'),
-      updateToken: session.get('wallet').keychainData.updateToken
+      params: {
+        username: session.get('username'),
+        updateToken: session.get('wallet').keychainData.updateToken
+      }
     }
-    $http.get(Options.API_SERVER + "/settings", data)
+    $http.get(Options.API_SERVER + "/user/settings", data)
     .success(function (response) {
-      $scope.toggle.recovery.on = response.data.recovery;
+      console.log(response);
+      $scope.toggle.recover.on = response.data.recover;
+      $scope.toggle.federate.on = response.data.federate;
       $scope.toggle.email.on = response.data.email;
-      $scope.toggle.email.federation = response.data.federation;
     })
     .error(function (response) {
       $scope.toggle.disableToggles = true;
-      $timeout(function() {
-        getSettings();
-      }, 5000);
+      // TODO retry
     });
   }
 
@@ -55,16 +56,16 @@ sc.controller('SettingsCtrl', function($scope, $http, $q, $timeout, session) {
 
   $scope.toggle = {
     disableToggles: false,
-    recovery: {
-      click: recoveryToggle,
+    recover: {
+      click: recoverToggle,
       on: false
     },
     email: {
-      click: sendEmailToggle,
+      click: emailToggle,
       on: false
     },
-    federation: {
-      click: federationToggle,
+    federate: {
+      click: federateToggle,
       on: false
     }
   }
@@ -74,30 +75,30 @@ sc.controller('SettingsCtrl', function($scope, $http, $q, $timeout, session) {
     updateToken: session.get('wallet').keychainData.updateToken
   };
 
-  function recoveryToggle() {
+  function recoverToggle() {
     if ($scope.toggle.disableToggles) {
       return;
     }
     // switch the toggle
-    $scope.toggle.recovery.on = !$scope.toggle.recovery.on;
-    var on = $scope.toggle.recovery.on;
+    $scope.toggle.recover.on = !$scope.toggle.recover.on;
+    var on = $scope.toggle.recover.on;
     // add the current toggle value to the request
-    toggleRequestData.on = on;
-    $http.post(Options.API_SERVER + '/user/allowrecovery', toggleRequestData)
+    toggleRequestData.recover = on;
+    $http.post(Options.API_SERVER + '/user/setrecover', toggleRequestData)
     .success(function (res) {
-      $scope.toggle.recovery.on = on;
+      $scope.toggle.recover.on = on;
     })
     .error(function (err) {
-      $scope.toggle.recovery.on = !on;
+      $scope.toggle.recover.on = !on;
     });
   }
 
-  function sendEmailToggle() {
+  function emailToggle() {
     if ($scope.toggle.disableToggles) {
       return;
     }
     // switch the toggle
-    $scope.toggle.email.on = !$scope.toggle.recovery.on;
+    $scope.toggle.email.on = !$scope.toggle.email.on;
     var on = $scope.toggle.email.on;
     var config = {
       params: {
@@ -114,21 +115,21 @@ sc.controller('SettingsCtrl', function($scope, $http, $q, $timeout, session) {
     });
   }
 
-  function federationToggle() {
+  function federateToggle() {
     if ($scope.toggle.disableToggles) {
       return;
     }
     // switch the toggle
-    $scope.toggle.federation.on = !$scope.toggle.recovery.on;
-    var on = $scope.toggle.federation.on;
+    $scope.toggle.federate.on = !$scope.toggle.federate.on;
+    var on = $scope.toggle.federate.on;
     // add the current toggle value to the request
-    toggleRequestData.on = on;
-    $http.post(Options.API_SERVER + '/user/allowfederate', toggleRequestData)
+    toggleRequestData.federate = on;
+    $http.post(Options.API_SERVER + '/user/setfederate', toggleRequestData)
     .success(function (res) {
-      $scope.toggle.federation.on = on;
+      $scope.toggle.federate.on = on;
     })
     .error(function (err) {
-      $scope.toggle.federation.on = !on;
+      $scope.toggle.federate.on = !on;
     });
   }
 
