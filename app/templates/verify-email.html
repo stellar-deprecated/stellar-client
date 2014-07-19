@@ -4,12 +4,12 @@
 </div>
 <div class="verify-email">
     <div class="add-email-item" ng-class="{active: reward.status == 'incomplete'}">
-        <form role="form" class="stellar-form" ng-controller="AddEmailCtrl" ng-submit="addEmail()">
+        <form role="form" name="addEmailForm" class="stellar-form" ng-controller="AddEmailCtrl" ng-submit="addEmail()" novalidate>
             <div class="form-group">
                 <div class="errors col-sm-12">
                     <div class="tip col-sm-offset-6 col-sm-6">{{ errors.join('\n') }}</div>
                 </div>
-                <input id="email" type="text" class="form-control" ng-class="{'input-error': errors.length}" placeholder="Email Address" ng-model="email" ng-change="errors = []">
+                <input id="email" name="email" type="email" class="form-control" ng-class="{'input-error': errors.length}" placeholder="Email Address" ng-model="email" ng-change="errors = []">
             </div>
             <div class="form-group">
                 <button type="button" class="cancel stellar-button btn btn-default" ng-click="cancel()">Cancel</button>
@@ -27,7 +27,7 @@
                 <input id="emailActivationCode" type="text" class="form-control" ng-class="{'input-error': errors.length}" placeholder="Recovery Code" ng-model="emailActivationCode" ng-change="errors = []">
             </div>
             <div class="form-group">
-                <button type="button" class="cancel stellar-button btn btn-default" ng-click="cancel()">Cancel</button>
+                <button type="button" class="cancel stellar-button btn btn-default" ng-click="back()">Back</button>
                 <button type="submit" class="submit stellar-button btn btn-default" ng-hide="loading">Submit</button>
                 <button class="loading submit stellar-button btn btn-default ng-hide" ng-show="loading" disabled>Loading...</button>
             </div>
