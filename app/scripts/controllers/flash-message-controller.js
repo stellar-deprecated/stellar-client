@@ -5,8 +5,8 @@
 sc.controller('FlashMessageCtrl', function ($scope, $rootScope) {
   $scope.messages = [];
 
-  $rootScope.$on('flashMessage', function(e, message) {
-    $scope.messages.push(message);
+  $rootScope.$on('flashMessage', function(e, newMessage) {
+    $scope.messages.unshift(newMessage);
   });
 
   $scope.dismissMessage = function(index) {
