@@ -14,12 +14,22 @@ sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout'
 
     $scope.changeMode = function(targetMode) {
         if (!$rootScope.connected) {
-            $scope.mode = "disconnected";
+            $rootScope.$broadcast('flashMessage', {
+                title: 'Oops...',
+                info: 'You have to be online to see the send pane.',
+                type: 'error'
+            });
+            $rootScope.tab = 'none';
             return;
         }
 
         if (!$scope.account.Balance) {
-            $scope.mode = "unfunded";
+            $rootScope.$broadcast('flashMessage', {
+                title: 'Oops...',
+                info: 'You have to be funded before you can send money.',
+                type: 'error'
+            });
+            $rootScope.tab = 'none';
             return;
         }
 
