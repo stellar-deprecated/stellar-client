@@ -32,10 +32,10 @@
             </div>
             <div class="row">
                 <div class="settings-label col-sm-3">EMAIL</div>
-                <div class="settings-control col-sm-4">
+                <div class="settings-control col-sm-9">
                     <div class="row">
                         <div class="col-sm-1">
-                            <span class="icon icon-user"/>
+                            <span class="icon icon-email"/>
                         </div>
                         <div class="col-sm-11">
                             <span>{{email ? email : 'Add your email!'}}</span>
@@ -53,7 +53,7 @@
                             <span class="icon icon-key"/>
                         </div>
                         <div class="col-sm-8">
-                            <span st-toggle ctrl="toggle.recover"></span>
+                            <span id="recovertoggle" class="error-block" data-toggle="tooltip" data-placement="right" data-template='<div class="tooltip error-tip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>' st-toggle ctrl="toggle.recover"></span>
                         </div>
                     </div>
                 </div>
@@ -66,7 +66,7 @@
                             <span class="icon icon-email"/>
                         </div>
                         <div class="col-sm-8">
-                            <span st-toggle ctrl="toggle.email"></span>
+                            <span id="emailtoggle" class="error-block" data-toggle="tooltip" data-placement="right" data-template='<div class="tooltip error-tip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>' st-toggle ctrl="toggle.email"></span>
                         </div>
                     </div>
                 </div>
@@ -75,9 +75,11 @@
                 <div class="settings-label col-sm-3">FEDERATION</div>
                 <div class="settings-control col-sm-4">
                     <div class="row">
-                        <div class="col-sm-1"/>
-                        <div class="col-sm-10">
-                            <span st-toggle ctrl="toggle.federate"></span>
+                        <div class="col-sm-1">
+                            <span class="icon icon-user"/>
+                        </div>
+                        <div class="col-sm-8">
+                            <span id="federatetoggle" class="error-block" data-toggle="tooltip" data-placement="right" data-template='<div class="tooltip error-tip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>' st-toggle ctrl="toggle.federate"></span>
                         </div>
                     </div>
                 </div>
@@ -164,7 +166,7 @@
                     <div class="col-sm-10">
                         <span>{{reveal ? secretKey : '***********************'}}</span>
                         <div class="secondary-action">
-                            <a href="" ng-click="reveal = !reveal">{{reveal ? 'Hide' : 'Reveal'}}</a>
+                            <span id="reveal-key" ng-click="reveal = !reveal">{{reveal ? 'Hide' : 'Reveal'}}</span>
                         </div>
                     </div>
                 </div>

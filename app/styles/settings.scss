@@ -21,6 +21,11 @@
     }
 
     .settings-control {
+
+        .error-block {
+            display:inline-block;
+        }
+
         .change-email-control {
             height:34px;
         }
@@ -51,6 +56,15 @@
             font-size: 12px;
         }
     }
+
+    .error-tip {
+        .tooltip-inner {
+            background-color: $error;
+        }
+        .tooltip-arrow {
+            border-right-color: $error;
+        }
+    }
 }
 
 .secondary-action {
@@ -72,4 +86,15 @@
     height: 40px;
     font-size: 16px;
     width:200px;
+}
+
+#reveal-key {
+    color: #B6BAB9;
+    font-weight: 300;
+    cursor: pointer;
+    transition: color 200ms ease-in-out;
+
+    &:hover {
+        color: $stellar-blue;
+    }
 }

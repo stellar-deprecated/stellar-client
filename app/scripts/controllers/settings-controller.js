@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('SettingsCtrl', function($scope, $http, $q, $timeout, session) {
+sc.controller('SettingsCtrl', function($scope, $http, $q, $timeout, $state, session) {
   var wallet = session.get('wallet');
 
   $scope.email = wallet.mainData.email;
@@ -24,18 +24,18 @@ sc.controller('SettingsCtrl', function($scope, $http, $q, $timeout, session) {
     }
     $http.get(Options.API_SERVER + "/user/settings", data)
     .success(function (response) {
-      console.log(response);
       $scope.toggle.recover.on = response.data.recover;
       $scope.toggle.federate.on = response.data.federate;
       $scope.toggle.email.on = response.data.email;
     })
     .error(function (response) {
+      $scope.toggle.error = "Server error";
       $scope.toggle.disableToggles = true;
       // TODO retry
     });
   }
 
-  $scope.saveSettings = function(){
+  $scope.saveSettings = function() {
     /*
     var email = $scope.newEmail;
     updateEmail(email)
@@ -56,17 +56,27 @@ sc.controller('SettingsCtrl', function($scope, $http, $q, $timeout, session) {
 
   $scope.toggle = {
     disableToggles: false,
+    error: null,
     recover: {
-      click: recoverToggle,
-      on: false
+      NAME: "recover",
+      API_ENDPOINT: "/user/setrecover",
+      click: switchToggle,
+      on: false,
+      wrapper: angular.element('#recovertoggle')
     },
     email: {
-      click: emailToggle,
-      on: false
+      NAME: "email",
+      API_ENDPOINT: "/user/setsubscribe",
+      click: switchToggle,
+      on: false,
+      wrapper: angular.element('#emailtoggle')
     },
     federate: {
-      click: federateToggle,
-      on: false
+      NAME: "federate",
+      API_ENDPOINT: "/user/setfederate",
+      click: switchToggle,
+      on: false,
+      wrapper: angular.element('#federatetoggle')
     }
   }
 
@@ -74,62 +84,39 @@ sc.controller('SettingsCtrl', function($scope, $http, $q, $timeout, session) {
     username: session.get('username'),
     updateToken: session.get('wallet').keychainData.updateToken
   };
-
-  function recoverToggle() {
+  function switchToggle(toggle) {
     if ($scope.toggle.disableToggles) {
-      return;
-    }
-    // switch the toggle
-    $scope.toggle.recover.on = !$scope.toggle.recover.on;
-    var on = $scope.toggle.recover.on;
-    // add the current toggle value to the request
-    toggleRequestData.recover = on;
-    $http.post(Options.API_SERVER + '/user/setrecover', toggleRequestData)
-    .success(function (res) {
-      $scope.toggle.recover.on = on;
-    })
-    .error(function (err) {
-      $scope.toggle.recover.on = !on;
-    });
-  }
-
-  function emailToggle() {
-    if ($scope.toggle.disableToggles) {
-      return;
-    }
-    // switch the toggle
-    $scope.toggle.email.on = !$scope.toggle.email.on;
-    var on = $scope.toggle.email.on;
-    var config = {
-      params: {
-        email: $scope.email
+      if ($scope.toggle.error) {
+        // if we're disabling these toggles, let the user know
+        showError(toggle.wrapper, "Server error.");
       }
-    };
-    var endpoint = on ? '/subscribe' : '/unsubscribe';
-    $http.get(Options.API_SERVER + endpoint, config)
-    .success(function (res) {
-      $scope.toggle.email.on = on;
-    })
-    .error(function (err) {
-      $scope.toggle.email.on = !on;
-    });
-  }
-
-  function federateToggle() {
-    if ($scope.toggle.disableToggles) {
       return;
     }
-    // switch the toggle
-    $scope.toggle.federate.on = !$scope.toggle.federate.on;
-    var on = $scope.toggle.federate.on;
+    if (toggle.error) {
+      toggle.error = null;
+    }
+    // save the toggle's current state
+    var on = toggle.on;
     // add the current toggle value to the request
-    toggleRequestData.federate = on;
-    $http.post(Options.API_SERVER + '/user/setfederate', toggleRequestData)
+    toggleRequestData[toggle.NAME] = !on;
+    $http.post(Options.API_SERVER + toggle.API_ENDPOINT, toggleRequestData)
     .success(function (res) {
-      $scope.toggle.federate.on = on;
+      // switch the toggle
+      toggle.on = !on;
     })
-    .error(function (err) {
-      $scope.toggle.federate.on = !on;
+    .error(function (err, status) {
+      if (status < 500 && status > 400) {
+        switch (err.code) {
+          case "validation_error":
+            if (err.data && err.data.field == "update_token") {
+              // this user's update token is invalid, send to login
+              $state.transitionTo('login');
+            }
+        }
+      } else {
+        console.log(status);
+        showError(toggle.wrapper, "Server error.");
+      }
     });
   }
 
@@ -157,6 +144,17 @@ sc.controller('SettingsCtrl', function($scope, $http, $q, $timeout, session) {
 
   function updatePassword(password) {
     // TODO
+  }
+
+
+  function showError(wrapper, title) {
+    console.log(wrapper);
+    wrapper.tooltip(
+      {
+        title: title,
+        delay: 1000
+      })
+      .tooltip('show');
   }
 
   getSettings();
