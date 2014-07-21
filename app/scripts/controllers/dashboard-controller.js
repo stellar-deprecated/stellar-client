@@ -14,8 +14,8 @@ sc.controller('DashboardCtrl', function($rootScope, $scope, $timeout, $state, se
     };
 
     $scope.openSend = function() {
-        $scope.$broadcast('resetSendPane');
         $rootScope.tab = 'send';
+        $scope.$broadcast('resetSendPane');
     };
 
     $scope.openReceive = function() {

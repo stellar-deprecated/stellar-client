@@ -5,12 +5,6 @@
     <i class="icon icon-times-circle-thin"></i>
 </div>
 <div l10n="l10n" class="literal title">Send Stellars</div>
-<group ng-show="mode=='disconnected'" class="send-error disconnected">
-    <p l10n="l10n" class="literal">You have to be online to see this screen</p>
-</group>
-<div ng-show="mode=='unfunded'" class="send-error unfunded">
-    <p l10n="l10n" class="literal">You have to be funded before you can send money</p>
-</div>
 <form name="sendForm" role="form" ng-show="mode=='form'" ng-submit="send_prepared()" class="stellar-form">
     <div class="row form-group">
         <div rp-errors="send_destination" class="errors col-sm-12">

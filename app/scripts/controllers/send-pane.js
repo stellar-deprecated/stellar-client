@@ -14,12 +14,24 @@ sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout'
 
     $scope.changeMode = function(targetMode) {
         if (!$rootScope.connected) {
-            $scope.mode = "disconnected";
+            $rootScope.$broadcast('flashMessage', {
+                title: 'Oops...',
+                info: 'You have to be online to see the send pane.',
+                type: 'error',
+                id: 'send-offline-error'
+            });
+            $rootScope.tab = 'none';
             return;
         }
 
         if (!$scope.account.Balance) {
-            $scope.mode = "unfunded";
+            $rootScope.$broadcast('flashMessage', {
+                title: 'Oops...',
+                info: 'You have to be funded before you can send money.',
+                type: 'error',
+                id: 'send-unfunded-error'
+            });
+            $rootScope.tab = 'none';
             return;
         }
 
@@ -1089,7 +1101,24 @@ sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout'
         }
     });
 
-    $scope.reset();
-
-
+    $scope.send = {
+        recipient: '',
+        recipient_name: '',
+        recipient_address: '',
+        recipient_prev: '',
+        recipient_info: {},
+        amount: '',
+        //trust_limit: '',
+        amount_prev: new Amount(),
+        currency: $scope.xtr.name,
+        currency_choices: $scope.currencies_all,
+        currency_code: "STR",
+        path_status: 'waiting',
+        fund_status: 'none',
+        sender_insufficient_xtr: false
+    };
+    $scope.nickname = '';
+    $scope.error_type = '';
+    $scope.error_message = '';
+    $scope.resetAddressForm();
 }]);
