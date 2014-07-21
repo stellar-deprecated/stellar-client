@@ -1,4 +1,4 @@
-sc.controller('AddEmailCtrl', function ($scope, $rootScope, $http, session) {
+sc.controller('AddEmailCtrl', function ($scope, $rootScope, $http, $state, session) {
   $scope.loading = false;
   $scope.errors = [];
 
@@ -36,17 +36,19 @@ sc.controller('AddEmailCtrl', function ($scope, $rootScope, $http, session) {
 
       function addEmailError(response) {
         if (response && response.status == 'fail') {
-          if (response.code == 'validation_error') {
-            var error = response.data;
-            if (error.field == "update_token" && error.code == "invalid") {
-              // TODO: send them to login screen?
-              $scope.errors.push('Login expired');
-            }
-          } else if (response.code == "already_taken") {
-            $scope.errors.push("This email is already taken.");
+          switch (response.code) {
+            case 'invalid_update_token':
+              // this user's update token is invalid, send to login
+              $state.transitionTo('login');
+              break;
+            case 'already_taken':
+              $scope.errors.push("This email is already taken.");
+              break;
+            default:
+              $scope.errors.push("Server error.");
           }
         } else {
-          $scope.errors.push('An error occured');
+          $scope.errors.push("Server error.");
         }
         $scope.loading = false;
       }

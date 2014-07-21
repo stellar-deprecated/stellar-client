@@ -39,13 +39,10 @@ sc.controller('AlphaCtrl', function ($scope, $state, $http, $q, session, singlet
       })
       .error(function (response) {
         if (response && response.status == 'fail') {
-          if (response.code == "validation_error") {
-            var error = response.data;
-            if (error.code == "already_taken") {
-              $scope.alphaCodeError = 'This Alpha Code is already taken.';
-            } else {
-              $scope.alphaCodeError = 'This Alpha Code is invalid.';
-            }
+          if (response.code == "already_taken") {
+            $scope.alphaCodeError = 'This Alpha Code is already taken.';
+          } else if (response.code == "invalid") {
+            $scope.alphaCodeError = 'This Alpha Code is invalid.';
           }
         } else {
           $scope.alphaCodeError = 'An error occured.';

@@ -12,6 +12,7 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
 
   $scope.rewardStatusIcons = {
     'incomplete': 'icon icon-lock',
+    'pending': 'icon icon-lock',
     'reward_queued': 'icon icon-clock',
     'needs_fbauth': 'icon icon-clock',
     'sending': 'icon icon-clock',
@@ -51,6 +52,7 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
   $scope.computeRewardProgress = function() {
     var order = {
       'incomplete': 0,
+      'pending': 0,
       'reward_queued': 1,
       'needs_fbauth': 1,
       'unverified': 1,
