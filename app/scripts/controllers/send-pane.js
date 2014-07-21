@@ -459,7 +459,7 @@ sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout'
         }
 
         // Validate the send amount.
-        if (!stellar.Amount.is_valid(amount) || amount.is_negative()) {
+        if (!stellar.Amount.is_valid(amount) || !amount.is_positive()) {
             $scope.sendForm.send_amount.$error['rpAmount'] = true;
             send.fund_status = 'invalid';
             return;
