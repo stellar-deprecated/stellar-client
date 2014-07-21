@@ -59,7 +59,7 @@ sc.service('session', function($rootScope, $http, stNetwork) {
     }
   };
 
-  Session.prototype.logOut = function() {
+  Session.prototype.logout = function() {
     cache = {};
 
     if (Options.PERSISTENT_SESSION){

@@ -111,7 +111,7 @@ stellarClient.run(function($rootScope, $state, $cookies, session){
 
       case '/logout':
         if(session.get('loggedIn')) {
-          session.logOut();
+          session.logout();
         }
         break;
 
