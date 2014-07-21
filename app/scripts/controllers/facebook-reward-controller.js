@@ -77,10 +77,10 @@ sc.controller('FacebookRewardCtrl', function ($scope, $http, session) {
     if (response && response.status == 'fail') {
       switch (response.code) {
         case 'validation_error':
-          var errorJSON = response.data;
-          if (errorJSON.field == "update_token" && errorJSON.code == "invalid") {
+          var error = response.data;
+          if (error && error.field == "update_token" && error.code == "invalid") {
             // TODO: log user out
-          } else if (errorJSON.field == "facebook_id" && errorJSON.code == "already_taken") {
+          } else if (error && error.field == "facebook_id" && error.code == "already_taken") {
             $scope.reward.updateReward('already_taken');
           }
           break;
