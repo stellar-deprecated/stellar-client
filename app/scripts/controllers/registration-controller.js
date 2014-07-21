@@ -191,21 +191,29 @@ sc.controller('RegistrationCtrl', function($scope, $state, $timeout, $http, $q, 
     };
 
     if (response && response.status == "fail") {
-      if (response.code == "validation_error") {
-        var error = response.data;
-        switch(error.field) {
-          case 'username':
-            $scope.errors.usernameErrors.push(usernameErrorMessages[error.code]);
-            break;
-
-          case 'email':
-            $scope.errors.emailErrors.push(emailErrorMessages[error.code]);
-            break;
-
-          case 'alpha_code':
+      switch (response.code) {
+        case 'already_taken':
+          var field = response.data && response.data.field;
+          if (field == 'username') {
+            $scope.errors.usernameErrors.push(usernameErrorMessages['already_taken']);
+          } else if (field == 'email') {
+            $scope.errors.emailErrors.push(emailErrorMessages['already_taken']);
+          } else if (field == 'alpha_code') {
             // TODO: ux for alpha code errors
-            break;
-        }
+          }
+          break;
+        case 'invalid':
+          var field = response.data && response.data.field;
+          if (field == 'username') {
+            $scope.errors.usernameErrors.push(usernameErrorMessages['invalid']);
+          } else if (field == 'email') {
+            $scope.errors.emailErrors.push(emailErrorMessages['invalid']);
+          } else if (field == 'alpha_code') {
+            // TODO: ux for alpha code errors
+          }
+          break;
+        default:
+          // TODO: generic error
       }
     } else {
       $scope.errors.usernameErrors.push('Registration error?');

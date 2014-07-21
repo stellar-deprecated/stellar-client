@@ -1,4 +1,4 @@
-sc.controller('VerifyEmailCtrl', function ($scope, $rootScope, $http, session) {
+sc.controller('VerifyEmailCtrl', function ($scope, $rootScope, $http, $state, session) {
   var wallet = session.get('wallet');
   $scope.email = wallet.mainData.email;
   $scope.loading = false;
@@ -34,19 +34,24 @@ sc.controller('VerifyEmailCtrl', function ($scope, $rootScope, $http, session) {
       })
       .error(function(response) {
         if (response && response.status == 'fail') {
-          if (response.code == 'validation_error') {
-            var error = response.data;
-            if (error.code == "invalid") {
-              $scope.errors.push("Invalid code.");
-            } else {
-              // TODO: invalid credentials, send to login page?
-              $scope.errors.push('Please login again.');
-            }
-          } else if (response.code == 'already_claimed') {
-            // TODO: this user has already claimed the verify_email reward
+          switch (response.code) {
+            case 'already_taken':
+              // TODO: this user has already claimed the verify_email reward
+              break;
+            case 'invalid':
+              if (response.data && response.data.field == 'recovery_code') {
+                $scope.errors.push('Invalid recovery code.');
+              }
+              break;
+            case 'invalid_update_token':
+              // this user's update token is invalid, send to login
+              $state.transitionTo('login');
+              break;
+            default:
+              $scope.errors.push('Server error.');
           }
         } else {
-          $scope.errors.push('An error occured.');
+          $scope.errors.push('Server error.');
         }
       });
   }
