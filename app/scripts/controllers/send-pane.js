@@ -17,7 +17,8 @@ sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout'
             $rootScope.$broadcast('flashMessage', {
                 title: 'Oops...',
                 info: 'You have to be online to see the send pane.',
-                type: 'error'
+                type: 'error',
+                id: 'send-offline-error'
             });
             $rootScope.tab = 'none';
             return;
@@ -27,7 +28,8 @@ sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout'
             $rootScope.$broadcast('flashMessage', {
                 title: 'Oops...',
                 info: 'You have to be funded before you can send money.',
-                type: 'error'
+                type: 'error',
+                id: 'send-unfunded-error'
             });
             $rootScope.tab = 'none';
             return;
