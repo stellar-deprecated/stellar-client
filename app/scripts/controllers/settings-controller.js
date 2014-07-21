@@ -114,7 +114,6 @@ sc.controller('SettingsCtrl', function($scope, $http, $q, $timeout, $state, sess
             }
         }
       } else {
-        console.log(status);
         showError(toggle.wrapper, "Server error.");
       }
     });
@@ -148,7 +147,6 @@ sc.controller('SettingsCtrl', function($scope, $http, $q, $timeout, $state, sess
 
 
   function showError(wrapper, title) {
-    console.log(wrapper);
     wrapper.tooltip(
       {
         title: title,
