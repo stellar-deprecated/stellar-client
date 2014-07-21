@@ -7,7 +7,7 @@ var sc = angular.module('stellarClient');
     waits for:
      walletAddressLoaded
  */
-sc.controller('AppCtrl', function($scope, $rootScope, stNetwork, session, rpReverseFederation, $state, $element) {
+sc.controller('AppCtrl', function($scope, $rootScope, stNetwork, session, rpReverseFederation, $state, $element, FlashMessages) {
 
     $rootScope.balance=0;
     $rootScope.accountStatus = 'connecting';
@@ -32,7 +32,7 @@ sc.controller('AppCtrl', function($scope, $rootScope, stNetwork, session, rpReve
         var loggedOutAt = args.loggedOutAt;
 
         $state.transitionTo('logout');
-        $rootScope.$broadcast('flashMessage', {
+        FlashMessages.add({
             title: 'You\'ve been automatically logged out.',
             info: 'We logged you automatically',
             type: 'error'
