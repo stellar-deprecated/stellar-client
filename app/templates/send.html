@@ -29,12 +29,7 @@
     <div class="form-group">
         <div rp-errors="send_amount" class="errors col-sm-12">
             <div rp-error-on="required" l10n="l10n" class="tip col-sm-offset-6 col-sm-3">Please enter an amount.</div>
-            <div rp-error-on="rpAmount" l10n="l10n" class="tip col-sm-offset-6 col-sm-3">Not a valid amount.</div>
-            <div rp-error-on="rpAmountPositive" l10n="l10n" class="tip col-sm-offset-6 col-sm-3">Amount must be greater than zero.</div>
-            <div rp-error-on="rpMaxAmount" l10n="l10n" class="tip col-sm-offset-6 col-sm-3">
-                This transaction exceeds your balance, you can send
-                a max. of {{account.max_spend | rpamount:{rel_precision: 0} }} STR
-            </div>
+            <div rp-error-on="rpAmount" l10n="l10n" class="tip col-sm-offset-3 col-sm-6">Not a valid amount. Please enter a value greater than 0.000001</div>
             <div ng-show="send.recipient_info.disallow_xtr && send.currency_code=='STR'" l10n="l10n" class="tip col-sm-offset-6 col-sm-3">Recipient does not allow STR payments. Are you sure you want to send STR anyway?</div>
             <div ng-show="send.trust_limit" l10n="l10n" class="success tip col-sm-offset-6 col-sm-3">
                 {{send.recipient | rpcontactname}}
