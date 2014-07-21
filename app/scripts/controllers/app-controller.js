@@ -33,8 +33,8 @@ sc.controller('AppCtrl', function($scope, $rootScope, stNetwork, session, rpReve
 
         $state.transitionTo('logout');
         FlashMessages.add({
-            title: 'You\'ve been automatically logged out.',
-            info: 'We logged you automatically',
+            title: 'You\'ve been logged out',
+            info: 'For your security, you have been logged out because your browser is idle. Please log back in to continue using Stellar.',
             type: 'error'
         });
         
