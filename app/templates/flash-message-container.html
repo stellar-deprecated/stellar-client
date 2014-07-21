@@ -1,4 +1,4 @@
-<div class="flash-message-container client-section" ng-show="messages.length" ng-controller="FlashMessageCtrl">
+<div class="flash-message-container" ng-show="messages.length" ng-controller="FlashMessageCtrl">
     <div ng-repeat="message in messages" class="flash-message" ng-class="message.type">
         <i class="icon icon-close" ng-click="dismissMessage($index)"></i>
         <span class="flash-title">{{ message.title }}</span>

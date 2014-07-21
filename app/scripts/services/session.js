@@ -4,11 +4,40 @@ var sc = angular.module('stellarClient');
 
 var cache = {};
 
-sc.service('session', function($rootScope, $http, stNetwork) {
+sc.service('session', function($rootScope, $http, $timeout, stNetwork) {
   var Session = function() {};
 
   Session.prototype.get = function(name){ return cache[name]; };
   Session.prototype.put = function(name, value){ return cache[name] =  value; };
+
+
+  /**
+   * Record user activity, resetting the idle timeout
+   * NOTE:  we debounce this function at the second level so we aren't 
+   * resetting the timer after every key press/click.  Second-level granularity
+   * is enough.
+   */
+  Session.prototype.act = _.debounce(function() {
+    if(this.get('loggedIn') === true) {
+      this.clearIdleTimeout();
+      this.setIdleTimeout();
+    }
+  }, 1000, true); 
+
+  Session.prototype.setIdleTimeout = function() {
+    var self = this;
+
+    this.idleTimeout = $timeout(function() {
+      self.logout();
+      $rootScope.$broadcast('idleLogout', {loggedOutAt: new Date()});
+    }, Options.IDLE_LOGOUT_TIMEOUT || 15 * 60 * 1000);
+  };
+
+  Session.prototype.clearIdleTimeout = function() {
+    if (this.idleTimeout) {
+      $timeout.cancel(this.idleTimeout);
+    }
+  }
 
   Session.prototype.syncWallet = function(wallet, action) {
     var url = Options.WALLET_SERVER + '/wallets/' + action;
@@ -42,6 +71,7 @@ sc.service('session', function($rootScope, $http, stNetwork) {
     $rootScope.$broadcast('walletAddressLoaded', {account: signingKeys.address, secret: signingKeys.secret});
     stNetwork.init();
 
+    this.setIdleTimeout();
     // Set loggedIn to be true to signify that it is safe to use the session variables.
     this.put('loggedIn', true);
   };
@@ -70,6 +100,9 @@ sc.service('session', function($rootScope, $http, stNetwork) {
     stNetwork.shutdown();
 
     this.put('loggedIn', false);
+
+    this.clearIdleTimeout();
+
 
   };
 

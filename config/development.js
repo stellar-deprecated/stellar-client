@@ -32,6 +32,7 @@ var Options = {
     // intended for developers, be careful about using this in a real setting.
     PERSISTENT_SESSION : true,
     ALPHA_PHASE : true,
+    IDLE_LOGOUT_TIMEOUT : 60 * 60 * 1000, //an hour
 
 
     REPORT_ERRORS : false,
