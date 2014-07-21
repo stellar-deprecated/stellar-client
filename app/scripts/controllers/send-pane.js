@@ -50,7 +50,11 @@ sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout'
     // {name: "XRP - Ripples", order: 146, value: "XRP"}
     $scope.xtr = _.where($scope.currencies_all, {value: "STR"})[0];
 
-    $scope.$watch('send.recipient', function () {
+    $scope.$watch('send.recipient', function (newVal, oldVal) {
+        if (newVal == oldVal || !newVal) {
+            return;
+        }
+        
         // raw address without any parameters
         var address = webutil.stripRippleAddress($scope.send.recipient);
 
