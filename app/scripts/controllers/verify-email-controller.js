@@ -15,7 +15,7 @@ sc.controller('VerifyEmailCtrl', function ($scope, $rootScope, $http, $state, se
     $scope.errors = [];
 
     verifyEmail()
-      .then(claimReward())
+      .then(claimReward)
       .then(storeRecoveryData)
       .finally(function(){
         $scope.loading = false;
