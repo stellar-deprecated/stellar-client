@@ -43,9 +43,9 @@ sc.controller('SendRewardCtrl', function ($rootScope, $scope, $http, stNetwork, 
   }
 
   function removeSentTxListener() {
-  	if (turnOffTxListener) {
-  		turnOffTxListener();
-  	}
+    if (turnOffTxListener) {
+      turnOffTxListener();
+    }
   }
 
   // checks if the user has any "sent" transactions, requests send reward if so
