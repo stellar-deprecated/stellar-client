@@ -1,5 +1,4 @@
 .flash-message-container {
-  background-color: $grey-background;
   padding-top: 28px;
   padding-bottom: 28px;
 
@@ -76,4 +75,8 @@
       bottom: 0;
     }
   }
+}
+
+#dashboard-flash-messages {
+  background-color: $grey-background;
 }

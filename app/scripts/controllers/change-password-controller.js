@@ -69,7 +69,7 @@ sc.controller('ChangePasswordCtrl', function($scope, $state, $timeout, $http, se
         return copyRecoveryData(oldWallet, newWallet);
       })
       .finally(function(){
-        session.logOut();
+        session.logout();
         session.login(newWallet);
         $state.go('dashboard');
       });

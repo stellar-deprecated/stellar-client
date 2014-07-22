@@ -74,7 +74,7 @@ stellarClient.config(function($httpProvider, $stateProvider, $urlRouterProvider,
 
 });
 
-stellarClient.run(function($rootScope, $state, $cookies, session){
+stellarClient.run(function($rootScope, $state, $cookies, session, FlashMessages){
   $rootScope.balance = 'loading...';
   $rootScope.unsupportedBrowser = !Modernizr.websockets;
 
@@ -111,7 +111,7 @@ stellarClient.run(function($rootScope, $state, $cookies, session){
 
       case '/logout':
         if(session.get('loggedIn')) {
-          session.logOut();
+          session.logout();
         }
         break;
 
@@ -144,5 +144,7 @@ stellarClient.run(function($rootScope, $state, $cookies, session){
       // Prevent the original destination state from loading.
       event.preventDefault();
     }
+
+    FlashMessages.dismissAll();
   });
 });

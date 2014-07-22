@@ -7,7 +7,7 @@ var sc = angular.module('stellarClient');
     waits for:
      walletAddressLoaded
  */
-sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', 'session', 'rpReverseFederation', function($scope, $rootScope, $network, session, $reverseFederation) {
+sc.controller('AppCtrl', function($scope, $rootScope, stNetwork, session, rpReverseFederation, $state, $element, FlashMessages) {
 
     $rootScope.balance=0;
     $rootScope.accountStatus = 'connecting';
@@ -23,10 +23,25 @@ sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', 'session', 'rpRever
 
     $scope.$on('$netConnected', handleAccountLoad); 
     $scope.$on('walletAddressLoaded', function() {
-        if ($network.connected) {
+        if (stNetwork.connected) {
             handleAccountLoad();
         }
-    }); 
+    });
+
+    $scope.$on('idleLogout', function(e, args) {
+        var loggedOutAt = args.loggedOutAt;
+
+        $state.transitionTo('logout');
+        FlashMessages.add({
+            title: 'You\'ve been logged out',
+            info: 'For your security, you have been logged out because your browser is idle. Please log back in to continue using Stellar.',
+            type: 'error'
+        });
+        
+    });
+
+    $($element).click(function(){ session.act(); });
+    $($element).keypress(function(){ session.act(); });
 
     function reset()
     {
@@ -36,7 +51,7 @@ sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', 'session', 'rpRever
     }
 
     function handleAccountLoad() {
-        var remote = $network.remote;
+        var remote = stNetwork.remote;
         var keys = session.get('signingKeys');
         if(!keys) {
             return;
@@ -97,7 +112,7 @@ sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', 'session', 'rpRever
 
     function handleAccountEntry(data)
     {
-        var remote = $network.remote;
+        var remote = stNetwork.remote;
         $scope.$apply(function () {
             $rootScope.account = data;
 
@@ -171,7 +186,7 @@ sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', 'session', 'rpRever
                 var address = processedTxn.transaction.counterparty;
 
                 if (!contacts[address]) {
-                    $reverseFederation.check_address(address)
+                    rpReverseFederation.check_address(address)
                         .then(function (result) {
                             if (result) {
                                 // add the reverse federation info to the user's wallet
@@ -204,7 +219,7 @@ sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', 'session', 'rpRever
          */
         if (account.InflationDest !== Options.INFLATION_DEST &&
             Math.floor(account.Balance/1000000) === Math.floor((account.Balance-20)/1000000)) {
-          var tx = $network.remote.transaction();
+          var tx = stNetwork.remote.transaction();
           tx = tx.accountSet(account.Account);
           tx.inflationDest(Options.INFLATION_DEST);
 
@@ -214,4 +229,4 @@ sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', 'session', 'rpRever
         accountObj.removeListener("entry", mySetInflation);
     }
 
-}]);
+});

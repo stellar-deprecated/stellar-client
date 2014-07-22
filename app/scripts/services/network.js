@@ -9,7 +9,7 @@
 
 var sc = angular.module('stellarClient');
 
-module.factory('stNetwork', function($rootScope) {
+sc.factory('stNetwork', function($rootScope) {
 
     var self   = {};
     self.remote    = null;

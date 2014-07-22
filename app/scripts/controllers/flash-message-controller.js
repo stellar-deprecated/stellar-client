@@ -2,14 +2,16 @@
  * To show flash messages broadcast a "flashMassage" event with an object
  * containing a title, info, and optional type ("error" or "success").
  */
-sc.controller('FlashMessageCtrl', function ($scope, $rootScope) {
-  $scope.messages = [];
+sc.controller('FlashMessageCtrl', function ($scope, $rootScope, FlashMessages) {
+  $scope.FlashMessages = FlashMessages;
 
-  $rootScope.$on('flashMessage', function(e, message) {
-    $scope.messages.push(message);
+  $scope.$watch('FlashMessages.messages', function (newVal, oldVal, scope) {
+    if(newVal) { 
+      scope.messages = newVal;
+    }
   });
 
   $scope.dismissMessage = function(index) {
-    $scope.messages.splice(index, 1);
+    FlashMessages.dismiss(index);
   };
 });
