@@ -220,7 +220,7 @@
   &.send-tutorial {
     .dash-send-container {
       button {
-        @include animation(pulse 1s ease-in-out infinite alternate);
+        @include animation(pulse 500ms ease-in-out infinite alternate);
       }
     }
   }
@@ -232,6 +232,6 @@
   }
 
   100% {
-    @include box-shadow(0 0 4px 4px rgba($stellar-blue, 0.5));
+    @include box-shadow(0 0 5px 5px rgba($stellar-blue, 0.5));
   }
 }
