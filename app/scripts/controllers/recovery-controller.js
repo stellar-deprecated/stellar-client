@@ -54,7 +54,11 @@ sc.controller('RecoveryCtrl', function($scope, $state, $http, $timeout, session)
       .error(function(body, status) {
         switch(status) {
           case 400:
-            $scope.recoveryError = 'Invalid username or recovery code.';
+            if (body.code == 'invalid') {
+              $scope.recoveryError = 'Invalid username or recovery code.';
+            } else if (body.code == 'disabled') {
+              $scope.recoveryError = 'Recovery has been disabled for this account.';
+            }
             break;
           case 0:
             $scope.recoveryError = 'Unable to contact the server.';
