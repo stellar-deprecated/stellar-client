@@ -37,7 +37,7 @@ sc.service('session', function($rootScope, $http, $timeout, stNetwork) {
     if (this.idleTimeout) {
       $timeout.cancel(this.idleTimeout);
     }
-  }
+  };
 
   Session.prototype.syncWallet = function(wallet, action) {
     var url = Options.WALLET_SERVER + '/wallets/' + action;

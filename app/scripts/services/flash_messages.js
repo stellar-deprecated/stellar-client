@@ -18,7 +18,7 @@ sc.factory('FlashMessages', function($rootScope) {
 
   result.dismissAll = function() {
     result.messages = [];
-  }
+  };
 
-  return result
+  return result;
 });
