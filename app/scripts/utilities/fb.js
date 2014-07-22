@@ -41,12 +41,12 @@ function fbLoginStart(http, username, updateToken, success, error){
       data.fbAccessToken = response.authResponse.accessToken;
       claim(http, data, success, error);
     } else {
-      FB.login(function(){
+      FB.login(function(response){
         handleFBSessionResponse(http, data, success, error);
      // LATER }, {scope: 'user_status'});
       }, { auth_type: 'reauthenticate' });
     }
-  });
+  }, true);
 }
 
 /**
@@ -67,7 +67,7 @@ function handleFBSessionResponse(http, data, success, error) {
     } else {
       error(response);
     }
-  });
+  }, true);
 }
 
 /**
