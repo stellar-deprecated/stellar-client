@@ -48,9 +48,9 @@
     </div>
     <div class="send-container client-section" ng-include="'templates/send.html'" ng-show="tab==='send'"></div>
     <div class="receive-container client-section" ng-include="'templates/receive.html'" ng-show="$root.tab==='receive'"></div>
+    <div class="client-section" id="dashboard-flash-messages">
+        <div ng-include="'templates/flash-message-container.html'"></div>
+    </div>
+    <div ng-include="'templates/reward-container.html'"></div>
+    <div ng-include="'templates/transaction-history.html'"></div>
 </div>
-<div class="client-section" id="dashboard-flash-messages">
-    <div ng-include="'templates/flash-message-container.html'"></div>
-</div>
-<div ng-include="'templates/reward-container.html'"></div>
-<div ng-include="'templates/transaction-history.html'"></div>

@@ -223,6 +223,12 @@
         @include animation(pulse 500ms ease-in-out infinite alternate);
       }
     }
+
+    .reward-page .content .send-stellar {
+      .send-arrow {
+        opacity: 1;
+      }
+    }
   }
 }
 

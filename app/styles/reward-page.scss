@@ -128,6 +128,15 @@
       margin-top: 40px;
       text-align: center;
 
+      .send-arrow {
+        width: 80px;
+        position: absolute;
+        right: 10%;
+        margin-top: -30px;
+        opacity: 0;
+        @include transition(opacity 200ms ease-in-out);
+      }
+
       .stellar-button {
         width: 300px;
       }
