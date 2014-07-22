@@ -1,0 +1,148 @@
+// https://github.com/stellar/first-theme/blob/master/scss/_footer.scss
+// with mixins and global dependencies included.
+
+#footer-wrapper {
+    background-color: $light-grey;
+    overflow: hidden;
+}
+
+#footer-wrapper:before {
+    display: block;
+    content: '';
+    background-image: url(../images/rainbow.svg);
+    height: 1px;
+}
+
+.clear:after {
+    clear: both;
+    content: '';
+    display: table;
+}
+
+@mixin clearfix {
+  &:after {
+    content:"";
+    display:table;
+    clear:both;
+  }
+}
+
+$max-width: 1440px;
+
+@mixin outer-container {
+  @include clearfix;
+  max-width: $max-width;
+  margin: {
+    left: auto;
+    right: auto;
+  }
+}
+
+$breakpoint-medium: 1024px;
+$breakpoint-large: $max-width;
+$breakpoint-non-large: $max-width + 1px;
+
+@mixin respond-to($media) {
+    @if $media == medium {
+        @media only screen and (max-width: $breakpoint-medium) { @content; }
+    }
+    @else if $media == large {
+        @media only screen and (max-width: $breakpoint-large) { @content; }
+    }
+    @else if $media == non-large {
+        @media only screen and (min-width: $breakpoint-non-large) { @content; }
+    }
+}
+
+footer#colophon {
+    @include outer-container;
+    margin: 0 auto;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    .site-info {
+        display: inline-block;
+
+        .icon-heart {
+            color: #9FABB1;
+            font-size: 20px;
+            margin-right: 12px;
+            vertical-align: middle;
+        }
+        p, a {
+            text-decoration: none;
+            font-size: 14px;
+            color: $dark-grey;
+            margin: 0;
+        }
+
+        @include respond-to(medium) {
+            text-align: center;
+            display: block;
+            padding: 1em 0;
+
+            .icon-heart {
+                display: block;
+                margin-right: 0;
+            }
+        }
+    }
+}
+
+#footer-navigation {
+    display: inline-block;
+    float: right;
+
+    @include respond-to(medium) {
+        display: block;
+        float: none;
+        margin-bottom: 1em;
+        clear: both;
+    }
+
+    ul {
+        margin: 0;
+        clear: both;
+        padding-left: 0;
+    }
+    li {
+        float: left;
+        @include respond-to(medium) {
+            width: 50%;
+            padding-left: 0;
+        }
+        margin-left: 0;
+        list-style-type: none;
+        padding-left: 1.5em;
+        line-height: 28px;
+    }
+    a {
+        font-size: 14px;
+        color: $dark-grey;
+        border: 1px solid transparent;
+        text-decoration: none;
+        font-weight: $avenir-book;
+    }
+}
+
+/* Sticky footer implementation.
+Buggy and disabled on iOs (by removing .flexbox with JavaScript) */
+@include respond-to(non-large) {
+    .flexbox {
+        #page {
+
+            display: -webkit-box;
+            display: -moz-box;
+            display: -ms-flexbox;
+            display: -webkit-flex;
+            display: flex;
+
+            min-height: 100vh;
+            -webkit-flex-direction: column;
+            flex-direction: column;
+        }
+        #content {
+            -webkit-flex: 1;
+            flex: 1;
+        }
+    }
+}
