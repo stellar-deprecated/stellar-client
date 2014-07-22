@@ -234,10 +234,10 @@
 
 @include keyframes(pulse) {
   0% {
-    @include box-shadow(0 0 2px 2px rgba($stellar-blue, 0));
+    @include box-shadow(0 0 2px 4px rgba(#EFB52E, 0));
   }
 
   100% {
-    @include box-shadow(0 0 5px 5px rgba($stellar-blue, 0.5));
+    @include box-shadow(0 0 4px 4px rgba(#EFB52E, 0.7));
   }
 }
