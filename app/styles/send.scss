@@ -52,7 +52,7 @@
     text-align: center;
     border: 1px solid $grey-border;
     border-radius: 2px;
-    margin: 40px auto 30px auto;
+    margin: 0 auto 30px auto;
     width: 540px;
     padding: 30px 36px;
 
@@ -95,11 +95,6 @@
         background-color: $stellar-blue;
       }
     }
-  }
-
-  .pane-close {
-    height: 70px;
-    line-height: 70px;
   }
 
   .change-button {

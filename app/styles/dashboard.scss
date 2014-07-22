@@ -198,6 +198,7 @@
   .pane {
     background-color: transparent;
     color: $dark-grey;
+    position: relative;
 
     form > div {
       margin: 45px 0;
@@ -213,7 +214,20 @@
       font-size: 20px;
       border-bottom: $grey-border-bottom;
       height: 70px;
+      line-height: 40px;
+
+      &.hide-text {
+        opacity: 0;
+      }
+    }
+
+    .pane-close {
+      float: none;
+      height: 70px;
       line-height: 70px;
+      position: absolute;
+      right: 0;
+      z-index: 1;
     }
   }
 
