@@ -30,36 +30,11 @@ window.fbAsyncInit = function() {
  */
 function fbLoginStart(http, username, updateToken, success, error){
   console.log("fbAuth");
-  FB.getLoginStatus(function (response) {
-    var data = {
-      username: username,
-      updateToken: updateToken
-    };
-
-    if (response.status === 'connected') {
-      data.fbID = response.authResponse.userID;
-      data.fbAccessToken = response.authResponse.accessToken;
-      claim(http, data, success, error);
-    } else {
-      FB.login(function(response){
-        handleFBSessionResponse(http, data, success, error);
-     // LATER }, {scope: 'user_status'});
-      }, { auth_type: 'reauthenticate' });
-    }
-  }, true);
-}
-
-/**
- * Handle a session response when attempting to login with facebook.
- *
- * @param {object} data
- * @param {string} data.username
- * @param {string} data.updateToken
- * @param {function} success callback
- * @param {function} error callback
- */
-function handleFBSessionResponse(http, data, success, error) {
-  FB.getLoginStatus(function (response) {
+  var data = {
+    username: username,
+    updateToken: updateToken
+  };
+  FB.login(function (response) {
     if (response.status === 'connected') {
       data.fbID = response.authResponse.userID;
       data.fbAccessToken = response.authResponse.accessToken;
@@ -67,7 +42,7 @@ function handleFBSessionResponse(http, data, success, error) {
     } else {
       error(response);
     }
-  }, true);
+  });
 }
 
 /**
