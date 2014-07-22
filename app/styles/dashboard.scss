@@ -216,4 +216,22 @@
       line-height: 70px;
     }
   }
+
+  &.send-tutorial {
+    .dash-send-container {
+      button {
+        @include animation(pulse 1s ease-in-out infinite alternate);
+      }
+    }
+  }
+}
+
+@include keyframes(pulse) {
+  0% {
+    @include box-shadow(0 0 2px 2px rgba($stellar-blue, 0));
+  }
+
+  100% {
+    @include box-shadow(0 0 4px 4px rgba($stellar-blue, 0.5));
+  }
 }

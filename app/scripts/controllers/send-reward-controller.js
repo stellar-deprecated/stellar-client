@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('SendRewardCtrl', function ($rootScope, $scope, $http, stNetwork, session) {
+sc.controller('SendRewardCtrl', function ($rootScope, $scope, $http, stNetwork, session, TutorialHelper) {
   $scope.reward = {
     rewardType: 3,
     title: 'Send stellars to a friend!',
@@ -20,6 +20,13 @@ sc.controller('SendRewardCtrl', function ($rootScope, $scope, $http, stNetwork, 
   $scope.rewards.push($scope.reward);
 
   $scope.reward.template = 'templates/send-stellar.html';
+
+  $scope.sendTutorial = function() {
+    TutorialHelper.set('dashboard', 'send-tutorial');
+
+    // Scroll up to ensure the send button is visible.
+    $('html, body').animate({scrollTop: 0}, 400);
+  };
 
   function validateTransaction(tx){
     var minAmount = $scope.giveawayAmount * .2 * 1000000;
