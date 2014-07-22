@@ -13,7 +13,7 @@ sc.service('session', function($rootScope, $http, $timeout, stNetwork) {
 
   /**
    * Record user activity, resetting the idle timeout
-   * NOTE:  we debounce this function at the second level so we aren't 
+   * NOTE:  we debounce this function at the second level so we aren't
    * resetting the timer after every key press/click.  Second-level granularity
    * is enough.
    */
@@ -22,7 +22,7 @@ sc.service('session', function($rootScope, $http, $timeout, stNetwork) {
       this.clearIdleTimeout();
       this.setIdleTimeout();
     }
-  }, 1000, true); 
+  }, 1000, true);
 
   Session.prototype.setIdleTimeout = function() {
     var self = this;
@@ -108,17 +108,11 @@ sc.service('session', function($rootScope, $http, $timeout, stNetwork) {
 
   function checkFairyAddress() {
     var session = this;
-    var config = {
-      params: {
-        destination: "stellarfoundation",
-        domain: Options.DEFAULT_FEDERATION_DOMAIN
-      }
-    }
-    $http.get(Options.API_SERVER + "/federation", config)
+    $http.get(Options.API_SERVER + "/fairy")
     .success(function (response) {
       var wallet = session.get('wallet');
       var contacts = wallet.mainData.contacts;
-      var federation_record = response.federation_json;
+      var federation_record = response.data.federation_json;
       if (wallet.mainData.stellar_contact.destination_address != federation_record.destination_address) {
         // add it as the stellar contact
         wallet.mainData.stellar_contact = federation_record;
