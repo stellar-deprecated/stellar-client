@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session) {
+sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session, TutorialHelper) {
   $scope.showRewards = false;
   $scope.showRewardsComplete = null;
   $scope.selectedReward = null;
@@ -47,6 +47,7 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
 
   $scope.closeReward = function () {
     $scope.selectedReward = null;
+    TutorialHelper.clear('dashboard');
   };
 
   $scope.computeRewardProgress = function() {
