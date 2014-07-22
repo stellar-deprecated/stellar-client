@@ -45,6 +45,7 @@ sc.controller('SendRewardCtrl', function ($rootScope, $scope, $http, stNetwork, 
   function removeSentTxListener() {
     if (turnOffTxListener) {
       turnOffTxListener();
+      turnOffTxListener = null;
     }
   }
 
