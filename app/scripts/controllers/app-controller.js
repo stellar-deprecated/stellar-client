@@ -21,12 +21,12 @@ sc.controller('AppCtrl', ['$scope','$rootScope','stNetwork', 'session', 'rpRever
     var accountObj;
 
 
-    $scope.$on('$netConnected', handleAccountLoad); 
+    $scope.$on('$netConnected', handleAccountLoad);
     $scope.$on('walletAddressLoaded', function() {
         if ($network.connected) {
             handleAccountLoad();
         }
-    }); 
+    });
 
     function reset()
     {
