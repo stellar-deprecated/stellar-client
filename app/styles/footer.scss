@@ -21,46 +21,40 @@
     display: table;
 }
 
-@mixin clearfix {
-  &:after {
-    content:"";
-    display:table;
-    clear:both;
-  }
-}
+$footer-max-width: 1440px;
 
-$max-width: 1440px;
+$footer-breakpoint-medium: 1024px;
+$footer-breakpoint-large: $footer-max-width;
+$footer-breakpoint-non-large: $footer-max-width + 1px;
 
-@mixin outer-container {
-  @include clearfix;
-  max-width: $max-width;
-  margin: {
-    left: auto;
-    right: auto;
-  }
-}
-
-$breakpoint-medium: 1024px;
-$breakpoint-large: $max-width;
-$breakpoint-non-large: $max-width + 1px;
-
-@mixin respond-to($media) {
+@mixin footer-respond-to($media) {
     @if $media == medium {
-        @media only screen and (max-width: $breakpoint-medium) { @content; }
+        @media only screen and (max-width: $footer-breakpoint-medium) { @content; }
     }
     @else if $media == large {
-        @media only screen and (max-width: $breakpoint-large) { @content; }
+        @media only screen and (max-width: $footer-breakpoint-large) { @content; }
     }
     @else if $media == non-large {
-        @media only screen and (min-width: $breakpoint-non-large) { @content; }
+        @media only screen and (min-width: $footer-breakpoint-non-large) { @content; }
     }
 }
 
 footer#colophon {
-    @include outer-container;
     margin: 0 auto;
     padding-top: 20px;
     padding-bottom: 20px;
+    max-width: $footer-max-width;
+    margin: {
+        left: auto;
+        right: auto;
+    }
+
+    &:after {
+        content:"";
+        display:table;
+        clear:both;
+    }
+
     .site-info {
         display: inline-block;
 
@@ -77,7 +71,7 @@ footer#colophon {
             margin: 0;
         }
 
-        @include respond-to(medium) {
+        @include footer-respond-to(medium) {
             text-align: center;
             display: block;
             padding: 1em 0;
@@ -94,7 +88,7 @@ footer#colophon {
     display: inline-block;
     float: right;
 
-    @include respond-to(medium) {
+    @include footer-respond-to(medium) {
         display: block;
         float: none;
         margin-bottom: 1em;
@@ -108,7 +102,7 @@ footer#colophon {
     }
     li {
         float: left;
-        @include respond-to(medium) {
+        @include footer-respond-to(medium) {
             width: 50%;
             padding-left: 0;
         }
@@ -128,7 +122,7 @@ footer#colophon {
 
 /* Sticky footer implementation.
 Buggy and disabled on iOs (by removing .flexbox with JavaScript) */
-@include respond-to(non-large) {
+@include footer-respond-to(non-large) {
     .flexbox {
         #page {
 
