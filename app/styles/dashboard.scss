@@ -220,7 +220,7 @@
   &.send-tutorial {
     .dash-send-container {
       button {
-        @include animation(pulse 500ms ease-in-out infinite alternate);
+        @include animation(pulse 1s ease-in-out infinite alternate);
       }
     }
 
