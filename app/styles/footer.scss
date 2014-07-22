@@ -1,5 +1,7 @@
 // https://github.com/stellar/first-theme/blob/master/scss/_footer.scss
 // with mixins and global dependencies included.
+// TODO: Refactor the footer into the minimal HTML and sass needed for
+// both the client and the website.
 
 #footer-wrapper {
     background-color: $light-grey;
