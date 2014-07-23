@@ -3,7 +3,7 @@ set -e
 
 npm install
 
-export NODE_ENV=production
+export NODE_ENV=${env}
 export CI=true
 
 ./node_modules/.bin/bower install
