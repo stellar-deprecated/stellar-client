@@ -43,7 +43,7 @@ sc.service('transactionHistory', function($rootScope, stNetwork, session, rpReve
       'ledger_index_min': -1,
       'ledger_index_max': -1,
       'descending': true,
-      'limit': Options.transactions_per_page,
+      //'limit': Options.transactions_per_page,
       'offset': offset
     });
 
@@ -61,6 +61,11 @@ sc.service('transactionHistory', function($rootScope, stNetwork, session, rpReve
     data.transactions.forEach(function (transaction) {
       processTransaction(transaction.tx, transaction.meta);
     });
+
+    // Request more transactions until there are no more left.
+    if (data.transactions.length) {
+      requestTransactions();
+    }
   }
 
   /**
