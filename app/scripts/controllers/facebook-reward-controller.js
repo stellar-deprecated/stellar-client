@@ -82,7 +82,7 @@ sc.controller('FacebookRewardCtrl', function ($scope, $http, session) {
         case 'unverified':
           $scope.reward.updateReward('unverified');
           break;
-        case 'ineligible_account':
+        case 'ineligible':
           $scope.reward.updateReward('ineligible');
           break;
         case 'fake_account':
