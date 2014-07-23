@@ -33,3 +33,7 @@ brew install phantomjs
 ```bash
 gulp develop
 ```
+
+# running yourself
+edit the settings in app/scripts/config.js
+You can make it point to your own stellard or wallet server
