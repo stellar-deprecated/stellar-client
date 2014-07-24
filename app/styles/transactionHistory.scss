@@ -14,6 +14,10 @@
   .tx-grid {
     background-color: transparent;
 
+    .ngViewport {
+      overflow: hidden;
+    }
+
     .ngVerticalBar {
       display: none;
     }
