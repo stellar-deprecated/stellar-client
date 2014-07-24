@@ -24,7 +24,7 @@
             <label for="receive_address" class="col-sm-3 address-title">YOUR STELLAR ADDRESS</label>
             <div class="col-sm-6 receive-address">
                 <i class="glyphicon glyphicon-globe"></i>
-                <span class="address">{{$root.account.Account || $root.account}}</span>
+                <span class="address">{{currentAddress()}}</span>
             </div>
         </div>
     </form>
