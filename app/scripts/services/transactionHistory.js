@@ -2,11 +2,8 @@
 
 var sc = angular.module('stellarClient');
 
-sc.service('transactionHistory', function($rootScope, stNetwork, session, rpReverseFederation) {
+sc.service('transactionHistory', function($rootScope, stNetwork, session, contacts) {
   var history = [];
-
-  var address;
-  var wallet;
 
   var remote;
   var account;
@@ -19,11 +16,8 @@ sc.service('transactionHistory', function($rootScope, stNetwork, session, rpReve
       // Clear the transactions history without changing the reference.
       history.length = 0;
 
-      address = session.get('address');
-      wallet = session.get('wallet');
-
       remote = stNetwork.remote;
-      account = remote.account(address);
+      account = remote.account(session.get('address'));
 
       requestTransactions();
       account.on('transaction', processNewTransaction);
@@ -37,7 +31,7 @@ sc.service('transactionHistory', function($rootScope, stNetwork, session, rpReve
    */
   function requestTransactions() {
     var txRequest = remote.request_account_tx({
-      'account': address,
+      'account': session.get('address'),
       'ledger_index_min': -1,
       'ledger_index_max': -1,
       'descending': true,
@@ -80,49 +74,27 @@ sc.service('transactionHistory', function($rootScope, stNetwork, session, rpReve
    * Clean up a transactions, add it to the history, and add the addresse to the contacts list.
    */
   function processTransaction(tx, meta, isNew) {
-    var processedTxn = JsonRewriter.processTxn(tx, meta, address);
+    var processedTxn = JsonRewriter.processTxn(tx, meta, session.get('address'));
 
     $rootScope.$apply(function() {
       if (processedTxn) {
         var transaction = processedTxn.transaction;
 
         if (processedTxn.tx_type === "Payment" && processedTxn.tx_result === "tesSUCCESS" && transaction) {
-          addContact(transaction);
+          contacts.addContact(transaction.counterparty);
+
           if (isNew) {
             history.unshift(processedTxn);
           } else {
             history.push(processedTxn);
           }
+
           $rootScope.$broadcast('$paymentNotification', transaction);
         }
       }
     });
 
     return processedTxn;
-  }
-
-  /**
-   * If the address is not in the contact list, try to create a contact by
-   * reverse federating the address.
-   */
-  function addContact(transaction) {
-    var contacts = wallet.mainData.contacts;
-    var address = transaction.counterparty;
-
-    if (contacts[address]) {
-      // Address is already in the contact list.
-      return;
-    }
-
-    rpReverseFederation.check_address(address)
-      .then(function (result) {
-        if (result) {
-          // Add the reverse federation info to the user's wallet.
-          contacts[address] = result;
-          session.syncWallet(wallet, "update");
-        }
-      })
-    ;
   }
 
   /**
