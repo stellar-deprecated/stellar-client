@@ -1,36 +1,38 @@
 <div class="login client-section">
-    <div ng-include="'templates/flash-message-container.html'"></div>
+    <div class="container">
+        <div ng-include="'templates/flash-message-container.html'"></div>
 
-    <h1 class="title">Log in</h1>
+        <h1 class="title">Log in</h1>
 
-    <form role="form" class="form-horizontal stellar-form" ng-controller="LoginCtrl">
-        <div class="form-group">
-            <div class="errors col-sm-12">
-                <div class="tip col-sm-offset-6 col-sm-3">{{ loginError }}</div>
+        <form role="form" class="form-horizontal stellar-form" ng-controller="LoginCtrl">
+            <div class="form-group">
+                <div class="errors col-sm-12">
+                    <div class="tip col-sm-offset-6 col-sm-3">{{ loginError }}</div>
+                </div>
+                <label for="username" class="col-sm-3">USERNAME</label>
+                <div class="col-sm-6 input-icon-wrapper">
+                    <input id="username" type="text" class="form-control" ng-model="username">
+                    <i class="icon icon-user"></i>
+                </div>
             </div>
-            <label for="username" class="col-sm-3">USERNAME</label>
-            <div class="col-sm-6 input-icon-wrapper">
-                <input id="username" type="text" class="form-control" ng-model="username">
-                <i class="icon icon-user"></i>
+            <div class="form-group">
+                <div class="errors col-sm-12"></div>
+                <label for="password" class="col-sm-3">PASSWORD</label>
+                <div class="col-sm-6 input-icon-wrapper">
+                    <input id="password" type="password" class="form-control" ng-model="password">
+                    <i class="icon icon-key"></i>
+                </div>
             </div>
-        </div>
-        <div class="form-group">
-            <div class="errors col-sm-12"></div>
-            <label for="password" class="col-sm-3">PASSWORD</label>
-            <div class="col-sm-6 input-icon-wrapper">
-                <input id="password" type="password" class="form-control" ng-model="password">
-                <i class="icon icon-key"></i>
+            <div class="form-group">
+                <div class="col-sm-offset-3 col-sm-6">
+                    <button type="submit" class="stellar-button btn btn-default" ng-click="attemptLogin()">{{attemptLogin.isLoading() ? 'Logging in...' : 'Log in'}}</button>
+                </div>
             </div>
-        </div>
-        <div class="form-group">
-            <div class="col-sm-offset-3 col-sm-6">
-                <button type="submit" class="stellar-button btn btn-default" ng-click="attemptLogin()">{{attemptLogin.isLoading() ? 'Logging in...' : 'Log in'}}</button>
+            <div class="form-group">
+                <div class="col-sm-offset-3 col-sm-6">
+                    <span class="recovery-info"><a href="#/recovery">Forgot password?</a></span>
+                </div>
             </div>
-        </div>
-        <div class="form-group">
-            <div class="col-sm-offset-3 col-sm-6">
-                <span class="recovery-info"><a href="#/recovery">Forgot password?</a></span>
-            </div>
-        </div>
-    </form>
+        </form>
+    </div>
 </div>

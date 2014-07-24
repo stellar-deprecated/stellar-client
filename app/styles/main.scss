@@ -32,7 +32,6 @@ body {
   width: 100%;
   color: $dark-grey;
   font-family: $avenir;
-  min-width: 450px;
 }
 
 .stellar-form {
@@ -289,9 +288,8 @@ body {
   > div {
      .title {
       font-size: 21px;
-      padding-top: 15px;
+      padding-top: 20px;
       padding-bottom: 20px;
-      margin-top: 5px;
     }
   }
 }
@@ -381,8 +379,6 @@ body {
 }
 
 .client-section {
-  padding-left: 20px;
-  padding-right: 20px;
 
   &:not(:last-child){
     border-bottom: $grey-border-bottom;
@@ -403,7 +399,6 @@ body {
 @media (min-width: 1440px) {
   body,
   .client-nav {
-    width: 1440px;
     margin: 0 auto;
   }
 }

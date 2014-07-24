@@ -1,194 +1,196 @@
 <div class="settings" ng-controller="SettingsCtrl">
-    <div class="client-section">
-        <h1 class="title">Settings</h1>
-    </div>
-
-    <!-- TODO: add user photos
-    <div class="client-section settings-section">
-        <div class="row">
-            <div class="settings-label col-sm-3">
-                <img id="picture" src="http://i.imgur.com/h6R4Bhp.jpg"/>
-            </div>
-            <div class="settings-control col-sm-4 row">
-                <div class="col-sm-1">
-                    <span id="button-icon" class="glyphicon glyphicon-picture"/>
-                </div>
-                <div class="col-sm-8">
-                    <button id="photo-upload" class="stellar-button btn btn-default ng-binding">Change photo</button>
-                    <div class="secondary-action">
-                        <a href="#">Remove my photo</a>
-                    </div>
-                </div>
-            </div>
+    <div class="container">
+        <div class="client-section">
+            <h1 class="title">Settings</h1>
         </div>
-    </div>
-    -->
 
-    <div class="client-section">
-        <div class="settings-section">
-            <div class="title">
-                <span class="glyphicon glyphicon-credit-card"/>
-                <span>Account</span>
-            </div>
+        <!-- TODO: add user photos
+        <div class="client-section settings-section">
             <div class="row">
-                <div class="settings-label col-sm-3">EMAIL</div>
-                <div class="settings-control col-sm-9">
-                    <div class="row">
-                        <div class="col-sm-1">
-                            <span class="icon icon-email"/>
-                        </div>
-                        <div class="col-sm-11">
-                            <span>{{email ? email : 'Add your email!'}}</span>
-                            <!-- TODO: show if verified -->
-                            <span class="verified-email-status icon icon-tick" ng-show="email"/>
-                        </div>
-                    </div>
+                <div class="settings-label col-sm-3">
+                    <img id="picture" src="http://i.imgur.com/h6R4Bhp.jpg"/>
                 </div>
-            </div>
-            <div class="row">
-                <div class="settings-label col-sm-3">RECOVERY TOKEN</div>
-                <div class="settings-control col-sm-4">
-                    <div class="row">
-                        <div class="col-sm-1">
-                            <span class="icon icon-key"/>
-                        </div>
-                        <div class="col-sm-8">
-                            <span id="recovertoggle" class="error-block" data-toggle="tooltip" data-placement="right" data-template='<div class="tooltip error-tip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>' st-toggle ctrl="toggle.recover"></span>
-                        </div>
+                <div class="settings-control col-sm-4 row">
+                    <div class="col-sm-1">
+                        <span id="button-icon" class="glyphicon glyphicon-picture"/>
                     </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="settings-label col-sm-3">SEND EMAILS</div>
-                <div class="settings-control col-sm-4">
-                    <div class="row">
-                        <div class="col-sm-1">
-                            <span class="icon icon-email"/>
-                        </div>
-                        <div class="col-sm-8">
-                            <span id="emailtoggle" class="error-block" data-toggle="tooltip" data-placement="right" data-template='<div class="tooltip error-tip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>' st-toggle ctrl="toggle.email"></span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="settings-label col-sm-3">FEDERATION</div>
-                <div class="settings-control col-sm-4">
-                    <div class="row">
-                        <div class="col-sm-1">
-                            <span class="icon icon-user"/>
-                        </div>
-                        <div class="col-sm-8">
-                            <span id="federatetoggle" class="error-block" data-toggle="tooltip" data-placement="right" data-template='<div class="tooltip error-tip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>' st-toggle ctrl="toggle.federate"></span>
+                    <div class="col-sm-8">
+                        <button id="photo-upload" class="stellar-button btn btn-default ng-binding">Change photo</button>
+                        <div class="secondary-action">
+                            <a href="#">Remove my photo</a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        -->
 
-        <div class="settings-section">
-            <div class="title">
-                <span class="icon icon-lock"/>
-                <span>Security</span>
-            </div>
-
-            <!-- TODO change email
-            <div class="row">
-                <div class="settings-label col-sm-3">EMAIL</div>
-                <div class="settings-control col-sm-9">
-                    <div class="row">
-                        <div class="col-sm-1 icon-col">
-                            <span class="icon icon-email"/>
+        <div class="client-section">
+            <div class="settings-section">
+                <div class="title">
+                    <span class="glyphicon glyphicon-credit-card"/>
+                    <span>Account</span>
+                </div>
+                <div class="row">
+                    <div class="settings-label col-sm-3">EMAIL</div>
+                    <div class="settings-control col-sm-9">
+                        <div class="row">
+                            <div class="col-sm-1">
+                                <span class="icon icon-email"/>
+                            </div>
+                            <div class="col-sm-11">
+                                <span>{{email ? email : 'Add your email!'}}</span>
+                                <!-- TODO: show if verified -->
+                                <span class="verified-email-status icon icon-tick" ng-show="email"/>
+                            </div>
                         </div>
-                        <div class="col-sm-4">
-                            <div class="change-email-control" ng-show='!changingEmail'>andrew@gostellar.org</div>
-                            <input class="change-email-control form-control" ng-show="changingEmail"></input>
-                            <div class="secondary-action" ng-click='changingEmail = !changingEmail'>
-                                <a href="">{{ changingEmail ? 'Cancel' : 'Change Email'}}</a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="settings-label col-sm-3">RECOVERY TOKEN</div>
+                    <div class="settings-control col-sm-4">
+                        <div class="row">
+                            <div class="col-sm-1">
+                                <span class="icon icon-key"/>
+                            </div>
+                            <div class="col-sm-8">
+                                <span id="recovertoggle" class="error-block" data-toggle="tooltip" data-placement="right" data-template='<div class="tooltip error-tip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>' st-toggle ctrl="toggle.recover"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="settings-label col-sm-3">SEND EMAILS</div>
+                    <div class="settings-control col-sm-4">
+                        <div class="row">
+                            <div class="col-sm-1">
+                                <span class="icon icon-email"/>
+                            </div>
+                            <div class="col-sm-8">
+                                <span id="emailtoggle" class="error-block" data-toggle="tooltip" data-placement="right" data-template='<div class="tooltip error-tip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>' st-toggle ctrl="toggle.email"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="settings-label col-sm-3">FEDERATION</div>
+                    <div class="settings-control col-sm-4">
+                        <div class="row">
+                            <div class="col-sm-1">
+                                <span class="icon icon-user"/>
+                            </div>
+                            <div class="col-sm-8">
+                                <span id="federatetoggle" class="error-block" data-toggle="tooltip" data-placement="right" data-template='<div class="tooltip error-tip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>' st-toggle ctrl="toggle.federate"></span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            -->
 
-            <!-- TODO change password
-            <div class="row">
-                <div class="settings-label col-sm-3">PASSWORD</div>
-                <div class="settings-control col-sm-9">
-                    <div class="row">
-                        <div class="col-sm-1 icon-col">
+            <div class="settings-section">
+                <div class="title">
+                    <span class="icon icon-lock"/>
+                    <span>Security</span>
+                </div>
+
+                <!-- TODO change email
+                <div class="row">
+                    <div class="settings-label col-sm-3">EMAIL</div>
+                    <div class="settings-control col-sm-9">
+                        <div class="row">
+                            <div class="col-sm-1 icon-col">
+                                <span class="icon icon-email"/>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="change-email-control" ng-show='!changingEmail'>andrew@gostellar.org</div>
+                                <input class="change-email-control form-control" ng-show="changingEmail"></input>
+                                <div class="secondary-action" ng-click='changingEmail = !changingEmail'>
+                                    <a href="">{{ changingEmail ? 'Cancel' : 'Change Email'}}</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                -->
+
+                <!-- TODO change password
+                <div class="row">
+                    <div class="settings-label col-sm-3">PASSWORD</div>
+                    <div class="settings-control col-sm-9">
+                        <div class="row">
+                            <div class="col-sm-1 icon-col">
+                                <span class="icon icon-key"/>
+                            </div>
+                            <div class="col-sm-10">
+                                <span ng-show="!changingPassword">***********************</span>
+                                <div class="change-password-control" ng-show="changingPassword">
+                                    <div class="row">
+                                        <div class="col-sm-12 col-md-3">
+                                            <label for="recovery-code">Enter Recovery Code:</label>
+                                        </div>
+                                        <div class="col-sm-12 col-md-4">
+                                            <input id="recovery-code" class="form-control"></input>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12 col-md-3">
+                                            <label for="pasword">Enter New Password:</label>
+                                        </div>
+                                        <div class="col-sm-12 col-md-4">
+                                            <input id="password" class="form-control"></input>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12 col-md-3">
+                                            <label for="confirm-password">Confirm New Password:</label>
+                                        </div>
+                                        <div class="col-sm-12 col-md-4">
+                                            <input id="confirm-password" class="form-control"></input>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="secondary-action">
+                                    <a href="" ng-click="changingPassword = !changingPassword">{{changingPassword ? 'Cancel' : 'Change Password'}}</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                -->
+
+                <div class="row">
+                    <div class="settings-label col-sm-3">SECRET KEY</div>
+                    <div class="settings-control col-sm-4 row">
+                        <div class="col-sm-1">
                             <span class="icon icon-key"/>
                         </div>
                         <div class="col-sm-10">
-                            <span ng-show="!changingPassword">***********************</span>
-                            <div class="change-password-control" ng-show="changingPassword">
-                                <div class="row">
-                                    <div class="col-sm-12 col-md-3">
-                                        <label for="recovery-code">Enter Recovery Code:</label>
-                                    </div>
-                                    <div class="col-sm-12 col-md-4">
-                                        <input id="recovery-code" class="form-control"></input>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-12 col-md-3">
-                                        <label for="pasword">Enter New Password:</label>
-                                    </div>
-                                    <div class="col-sm-12 col-md-4">
-                                        <input id="password" class="form-control"></input>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-12 col-md-3">
-                                        <label for="confirm-password">Confirm New Password:</label>
-                                    </div>
-                                    <div class="col-sm-12 col-md-4">
-                                        <input id="confirm-password" class="form-control"></input>
-                                    </div>
-                                </div>
-                            </div>
+                            <span>{{reveal ? secretKey : '***********************'}}</span>
                             <div class="secondary-action">
-                                <a href="" ng-click="changingPassword = !changingPassword">{{changingPassword ? 'Cancel' : 'Change Password'}}</a>
+                                <span id="reveal-key" ng-click="reveal = !reveal">{{reveal ? 'Hide' : 'Reveal'}}</span>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            -->
 
-            <div class="row">
-                <div class="settings-label col-sm-3">SECRET KEY</div>
-                <div class="settings-control col-sm-4 row">
-                    <div class="col-sm-1">
-                        <span class="icon icon-key"/>
-                    </div>
-                    <div class="col-sm-10">
-                        <span>{{reveal ? secretKey : '***********************'}}</span>
-                        <div class="secondary-action">
-                            <span id="reveal-key" ng-click="reveal = !reveal">{{reveal ? 'Hide' : 'Reveal'}}</span>
+                <!-- TODO backup
+                <div class="row">
+                    <div class="settings-label col-sm-3">BACK UP</div>
+                    <div class="settings-control col-sm-4 row">
+                        <div class="col-sm-1">
+                            <span class="glyphicon glyphicon-download"/>
                         </div>
+                        <a href="#" class="icon col-sm-8">Backup your wallet</a>
                     </div>
                 </div>
-            </div>
+                -->
 
-            <!-- TODO backup
-            <div class="row">
-                <div class="settings-label col-sm-3">BACK UP</div>
-                <div class="settings-control col-sm-4 row">
-                    <div class="col-sm-1">
-                        <span class="glyphicon glyphicon-download"/>
-                    </div>
-                    <a href="#" class="icon col-sm-8">Backup your wallet</a>
+                <!-- TODO add save when we need it
+                <div class="row col-md-offset-3">
+                    <button class="stellar-button btn btn-default ng-binding col-sm-6 col-md-offset-4" ng-click="saveSettings()" type="submit">Save</button>
                 </div>
+                -->
             </div>
-            -->
-
-            <!-- TODO add save when we need it
-            <div class="row col-md-offset-3">
-                <button class="stellar-button btn btn-default ng-binding col-sm-6 col-md-offset-4" ng-click="saveSettings()" type="submit">Save</button>
-            </div>
-            -->
         </div>
     </div>
 </div>
