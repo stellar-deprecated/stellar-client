@@ -122,7 +122,7 @@ sc.service('session', function($rootScope, $http, $timeout, stNetwork) {
       updateToken: this.get('wallet').keychainData.updateToken,
       link: link
     }
-    $http.post(Options.API_SERVER + "/user/picture", params)
+    $http.put(Options.API_SERVER + "/user/picture", params)
     .success(function (response) {
       // woohoo
     })
