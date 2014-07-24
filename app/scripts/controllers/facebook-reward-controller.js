@@ -7,7 +7,7 @@ sc.controller('FacebookRewardCtrl', function ($scope, $http, session) {
     rewardType: 1,
     title: 'Receive your first stellars on us!',
     subtitle: 'Log in with Facebook',
-    innerTitle: 'Receive your first stellars.',
+    innerTitle: 'Receive your first stellars',
     status: 'incomplete',
     error: null,
     updateReward: function (status) {
