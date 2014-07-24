@@ -22,10 +22,9 @@
     <!-- endbuild -->
 
     <script src="https://cdn.ravenjs.com/1.1.15/jquery,native/raven.min.js"></script>
-    <script>
-        Raven.config('https://5c08986e949742d2bb29e1ffac78e50a@app.getsentry.com/26645', {}).install()
-    </script>
-    <!-- build:js scripts/vendor/modernizr.js -->
+    <!-- build:js scripts/vendor/head.js -->
+    <script src="scripts/config.js"></script>
+    <script src="scripts/raven-setup.js"></script>
     <script src="bower_components/modernizr/modernizr.js"></script>
     <!-- endbuild -->
 </head>
@@ -152,7 +151,6 @@
 <script src="scripts/app.js"></script>
 <script src="scripts/states.js"></script>
 <script src="scripts/templates.js"></script>
-<script src="scripts/config.js"></script>
 <script src="scripts/utilities/fb.js"></script>
 
 <script src="scripts/controllers/app-controller.js"></script>

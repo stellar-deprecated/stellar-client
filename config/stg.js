@@ -21,7 +21,7 @@ var Options = {
 
     INFLATION_DEST: 'g4eRqgZfzfj3132y17iaf2fp6HQj1gofjt',
 
-    APP_ID: '1512347158994532',
+    APP_ID: '1514787142083867',
     DOMAIN_NAME: 'stg.gostellar.org',
     DEFAULT_FEDERATION_DOMAIN: 'stg.gostellar.org',
     API_SERVER: 'https://api-stg.gostellar.org',
@@ -34,7 +34,7 @@ var Options = {
     IDLE_LOGOUT_TIMEOUT : 15 * 60 * 1000, //15 minutes
 
     REPORT_ERRORS : true,
-
+    SENTRY_DSN : "https://4574695240794dc090caaa3f2d02fd6c@app.getsentry.com/27687",
     // Number of transactions each page has in balance tab notifications
     transactions_per_page: 50
 };
