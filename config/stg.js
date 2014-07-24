@@ -21,7 +21,7 @@ var Options = {
 
     INFLATION_DEST: 'g4eRqgZfzfj3132y17iaf2fp6HQj1gofjt',
 
-    APP_ID: '1512347158994532',
+    APP_ID: '1514787142083867',
     DOMAIN_NAME: 'stg.gostellar.org',
     DEFAULT_FEDERATION_DOMAIN: 'stg.gostellar.org',
     API_SERVER: 'https://api-stg.gostellar.org',
