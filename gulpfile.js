@@ -133,7 +133,7 @@ gulp.task('fonts', ['iconfont'], function () {
 });
 
 gulp.task('config', function() {
-    var env = process.env.NODE_ENV || 'development'
+    var env = process.env.NODE_ENV || 'dev'
     gulp.src('config/' + env + ".js")
         .pipe($.rename(function (path) {
             path.basename = "config";
