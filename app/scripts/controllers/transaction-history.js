@@ -2,8 +2,9 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('TransactionHistoryCtrl', function($scope)
-{
+sc.controller('TransactionHistoryCtrl', function($scope, transactionHistory) {
+  transactionHistory.init();
+
   $scope.typeIcons = {
     'sent': 'icon icon-send',
     'received': 'icon icon-receive'
