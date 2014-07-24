@@ -3,7 +3,7 @@
 var sc = angular.module('stellarClient');
 
 sc.service('transactionHistory', function($rootScope, stNetwork, session, rpReverseFederation) {
-  $rootScope.history = [];
+  var history = [];
   var offset = 0;
 
   var address;
@@ -18,7 +18,7 @@ sc.service('transactionHistory', function($rootScope, stNetwork, session, rpReve
   function init() {
     $rootScope.$on('$netConnected', function() {
       // Clear the transactions history without changing the reference.
-      $rootScope.history.length = 0;
+      history.length = 0;
       offset = 0;
 
       address = session.get('address');
@@ -93,9 +93,9 @@ sc.service('transactionHistory', function($rootScope, stNetwork, session, rpReve
         if (processedTxn.tx_type === "Payment" && processedTxn.tx_result === "tesSUCCESS" && transaction) {
           addContact(transaction);
           if (isNew) {
-            $rootScope.history.unshift(processedTxn);
+            history.unshift(processedTxn);
           } else {
-            $rootScope.history.push(processedTxn);
+            history.push(processedTxn);
           }
           $rootScope.$broadcast('$paymentNotification', transaction);
         }
@@ -137,6 +137,7 @@ sc.service('transactionHistory', function($rootScope, stNetwork, session, rpReve
   }
 
   return {
-    init: init
+    init: init,
+    history: history
   };
 });

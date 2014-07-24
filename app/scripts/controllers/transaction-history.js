@@ -10,6 +10,7 @@ sc.controller('TransactionHistoryCtrl', function($scope, transactionHistory) {
     'received': 'icon icon-receive'
   };
 
+  $scope.history = transactionHistory.history;
   $scope.sortedHistory = [];
   $scope.transactionPage = [];
 
