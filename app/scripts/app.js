@@ -76,13 +76,19 @@ stellarClient.config(function($httpProvider, $stateProvider, $urlRouterProvider,
 
 stellarClient.run(function($rootScope, $state, $cookies, session, FlashMessages){
   $rootScope.balance = 'loading...';
-  $rootScope.unsupportedBrowser = !Modernizr.websockets;
+
+  // HACK: A specific version of Android's stock browser (AppleWebKit/534.30)
+  // has a broken implementation of WebSocket. This can be removed if Modernizr
+  // fixes the issue (https://github.com/Modernizr/Modernizr/issues/1399).
+  $rootScope.unsupportedBrowser = !Modernizr.websockets || navigator.userAgent.match('AppleWebKit/534.30');
+
 
   $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){
 
     if($rootScope.unsupportedBrowser && toState.name !== "browser_unsupported") {
       $state.transitionTo('browser_unsupported');
       event.preventDefault();
+      return;
     }
 
     switch(toState.url){
