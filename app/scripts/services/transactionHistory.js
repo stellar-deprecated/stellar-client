@@ -4,7 +4,6 @@ var sc = angular.module('stellarClient');
 
 sc.service('transactionHistory', function($rootScope, stNetwork, session, rpReverseFederation) {
   var history = [];
-  var offset = 0;
 
   var address;
   var wallet;
@@ -19,7 +18,6 @@ sc.service('transactionHistory', function($rootScope, stNetwork, session, rpReve
     $rootScope.$on('$netConnected', function() {
       // Clear the transactions history without changing the reference.
       history.length = 0;
-      offset = 0;
 
       address = session.get('address');
       wallet = session.get('wallet');
@@ -44,7 +42,7 @@ sc.service('transactionHistory', function($rootScope, stNetwork, session, rpReve
       'ledger_index_max': -1,
       'descending': true,
       //'limit': Options.transactions_per_page,
-      'offset': offset
+      'offset': history.length
     });
 
     txRequest.on('success', processTransactionSet);
@@ -56,7 +54,6 @@ sc.service('transactionHistory', function($rootScope, stNetwork, session, rpReve
    */
   function processTransactionSet(data) {
     data.transactions = data.transactions || [];
-    offset += data.transactions.length;
 
     data.transactions.forEach(function (transaction) {
       processTransaction(transaction.tx, transaction.meta);
@@ -72,7 +69,6 @@ sc.service('transactionHistory', function($rootScope, stNetwork, session, rpReve
    * Process new transactions as they occur.
    */
   function processNewTransaction(data) {
-    offset++;
     var tx = processTransaction(data.transaction, data.meta);
 
     if (tx.tx_result === "tesSUCCESS" && tx.transaction) {
