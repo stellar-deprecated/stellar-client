@@ -75,19 +75,20 @@ sc.controller('AppCtrl', function($scope, $rootScope, stNetwork, session, $state
         remote.once('disconnected', listenerCleanupFn);
 
         accountObj.entry(function (err, entry) {
-            if (err) {
-                switch(err.remote.error) {
-                    case 'actNotFound':
-                        // The account is unfunded.
-                        $rootScope.accountStatus = 'loaded';
-                        break;
-                    default:
-                        $rootScope.accountStatus = 'error';
+            $rootScope.$apply(function() {
+                if (err) {
+                    switch(err.remote.error) {
+                        case 'actNotFound':
+                            // The account is unfunded.
+                            $rootScope.accountStatus = 'loaded';
+                            break;
+                        default:
+                            $rootScope.accountStatus = 'error';
+                    }
+                } else {
+                    $rootScope.accountStatus = 'loaded';
                 }
-            } else {
-                $rootScope.accountStatus = 'loaded';
-            }
-            $scope.$apply(function(){});
+            });
         });
     };
 
