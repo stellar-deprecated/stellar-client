@@ -8,4 +8,8 @@ sc.controller('NavCtrl', function($scope, session) {
 
   // Allow the nav to access the session variables.
   $scope.session = session;
+
+  $scope.$on('profilePictureLinkChanged', function () {
+    $scope.pictureLink = session.get('profilePictureLink');
+  });
 });

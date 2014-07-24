@@ -53,7 +53,12 @@
                 </ul>
 
                 <ul class="nav navbar-nav navbar-right ng-hide" ng-show="session.get('loggedIn')">
-                    <li><a href="#/settings">{{ session.get('username') }}</a></li>
+                    <li>
+                        <a class="username" href="#/settings">{{ session.get('username') }}</a>
+                        <div class="profile-picture" ng-class="{active: pictureLink}">
+                            <img ng-src="{{pictureLink}}" ng-show="pictureLink"/>
+                        </div>
+                    </li>
                     <li><a href="#/logout" ui-sref="logout">LOG OUT</a></li>
                 </ul>
             </div>

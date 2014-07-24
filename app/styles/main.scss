@@ -261,6 +261,29 @@ body {
       }
     }
 
+    li {
+      line-height:30px;
+    }
+
+    .username {
+      display:inline-block;
+    }
+
+    .profile-picture {
+      display:inline;
+      img {
+        width:0px;
+        border-radius:30px;
+      }
+    }
+
+    .profile-picture.active {
+      img {
+        width:60px;
+        @include transition(width 200ms ease-in-out);
+      }
+    }
+
     .sign-up {
       border: 1px solid $grey-border;
     }

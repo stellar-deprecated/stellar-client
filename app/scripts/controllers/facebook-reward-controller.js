@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('FacebookRewardCtrl', function ($scope, $http, session) {
+sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, session) {
   $scope.reward = {
     rewardType: 1,
     title: 'Receive your first stellars on us!',
@@ -91,7 +91,8 @@ sc.controller('FacebookRewardCtrl', function ($scope, $http, session) {
     fbLoginStart($http, username, updateToken, facebookLoginSuccess, facebookLoginError);
   };
 
-  $scope.$on('profilePicturePicked', function () {
+  $scope.$on('profilePicturePicked', function (event, args) {
+    session.setProfilePicture(args.link);
     $scope.claim();
   });
 

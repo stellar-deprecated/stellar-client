@@ -43,8 +43,7 @@ sc.controller('FacebookPhotoPickerCtrl', function ($scope, $http, session) {
         var callbackSubmit = function(photoId) {
             var photo;
             photo = CSPhotoSelector.getPhotoById(photoId);
-            console.log(photo);
-            $scope.$emit('profilePicturePicked');
+            $scope.$emit('profilePicturePicked', {link: photo.picture});
         };
 
 

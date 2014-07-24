@@ -67,6 +67,8 @@ sc.service('session', function($rootScope, $http, $timeout, stNetwork) {
 
     // check for the most up to date fairy address
     checkFairyAddress.bind(this)();
+    // pull down this user's profile picture
+    loadProfilePicture.bind(this)();
     $rootScope.account = {}
     $rootScope.$broadcast('walletAddressLoaded', {account: signingKeys.address, secret: signingKeys.secret});
     stNetwork.init();
@@ -106,6 +108,29 @@ sc.service('session', function($rootScope, $http, $timeout, stNetwork) {
 
   };
 
+  /**
+  * This function will set the session variable profilePictureLink and also sync it to the
+  * server.
+  */
+  Session.prototype.setProfilePicture = function(link) {
+    this.put('profilePictureLink', link);
+    $rootScope.$broadcast('profilePictureLinkChanged');
+
+    // sync to API server
+    var params = {
+      username: this.get('username'),
+      updateToken: this.get('wallet').keychainData.updateToken,
+      link: link
+    }
+    $http.post(Options.API_SERVER + "/user/picture", params)
+    .success(function (response) {
+      // woohoo
+    })
+    .error(function (response) {
+      // TODO: error syncing to server
+    })
+  };
+
   function checkFairyAddress() {
     var session = this;
     $http.get(Options.API_SERVER + "/fairy")
@@ -121,6 +146,23 @@ sc.service('session', function($rootScope, $http, $timeout, stNetwork) {
         session.syncWallet(wallet, 'update');
       }
     });
+  }
+
+  function loadProfilePicture() {
+    var session = this;
+    var config = {
+      params: {
+        username: session.get('username'),
+        updateToken: session.get('wallet').keychainData.updateToken
+      }
+    }
+    $http.get(Options.API_SERVER + "/user/picture", config)
+    .success(function (response) {
+      if (response.message) {
+        session.put('profilePictureLink', response.message);
+        $rootScope.$broadcast('profilePictureLinkChanged');
+      }
+    })
   }
 
   return new Session();
