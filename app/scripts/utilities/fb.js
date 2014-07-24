@@ -30,41 +30,11 @@ window.fbAsyncInit = function() {
  */
 function fbLoginStart(http, username, updateToken, success, error){
   console.log("fbAuth");
-  var data = {
-    username: username,
-    updateToken: updateToken
-  };
   FB.login(function (response) {
     if (response.status === 'connected') {
-      data.fbID = response.authResponse.userID;
-      data.fbAccessToken = response.authResponse.accessToken;
-      claim(http, data, success, error);
+      success(response);
     } else {
       error(response);
     }
   }, {scope: 'user_photos'});
-}
-
-/**
- * Send the facebook auth data to the server to be verified and saved.
- *
- * @param {object} data
- * @param {string} data.username
- * @param {string} data.updateToken
- * @param {string} data.fbID
- * @param {string} data.fbAccessToken
- * @param {function} success callback
- * @param {function} error callback
- */
-function claim(http, data, success, error) {
-  http.post(Options.API_SERVER + "/claim/facebook", data)
-    .success(
-      function (response) {
-        console.log(response.status);
-        success(response.message);
-      })
-    .error(function (response) {
-        console.log(response.status);
-        error(response);
-      });
 }

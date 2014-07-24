@@ -60,12 +60,52 @@ sc.controller('FacebookRewardCtrl', function ($scope, $http, session) {
 
   $scope.reward.template = 'templates/facebook-button.html';
 
+
+  $scope.facebookConnected = false;
+  $scope.login = function () {
+    var username = session.get('username');
+    var updateToken = session.get('wallet').keychainData.updateToken;
+    $scope.claimData = {
+      username: username,
+      updateToken: updateToken
+    };
+    // send the facebook data to the claim server
+    fbLoginStart($http, username, updateToken,
+      function (success) {
+        $scope.$apply(function () {
+          $scope.claimData.fbID = success.authResponse.userID;
+          $scope.claimData.fbAccessToken = success.authResponse.accessToken;
+          $scope.facebookConnected = true;
+        })
+      },
+      function (error) {
+        facebookLoginError();
+      }
+    );
+  }
+
   $scope.facebookLogin = function () {
     var username = session.get('username');
     var updateToken = session.get('wallet').keychainData.updateToken;
     $scope.loading = true;
     fbLoginStart($http, username, updateToken, facebookLoginSuccess, facebookLoginError);
   };
+
+  $scope.$on('profilePicturePicked', function () {
+    $scope.claim();
+  });
+
+  $scope.claim = function() {
+    $http.post(Options.API_SERVER + "/claim/facebook", $scope.claimData)
+      .success(
+        function (response) {
+          facebookLoginSuccess(response.message);
+        })
+      .error(function (response) {
+          console.log(response.status);
+          facebookLoginError(response);
+        });
+  }
 
   function facebookLoginSuccess(status) {
     $scope.rewards[1].status = status;

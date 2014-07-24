@@ -1,12 +1,21 @@
-<div class="body">
-    Connect and receive {{giveawayAmount}} stellars on us!<br>
-    We are using Facebook to confirm that each person is funded only once.<br>
-    We will not post on your Facebook.
-</div>
-<div class="fbconnect">
-    <button class="fbbutton" ng-click="facebookLogin()">
-        <div class="fblogo">f</div>
-        <div class="fblabel" ng-hide="loading">Connect with Facebook</div>
-        <div class="fblabel" ng-show="loading">Loading...</div>
+<div class="connect-facedbook" ng-show="!facebookConnected">
+    <div class="info">
+        Connect and receive {{giveawayAmount}} stellars on us!<br>
+        We are using Facebook to confirm that each person is funded only once.<br>
+        We will not post on your Facebook.
     </div>
+    <div class="fbconnect">
+        <button class="fbbutton" ng-click="login()">
+            <div class="fblogo">f</div>
+            <div class="fblabel" ng-hide="loading">Connect with Facebook</div>
+            <div class="fblabel" ng-show="loading">Loading...</div>
+        </button>
+    </div>
+</div>
+<div class="pick-photo" ng-show="facebookConnected">
+    <div class="info">
+        Pick your profile photo!
+    </div>
+    <div ng-include="'templates/facebook-photo-picker.html'"></div>
+    <a href="#" ng-click="claim()">Skip</a>
 </div>
