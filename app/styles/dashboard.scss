@@ -110,6 +110,9 @@
       .arrow-row {
 
         height:25px;
+        .col-sm-3{
+          float: none;
+        }
 
         .arrow {
           margin:auto;
@@ -118,7 +121,14 @@
           border-left: 20px solid transparent;
           border-right: 20px solid transparent;
           border-bottom: 26px solid white;
+          margin-top: -23px;
+          &.arrow-shadow {
+            border-bottom-color: $grey-border;
+            margin-top: 0;
+            
+          }
         }
+
       }
     }
   }
