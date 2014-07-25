@@ -46,7 +46,7 @@ sc.service('session', function($rootScope, $http, $timeout, stNetwork) {
     return $http.post(url, data)
       .success(function (response) {
         if (Options.PERSISTENT_SESSION) {
-          localStorage.wallet = JSON.stringify(wallet);
+          sessionStorage.wallet = JSON.stringify(wallet);
         }
       });
   };
@@ -55,7 +55,7 @@ sc.service('session', function($rootScope, $http, $timeout, stNetwork) {
     this.put('wallet', wallet);
 
     if (Options.PERSISTENT_SESSION) {
-      localStorage.wallet = JSON.stringify(wallet);
+      sessionStorage.wallet = JSON.stringify(wallet);
     }
 
     var signingKeys = wallet.keychainData.signingKeys;
@@ -77,9 +77,9 @@ sc.service('session', function($rootScope, $http, $timeout, stNetwork) {
   };
 
   Session.prototype.loginFromStorage = function($scope) {
-    if(localStorage.wallet) {
+    if(sessionStorage.wallet) {
       try {
-        var wallet = new Wallet(JSON.parse(localStorage.wallet));
+        var wallet = new Wallet(JSON.parse(sessionStorage.wallet));
 
         if (wallet) {
           this.login(wallet);
@@ -92,8 +92,10 @@ sc.service('session', function($rootScope, $http, $timeout, stNetwork) {
   Session.prototype.logout = function() {
     cache = {};
 
+
     if (Options.PERSISTENT_SESSION){
-      delete localStorage.wallet;
+      //TODO: remove keys and such
+      delete sessionStorage.wallet;
     }
 
     delete $rootScope.account;
