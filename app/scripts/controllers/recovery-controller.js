@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('RecoveryCtrl', function($scope, $state, $http, $timeout, session) {
+sc.controller('RecoveryCtrl', function($scope, $state, $http, $timeout, session, Wallet) {
   $scope.username = null;
   $scope.userRecoveryCode = null;
   $scope.serverRecoveryCode = null;

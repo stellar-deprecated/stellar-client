@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('ChangePasswordCtrl', function($scope, $state, $timeout, $http, session, debounce) {
+sc.controller('ChangePasswordCtrl', function($scope, $state, $timeout, $http, session, debounce, Wallet) {
   $scope.data = {
     username:             session.get('username'),
     password:             '',

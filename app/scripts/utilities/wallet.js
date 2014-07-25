@@ -1,278 +1,281 @@
-var Wallet = function(options){
-  this.id = options.id;
-  this.key = options.key;
+angular.module('stellarClient').factory('Wallet', function() {
+  var Wallet = function(options){
+    this.id = options.id;
+    this.key = options.key;
 
-  this.keychainData = options.keychainData || {};
-  this.mainData = options.mainData || {};
-};
-
-/**
- * Decrypts an encrypted wallet.
- *
- * @param {object} encryptedWallet
- * @param {string} encryptedWallet.id
- * @param {string} encryptedWallet.mainData
- * @param {string} encryptedWallet.keychainData
- * @param {string} id
- * @param {string} key
- *
- * @returns {Wallet}
- */
-Wallet.decrypt = function(encryptedWallet, id, key){
-  var rawKey = sjcl.codec.hex.toBits(key);
-
-  var mainData = Wallet.decryptData(encryptedWallet.mainData, rawKey);
-  var keychainData = Wallet.decryptData(encryptedWallet.keychainData, rawKey);
-
-  var options = {
-    id:           id,
-    key:          key,
-    mainData:     mainData,
-    keychainData: keychainData
+    this.keychainData = options.keychainData || {};
+    this.mainData = options.mainData || {};
   };
 
-  return new Wallet(options);
-};
+  /**
+   * Decrypts an encrypted wallet.
+   *
+   * @param {object} encryptedWallet
+   * @param {string} encryptedWallet.id
+   * @param {string} encryptedWallet.mainData
+   * @param {string} encryptedWallet.keychainData
+   * @param {string} id
+   * @param {string} key
+   *
+   * @returns {Wallet}
+   */
+  Wallet.decrypt = function(encryptedWallet, id, key){
+    var rawKey = sjcl.codec.hex.toBits(key);
 
-/**
- * Decrypts a wallet using the recovery data.
- *
- * @param {object} encryptedWallet
- * @param {string} encryptedWallet.id
- * @param {string} encryptedWallet.recoveryId
- * @param {string} encryptedWallet.mainData
- * @param {string} encryptedWallet.keychainData
- * @param {string} encryptedWallet.recoveryData
- * @param {string} recoveryId
- * @param {string} recoveryKey
- *
- * @returns {Wallet}
- */
-Wallet.recover = function(encryptedWallet, recoveryId, recoveryKey){
-  var rawRecoveryKey = sjcl.codec.hex.toBits(recoveryKey);
-  var recoveryData = Wallet.decryptData(encryptedWallet.recoveryData, rawRecoveryKey);
+    var mainData = Wallet.decryptData(encryptedWallet.mainData, rawKey);
+    var keychainData = Wallet.decryptData(encryptedWallet.keychainData, rawKey);
 
-  var wallet = Wallet.decrypt(encryptedWallet, recoveryData.id, recoveryData.key);
-  wallet.recoveryId = recoveryId;
-  wallet.recoveryKey = recoveryKey;
+    var options = {
+      id:           id,
+      key:          key,
+      mainData:     mainData,
+      keychainData: keychainData
+    };
 
-  return wallet;
-};
-
-Wallet.loadLocal = function() {
-  //TODO: load key and encryption
-
-  if(!sessionStorage.wallet) {
-    return;
-  }
-
-  var parsed = null;
-
-  try {
-    parsed = JSON.parse(sessionStorage.wallet);
-  } catch(e) {
-    return;
-  }
-
-  return new Wallet(parsed);
-};
-
-/**
- * Encrypts the wallet's id and key into the recoveryData and sets its the recoveryId.
- *
- * @param {string} recoveryId
- * @param {string} recoveryKey
- */
-Wallet.prototype.createRecoveryData = function(recoveryId, recoveryKey){
-  var rawRecoveryKey = sjcl.codec.hex.toBits(recoveryKey);
-  var recoveryData = Wallet.encryptData({id: this.id, key: this.key}, rawRecoveryKey);
-
-  return {
-    id: this.id,
-    authToken: this.keychainData.authToken,
-    recoveryId: recoveryId,
-    recoveryData: recoveryData,
-    recoveryDataHash: sjcl.codec.hex.fromBits(sjcl.hash.sha1.hash(recoveryData))
-  }
-};
-
-/**
- * Encrypts the wallet data into a generic object.
- *
- * @returns {object}
- */
-Wallet.prototype.encrypt = function(){
-  var rawKey = sjcl.codec.hex.toBits(this.key);
-
-  var encryptedMainData = Wallet.encryptData(this.mainData, rawKey);
-  var encryptedKeychainData = Wallet.encryptData(this.keychainData, rawKey);
-
-  return {
-    id:               this.id,
-    authToken:        this.keychainData.authToken,
-    mainData:         encryptedMainData,
-    mainDataHash:     sjcl.codec.hex.fromBits(sjcl.hash.sha1.hash(encryptedMainData)),
-    keychainData:     encryptedKeychainData,
-    keychainDataHash: sjcl.codec.hex.fromBits(sjcl.hash.sha1.hash(encryptedKeychainData))
+    return new Wallet(options);
   };
-};
+
+  /**
+   * Decrypts a wallet using the recovery data.
+   *
+   * @param {object} encryptedWallet
+   * @param {string} encryptedWallet.id
+   * @param {string} encryptedWallet.recoveryId
+   * @param {string} encryptedWallet.mainData
+   * @param {string} encryptedWallet.keychainData
+   * @param {string} encryptedWallet.recoveryData
+   * @param {string} recoveryId
+   * @param {string} recoveryKey
+   *
+   * @returns {Wallet}
+   */
+  Wallet.recover = function(encryptedWallet, recoveryId, recoveryKey){
+    var rawRecoveryKey = sjcl.codec.hex.toBits(recoveryKey);
+    var recoveryData = Wallet.decryptData(encryptedWallet.recoveryData, rawRecoveryKey);
+
+    var wallet = Wallet.decrypt(encryptedWallet, recoveryData.id, recoveryData.key);
+    wallet.recoveryId = recoveryId;
+    wallet.recoveryKey = recoveryKey;
+
+    return wallet;
+  };
+
+  Wallet.loadLocal = function() {
+    //TODO: load key and encryption
+
+    if(!sessionStorage.wallet) {
+      return;
+    }
+
+    var parsed = null;
+
+    try {
+      parsed = JSON.parse(sessionStorage.wallet);
+    } catch(e) {
+      return;
+    }
+
+    return new Wallet(parsed);
+  };
+
+  /**
+   * Encrypts the wallet's id and key into the recoveryData and sets its the recoveryId.
+   *
+   * @param {string} recoveryId
+   * @param {string} recoveryKey
+   */
+  Wallet.prototype.createRecoveryData = function(recoveryId, recoveryKey){
+    var rawRecoveryKey = sjcl.codec.hex.toBits(recoveryKey);
+    var recoveryData = Wallet.encryptData({id: this.id, key: this.key}, rawRecoveryKey);
+
+    return {
+      id: this.id,
+      authToken: this.keychainData.authToken,
+      recoveryId: recoveryId,
+      recoveryData: recoveryData,
+      recoveryDataHash: sjcl.codec.hex.fromBits(sjcl.hash.sha1.hash(recoveryData))
+    }
+  };
+
+  /**
+   * Encrypts the wallet data into a generic object.
+   *
+   * @returns {object}
+   */
+  Wallet.prototype.encrypt = function(){
+    var rawKey = sjcl.codec.hex.toBits(this.key);
+
+    var encryptedMainData = Wallet.encryptData(this.mainData, rawKey);
+    var encryptedKeychainData = Wallet.encryptData(this.keychainData, rawKey);
+
+    return {
+      id:               this.id,
+      authToken:        this.keychainData.authToken,
+      mainData:         encryptedMainData,
+      mainDataHash:     sjcl.codec.hex.fromBits(sjcl.hash.sha1.hash(encryptedMainData)),
+      keychainData:     encryptedKeychainData,
+      keychainDataHash: sjcl.codec.hex.fromBits(sjcl.hash.sha1.hash(encryptedKeychainData))
+    };
+  };
 
 
-Wallet.prototype.saveLocal = function() {
-      //TODO: encrypt the key
-    localStorage.key      = this.key
-    localStorage.wallet   = JSON.stringify(this.encrypt());
-    sessionStorage.wallet = JSON.stringify(this);
-};
+  Wallet.prototype.saveLocal = function() {
+        //TODO: encrypt the key
+      localStorage.key      = this.key
+      localStorage.wallet   = JSON.stringify(this.encrypt());
+      sessionStorage.wallet = JSON.stringify(this);
+  };
 
-Wallet.prototype.purgeLocal = function() {
-    //TODO: remove keys and such
-    delete sessionStorage.wallet;
-    delete localStorage.wallet;
-};
+  Wallet.prototype.purgeLocal = function() {
+      //TODO: remove keys and such
+      delete sessionStorage.wallet;
+      delete localStorage.wallet;
+  };
 
-Wallet.prototype.bumpLocalTimeout = function() {
-  //TODO: push the cookie timeout foreward
-}
-
-/**
- * Configure the data cryptography setting.
- */
-Wallet.SETTINGS = {
-  PBKDF2: {
-    ITERATIONS: 1000,
-    SIZE: 256 // Must be a valid AES key size.
-  },
-
-  SCRYPT: {
-    N: Math.pow(2, 11),
-    r: 8,
-    p: 1,
-    SIZE: 256
-  },
-
-  CIPHER_NAME: 'aes',
-  MODE: 'ccm'
-};
-
-/**
- * Expand a username and password into an id and key using sjcl-scrypt.
- * Since the results must be deterministic, the credentials are used for the salt.
- *
- * id = scrypt(username + password)
- * key = scrypt(scrypt(username + password) + username + password)
- *
- * @param username
- * @param password
- * @returns {
- *   {
- *     id: {string},
- *     key: {string}
- *   }
- * }
- */
-
-Wallet.deriveId = function(username, password){
-  var credentials = username.toLowerCase() + password;
-  var salt = sjcl.codec.utf8String.toBits(credentials);
-
-  var id = sjcl.misc.scrypt(
-    credentials,
-    salt,
-    Wallet.SETTINGS.SCRYPT.N,
-    Wallet.SETTINGS.SCRYPT.r,
-    Wallet.SETTINGS.SCRYPT.p,
-    Wallet.SETTINGS.SCRYPT.SIZE/8
-  );
-
-  return sjcl.codec.hex.fromBits(id);
-};
-
-Wallet.deriveKey = function(id, username, password){
-  var credentials = username.toLowerCase() + password;
-  var salt = sjcl.codec.utf8String.toBits(credentials);
-
-  var key = sjcl.misc.scrypt(
-    id + credentials,
-    id + salt,
-    Wallet.SETTINGS.SCRYPT.N,
-    Wallet.SETTINGS.SCRYPT.r,
-    Wallet.SETTINGS.SCRYPT.p,
-    Wallet.SETTINGS.SCRYPT.SIZE/8
-  );
-
-  return sjcl.codec.hex.fromBits(key);
-};
-
-/**
- * Encrypt data using 256bit AES in CCM mode with HMAC-SHA256 integrity checking.
- *
- * @param {object} data The data to encrypt.
- * @param {Array.<bits>} key The key used to encrypt the data.
- *
- * @return {string} The encrypted data encoded as base64.
- */
-Wallet.encryptData = function(data, key) {
-  // Encode data into a JSON byte array.
-  var rawData = sjcl.codec.utf8String.toBits(JSON.stringify(data));
-
-  // Initialize the cipher algorithm with the key.
-  var cipher = new sjcl.cipher[Wallet.SETTINGS.CIPHER_NAME](key);
-
-  // Encrypt the blob data in CCM mode using AES and a random 96bit IV.
-  var rawIV = sjcl.random.randomWords(3);
-  var rawCipherText = sjcl.mode[Wallet.SETTINGS.MODE].encrypt(cipher, rawData, rawIV);
-
-  // Base 64 encode.
-  var IV = sjcl.codec.base64.fromBits(rawIV);
-  var cipherText = sjcl.codec.base64.fromBits(rawCipherText);
-
-  // Pack the results into a JSON encoded string.
-  var resultString = JSON.stringify({
-    IV: IV,
-    cipherText: cipherText,
-    cipherName: Wallet.SETTINGS.CIPHER_NAME,
-    mode: Wallet.SETTINGS.MODE
-  });
-
-  // Encode the JSON string as base64 to obscure it's structure.
-  return btoa(resultString);
-};
-
-/**
- * Decrypt data using 256bit AES in CCM mode with HMAC-SHA256 integrity checking.
- *
- * @param {string} encryptedData The encrypted data encoded as base64.
- * @param {Array.<bits>} key The key used to decrypt the blob.
- */
-Wallet.decryptData = function(encryptedData, key) {
-  try {
-    // Parse the base64 encoded JSON object.
-    var resultObject = JSON.parse(atob(encryptedData));
-
-    // Extract the cipher text from the encrypted data.
-    var rawCipherText = sjcl.codec.base64.toBits(resultObject.cipherText);
-
-    // Extract the cipher text from the encrypted data.
-    var rawIV = sjcl.codec.base64.toBits(resultObject.IV);
-
-    // Extract the cipher name from the encrypted data.
-    var cipherName = resultObject.cipherName;
-    var mode = resultObject.mode;
-  } catch(e) {
-    // The encoded data does not represent valid base64 values.
-    throw('Data corrupt!');
+  Wallet.prototype.bumpLocalTimeout = function() {
+    //TODO: push the cookie timeout foreward
   }
 
-  // Initialize the cipher algorithm with the key.
-  var cipher = new sjcl.cipher[cipherName](key);
+  /**
+   * Configure the data cryptography setting.
+   */
+  Wallet.SETTINGS = {
+    PBKDF2: {
+      ITERATIONS: 1000,
+      SIZE: 256 // Must be a valid AES key size.
+    },
 
-  // Decrypt the data in CCM mode using AES and the given IV.
-  var rawData = sjcl.mode[mode].decrypt(cipher, rawCipherText, rawIV);
-  var data = sjcl.codec.utf8String.fromBits(rawData);
+    SCRYPT: {
+      N: Math.pow(2, 11),
+      r: 8,
+      p: 1,
+      SIZE: 256
+    },
 
-  // Parse and return the decrypted data as a JSON object.
-  return JSON.parse(data);
-};
+    CIPHER_NAME: 'aes',
+    MODE: 'ccm'
+  };
 
+  /**
+   * Expand a username and password into an id and key using sjcl-scrypt.
+   * Since the results must be deterministic, the credentials are used for the salt.
+   *
+   * id = scrypt(username + password)
+   * key = scrypt(scrypt(username + password) + username + password)
+   *
+   * @param username
+   * @param password
+   * @returns {
+   *   {
+   *     id: {string},
+   *     key: {string}
+   *   }
+   * }
+   */
+
+  Wallet.deriveId = function(username, password){
+    var credentials = username.toLowerCase() + password;
+    var salt = sjcl.codec.utf8String.toBits(credentials);
+
+    var id = sjcl.misc.scrypt(
+      credentials,
+      salt,
+      Wallet.SETTINGS.SCRYPT.N,
+      Wallet.SETTINGS.SCRYPT.r,
+      Wallet.SETTINGS.SCRYPT.p,
+      Wallet.SETTINGS.SCRYPT.SIZE/8
+    );
+
+    return sjcl.codec.hex.fromBits(id);
+  };
+
+  Wallet.deriveKey = function(id, username, password){
+    var credentials = username.toLowerCase() + password;
+    var salt = sjcl.codec.utf8String.toBits(credentials);
+
+    var key = sjcl.misc.scrypt(
+      id + credentials,
+      id + salt,
+      Wallet.SETTINGS.SCRYPT.N,
+      Wallet.SETTINGS.SCRYPT.r,
+      Wallet.SETTINGS.SCRYPT.p,
+      Wallet.SETTINGS.SCRYPT.SIZE/8
+    );
+
+    return sjcl.codec.hex.fromBits(key);
+  };
+
+  /**
+   * Encrypt data using 256bit AES in CCM mode with HMAC-SHA256 integrity checking.
+   *
+   * @param {object} data The data to encrypt.
+   * @param {Array.<bits>} key The key used to encrypt the data.
+   *
+   * @return {string} The encrypted data encoded as base64.
+   */
+  Wallet.encryptData = function(data, key) {
+    // Encode data into a JSON byte array.
+    var rawData = sjcl.codec.utf8String.toBits(JSON.stringify(data));
+
+    // Initialize the cipher algorithm with the key.
+    var cipher = new sjcl.cipher[Wallet.SETTINGS.CIPHER_NAME](key);
+
+    // Encrypt the blob data in CCM mode using AES and a random 96bit IV.
+    var rawIV = sjcl.random.randomWords(3);
+    var rawCipherText = sjcl.mode[Wallet.SETTINGS.MODE].encrypt(cipher, rawData, rawIV);
+
+    // Base 64 encode.
+    var IV = sjcl.codec.base64.fromBits(rawIV);
+    var cipherText = sjcl.codec.base64.fromBits(rawCipherText);
+
+    // Pack the results into a JSON encoded string.
+    var resultString = JSON.stringify({
+      IV: IV,
+      cipherText: cipherText,
+      cipherName: Wallet.SETTINGS.CIPHER_NAME,
+      mode: Wallet.SETTINGS.MODE
+    });
+
+    // Encode the JSON string as base64 to obscure it's structure.
+    return btoa(resultString);
+  };
+
+  /**
+   * Decrypt data using 256bit AES in CCM mode with HMAC-SHA256 integrity checking.
+   *
+   * @param {string} encryptedData The encrypted data encoded as base64.
+   * @param {Array.<bits>} key The key used to decrypt the blob.
+   */
+  Wallet.decryptData = function(encryptedData, key) {
+    try {
+      // Parse the base64 encoded JSON object.
+      var resultObject = JSON.parse(atob(encryptedData));
+
+      // Extract the cipher text from the encrypted data.
+      var rawCipherText = sjcl.codec.base64.toBits(resultObject.cipherText);
+
+      // Extract the cipher text from the encrypted data.
+      var rawIV = sjcl.codec.base64.toBits(resultObject.IV);
+
+      // Extract the cipher name from the encrypted data.
+      var cipherName = resultObject.cipherName;
+      var mode = resultObject.mode;
+    } catch(e) {
+      // The encoded data does not represent valid base64 values.
+      throw('Data corrupt!');
+    }
+
+    // Initialize the cipher algorithm with the key.
+    var cipher = new sjcl.cipher[cipherName](key);
+
+    // Decrypt the data in CCM mode using AES and the given IV.
+    var rawData = sjcl.mode[mode].decrypt(cipher, rawCipherText, rawIV);
+    var data = sjcl.codec.utf8String.fromBits(rawData);
+
+    // Parse and return the decrypted data as a JSON object.
+    return JSON.parse(data);
+  };
+
+  return Wallet;
+});
 

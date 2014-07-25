@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('LoginCtrl', function($scope, $state, $http, $timeout, $q, session, singletonPromise) {
+sc.controller('LoginCtrl', function($scope, $state, $http, $timeout, $q, session, singletonPromise, Wallet) {
   $scope.username   = null;
   $scope.password   = null;
   $scope.loginError = null;
