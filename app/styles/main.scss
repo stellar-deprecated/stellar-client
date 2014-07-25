@@ -34,6 +34,18 @@ body {
   font-family: $avenir;
 }
 
+.app-wrapper{
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
 .stellar-form {
   margin-top: 0;
 
@@ -245,6 +257,9 @@ body {
 
 .client-nav {
   margin-bottom: 0;
+  border-top: 3px solid $stellar-blue;
+  border-bottom: 1px solid $grey-border;
+  background-color: $grey-background;
 
   ul {
     font-weight: $avenir-medium;
@@ -268,9 +283,6 @@ body {
   .client-inner-nav {
     padding-top: 20px;
     padding-bottom: 15px;
-    border-top: 3px solid $stellar-blue;
-    border-bottom: 1px solid $grey-border;
-    background-color: $grey-background;
   }
 
   .navbar-brand {
@@ -285,6 +297,10 @@ body {
 }
 
 .client-container {
+  -webkit-box-flex: 1 0 auto;
+  -ms-flex: 1 0 auto;
+  flex: 1 0 auto;
+  -webkit-flex: 1 0 auto;
   > div {
      .title {
       font-size: 21px;
@@ -393,12 +409,5 @@ body {
 
   .client-nav ul > div {
     padding: 20px 105px 15px 105px;
-  }
-}
-
-@media (min-width: 1440px) {
-  body,
-  .client-nav {
-    margin: 0 auto;
   }
 }
