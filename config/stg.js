@@ -23,7 +23,7 @@ var Options = {
 
     APP_ID: '1514787142083867',
     DOMAIN_NAME: 'stg.gostellar.org',
-    DEFAULT_FEDERATION_DOMAIN: 'stg.gostellar.org',
+    DEFAULT_FEDERATION_DOMAIN: 'stellar-stg.gostellar.org',
     API_SERVER: 'https://api-stg.gostellar.org',
     WALLET_SERVER: 'https://wallet-stg.gostellar.org',
 
