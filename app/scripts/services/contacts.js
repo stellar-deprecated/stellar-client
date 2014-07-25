@@ -8,7 +8,8 @@ sc.service('contacts', function(session, rpReverseFederation) {
    * reverse federating the address.
    */
   function addContact(address) {
-    var contacts = session.get('wallet').mainData.contacts;
+    var wallet = session.get('wallet');
+    var contacts = wallet.mainData.contacts;
 
     if (contacts[address]) {
       // Address is already in the contact list.
