@@ -83,21 +83,20 @@ sc.service('session', function($rootScope, $http, $timeout, stNetwork, Wallet) {
   };
 
   Session.prototype.loginFromStorage = function($scope) {
-    var wallet = Wallet.loadLocal()
+    try {
+       var wallet = Wallet.loadLocal()
 
-    if (wallet) {
-      this.login(wallet);
+      if (wallet) {
+        this.login(wallet);
+      }
+    } catch(e) {
+      Wallet.purgeLocal();
+      throw e;
     }
-
   };
 
   Session.prototype.logout = function() {
-
-    var wallet = this.get('wallet');
-    if(wallet) {
-      wallet.purgeLocal();
-    }
-
+    Wallet.purgeLocal();
     cache = {};
     delete $rootScope.account;
     stNetwork.shutdown();

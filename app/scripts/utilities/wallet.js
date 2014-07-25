@@ -78,6 +78,11 @@ angular.module('stellarClient').factory('Wallet', function() {
     return new Wallet(parsed);
   };
 
+  Wallet.purgeLocal = function() {
+    delete sessionStorage.wallet;
+    delete localStorage.wallet;
+  };
+
   /**
    * Encrypts the wallet's id and key into the recoveryData and sets its the recoveryId.
    *
@@ -126,11 +131,6 @@ angular.module('stellarClient').factory('Wallet', function() {
       sessionStorage.wallet = JSON.stringify(this);
   };
 
-  Wallet.prototype.purgeLocal = function() {
-      //TODO: remove keys and such
-      delete sessionStorage.wallet;
-      delete localStorage.wallet;
-  };
 
   Wallet.prototype.bumpLocalTimeout = function() {
     //TODO: push the cookie timeout foreward
