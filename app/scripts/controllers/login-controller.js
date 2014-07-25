@@ -34,7 +34,8 @@ sc.controller('LoginCtrl', function($scope, $state, $http, $timeout, $q, session
           $state.go('dashboard');
         } catch (err) {
           // Error decrypting blob.
-          $scope.loginError = err.message;
+          $scope.loginError = 'An error occurred.';
+          throw err;
         }
       })
       .error(function(body, status) {
