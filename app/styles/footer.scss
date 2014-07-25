@@ -41,8 +41,7 @@ $footer-breakpoint-non-large: $footer-max-width + 1px;
 
 footer#colophon {
     margin: 0 auto;
-    padding-top: 20px;
-    padding-bottom: 20px;
+    padding: 20px;
     max-width: $footer-max-width;
     margin: {
         left: auto;
