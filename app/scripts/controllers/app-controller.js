@@ -7,15 +7,12 @@ var sc = angular.module('stellarClient');
     waits for:
      walletAddressLoaded
  */
-sc.controller('AppCtrl', function($scope, $rootScope, stNetwork, session, rpReverseFederation, $state, $element, FlashMessages) {
-
+sc.controller('AppCtrl', function($scope, $rootScope, stNetwork, session, $state, $element, FlashMessages) {
     $rootScope.balance=0;
     $rootScope.accountStatus = 'connecting';
-    $scope.history = [];
     // implements account listener cleanup, added to $rootScope.account to be called in logout event
     var listenerCleanupFn;
 
-    var myHandleAccountEvent;
     var myHandleAccountEntry;
     var mySetInflation;
     var accountObj;
@@ -47,7 +44,6 @@ sc.controller('AppCtrl', function($scope, $rootScope, stNetwork, session, rpReve
     {
         $rootScope.balance=0;
         $rootScope.accountStatus = 'connecting';
-        $scope.history = [];
     }
 
     function handleAccountLoad() {
@@ -65,16 +61,13 @@ sc.controller('AppCtrl', function($scope, $rootScope, stNetwork, session, rpReve
 
         // We need a reference to these functions after they're bound, so we can
         // unregister them if the account is unloaded.
-        myHandleAccountEvent = handleAccountEvent;
         myHandleAccountEntry = handleAccountEntry;
         mySetInflation = setInflation;
 
-        accountObj.on('transaction', myHandleAccountEvent);
         accountObj.on('entry', myHandleAccountEntry);
         accountObj.on('entry', mySetInflation);
 
         listenerCleanupFn = function () {
-            accountObj.removeListener("transaction", myHandleAccountEvent);
             accountObj.removeListener("entry", myHandleAccountEntry);
             accountObj.removeListener("entry", mySetInflation);
         }
@@ -82,32 +75,21 @@ sc.controller('AppCtrl', function($scope, $rootScope, stNetwork, session, rpReve
         remote.once('disconnected', listenerCleanupFn);
 
         accountObj.entry(function (err, entry) {
-            if (err) {
-                switch(err.remote.error) {
-                    case 'actNotFound':
-                        // The account is unfunded.
-                        $rootScope.accountStatus = 'loaded';
-                        break;
-                    default:
-                        $rootScope.accountStatus = 'error';
+            $rootScope.$apply(function() {
+                if (err) {
+                    switch(err.remote.error) {
+                        case 'actNotFound':
+                            // The account is unfunded.
+                            $rootScope.accountStatus = 'loaded';
+                            break;
+                        default:
+                            $rootScope.accountStatus = 'error';
+                    }
+                } else {
+                    $rootScope.accountStatus = 'loaded';
                 }
-            } else {
-                $rootScope.accountStatus = 'loaded';
-            }
+            });
         });
-
-        // Transactions
-        remote.request_account_tx({
-            'account': keys.address,
-            'ledger_index_min': -1,
-            'ledger_index_max': -1,
-            'descending': true,
-            // TODO: Only request the first page of transactions.
-            // 'limit': Options.transactions_per_page,
-            'count': true
-        })
-            .on('success', handleAccountTx)
-            .on('error', handleAccountTxError).request();
     };
 
     function handleAccountEntry(data)
@@ -133,74 +115,6 @@ sc.controller('AppCtrl', function($scope, $rootScope, stNetwork, session, rpReve
             $rootScope.account.max_spend = bal.subtract($rootScope.account.reserve);
             $rootScope.$broadcast("accountLoaded", $rootScope.account);
         });
-    }
-
-    function handleAccountTx(data)
-    {
-        $scope.$apply(function () {
-            $scope.history_count = data.count;
-
-            if (data.transactions) {
-                data.transactions.reverse().forEach(function (e) {
-                    processTxn(e.tx, e.meta, true);
-                });
-            }
-        });
-    }
-
-    function handleAccountTxError(data)
-    {
-
-    }
-
-    function handleAccountEvent(e)
-    {
-        $scope.$apply(function () {
-            processTxn(e.transaction, e.meta);
-        });
-    }
-
-    /**
-     * Process a transaction and add it to the history table.
-     */
-    function processTxn(tx, meta, is_historic)
-    {
-        var processedTxn = JsonRewriter.processTxn(tx, meta, session.get("address"));
-
-        if (processedTxn) {
-            var transaction = processedTxn.transaction;
-
-            // Show status notification
-            if (processedTxn.tx_result === "tesSUCCESS" &&
-                transaction &&
-                !is_historic) {
-                $scope.$broadcast('$appTxNotification', transaction);
-            }
-
-            // Add to payments history
-            if (processedTxn.tx_type === "Payment" &&
-                processedTxn.tx_result === "tesSUCCESS" &&
-                processedTxn.transaction) {
-                var wallet = session.get('wallet');
-                var contacts = wallet.mainData.contacts;
-                var address = processedTxn.transaction.counterparty;
-
-                if (!contacts[address]) {
-                    rpReverseFederation.check_address(address)
-                        .then(function (result) {
-                            if (result) {
-                                // add the reverse federation info to the user's wallet
-                                contacts[address] = result;
-                                session.syncWallet(wallet, "update");
-                            }
-                        })
-                    ;
-                }
-
-                $scope.history.unshift(processedTxn);
-                $scope.$broadcast('$paymentNotification', transaction);
-            }
-        }
     }
 
     function setInflation(account) {
