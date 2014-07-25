@@ -31,7 +31,7 @@ var Options = {
     // intended for developers, be careful about using this in a real setting.
     PERSISTENT_SESSION : false,
     ALPHA_PHASE : true,
-    IDLE_LOGOUT_TIMEOUT : 15 * 60 * 1000, //15 minutes
+    IDLE_LOGOUT_TIMEOUT : 30 * 60 * 1000, //15 minutes
 
     REPORT_ERRORS : true,
     SENTRY_DSN : "https://5c08986e949742d2bb29e1ffac78e50a@app.getsentry.com/26645",
