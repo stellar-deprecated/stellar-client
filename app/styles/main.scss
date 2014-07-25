@@ -32,7 +32,18 @@ body {
   width: 100%;
   color: $dark-grey;
   font-family: $avenir;
-  min-width: 450px;
+}
+
+.app-wrapper{
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 .stellar-form {
@@ -246,6 +257,9 @@ body {
 
 .client-nav {
   margin-bottom: 0;
+  border-top: 3px solid $stellar-blue;
+  border-bottom: 1px solid $grey-border;
+  background-color: $grey-background;
 
   ul {
     font-weight: $avenir-medium;
@@ -269,9 +283,6 @@ body {
   .client-inner-nav {
     padding-top: 20px;
     padding-bottom: 15px;
-    border-top: 3px solid $stellar-blue;
-    border-bottom: 1px solid $grey-border;
-    background-color: $grey-background;
   }
 
   .navbar-brand {
@@ -286,12 +297,15 @@ body {
 }
 
 .client-container {
+  -webkit-box-flex: 1 0 auto;
+  -ms-flex: 1 0 auto;
+  flex: 1 0 auto;
+  -webkit-flex: 1 0 auto;
   > div {
      .title {
       font-size: 21px;
-      padding-top: 15px;
+      padding-top: 20px;
       padding-bottom: 20px;
-      margin-top: 5px;
     }
   }
 }
@@ -381,29 +395,8 @@ body {
 }
 
 .client-section {
-  padding-left: 20px;
-  padding-right: 20px;
 
   &:not(:last-child){
     border-bottom: $grey-border-bottom;
-  }
-}
-
-@media (min-width: $phone-width) {
-  .client-section {
-    padding-left: 105px;
-    padding-right: 105px;
-  }
-
-  .client-nav ul > div {
-    padding: 20px 105px 15px 105px;
-  }
-}
-
-@media (min-width: 1440px) {
-  body,
-  .client-nav {
-    width: 1440px;
-    margin: 0 auto;
   }
 }
