@@ -1,4 +1,4 @@
-angular.module('stellarClient').factory('Wallet', function() {
+angular.module('stellarClient').factory('Wallet', function(ipCookie) {
   var Wallet = function(options){
     this.id = options.id;
     this.key = options.key;
@@ -61,25 +61,45 @@ angular.module('stellarClient').factory('Wallet', function() {
   };
 
   Wallet.loadLocal = function() {
-    //TODO: load key and encryption
 
-    if(!sessionStorage.wallet) {
-      return;
+    var loadFromSession = function() {
+      var unparsedWallet = sessionStorage.wallet;
+      if (!unparsedWallet) {
+        return;
+      }
+
+      var parsed = null;
+
+      try {
+        parsed = JSON.parse(sessionStorage.wallet);
+      } catch(e) {
+        return;
+      }
+
+      return new Wallet(parsed);
     }
 
-    var parsed = null;
+    var loadFromLocal = function() {
+      var encryptedWallet            = localStorage.wallet;
+      var localWalletKey             = ipCookie("localWalletKey");
+      var encryptedWalletKey         = localStorage.encryptedWalletKey;
+      var canAttemptLocalStorageLoad = encryptedWallet && localWalletKey && encryptedWallet;
 
-    try {
-      parsed = JSON.parse(sessionStorage.wallet);
-    } catch(e) {
-      return;
+      if (!canAttemptLocalStorageLoad) { return; }
+
+      var decryptedWalletKey = Wallet.decryptData(encryptedWalletKey, localWalletKey);
+      var decryptedWallet    = Wallet.decryptData(encryptedWallet, sjcl.codec.hex.toBits(decryptedWalletKey));
+
+      return new Wallet(decryptedWallet);
     }
 
-    return new Wallet(parsed);
+    return loadFromSession() || loadFromLocal();
   };
 
   Wallet.purgeLocal = function() {
+    ipCookie.remove("localWalletKey");
     delete sessionStorage.wallet;
+    delete localStorage.encryptedWalletKey;
     delete localStorage.wallet;
   };
 
@@ -125,15 +145,19 @@ angular.module('stellarClient').factory('Wallet', function() {
 
 
   Wallet.prototype.saveLocal = function() {
-        //TODO: encrypt the key
-      localStorage.key      = this.key
-      localStorage.wallet   = JSON.stringify(this.encrypt());
-      sessionStorage.wallet = JSON.stringify(this);
+      var loginWalletKey = sjcl.random.randomWords(Wallet.SETTINGS.KEY_SIZE / 4);
+      var encryptedWalletKey = Wallet.encryptData(this.key, loginWalletKey);
+
+      ipCookie("localWalletKey", loginWalletKey, {expires:Options.IDLE_LOGOUT_TIMEOUT, expirationUnit:'seconds'});
+      localStorage.encryptedWalletKey = encryptedWalletKey;
+      localStorage.wallet             = Wallet.encryptData(this, sjcl.codec.hex.toBits(this.key));
+      sessionStorage.wallet           = JSON.stringify(this);
   };
 
 
   Wallet.prototype.bumpLocalTimeout = function() {
     //TODO: push the cookie timeout foreward
+    ipCookie("localWalletKey", ipCookie("localWalletKey"), {expires:Options.IDLE_LOGOUT_TIMEOUT, expirationUnit:'seconds'});
   }
 
   /**
@@ -153,7 +177,8 @@ angular.module('stellarClient').factory('Wallet', function() {
     },
 
     CIPHER_NAME: 'aes',
-    MODE: 'ccm'
+    MODE: 'ccm',
+    KEY_SIZE: 32
   };
 
   /**
