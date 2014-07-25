@@ -31,34 +31,32 @@
 <body ng-controller="AppCtrl">
 <div class="app-wrapper">
     <nav class="client-nav navbar" role="navigation" ng-controller="NavCtrl">
-        <div class="client-section client-inner-nav container-fluid navbar-default">
-            <div class="container">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <a class="navbar-brand" href="#/">STELLAR</a>
-                </div>
-                <div class="collapse navbar-collapse" id="navbar">
-                    <ul class="nav navbar-nav navbar-right" ng-hide="session.get('loggedIn')">
-                        <li><a href="#/login" ui-sref="login">LOG IN</a></li>
-                        <li><a href="#/register" ui-sref="register" class="sign-up">SIGN UP</a></li>
-                    </ul>
+        <div class="client-section client-inner-nav container navbar-default">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#/">STELLAR</a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+                <ul class="nav navbar-nav navbar-right" ng-hide="session.get('loggedIn')">
+                    <li><a href="#/login" ui-sref="login">LOG IN</a></li>
+                    <li><a href="#/register" ui-sref="register" class="sign-up">SIGN UP</a></li>
+                </ul>
 
-                    <ul class="nav navbar-nav navbar-right ng-hide" ng-show="session.get('loggedIn')">
-                        <li><a href="#/settings">{{ session.get('username') }}</a></li>
-                        <li><a href="#/logout" ui-sref="logout">LOG OUT</a></li>
-                    </ul>
-                </div>
+                <ul class="nav navbar-nav navbar-right ng-hide" ng-show="session.get('loggedIn')">
+                    <li><a href="#/settings">{{ session.get('username') }}</a></li>
+                    <li><a href="#/logout" ui-sref="logout">LOG OUT</a></li>
+                </ul>
             </div>
         </div>
     </nav>
 
     <div class="client-container" ui-view>
-        <div class="page-header">
+        <div class="page-header container">
             <h1>Loading...</h1>
         </div>
     </div>
