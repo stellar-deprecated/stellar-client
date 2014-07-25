@@ -400,9 +400,3 @@ body {
     border-bottom: $grey-border-bottom;
   }
 }
-
-@media (min-width: $phone-width) {
-  .client-nav ul > div {
-    padding: 20px 105px 15px 105px;
-  }
-}
