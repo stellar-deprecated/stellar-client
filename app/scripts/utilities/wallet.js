@@ -59,6 +59,24 @@ Wallet.recover = function(encryptedWallet, recoveryId, recoveryKey){
   return wallet;
 };
 
+Wallet.loadLocal = function() {
+  //TODO: load key and encryption
+
+  if(!sessionStorage.wallet) {
+    return;
+  }
+
+  var parsed = null;
+
+  try {
+    parsed = JSON.parse(sessionStorage.wallet);
+  } catch(e) {
+    return;
+  }
+
+  return new Wallet(parsed);
+};
+
 /**
  * Encrypts the wallet's id and key into the recoveryData and sets its the recoveryId.
  *
@@ -98,6 +116,24 @@ Wallet.prototype.encrypt = function(){
     keychainDataHash: sjcl.codec.hex.fromBits(sjcl.hash.sha1.hash(encryptedKeychainData))
   };
 };
+
+
+Wallet.prototype.saveLocal = function() {
+      //TODO: encrypt the key
+    localStorage.key      = this.key
+    localStorage.wallet   = JSON.stringify(this.encrypt());
+    sessionStorage.wallet = JSON.stringify(this);
+};
+
+Wallet.prototype.purgeLocal = function() {
+    //TODO: remove keys and such
+    delete sessionStorage.wallet;
+    delete localStorage.wallet;
+};
+
+Wallet.prototype.bumpLocalTimeout = function() {
+  //TODO: push the cookie timeout foreward
+}
 
 /**
  * Configure the data cryptography setting.
@@ -238,3 +274,5 @@ Wallet.decryptData = function(encryptedData, key) {
   // Parse and return the decrypted data as a JSON object.
   return JSON.parse(data);
 };
+
+

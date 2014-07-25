@@ -22,6 +22,12 @@ sc.service('session', function($rootScope, $http, $timeout, stNetwork) {
       this.clearIdleTimeout();
       this.setIdleTimeout();
     }
+
+    var wallet = this.get('wallet');
+    if (wallet) {
+      wallet.bumpLocalTimeout();
+    }
+
   }, 1000, true);
 
   Session.prototype.setIdleTimeout = function() {
@@ -46,7 +52,7 @@ sc.service('session', function($rootScope, $http, $timeout, stNetwork) {
     return $http.post(url, data)
       .success(function (response) {
         if (Options.PERSISTENT_SESSION) {
-          sessionStorage.wallet = JSON.stringify(wallet);
+          wallet.saveLocal();
         }
       });
   };
@@ -55,7 +61,7 @@ sc.service('session', function($rootScope, $http, $timeout, stNetwork) {
     this.put('wallet', wallet);
 
     if (Options.PERSISTENT_SESSION) {
-      sessionStorage.wallet = JSON.stringify(wallet);
+      wallet.saveLocal();
     }
 
     var signingKeys = wallet.keychainData.signingKeys;
@@ -77,35 +83,25 @@ sc.service('session', function($rootScope, $http, $timeout, stNetwork) {
   };
 
   Session.prototype.loginFromStorage = function($scope) {
-    if(sessionStorage.wallet) {
-      try {
-        var wallet = new Wallet(JSON.parse(sessionStorage.wallet));
+    var wallet = Wallet.loadLocal()
 
-        if (wallet) {
-          this.login(wallet);
-        }
-      }
-      catch(e) { }
+    if (wallet) {
+      this.login(wallet);
     }
+
   };
 
   Session.prototype.logout = function() {
-    cache = {};
 
-
-    if (Options.PERSISTENT_SESSION){
-      //TODO: remove keys and such
-      delete sessionStorage.wallet;
+    var wallet = this.get('wallet');
+    if(wallet) {
+      wallet.purgeLocal();
     }
 
+    cache = {};
     delete $rootScope.account;
     stNetwork.shutdown();
-
-    this.put('loggedIn', false);
-
     this.clearIdleTimeout();
-
-
   };
 
   function checkFairyAddress() {
