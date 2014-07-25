@@ -8,11 +8,11 @@ var stellarClient = angular.module('stellarClient', [
   'ngGrid',
   'ngRaven',
   'ngRoute',
-  'ngCookies',
   'rt.debounce',
   'singletonPromise',
   'ui.router',
-  'vr.passwordStrength'
+  'vr.passwordStrength',
+  'ipCookie'
 ]);
 
 stellarClient.config(function($httpProvider, $stateProvider, $urlRouterProvider, RavenProvider) {
@@ -74,7 +74,7 @@ stellarClient.config(function($httpProvider, $stateProvider, $urlRouterProvider,
 
 });
 
-stellarClient.run(function($rootScope, $state, $cookies, session, FlashMessages){
+stellarClient.run(function($rootScope, $state, ipCookie, session, FlashMessages){
   $rootScope.balance = 'loading...';
 
   // HACK: A specific version of Android's stock browser (AppleWebKit/534.30)
@@ -108,7 +108,7 @@ stellarClient.run(function($rootScope, $state, $cookies, session, FlashMessages)
         }
 
         // if the user has never visited the app before, send to alpha
-        if (!$cookies.weve_been_here_before) {
+        if (!ipCookie("weve_been_here_before")) {
           $state.transitionTo('register');
           event.preventDefault();
           return;
@@ -129,7 +129,7 @@ stellarClient.run(function($rootScope, $state, $cookies, session, FlashMessages)
           // Prevent the original destination state from loading.
           event.preventDefault();
         }
-        $cookies.weve_been_here_before = true;
+        ipCookie("weve_been_here_before", "true", {expires: new Date('01 Jan 2030 00:00:00 GMT')})
         break;
     }
 
