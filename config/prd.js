@@ -27,11 +27,9 @@ var Options = {
     API_SERVER: 'https://api.gostellar.org',
     WALLET_SERVER: 'https://wallet.gostellar.org',
 
-    // If set, login will persist across sessions (page reload). This is mostly
-    // intended for developers, be careful about using this in a real setting.
-    PERSISTENT_SESSION : false,
+    PERSISTENT_SESSION : true,
     ALPHA_PHASE : true,
-    IDLE_LOGOUT_TIMEOUT : 15 * 60 * 1000, //15 minutes
+    IDLE_LOGOUT_TIMEOUT : 30 * 60 * 1000, //15 minutes
 
     REPORT_ERRORS : true,
     SENTRY_DSN : "https://5c08986e949742d2bb29e1ffac78e50a@app.getsentry.com/26645",

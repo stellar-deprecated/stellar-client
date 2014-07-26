@@ -2,7 +2,6 @@
 // generated on 2014-04-24 using generator-gulp-webapp 0.0.8
 
 var gulp        = require('gulp');
-var plumber     = require('gulp-plumber');
 var exec        = require('child_process').exec;
 var mergeStream = require('merge-stream');
 var git         = require('git-rev');
@@ -25,7 +24,7 @@ gulp.task('scripts', ['scripts:lint', 'scripts:templateCache', 'scripts:unminifi
 //component tasks
 gulp.task('styles', ['iconfont'], function () {
     return gulp.src('app/styles/main.scss')
-        .pipe(plumber({errorHandler: console.log}))
+        .pipe($.plumber({errorHandler: console.log}))
         .pipe($.sass({
             outputStyle: 'expanded',
             includePaths: ['app/styles', '.tmp/styles']

@@ -4,7 +4,7 @@ var sc = angular.module('stellarClient');
 
 var cache = {};
 
-sc.service('session', function($rootScope, $http, $timeout, stNetwork) {
+sc.service('session', function($rootScope, $http, $timeout, stNetwork, Wallet) {
   var Session = function() {};
 
   Session.prototype.get = function(name){ return cache[name]; };
@@ -22,6 +22,12 @@ sc.service('session', function($rootScope, $http, $timeout, stNetwork) {
       this.clearIdleTimeout();
       this.setIdleTimeout();
     }
+
+    var wallet = this.get('wallet');
+    if (wallet) {
+      wallet.bumpLocalTimeout();
+    }
+
   }, 1000, true);
 
   Session.prototype.setIdleTimeout = function() {
@@ -46,7 +52,7 @@ sc.service('session', function($rootScope, $http, $timeout, stNetwork) {
     return $http.post(url, data)
       .success(function (response) {
         if (Options.PERSISTENT_SESSION) {
-          localStorage.wallet = JSON.stringify(wallet);
+          wallet.saveLocal();
         }
       });
   };
@@ -55,7 +61,7 @@ sc.service('session', function($rootScope, $http, $timeout, stNetwork) {
     this.put('wallet', wallet);
 
     if (Options.PERSISTENT_SESSION) {
-      localStorage.wallet = JSON.stringify(wallet);
+      wallet.saveLocal();
     }
 
     var signingKeys = wallet.keychainData.signingKeys;
@@ -77,33 +83,24 @@ sc.service('session', function($rootScope, $http, $timeout, stNetwork) {
   };
 
   Session.prototype.loginFromStorage = function($scope) {
-    if(localStorage.wallet) {
-      try {
-        var wallet = new Wallet(JSON.parse(localStorage.wallet));
+    try {
+       var wallet = Wallet.loadLocal()
 
-        if (wallet) {
-          this.login(wallet);
-        }
+      if (wallet) {
+        this.login(wallet);
       }
-      catch(e) { }
+    } catch(e) {
+      Wallet.purgeLocal();
+      throw e;
     }
   };
 
   Session.prototype.logout = function() {
+    Wallet.purgeLocal();
     cache = {};
-
-    if (Options.PERSISTENT_SESSION){
-      delete localStorage.wallet;
-    }
-
     delete $rootScope.account;
     stNetwork.shutdown();
-
-    this.put('loggedIn', false);
-
     this.clearIdleTimeout();
-
-
   };
 
   function checkFairyAddress() {

@@ -1,4 +1,4 @@
-sc.controller('VerifyEmailCtrl', function ($scope, $rootScope, $http, $state, session) {
+sc.controller('VerifyEmailCtrl', function ($scope, $rootScope, $http, $state, session, Wallet) {
   var wallet = session.get('wallet');
   $scope.email = wallet.mainData.email;
   $scope.loading = false;

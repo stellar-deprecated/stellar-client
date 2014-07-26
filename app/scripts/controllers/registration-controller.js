@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('RegistrationCtrl', function($scope, $state, $timeout, $http, $q, session, debounce, singletonPromise) {
+sc.controller('RegistrationCtrl', function($scope, $state, $timeout, $http, $q, session, debounce, singletonPromise, Wallet) {
   $scope.data = {
     username:             '',
     email:                '',
