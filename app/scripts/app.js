@@ -5,14 +5,14 @@ var stellarClient = angular.module('stellarClient', [
   'angularMoment',
   'bruteRequest',
   'filters',
+  'ipCookie',
   'ngGrid',
   'ngRaven',
   'ngRoute',
   'rt.debounce',
   'singletonPromise',
   'ui.router',
-  'vr.passwordStrength',
-  'ipCookie'
+  'vr.passwordStrength'
 ]);
 
 stellarClient.config(function($httpProvider, $stateProvider, $urlRouterProvider, RavenProvider) {
