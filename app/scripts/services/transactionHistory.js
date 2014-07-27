@@ -3,6 +3,8 @@
 var sc = angular.module('stellarClient');
 
 sc.service('transactionHistory', function($rootScope, stNetwork, session, contacts) {
+  // TODO: move history to an object, mapping hash -> transaction
+  // then use an array of hashes to establish order
   var history = [];
 
   var remote;
@@ -19,7 +21,7 @@ sc.service('transactionHistory', function($rootScope, stNetwork, session, contac
       remote = stNetwork.remote;
       account = remote.account(session.get('address'));
 
-      requestTransactions();
+      requestTransactions(0);
       account.on('transaction', processNewTransaction);
 
       remote.once('disconnected', cleanupListeners);
@@ -29,24 +31,26 @@ sc.service('transactionHistory', function($rootScope, stNetwork, session, contac
   /**
    * Request the first page of the transaction history.
    */
-  function requestTransactions() {
+  function requestTransactions(offset) {
     var txRequest = remote.request_account_tx({
       'account': session.get('address'),
       'ledger_index_min': -1,
       'ledger_index_max': -1,
       'descending': true,
       //'limit': Options.transactions_per_page,
-      'offset': history.length
+      'offset': offset
     });
 
-    txRequest.on('success', processTransactionSet);
+    txRequest.on('success', function(data) {
+      processTransactionSet(offset, data);
+    });
     txRequest.request();
   }
 
   /**
    * Process a set of transactions.
    */
-  function processTransactionSet(data) {
+  function processTransactionSet(lastOffset, data) {
     data.transactions = data.transactions || [];
 
     data.transactions.forEach(function (transaction) {
@@ -54,8 +58,8 @@ sc.service('transactionHistory', function($rootScope, stNetwork, session, contac
     });
 
     // Request more transactions until there are no more left.
-    if (data.transactions.length) {
-      requestTransactions();
+    if (_.any(data.transactions)) {
+      requestTransactions(lastOffset + data.transactions.length);
     }
   }
 
