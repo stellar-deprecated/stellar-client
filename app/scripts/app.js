@@ -34,11 +34,6 @@ stellarClient.config(function($httpProvider, $stateProvider, $urlRouterProvider,
       templateUrl: 'states/recovery.html',
       authenticate: false
     })
-    .state('alpha', {
-      url:         '/alpha',
-      templateUrl: 'states/alpha.html',
-      authenticate: false
-    })
     .state('register', {
       url:         '/register',
       templateUrl: 'states/register.html',
@@ -107,7 +102,7 @@ stellarClient.run(function($rootScope, $state, ipCookie, session, FlashMessages)
           }
         }
 
-        // if the user has never visited the app before, send to alpha
+        // if the user has never visited the app before, send to registration
         if (!ipCookie("weve_been_here_before")) {
           $state.transitionTo('register');
           event.preventDefault();
@@ -119,17 +114,6 @@ stellarClient.run(function($rootScope, $state, ipCookie, session, FlashMessages)
         if(session.get('loggedIn')) {
           session.logout();
         }
-        break;
-
-      case '/register':
-        // If the user is trying to register, ensure they are an alpha tester.
-        if(Options.ALPHA_PHASE && !session.get('alpha')){
-          $state.transitionTo('alpha');
-
-          // Prevent the original destination state from loading.
-          event.preventDefault();
-        }
-        ipCookie("weve_been_here_before", "true", {expires: new Date('01 Jan 2030 00:00:00 GMT')})
         break;
     }
 
