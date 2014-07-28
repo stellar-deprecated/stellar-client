@@ -93,14 +93,18 @@ angular.module('stellarClient').factory('Wallet', function(ipCookie) {
       return new Wallet(decryptedWallet);
     }
 
-    return loadFromSession() || loadFromLocal();
+    return catchAndSwallowSecurityErrors(function() {
+      return loadFromSession() || loadFromLocal();
+    });
   };
 
   Wallet.purgeLocal = function() {
-    ipCookie.remove("localWalletKey");
-    delete sessionStorage.wallet;
-    delete localStorage.encryptedWalletKey;
-    delete localStorage.wallet;
+    catchAndSwallowSecurityErrors(function() {
+      ipCookie.remove("localWalletKey");
+      delete sessionStorage.wallet;
+      delete localStorage.encryptedWalletKey;
+      delete localStorage.wallet;
+    });
   };
 
   /**
@@ -145,19 +149,24 @@ angular.module('stellarClient').factory('Wallet', function(ipCookie) {
 
 
   Wallet.prototype.saveLocal = function() {
-      var loginWalletKey = sjcl.random.randomWords(Wallet.SETTINGS.KEY_SIZE / 4);
-      var encryptedWalletKey = Wallet.encryptData(this.key, loginWalletKey);
+    var self = this;
+    var loginWalletKey = sjcl.random.randomWords(Wallet.SETTINGS.KEY_SIZE / 4);
+    var encryptedWalletKey = Wallet.encryptData(this.key, loginWalletKey);
 
+    catchAndSwallowSecurityErrors(function() {
       ipCookie("localWalletKey", loginWalletKey, {expires:Options.IDLE_LOGOUT_TIMEOUT, expirationUnit:'seconds'});
       localStorage.encryptedWalletKey = encryptedWalletKey;
-      localStorage.wallet             = Wallet.encryptData(this, sjcl.codec.hex.toBits(this.key));
-      sessionStorage.wallet           = JSON.stringify(this);
+      localStorage.wallet             = Wallet.encryptData(self, sjcl.codec.hex.toBits(self.key));
+      sessionStorage.wallet           = JSON.stringify(self);
+    });
   };
 
 
   Wallet.prototype.bumpLocalTimeout = function() {
     //TODO: push the cookie timeout foreward
-    ipCookie("localWalletKey", ipCookie("localWalletKey"), {expires:Options.IDLE_LOGOUT_TIMEOUT, expirationUnit:'seconds'});
+    catchAndSwallowSecurityErrors(function() {
+      ipCookie("localWalletKey", ipCookie("localWalletKey"), {expires:Options.IDLE_LOGOUT_TIMEOUT, expirationUnit:'seconds'});
+    });
   }
 
   /**
@@ -303,4 +312,19 @@ angular.module('stellarClient').factory('Wallet', function(ipCookie) {
 
   return Wallet;
 });
+
+function catchAndSwallowSecurityErrors(fn) {
+  try {
+    return fn();
+  } catch(err) {
+    // Safari throws this exception when interacting with localstorage
+    // if the current user has their privacy settings set to reject cookies
+    // and other data.  We swallow it silently.
+    if(err.name == "SecurityError"){ 
+      return; 
+    } else {
+      throw err;
+    }
+  }
+}
 
