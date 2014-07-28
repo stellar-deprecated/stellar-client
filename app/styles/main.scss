@@ -257,9 +257,11 @@ body {
 
 .client-nav {
   margin-bottom: 0;
+  border: 0;
   border-top: 3px solid $stellar-blue;
   border-bottom: 1px solid $grey-border;
   background-color: $grey-background;
+  border-radius: 0;
 
   ul {
     font-weight: $avenir-medium;
@@ -283,6 +285,7 @@ body {
   .client-inner-nav {
     padding-top: 20px;
     padding-bottom: 15px;
+    background: none;
   }
 
   .navbar-brand {
