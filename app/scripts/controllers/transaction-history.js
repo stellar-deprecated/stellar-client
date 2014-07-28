@@ -10,22 +10,29 @@ sc.controller('TransactionHistoryCtrl', function($scope, transactionHistory) {
     'received': 'icon icon-receive'
   };
 
-  $scope.history = transactionHistory.history;
+  $scope.$on("transactionHistory.historyUpdated", function(e, history) {
+    $scope.history = history;
+    newHistory();
+  })
+
+  $scope.history = [];
   $scope.sortedHistory = [];
   $scope.transactionPage = [];
 
-  function updateTransactions(){
+  function newHistory() {
+    $scope.sortedHistory = $scope.history.slice();
+    $scope.lastPage = Math.ceil($scope.sortedHistory.length / $scope.pagingOptions.pageSize);
+
+    sortTransactionHistory();
+    updateTransactionPage();
+  }
+
+  function updateTransactionPage(){
     var startIndex = ($scope.pagingOptions.currentPage - 1) * $scope.pagingOptions.pageSize;
     $scope.transactionPage = $scope.sortedHistory.slice(startIndex, startIndex + $scope.pagingOptions.pageSize);
   }
 
-  function updatePaging(){
-    $scope.lastPage = Math.ceil($scope.sortedHistory.length / $scope.pagingOptions.pageSize);
-    updateTransactions();
-  }
-
   $scope.nextPage = function() {
-    $scope.lastPage = Math.ceil($scope.sortedHistory.length / $scope.pagingOptions.pageSize);
     $scope.pagingOptions.currentPage = Math.min($scope.pagingOptions.currentPage + 1, $scope.lastPage);
   };
 
@@ -33,18 +40,13 @@ sc.controller('TransactionHistoryCtrl', function($scope, transactionHistory) {
     $scope.pagingOptions.currentPage = Math.max($scope.pagingOptions.currentPage - 1, 1);
   };
 
-  $scope.$watch('history', function() {
-    $scope.sortedHistory = $scope.history.slice();
-    sortTransactionHistory();
-    updatePaging();
-  }, true);
-
   $scope.$watch('pagingOptions', function() {
-    updatePaging();
+    updateTransactionPage();
   }, true);
 
   $scope.$watch('sortOptions', function() {
     sortTransactionHistory();
+    updateTransactionPage();
   }, true);
 
   $scope.pagingOptions = {
@@ -57,10 +59,6 @@ sc.controller('TransactionHistoryCtrl', function($scope, transactionHistory) {
     fields: ['date'],
     directions: ['desc']
   };
-
-  function sortAmount(a, b){
-    return a.to_number() - b.to_number();
-  }
 
   $scope.transactionGrid = {
     data: 'transactionPage',
@@ -119,40 +117,41 @@ sc.controller('TransactionHistoryCtrl', function($scope, transactionHistory) {
   // and using $scope.sortOptions.columns[0].sortingAlgorithm for custom sort predicates.
   // Consider adding this functionality to a fork of ng-grid.
   function sortTransactionHistory(){
-    var sortPredicate;
+      
+    var sortPredicate = getSortPredicate($scope.sortOptions.fields[0], $scope.sortOptions.directions[0]);
+    $scope.sortedHistory.sort(sortPredicate);
+  }
 
-    function compareStrings(a, b) {
-      if (a < b) return -1;
-      if (a > b) return 1;
-      return 0;
-    }
+  function getSortPredicate(field, direction) {
+    var ascPredicate;
 
-    switch($scope.sortOptions.fields[0]) {
+    switch(field) {
       case 'transaction.type':
-        sortPredicate = function(a, b){
-          return compareStrings(a.transaction.type, b.transaction.type);
+        ascPredicate = function(a, b){
+          if (a < b) return -1;
+          if (a > b) return 1;
+          return 0;
         };
         break;
       case 'date':
-        sortPredicate = function(a, b){
+        ascPredicate = function(a, b){
           return a.date - b.date;
         };
         break;
       case 'transaction.amount':
-        sortPredicate = function(a, b){
-          return sortAmount(a.transaction.amount, b.transaction.amount);
+        ascPredicate = function(a, b){
+          return a.to_number() - b.to_number();;
         };
         break;
     }
 
-    if($scope.sortOptions.directions[0] == 'asc') {
-      $scope.sortedHistory.sort(sortPredicate);
+    if(direction == 'asc') {
+      return ascPredicate;
     } else {
-      $scope.sortedHistory.sort(function(a, b) {
-        return sortPredicate(b, a);
-      });
+      return function(a, b) {
+        return ascPredicate(b, a);
+      };
     }
 
-    updateTransactions();
   }
 });
