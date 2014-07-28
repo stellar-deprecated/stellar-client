@@ -14,10 +14,10 @@
 <form name="sendForm" role="form" ng-show="mode=='form'" ng-submit="send_prepared()" class="stellar-form">
     <div class="row form-group">
         <div rp-errors="send_destination" class="errors col-sm-12">
-            <div rp-error-valid ng-show="recipientFederation()" class="success tip col-sm-offset-3 col-sm-6">{{ recipientFederation() }}</div>
-            <div rp-error-on="required" l10n="l10n" class="tip col-sm-offset-6 col-sm-3">Please enter a recipient.</div>
-            <div rp-error-on="rpDest" l10n="l10n" class="tip col-sm-offset-6 col-sm-3">Recipient should be either a name from your contact list or Stellar/Bitcoin address.</div>
-            <div rp-error-on="federation" l10n="l10n" class="tip col-sm-offset-6 col-sm-3">This person isn't on Stellar yet.</div>
+            <div rp-error-valid ng-show="recipientFederation()" class="success tip col-sm-offset-3 col-sm-6">wallet address found: {{ recipientFederation() }}</div>
+            <div rp-error-on="required" l10n="l10n" class="tip col-sm-offset-3 col-sm-3">Please enter a recipient.</div>
+            <div rp-error-on="rpDest" l10n="l10n" class="tip col-sm-offset-3 col-sm-3">Recipient should be either a name from your contact list or Stellar/Bitcoin address.</div>
+            <div rp-error-on="federation" l10n="l10n" class="tip col-sm-offset-3 col-sm-3">This person isn't on Stellar yet.</div>
         </div>
         <label for="send_destination" l10n="l10n" class="col-sm-3">SEND TO</label>
         <div class="col-sm-6 send-address right-inner-addon">
@@ -94,7 +94,7 @@
                 <a href="https://wiki.gostellar.org/Reserves" target="_blank" l10n="l10n">More information</a>
             </p>
             <p ng-show="account.max_spend.to_number() < send.amount * 1000000" l10n="l10n" class="send-form-status">
-                You need a reserve amount of 50 Stellars to send. <a href="https://wiki.gostellar.org/Reserves" target="_blank" l10n="l10n">More information</a>
+                You need a minimum balance of 50 Stellars to send. <a href="https://wiki.gostellar.org/Reserves" target="_blank" l10n="l10n">More information</a>
             </p>
             <p ng-show="send.path_status == 'checking'" class="send-form-status">Checking</p>
             <p ng-show="send.path_status == 'fed-check'" class="send-form-status">Analyzing address</p>
