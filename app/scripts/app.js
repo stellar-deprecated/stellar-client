@@ -69,6 +69,17 @@ stellarClient.config(function($httpProvider, $stateProvider, $urlRouterProvider,
 
 });
 
+stellarClient.run(function($location, $state, ipCookie){
+  var atRoot    = _.isEmpty($location.path());
+  var firstTime = !ipCookie("weve_been_here_before")
+  var forceToRegister = atRoot && firstTime;
+
+    if(forceToRegister) {
+      $state.transitionTo('register');
+      ipCookie("weve_been_here_before", "true", {expires: new Date('01 Jan 2030 00:00:00 GMT')})
+    }
+});
+
 stellarClient.run(function($rootScope, $state, ipCookie, session, FlashMessages){
   $rootScope.balance = 'loading...';
 
@@ -101,23 +112,12 @@ stellarClient.run(function($rootScope, $state, ipCookie, session, FlashMessages)
             return;
           }
         }
-
-        // if the user has never visited the app before, send to registration
-        if (!ipCookie("weve_been_here_before")) {
-          $state.transitionTo('register');
-          event.preventDefault();
-          return;
-        }
         break;
 
       case '/logout':
         if(session.get('loggedIn')) {
           session.logout();
         }
-        break;
-
-      case '/register':
-        ipCookie("weve_been_here_before", "true", {expires: new Date('01 Jan 2030 00:00:00 GMT')})
         break;
     }
 
