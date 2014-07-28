@@ -699,7 +699,7 @@ var stellar =
 	    case 'transaction':
 	      this._handleTransaction(message);
 	      break;
-	    case 'path_find':
+	    case 'find_path':
 	      this._handlePathFind(message);
 	      break;
 	    default:
@@ -805,7 +805,7 @@ var stellar =
 	};
 
 	/**
-	 * Handle server path_find event
+	 * Handle server find_path event
 	 *
 	 * @param {Object} message
 	 */
@@ -2092,7 +2092,7 @@ var stellar =
 	};
 
 	/**
-	 * Request ripple_path_find
+	 * Request static_path_find
 	 *
 	 * @param {Object} options
 	 * @param [Function] callback
@@ -2109,7 +2109,7 @@ var stellar =
 	    src_account    = options.src_account;
 	  }
 
-	  var request = new Request(this, 'ripple_path_find');
+	  var request = new Request(this, 'static_path_find');
 
 	  request.message.source_account      = UInt160.json_rewrite(src_account);
 	  request.message.destination_account = UInt160.json_rewrite(dst_account);
@@ -2125,7 +2125,7 @@ var stellar =
 	};
 
 	/**
-	 * Request path_find/create
+	 * Request find_path/create
 	 *
 	 * @param {Object} options
 	 * @param [Function] callback
@@ -2142,7 +2142,7 @@ var stellar =
 	    src_account    = options.src_account;
 	  }
 
-	  var request = new Request(this, 'path_find');
+	  var request = new Request(this, 'find_path');
 
 	  request.message.subcommand          = 'create';
 	  request.message.source_account      = UInt160.json_rewrite(src_account);
@@ -2159,14 +2159,14 @@ var stellar =
 	};
 
 	/**
-	 * Request path_find/close
+	 * Request find_path/close
 	 *
 	 * @param [Function] callback
 	 * @return {Request}
 	 */
 
 	Remote.prototype.requestPathFindClose = function(callback) {
-	  var request = new Request(this, 'path_find');
+	  var request = new Request(this, 'find_path');
 
 	  request.message.subcommand = 'close';
 	  request.callback(callback);
@@ -8748,7 +8748,7 @@ var stellar =
 	    case 'response':
 	      this._handleResponse(message);
 	      break;
-	    case 'path_find':
+	    case 'find_path':
 	      this._handlePathFind(message);
 	      break;
 	  }
@@ -8828,7 +8828,7 @@ var stellar =
 
 	Server.prototype._handlePathFind = function(message) {
 	  if (this._remote.trace) {
-	    log.info('path_find:', this._opts.url, message);
+	    log.info('find_path:', this._opts.url, message);
 	  }
 	};
 
@@ -23727,8 +23727,8 @@ var stellar =
 	 * Module dependencies.
 	 */
 
-	var Emitter = __webpack_require__(68);
-	var reduce = __webpack_require__(67);
+	var Emitter = __webpack_require__(67);
+	var reduce = __webpack_require__(68);
 
 	/**
 	 * Root reference for iframes.
@@ -28089,35 +28089,6 @@ var stellar =
 
 	
 	/**
-	 * Reduce `arr` with `fn`.
-	 *
-	 * @param {Array} arr
-	 * @param {Function} fn
-	 * @param {Mixed} initial
-	 *
-	 * TODO: combatible error handling?
-	 */
-
-	module.exports = function(arr, fn, initial){  
-	  var idx = 0;
-	  var len = arr.length;
-	  var curr = arguments.length == 3
-	    ? initial
-	    : arr[idx++];
-
-	  while (idx < len) {
-	    curr = fn.call(null, curr, arr[idx], ++idx, arr);
-	  }
-	  
-	  return curr;
-	};
-
-/***/ },
-/* 68 */
-/***/ function(module, exports, __webpack_require__) {
-
-	
-	/**
 	 * Expose `Emitter`.
 	 */
 
@@ -28281,6 +28252,35 @@ var stellar =
 	  return !! this.listeners(event).length;
 	};
 
+
+/***/ },
+/* 68 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	/**
+	 * Reduce `arr` with `fn`.
+	 *
+	 * @param {Array} arr
+	 * @param {Function} fn
+	 * @param {Mixed} initial
+	 *
+	 * TODO: combatible error handling?
+	 */
+
+	module.exports = function(arr, fn, initial){  
+	  var idx = 0;
+	  var len = arr.length;
+	  var curr = arguments.length == 3
+	    ? initial
+	    : arr[idx++];
+
+	  while (idx < len) {
+	    curr = fn.call(null, curr, arr[idx], ++idx, arr);
+	  }
+	  
+	  return curr;
+	};
 
 /***/ },
 /* 69 */
