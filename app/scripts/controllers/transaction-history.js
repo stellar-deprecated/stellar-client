@@ -32,7 +32,6 @@ sc.controller('TransactionHistoryCtrl', function($scope, transactionHistory) {
   };
 
   $scope.$watch('history', function() {
-    console.log("history");
     $scope.sortedHistory = $scope.history.slice();
     $scope.lastPage = Math.ceil($scope.sortedHistory.length / $scope.pagingOptions.pageSize);
 
