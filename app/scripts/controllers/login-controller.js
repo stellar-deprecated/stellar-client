@@ -20,7 +20,7 @@ sc.controller('LoginCtrl', function($scope, $state, $http, $timeout, $q, session
     //HACK: use timeout to turn an expensive synchronous operation into a promise
     return  $timeout(function() {
               return Wallet.deriveId($scope.username, $scope.password);
-            }, 0);
+            }, 25);
   }
 
   function performLogin(id) {
