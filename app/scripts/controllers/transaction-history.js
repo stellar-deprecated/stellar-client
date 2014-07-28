@@ -10,22 +10,20 @@ sc.controller('TransactionHistoryCtrl', function($scope, transactionHistory) {
     'received': 'icon icon-receive'
   };
 
-  $scope.history = transactionHistory.history;
+  $scope.$on("transactionHistory.historyUpdated", function(e, history) {
+    $scope.history = history;
+  })
+
+  $scope.history = [];
   $scope.sortedHistory = [];
   $scope.transactionPage = [];
 
-  function updateTransactions(){
+  function updateTransactionPage(){
     var startIndex = ($scope.pagingOptions.currentPage - 1) * $scope.pagingOptions.pageSize;
     $scope.transactionPage = $scope.sortedHistory.slice(startIndex, startIndex + $scope.pagingOptions.pageSize);
   }
 
-  function updatePaging(){
-    $scope.lastPage = Math.ceil($scope.sortedHistory.length / $scope.pagingOptions.pageSize);
-    updateTransactions();
-  }
-
   $scope.nextPage = function() {
-    $scope.lastPage = Math.ceil($scope.sortedHistory.length / $scope.pagingOptions.pageSize);
     $scope.pagingOptions.currentPage = Math.min($scope.pagingOptions.currentPage + 1, $scope.lastPage);
   };
 
@@ -34,17 +32,21 @@ sc.controller('TransactionHistoryCtrl', function($scope, transactionHistory) {
   };
 
   $scope.$watch('history', function() {
+    console.log("history");
     $scope.sortedHistory = $scope.history.slice();
+    $scope.lastPage = Math.ceil($scope.sortedHistory.length / $scope.pagingOptions.pageSize);
+
     sortTransactionHistory();
-    updatePaging();
+    updateTransactionPage();
   }, true);
 
   $scope.$watch('pagingOptions', function() {
-    updatePaging();
+    updateTransactionPage();
   }, true);
 
   $scope.$watch('sortOptions', function() {
     sortTransactionHistory();
+    updateTransactionPage();
   }, true);
 
   $scope.pagingOptions = {
@@ -118,8 +120,6 @@ sc.controller('TransactionHistoryCtrl', function($scope, transactionHistory) {
       
     var sortPredicate = getSortPredicate($scope.sortOptions.fields[0], $scope.sortOptions.directions[0]);
     $scope.sortedHistory.sort(sortPredicate);
-
-    updateTransactions();
   }
 
   function getSortPredicate(field, direction) {

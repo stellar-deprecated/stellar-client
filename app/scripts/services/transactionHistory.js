@@ -61,42 +61,49 @@ sc.service('transactionHistory', function($rootScope, stNetwork, session, contac
     if (_.any(data.transactions)) {
       requestTransactions(lastOffset + data.transactions.length);
     }
+
+    $rootScope.$broadcast('transactionHistory.historyUpdated', history.slice());
   }
 
   /**
    * Process new transactions as they occur.
    */
   function processNewTransaction(data) {
+
     var tx = processTransaction(data.transaction, data.meta);
 
     if (tx.tx_result === "tesSUCCESS" && tx.transaction) {
       $rootScope.$broadcast('$appTxNotification', tx.transaction, true);
     }
+
+    $rootScope.$broadcast('transactionHistory.historyUpdated', history.slice());
   }
 
   /**
    * Clean up a transactions, add it to the history, and add the addresse to the contacts list.
+   *
+   * NOTE:  this does not, and should not do an $apply.  It gets expensive doing that on every transaction
    */
   function processTransaction(tx, meta, isNew) {
     var processedTxn = JsonRewriter.processTxn(tx, meta, session.get('address'));
 
-    $rootScope.$apply(function() {
-      if (processedTxn) {
-        var transaction = processedTxn.transaction;
+    
+    if (processedTxn) {
+      var transaction = processedTxn.transaction;
 
-        if (processedTxn.tx_type === "Payment" && processedTxn.tx_result === "tesSUCCESS" && transaction) {
-          contacts.addContact(transaction.counterparty);
+      if (processedTxn.tx_type === "Payment" && processedTxn.tx_result === "tesSUCCESS" && transaction) {
+        contacts.addContact(transaction.counterparty);
 
-          if (isNew) {
-            history.unshift(processedTxn);
-          } else {
-            history.push(processedTxn);
-          }
-
-          $rootScope.$broadcast('$paymentNotification', transaction);
+        if (isNew) {
+          history.unshift(processedTxn);
+        } else {
+          history.push(processedTxn);
         }
+
+        $rootScope.$broadcast('$paymentNotification', transaction);
       }
-    });
+    }
+
 
     return processedTxn;
   }
