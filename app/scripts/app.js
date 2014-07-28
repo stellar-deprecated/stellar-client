@@ -115,6 +115,10 @@ stellarClient.run(function($rootScope, $state, ipCookie, session, FlashMessages)
           session.logout();
         }
         break;
+
+      case '/register':
+        ipCookie("weve_been_here_before", "true", {expires: new Date('01 Jan 2030 00:00:00 GMT')})
+        break;
     }
 
     // If the user is navigating to a state that requires authentication
