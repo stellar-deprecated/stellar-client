@@ -163,7 +163,6 @@ sc.controller('RegistrationCtrl', function($scope, $state, $timeout, $http, $q, 
     signingKeys = new SigningKeys();
 
     var data = {
-      alphaCode: session.get('alpha'),
       username: $scope.data.username,
       email: $scope.data.email,
       address: signingKeys.address
@@ -185,11 +184,6 @@ sc.controller('RegistrationCtrl', function($scope, $state, $timeout, $http, $q, 
       'invalid': 'The email is invalid.'
     };
 
-    var alphaCodeErrorMessages = {
-      'already_taken': 'The alpha code is taken.',
-      'invalid': 'The alpha code is invalid.'
-    };
-
     if (response && response.status == "fail") {
       switch (response.code) {
         case 'already_taken':
@@ -198,8 +192,6 @@ sc.controller('RegistrationCtrl', function($scope, $state, $timeout, $http, $q, 
             $scope.errors.usernameErrors.push(usernameErrorMessages['already_taken']);
           } else if (field == 'email') {
             $scope.errors.emailErrors.push(emailErrorMessages['already_taken']);
-          } else if (field == 'alpha_code') {
-            // TODO: ux for alpha code errors
           }
           break;
         case 'invalid':
@@ -208,8 +200,6 @@ sc.controller('RegistrationCtrl', function($scope, $state, $timeout, $http, $q, 
             $scope.errors.usernameErrors.push(usernameErrorMessages['invalid']);
           } else if (field == 'email') {
             $scope.errors.emailErrors.push(emailErrorMessages['invalid']);
-          } else if (field == 'alpha_code') {
-            // TODO: ux for alpha code errors
           }
           break;
         default:

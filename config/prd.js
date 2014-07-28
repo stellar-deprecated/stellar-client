@@ -28,7 +28,6 @@ var Options = {
     WALLET_SERVER: 'https://wallet.gostellar.org',
 
     PERSISTENT_SESSION : true,
-    ALPHA_PHASE : true,
     IDLE_LOGOUT_TIMEOUT : 30 * 60 * 1000, //15 minutes
 
     REPORT_ERRORS : true,
