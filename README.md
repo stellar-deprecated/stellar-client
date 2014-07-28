@@ -3,6 +3,10 @@
 The Stellar client is an AngularJS application that allows users to create, use,
 and manage their account and wallet.
 
+The client is a webbased front end for https://github.com/stellar/stellard 
+It stores your secret key encrypted in https://github.com/stellar/stellar-wallet
+You can see it in action here: https://launch.gostellar.org
+
 ## Setting up your dev server
 **TODO:** Script setup with makefile.
 
