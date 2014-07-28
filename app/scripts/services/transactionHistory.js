@@ -15,8 +15,7 @@ sc.service('transactionHistory', function($rootScope, stNetwork, session, contac
    */
   function init() {
     $rootScope.$on('$netConnected', function() {
-      // Clear the transactions history without changing the reference.
-      history.length = 0;
+      history = [];
 
       remote = stNetwork.remote;
       account = remote.account(session.get('address'));
@@ -99,8 +98,6 @@ sc.service('transactionHistory', function($rootScope, stNetwork, session, contac
         } else {
           history.push(processedTxn);
         }
-
-        $rootScope.$broadcast('$paymentNotification', transaction);
       }
     }
 

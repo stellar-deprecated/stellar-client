@@ -12,11 +12,20 @@ sc.controller('TransactionHistoryCtrl', function($scope, transactionHistory) {
 
   $scope.$on("transactionHistory.historyUpdated", function(e, history) {
     $scope.history = history;
+    newHistory();
   })
 
   $scope.history = [];
   $scope.sortedHistory = [];
   $scope.transactionPage = [];
+
+  function newHistory() {
+    $scope.sortedHistory = $scope.history.slice();
+    $scope.lastPage = Math.ceil($scope.sortedHistory.length / $scope.pagingOptions.pageSize);
+
+    sortTransactionHistory();
+    updateTransactionPage();
+  }
 
   function updateTransactionPage(){
     var startIndex = ($scope.pagingOptions.currentPage - 1) * $scope.pagingOptions.pageSize;
@@ -30,14 +39,6 @@ sc.controller('TransactionHistoryCtrl', function($scope, transactionHistory) {
   $scope.previousPage = function() {
     $scope.pagingOptions.currentPage = Math.max($scope.pagingOptions.currentPage - 1, 1);
   };
-
-  $scope.$watch('history', function() {
-    $scope.sortedHistory = $scope.history.slice();
-    $scope.lastPage = Math.ceil($scope.sortedHistory.length / $scope.pagingOptions.pageSize);
-
-    sortTransactionHistory();
-    updateTransactionPage();
-  }, true);
 
   $scope.$watch('pagingOptions', function() {
     updateTransactionPage();
