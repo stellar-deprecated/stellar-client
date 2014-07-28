@@ -10,17 +10,23 @@
 
 var module = angular.module('stellarClient');
 
-module.factory('rpReverseFederation', ['$q', '$rootScope', '$http', 'rpStellarTxt', 'session',
-        function ($q, $scope, $http, $txt, session) {
+module.factory('rpReverseFederation', function ($q, $http, rpStellarTxt, session) {
     var txts = {};
+    var results = {};
 
     function check_address(address) {
-        console.log("reverse federation: " + address);
 
         var reverseFederationPromise = $q.defer();
 
+        if(_.has(results, address)) {
+            return results[address];
+        }
+
+        results[address] = reverseFederationPromise.promise;
+
+
         var domain = Options.DEFAULT_FEDERATION_DOMAIN;
-        var txtPromise = $txt.get(domain);
+        var txtPromise = rpStellarTxt.get(domain);
 
         if (txtPromise) {
             if ("function" === typeof txtPromise.then) {
@@ -96,4 +102,4 @@ module.factory('rpReverseFederation', ['$q', '$rootScope', '$http', 'rpStellarTx
     return {
         check_address: check_address
     };
-}]);
+});
