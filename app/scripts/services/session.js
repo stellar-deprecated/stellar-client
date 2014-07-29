@@ -101,6 +101,11 @@ sc.service('session', function($rootScope, $http, $timeout, stNetwork, Wallet) {
     delete $rootScope.account;
     stNetwork.shutdown();
     this.clearIdleTimeout();
+
+    // HACK: Ensure that the app's state is reset by reloading the page.
+    if (Options.LOGOUT_WITH_REFRESH) {
+      location.reload();
+    }
   };
 
   function checkFairyAddress() {
