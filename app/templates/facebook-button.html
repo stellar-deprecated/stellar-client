@@ -1,6 +1,7 @@
 <div class="body">
     <h2>Receive <strong>{{giveawayAmount}} stellars</strong> on us!</h2>
-    <p>We will not post on your Facebook.</p>
+    <a href="" ng-show="!describe" ng-click="describe = true">Why Facebook?</a>
+    <p ng-show="describe">As the world's largest identity database, we use Facebook as a verifification mechanism to avoid spam. Your Facebook account must be verified and created before July 31, 2014. We determine your account's age with the earliest uploaded photo. We will not post on your Facebook.</p>
 </div>
 <div class="fbconnect">
     <button class="fbbutton" ng-click="facebookLogin()">
