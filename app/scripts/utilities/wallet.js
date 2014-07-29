@@ -289,8 +289,6 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
       deferred.resolve(wallet);
     } catch (err) {
       try {
-        console.log('broken');
-
         // The key was invalid. Try using the broken deriveKey function.
         var brokenKey = Wallet.deriveKeyBroken(id, username, password);
         wallet = Wallet.decrypt(encryptedWallet, id, brokenKey);
