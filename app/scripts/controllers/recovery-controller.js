@@ -83,8 +83,7 @@ sc.controller('RecoveryCtrl', function($scope, $state, $http, $timeout, session,
     return $http.post(Options.WALLET_SERVER + '/wallets/recover', data)
       .success(function(body) {
         if (body.data) {
-          var recoveryKey = Wallet.deriveKey(recoveryId, $scope.userRecoveryCode, $scope.serverRecoveryCode);
-          var wallet = Wallet.recover(body.data, recoveryId, recoveryKey);
+          var wallet = Wallet.recover(body.data, recoveryId, $scope.userRecoveryCode, $scope.serverRecoveryCode);
 
           session.login(wallet);
           $state.go('change_password');
