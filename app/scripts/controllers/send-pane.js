@@ -991,7 +991,7 @@ sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout'
             var federation_record = send.federation_record;
             if (federation_record && !contacts[federation_record.destination_address]) {
                 contacts[federation_record.destination_address] = federation_record;
-                session.syncWallet(wallet, "update");
+                wallet.sync("update");
             }
 
             $rpTracker.track('Send result', {

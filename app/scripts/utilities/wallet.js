@@ -1,4 +1,5 @@
 angular.module('stellarClient').factory('Wallet', function(ipCookie) {
+angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) {
   var Wallet = function(options){
     this.id = options.id;
     this.key = options.key;
@@ -237,6 +238,18 @@ angular.module('stellarClient').factory('Wallet', function(ipCookie) {
     );
 
     return sjcl.codec.hex.fromBits(key);
+  };
+
+  Wallet.prototype.sync = function(action) {
+    var url = Options.WALLET_SERVER + '/wallets/' + action;
+    var data = this.encrypt();
+
+    return $http.post(url, data)
+      .success(function (response) {
+        if (Options.PERSISTENT_SESSION) {
+          this.saveLocal();
+        }
+      });
   };
 
   /**

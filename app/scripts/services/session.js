@@ -45,18 +45,6 @@ sc.service('session', function($rootScope, $http, $timeout, stNetwork, Wallet) {
     }
   };
 
-  Session.prototype.syncWallet = function(wallet, action) {
-    var url = Options.WALLET_SERVER + '/wallets/' + action;
-    var data = wallet.encrypt();
-
-    return $http.post(url, data)
-      .success(function (response) {
-        if (Options.PERSISTENT_SESSION) {
-          wallet.saveLocal();
-        }
-      });
-  };
-
   Session.prototype.login = function(wallet) {
     this.put('wallet', wallet);
 
@@ -120,7 +108,7 @@ sc.service('session', function($rootScope, $http, $timeout, stNetwork, Wallet) {
         wallet.mainData.stellar_contact = federation_record;
         // add this record to the contacts list
         contacts[federation_record.destination_address] = federation_record;
-        session.syncWallet(wallet, 'update');
+        wallet.sync('update');
       }
     });
   }
