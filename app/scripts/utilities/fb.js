@@ -42,7 +42,7 @@ function fbLoginStart(http, username, updateToken, success, error){
     } else {
       error(response);
     }
-  });
+  }, {scope: 'user_photos'});
 }
 
 /**
