@@ -45,7 +45,8 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
    * @param {string} encryptedWallet.keychainData
    * @param {string} encryptedWallet.recoveryData
    * @param {string} recoveryId
-   * @param {string} recoveryKey
+   * @param {string} userRecoveryCode
+   * @param {string} serverRecoveryCode
    *
    * @returns {Wallet}
    */
@@ -158,6 +159,24 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
     };
   };
 
+  /**
+   * Encrypts and saves the wallet to the server.
+   *
+   * @param {string} action Server expects 'create' or 'update'.
+   *
+   * returns {Promise}
+   */
+  Wallet.prototype.sync = function(action) {
+    var url = Options.WALLET_SERVER + '/wallets/' + action;
+    var data = this.encrypt();
+
+    return $http.post(url, data)
+      .success(function (response) {
+        if (Options.PERSISTENT_SESSION) {
+          this.saveLocal();
+        }
+      }.bind(this));
+  };
 
   Wallet.prototype.saveLocal = function() {
     var self = this;
@@ -250,6 +269,10 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
     return sjcl.codec.hex.fromBits(key);
   };
 
+  /**
+   * This is the old version of deriveKey that is broken, because it concatenates
+   * a string with an array for the salt parameter.
+   */
   Wallet.deriveKeyBroken = function(id, username, password){
     var credentials = username.toLowerCase() + password;
     var salt = sjcl.codec.utf8String.toBits(credentials);
@@ -266,18 +289,16 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
     return sjcl.codec.hex.fromBits(key);
   };
 
-  Wallet.prototype.sync = function(action) {
-    var url = Options.WALLET_SERVER + '/wallets/' + action;
-    var data = this.encrypt();
-
-    return $http.post(url, data)
-      .success(function (response) {
-        if (Options.PERSISTENT_SESSION) {
-          this.saveLocal();
-        }
-      }.bind(this));
-  };
-
+  /**
+   * Handles opening an encrypted wallet and migrating to the new deriveKey function.
+   *
+   * @param {object} encryptedWallet
+   * @param {string} id
+   * @param {string} username
+   * @param {string} password
+   *
+   * @return {Promise}
+   */
   Wallet.open = function(encryptedWallet, id, username, password){
     var deferred = $q.defer();
 
