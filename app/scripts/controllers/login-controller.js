@@ -26,17 +26,11 @@ sc.controller('LoginCtrl', function($scope, $state, $http, $timeout, $q, session
   function performLogin(id) {
     return $http.post(Options.WALLET_SERVER + '/wallets/show', {id: id})
       .success(function(body) {
-        try {
-          var key    = Wallet.deriveKey(id, $scope.username, $scope.password);
-          var wallet = Wallet.decrypt(body.data, id, key);
-
-          session.login(wallet);
-          $state.go('dashboard');
-        } catch (err) {
-          // Error decrypting blob.
-          $scope.loginError = 'An error occurred.';
-          throw err;
-        }
+        Wallet.open(body.data, id, $scope.username, $scope.password)
+          .then(function(wallet) {
+            session.login(wallet);
+            $state.go('dashboard');
+          });
       })
       .error(function(body, status) {
         switch(status) {

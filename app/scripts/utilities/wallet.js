@@ -1,4 +1,3 @@
-angular.module('stellarClient').factory('Wallet', function(ipCookie) {
 angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) {
   var Wallet = function(options){
     this.id = options.id;
@@ -225,6 +224,22 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
   };
 
   Wallet.deriveKey = function(id, username, password){
+    var credentials = id + username.toLowerCase() + password;
+    var salt = sjcl.codec.utf8String.toBits(credentials);
+
+    var key = sjcl.misc.scrypt(
+      credentials,
+      salt,
+      Wallet.SETTINGS.SCRYPT.N,
+      Wallet.SETTINGS.SCRYPT.r,
+      Wallet.SETTINGS.SCRYPT.p,
+      Wallet.SETTINGS.SCRYPT.SIZE/8
+    );
+
+    return sjcl.codec.hex.fromBits(key);
+  };
+
+  Wallet.deriveKeyBroken = function(id, username, password){
     var credentials = username.toLowerCase() + password;
     var salt = sjcl.codec.utf8String.toBits(credentials);
 
@@ -249,7 +264,44 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
         if (Options.PERSISTENT_SESSION) {
           this.saveLocal();
         }
-      });
+      }.bind(this));
+  };
+
+  Wallet.open = function(encryptedWallet, id, username, password){
+    var deferred = $q.defer();
+
+    var key, wallet;
+
+    try {
+      key = Wallet.deriveKey(id, username, password);
+      wallet = Wallet.decrypt(encryptedWallet, id, key);
+      deferred.resolve(wallet);
+    } catch (err) {
+      try {
+        console.log('broken');
+
+        // The key was invalid. Try using the broken deriveKey function.
+        var brokenKey = Wallet.deriveKeyBroken(id, username, password);
+        wallet = Wallet.decrypt(encryptedWallet, id, brokenKey);
+
+        var newWallet = new Wallet({
+          id: id,
+          key: key,
+          keychainData: wallet.keychainData,
+          mainData: wallet.mainData
+          // TODO: Copy recovery data.
+        });
+
+        newWallet.sync('update')
+          .then(function() {
+            deferred.resolve(newWallet);
+          });
+      } catch (err) {
+        deferred.reject(err);
+      }
+    }
+
+    return deferred.promise;
   };
 
   /**
