@@ -499,6 +499,10 @@ sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout'
                 return;
             }
 
+            if (!$scope.account) {
+                return;
+            }
+
             // Cannot make STR payment if the sender does not have enough STR
             send.sender_insufficient_xtr = send.amount_feedback.is_native()
                 && $scope.account.max_spend
