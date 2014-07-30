@@ -4,24 +4,27 @@ var sc = angular.module('stellarClient');
 
 sc.controller('DashboardCtrl', function($rootScope, $scope, $timeout, $state, session, TutorialHelper) {
     $rootScope.tab = 'none';
+    $rootScope.showTab = false;
 
     $scope.showTransaction = false;
     $scope.newTransaction = null;
     $scope.username = session.get('username');
     $scope.tutorials = TutorialHelper;
 
-    $scope.closePane = function(){
-      $rootScope.tab = 'none';
+    $rootScope.closePane = function(){
+      $rootScope.showTab = false;
     };
 
-    $scope.openSend = function() {
+    $rootScope.openSend = function() {
         $scope.$broadcast('resetSendPane');
         $rootScope.tab = 'send';
+        $rootScope.showTab = true;
         TutorialHelper.clear('dashboard');
     };
 
-    $scope.openReceive = function() {
+    $rootScope.openReceive = function() {
         $rootScope.tab = 'receive';
+        $rootScope.showTab = true;
     };
 
     $scope.statusMessage = function(){
