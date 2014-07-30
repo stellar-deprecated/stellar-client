@@ -24,8 +24,9 @@ sc.controller('SendRewardCtrl', function ($rootScope, $scope, $http, stNetwork, 
   $scope.sendTutorial = function() {
     TutorialHelper.set('dashboard', 'send-tutorial');
 
-    // Scroll up to ensure the send button is visible.
-    $('html, body').animate({scrollTop: 0}, 400);
+    // Scroll up and open the send tab.
+    $('html, body').animate({scrollTop: $('.send-receive').offset().top}, 400);
+    $rootScope.openSend();
   };
 
   function validateTransaction(tx){
