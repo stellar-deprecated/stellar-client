@@ -22,8 +22,8 @@ var Options = {
     INFLATION_DEST: 'g4eRqgZfzfj3132y17iaf2fp6HQj1gofjt',
 
     APP_ID: '1411202179109031',
-    DOMAIN_NAME: 'gostellar.org',
-    DEFAULT_FEDERATION_DOMAIN: 'gostellar.org',
+    DOMAIN_NAME: 'stellar.org',
+    DEFAULT_FEDERATION_DOMAIN: 'stellar.org',
     API_SERVER: 'https://api.stellar.org',
     WALLET_SERVER: 'https://wallet.stellar.org',
 
