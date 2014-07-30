@@ -216,7 +216,7 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
     },
 
     CIPHER_NAME: 'aes',
-    MODE: 'ccm',
+    MODE: 'gcm',
     KEY_SIZE: 32
   };
 
