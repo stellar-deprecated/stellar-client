@@ -61,7 +61,7 @@ sc.controller('ChangePasswordCtrl', function($scope, $state, $timeout, $http, se
     });
 
     // Upload the new wallet to the server.
-    session.syncWallet(newWallet, 'create')
+    newWallet.sync('create')
       .then(function(){
         return replaceWallet(oldWallet, newWallet);
       })

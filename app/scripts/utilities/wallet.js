@@ -1,4 +1,4 @@
-angular.module('stellarClient').factory('Wallet', function(ipCookie) {
+angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) {
   var Wallet = function(options){
     this.id = options.id;
     this.key = options.key;
@@ -45,13 +45,25 @@ angular.module('stellarClient').factory('Wallet', function(ipCookie) {
    * @param {string} encryptedWallet.keychainData
    * @param {string} encryptedWallet.recoveryData
    * @param {string} recoveryId
-   * @param {string} recoveryKey
+   * @param {string} userRecoveryCode
+   * @param {string} serverRecoveryCode
    *
    * @returns {Wallet}
    */
-  Wallet.recover = function(encryptedWallet, recoveryId, recoveryKey){
-    var rawRecoveryKey = sjcl.codec.hex.toBits(recoveryKey);
-    var recoveryData = Wallet.decryptData(encryptedWallet.recoveryData, rawRecoveryKey);
+  Wallet.recover = function(encryptedWallet, recoveryId, userRecoveryCode, serverRecoveryCode){
+    var recoveryKey, recoveryData;
+
+    try {
+      recoveryKey = Wallet.deriveKey(recoveryId, userRecoveryCode, serverRecoveryCode);
+      var rawRecoveryKey = sjcl.codec.hex.toBits(recoveryKey);
+      recoveryData = Wallet.decryptData(encryptedWallet.recoveryData, rawRecoveryKey);
+    } catch(err) {
+      // The recovery key was invalid. Try using the broken deriveKey function.
+      var brokenRecoveryKey = Wallet.deriveKeyBroken(recoveryId, userRecoveryCode, serverRecoveryCode);
+      var rawRecoveryKey = sjcl.codec.hex.toBits(recoveryKey);
+      recoveryData = Wallet.decryptData(encryptedWallet.recoveryData, rawRecoveryKey);
+      // TODO: Encrypt the recovery data with the new key and update it.
+    }
 
     var wallet = Wallet.decrypt(encryptedWallet, recoveryData.id, recoveryData.key);
     wallet.recoveryId = recoveryId;
@@ -147,6 +159,24 @@ angular.module('stellarClient').factory('Wallet', function(ipCookie) {
     };
   };
 
+  /**
+   * Encrypts and saves the wallet to the server.
+   *
+   * @param {string} action Server expects 'create' or 'update'.
+   *
+   * returns {Promise}
+   */
+  Wallet.prototype.sync = function(action) {
+    var url = Options.WALLET_SERVER + '/wallets/' + action;
+    var data = this.encrypt();
+
+    return $http.post(url, data)
+      .success(function (response) {
+        if (Options.PERSISTENT_SESSION) {
+          this.saveLocal();
+        }
+      }.bind(this));
+  };
 
   Wallet.prototype.saveLocal = function() {
     var self = this;
@@ -224,6 +254,26 @@ angular.module('stellarClient').factory('Wallet', function(ipCookie) {
   };
 
   Wallet.deriveKey = function(id, username, password){
+    var credentials = id + username.toLowerCase() + password;
+    var salt = sjcl.codec.utf8String.toBits(credentials);
+
+    var key = sjcl.misc.scrypt(
+      credentials,
+      salt,
+      Wallet.SETTINGS.SCRYPT.N,
+      Wallet.SETTINGS.SCRYPT.r,
+      Wallet.SETTINGS.SCRYPT.p,
+      Wallet.SETTINGS.SCRYPT.SIZE/8
+    );
+
+    return sjcl.codec.hex.fromBits(key);
+  };
+
+  /**
+   * This is the old version of deriveKey that is broken, because it concatenates
+   * a string with an array for the salt parameter.
+   */
+  Wallet.deriveKeyBroken = function(id, username, password){
     var credentials = username.toLowerCase() + password;
     var salt = sjcl.codec.utf8String.toBits(credentials);
 
@@ -237,6 +287,51 @@ angular.module('stellarClient').factory('Wallet', function(ipCookie) {
     );
 
     return sjcl.codec.hex.fromBits(key);
+  };
+
+  /**
+   * Handles opening an encrypted wallet and migrating to the new deriveKey function.
+   *
+   * @param {object} encryptedWallet
+   * @param {string} id
+   * @param {string} username
+   * @param {string} password
+   *
+   * @return {Promise}
+   */
+  Wallet.open = function(encryptedWallet, id, username, password){
+    var deferred = $q.defer();
+
+    var key, wallet;
+
+    try {
+      key = Wallet.deriveKey(id, username, password);
+      wallet = Wallet.decrypt(encryptedWallet, id, key);
+      deferred.resolve(wallet);
+    } catch (err) {
+      try {
+        // The key was invalid. Try using the broken deriveKey function.
+        var brokenKey = Wallet.deriveKeyBroken(id, username, password);
+        wallet = Wallet.decrypt(encryptedWallet, id, brokenKey);
+
+        var newWallet = new Wallet({
+          id: id,
+          key: key,
+          keychainData: wallet.keychainData,
+          mainData: wallet.mainData
+          // TODO: Copy recovery data.
+        });
+
+        newWallet.sync('update')
+          .then(function() {
+            deferred.resolve(newWallet);
+          });
+      } catch (err) {
+        deferred.reject(err);
+      }
+    }
+
+    return deferred.promise;
   };
 
   /**
