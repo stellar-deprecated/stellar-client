@@ -24,8 +24,8 @@ var Options = {
     APP_ID: '1411202179109031',
     DOMAIN_NAME: 'gostellar.org',
     DEFAULT_FEDERATION_DOMAIN: 'gostellar.org',
-    API_SERVER: 'https://api.gostellar.org',
-    WALLET_SERVER: 'https://wallet.gostellar.org',
+    API_SERVER: 'https://api.stellar.org',
+    WALLET_SERVER: 'https://wallet.stellar.org',
 
     PERSISTENT_SESSION : true,
     IDLE_LOGOUT_TIMEOUT : 30 * 60 * 1000, //15 minutes
