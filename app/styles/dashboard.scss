@@ -243,26 +243,20 @@
   }
 
   &.send-tutorial {
-    .dash-send-container {
-      button {
-        @include animation(pulse 1s ease-in-out infinite alternate);
-      }
-    }
-
     .reward-page .content .send-stellar {
       .send-arrow {
         opacity: 1;
       }
     }
   }
-}
 
-@include keyframes(pulse) {
-  0% {
-    @include box-shadow(0 0 2px 4px rgba(#EFB52E, 0));
-  }
+  .send-receive {
+    max-height: 0;
+    overflow: hidden;
+    @include transition(max-height 700ms ease-in-out);
 
-  100% {
-    @include box-shadow(0 0 4px 4px rgba(#EFB52E, 0.7));
+    &.open {
+      max-height: 700px;
+    }
   }
 }

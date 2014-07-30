@@ -14,26 +14,26 @@
                     <span ng-show="$root.accountStatus == 'loaded'" class="dash-balance-info ng-hide">Current Balance <b>Stellars</b></span>
                 </div>
                 <div class="dash-receive-container col-xs-12 col-sm-3 col-sm-pull-6">
-                    <button class="stellar-button btn btn-default" ng-click="openReceive()" ng-show="tab != 'receive'">
+                    <button class="stellar-button btn btn-default" ng-click="openReceive()" ng-show="!showTab || tab != 'receive'">
                         <i class="icon icon-receive"></i>
                         Receive
                     </button>
-                    <div class="no-button" ng-show="tab == 'receive'"><i class="icon icon-receive"></i>Receive</div>
+                    <div class="no-button" ng-show="showTab && tab == 'receive'"><i class="icon icon-receive"></i>Receive</div>
                 </div>
                 <div class="dash-send-container col-xs-12 col-sm-3">
-                    <button class="stellar-button btn btn-default" ng-click="openSend()" ng-show="tab != 'send'">
+                    <button class="stellar-button btn btn-default" ng-click="openSend()" ng-show="!showTab || tab != 'send'">
                         <i class="icon icon-send"></i>
                         Send
                     </button>
-                    <div class="no-button" ng-show="tab == 'send'"><i class="icon icon-send"></i>Send</div>
+                    <div class="no-button" ng-show="showTab && tab == 'send'"><i class="icon icon-send"></i>Send</div>
                 </div>
             </div>
             <div class="row arrow-row">
-                <div class="col-sm-3" ng-show="tab == 'receive'">
+                <div class="col-sm-3" ng-show="showTab && tab == 'receive'">
                     <div class="arrow arrow-shadow"></div>
                     <div class="arrow"></div>
                 </div>
-                <div class="col-sm-3 col-sm-offset-9" ng-show="tab == 'send'">
+                <div class="col-sm-3 col-sm-offset-9" ng-show="showTab && tab == 'send'">
                     <div class="arrow arrow-shadow"></div>
                     <div class="arrow"></div>
                 </div>
@@ -52,7 +52,7 @@
             </div>
         </div>
     </div>
-    <div class="send-receive container">
+    <div class="send-receive container" ng-class="{open: showTab}">
         <div class="send-container client-section" ng-include="'templates/send.html'" ng-show="tab==='send'"></div>
         <div class="receive-container client-section" ng-include="'templates/receive.html'" ng-show="$root.tab==='receive'"></div>
     </div>
