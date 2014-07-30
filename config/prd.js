@@ -27,7 +27,7 @@ var Options = {
     API_SERVER: 'https://api.stellar.org',
     WALLET_SERVER: 'https://wallet.stellar.org',
 
-    PERSISTENT_SESSION : true,
+    PERSISTENT_SESSION : false,
     IDLE_LOGOUT_TIMEOUT : 30 * 60 * 1000, //15 minutes
 
     REPORT_ERRORS : true,
