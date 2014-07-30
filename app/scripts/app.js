@@ -21,6 +21,8 @@ stellarClient.config(function($httpProvider, $stateProvider, $urlRouterProvider,
     RavenProvider.development(true);
   }
 
+  sjcl.random.startCollectors();
+
   $httpProvider.interceptors.push('bruteRequestInterceptor');
 
   $stateProvider
