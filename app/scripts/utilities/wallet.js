@@ -105,6 +105,8 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
       return new Wallet(decryptedWallet);
     }
 
+    if (!Options.PERSISTENT_SESSION) { return; }
+
     return catchAndSwallowSecurityErrors(function() {
       return loadFromSession() || loadFromLocal();
     });
@@ -172,9 +174,9 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
 
     return $http.post(url, data)
       .success(function (response) {
-        if (Options.PERSISTENT_SESSION) {
-          this.saveLocal();
-        }
+        if (!Options.PERSISTENT_SESSION) { return; }
+        this.saveLocal();
+
       }.bind(this));
   };
 
@@ -193,6 +195,8 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
 
 
   Wallet.prototype.bumpLocalTimeout = function() {
+    if (!Options.PERSISTENT_SESSION) { return; }
+
     //TODO: push the cookie timeout foreward
     catchAndSwallowSecurityErrors(function() {
       ipCookie("localWalletKey", ipCookie("localWalletKey"), {expires:Options.IDLE_LOGOUT_TIMEOUT, expirationUnit:'seconds'});
