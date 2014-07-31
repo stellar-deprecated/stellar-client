@@ -278,20 +278,19 @@ sc.controller('RegistrationCtrl', function($scope, $state, $timeout, $http, $q, 
 
     // Upload the new wallet to the server.
     return wallet.sync('create').catch(function(err) {
-       // if this is a wallet error
-        var data = {
-          username: $scope.data.username,
-          email: $scope.data.email
-        };
-        $http.post(Options.API_SERVER + "/failedRegistration", data);
-        
-        FlashMessages.add({
-          title: 'Registration Error',
-          info: 'There was an error during registration. Please contact us at hello@stellar.org to retrieve your account.',
-          type: 'error'
-        });
+      var data = {
+        username: $scope.data.username,
+        email: $scope.data.email
+      };
+      $http.post(Options.API_SERVER + "/failedRegistration", data);
+      
+      FlashMessages.add({
+        title: 'Registration Error',
+        info: 'There was an error during registration. Please contact us at hello@stellar.org to retrieve your account.',
+        type: 'error'
+      });
 
-        return $q.reject();
+      return $q.reject();
     });
   }
 });
