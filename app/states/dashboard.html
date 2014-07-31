@@ -56,7 +56,7 @@
         <div class="send-container client-section" ng-include="'templates/send.html'" ng-show="tab==='send'"></div>
         <div class="receive-container client-section" ng-include="'templates/receive.html'" ng-show="$root.tab==='receive'"></div>
     </div>
-    <div class="client-section" id="dashboard-flash-messages">
+    <div class="client-section" id="dashboard-flash-messages" ng-show="messages.length" ng-controller="FlashMessageCtrl">
         <div ng-include="'templates/flash-message-container.html'"></div>
     </div>
     <div ng-include="'templates/reward-container.html'"></div>
