@@ -18,4 +18,24 @@
       padding: 16px 12px;
     }
   }
+
+  @media (max-width: $phone-width) {
+    h1 {
+      margin: 0;
+    }
+    .stellar-form {
+      .form-group {
+        .errors {
+          height: auto;
+        }
+        label {
+          line-height: 2em;
+        }
+        button {
+          margin: 15px 0;
+        }
+      }
+    }
+
+  }
 }
