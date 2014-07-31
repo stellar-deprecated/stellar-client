@@ -162,6 +162,14 @@
       margin-top: 20px;
     }
   }
+  @media (max-width: $phone-width) {
+    .reward-page-title {
+      margin-bottom: 10px;
+      span {
+        display: none;
+      }
+    }
+  }
 }
 
 @media (min-width: $mobile-width) {
