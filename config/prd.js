@@ -36,5 +36,6 @@ var Options = {
     // Number of transactions each page has in balance tab notifications
     transactions_per_page: 25,
 
-    LOGOUT_WITH_REFRESH: true
+    LOGOUT_WITH_REFRESH: true,
+    MAX_WALLET_ATTEMPTS: 3
 };
