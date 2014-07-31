@@ -16,7 +16,7 @@
     "fontawesome": "~4.1.0",
     "lodash": "~2.4.1",
     "angular-raven": "~0.5.6",
-    "ng-grid": "~2.0.11",
+    "ng-grid": "deckar01/ng-grid",
     "angular-cookie": "~4.0.2"
   },
   "devDependencies": {},
