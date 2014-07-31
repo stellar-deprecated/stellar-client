@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('RegistrationCtrl', function($scope, $state, $timeout, $http, $q, session, debounce, singletonPromise, Wallet) {
+sc.controller('RegistrationCtrl', function($scope, $state, $timeout, $http, $q, session, debounce, singletonPromise, Wallet, FlashMessages) {
   $scope.data = {
     username:             '',
     email:                '',
@@ -277,6 +277,20 @@ sc.controller('RegistrationCtrl', function($scope, $state, $timeout, $http, $q, 
     wallet.mainData.contacts[Options.stellar_contact.destination_address] = Options.stellar_contact;
 
     // Upload the new wallet to the server.
-    return wallet.sync('create');
+    return wallet.sync('create').catch(function(err) {
+      var data = {
+        username: $scope.data.username,
+        email: $scope.data.email
+      };
+      $http.post(Options.API_SERVER + "/failedRegistration", data);
+      
+      FlashMessages.add({
+        title: 'Registration Error',
+        info: 'There was an error during registration. Please contact us at hello@stellar.org to retrieve your account.',
+        type: 'error'
+      });
+
+      return $q.reject();
+    });
   }
 });
