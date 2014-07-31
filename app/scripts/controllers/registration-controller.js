@@ -120,6 +120,11 @@ sc.controller('RegistrationCtrl', function($scope, $state, $timeout, $http, $q, 
     if(!registration.email.value && $scope.noEmailWarning == false) {
       validInput = false;
       $scope.noEmailWarning = true;
+
+      // Scroll up to the poptip.
+      $timeout(function() {
+        $('html, body').animate({scrollTop: $('.poptip').offset().top - 15}, 400);
+      }, 20);
     } else if(registration.email.value && !$scope.data.email) {
       validInput = false;
       $scope.errors.emailErrors.push('Invalid email address.');

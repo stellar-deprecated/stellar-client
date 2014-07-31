@@ -1,10 +1,10 @@
 .poptip {
   border: 1px solid #D0D0D0;
   border-radius: 3px;
-  width: 450px;
+  width: calc(100% - 30px);
   position: absolute;
-  left: 60%;
-  top: -30px;
+  left: 15px;
+  bottom: 55px;
   z-index: 99;
   cursor: default;
   box-shadow: 0 0 5px 2px rgba($grey, 0.2);
@@ -19,20 +19,20 @@
   &:after {
     content: "";
     position: absolute;
-    border-top: 10px solid transparent;
-    border-bottom: 10px solid transparent;
-    top: 42px;
-    left: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    bottom: -10px;
+    left: 50%;
     margin-left: -10px;
   }
 
   &:before {
-    border-right: 10px solid #D0D0D0;
+    border-top: 10px solid #D0D0D0;
   }
 
   &:after {
-    border-right: 10px solid #FEEBE5;
-    padding-left: 2px;
+    border-top: 10px solid white;
+    padding-top: 2px;
     z-index: 1;
   }
 
@@ -58,10 +58,11 @@
     background-color: white;
     border-bottom-left-radius: 3px;
     border-bottom-right-radius: 3px;
+    text-align: center;
 
     .stellar-button {
       margin: 0;
-      width: 62%;
+      width: 100%;
       font-size: 16px;
       height: 40px;
     }
@@ -69,7 +70,6 @@
     .poptip-ignore {
       display: inline-block;
       margin: 12px 0;
-      float: right;
       color: $grey;
       cursor: pointer;
       @include transition(color 200ms ease-in-out);
