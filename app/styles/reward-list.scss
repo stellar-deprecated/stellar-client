@@ -17,6 +17,7 @@
     position: relative;
     overflow: visible;
     white-space: nowrap;
+
     @include transition(border-color 350ms ease-in-out,
             color 350ms ease-in-out,
             background-color 350ms ease-in-out);
@@ -70,6 +71,19 @@
         font-size: 17px;
         display: block;
         margin-left: 51px;
+      }
+    }
+  }
+  @media (max-width: $phone-width) {
+    li {
+      .reward-body {
+        padding: 10px;
+        .subtitle {
+          margin-left: 35px;
+        }
+      }
+      i{
+        padding-right: 5px;
       }
     }
   }
