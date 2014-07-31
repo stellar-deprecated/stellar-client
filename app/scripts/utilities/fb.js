@@ -7,6 +7,11 @@ window.fbAsyncInit = function() {
         cookie     : true, // enable cookies to allow the server to access the session
         xfbml      : true  // parse XFBML
     });
+    var rootscope =angular.element(document).injector().get("$rootScope");
+    rootscope.$apply(function () {
+      rootscope.fbinit = true;
+      rootscope.$broadcast('fbinit');
+    });
 };
 
 // Load the facebook SDK asynchronously
@@ -19,6 +24,7 @@ window.fbAsyncInit = function() {
     js.src = "//connect.facebook.net/en_US/all.js";
     ref.parentNode.insertBefore(js, ref);
 }(document));
+
 
 /**
  * Prompt the user to login with facebook.

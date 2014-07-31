@@ -4,7 +4,7 @@
     <p ng-show="describe">We are currently using Facebook as a verification method to avoid spam but hope to add other methods soon. We will not post on your Facebook.</p>
 </div>
 <div class="fbconnect">
-    <button class="fbbutton" ng-click="facebookLogin()">
+    <button class="fbbutton" ng-click="facebookLogin()" ng-disabled="!fbinit">
         <div class="fblogo">f</div>
         <div class="fblabel" ng-hide="loading">Connect with Facebook</div>
         <div class="fblabel" ng-show="loading">Loading...</div>
