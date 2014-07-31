@@ -46,6 +46,8 @@ sc.service('session', function($rootScope, $http, $timeout, stNetwork, Wallet) {
   };
 
   Session.prototype.login = function(wallet) {
+    sessionStorage['display_reload_message'] = "display";
+
     this.put('wallet', wallet);
 
     if (Options.PERSISTENT_SESSION) {
@@ -84,6 +86,8 @@ sc.service('session', function($rootScope, $http, $timeout, stNetwork, Wallet) {
   };
 
   Session.prototype.logout = function() {
+    sessionStorage['display_reload_message'] = false;
+
     Wallet.purgeLocal();
     cache = {};
     delete $rootScope.account;
