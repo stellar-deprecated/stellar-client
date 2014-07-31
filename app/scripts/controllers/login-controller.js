@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('LoginCtrl', function($scope, $state, $http, $timeout, $q, session, singletonPromise, Wallet) {
+sc.controller('LoginCtrl', function($scope, $state, $http, $timeout, $q, session, singletonPromise, Wallet, FlashMessages) {
   $scope.username   = null;
   $scope.password   = null;
   $scope.loginError = null;
@@ -44,5 +44,14 @@ sc.controller('LoginCtrl', function($scope, $state, $http, $timeout, $q, session
             $scope.loginError = 'An error occurred.';
         }
       });
+  }
+
+  if (sessionStorage['display_reload_message'] === "display") {
+    sessionStorage['display_reload_message'] = false;
+    FlashMessages.add({
+      title: 'Logout',
+      info: 'You\'ve been automatically logged out.',
+      type: 'error'
+    });
   }
 });
