@@ -46,7 +46,9 @@ sc.service('session', function($rootScope, $http, $timeout, stNetwork, Wallet) {
   };
 
   Session.prototype.login = function(wallet) {
-    sessionStorage['display_reload_message'] = "display";
+    try {
+      sessionStorage['display_reload_message'] = "display";
+    } catch (e) {}
 
     this.put('wallet', wallet);
 
@@ -86,7 +88,9 @@ sc.service('session', function($rootScope, $http, $timeout, stNetwork, Wallet) {
   };
 
   Session.prototype.logout = function() {
-    sessionStorage['display_reload_message'] = false;
+    try {
+      sessionStorage['display_reload_message'] = false;
+    } catch (e) {}
 
     Wallet.purgeLocal();
     cache = {};
