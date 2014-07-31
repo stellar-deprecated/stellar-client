@@ -45,7 +45,6 @@ sc.controller('RegistrationCtrl', function($scope, $state, $timeout, $http, $q, 
       $http.post(Options.API_SERVER + '/user/validname', {username: $scope.data.username})
       .success(
         function (response) {
-          console.log(response.status);
           $scope.status.usernameAvailable = true;
         })
       .error(
@@ -153,6 +152,7 @@ sc.controller('RegistrationCtrl', function($scope, $state, $timeout, $http, $q, 
 
   $scope.attemptRegistration = singletonPromise(function() {
     return validateInput()
+      .then(ensureEntropy)
       .then(submitRegistration)
       .then(createWallet)
       .then(function(){
@@ -163,6 +163,43 @@ sc.controller('RegistrationCtrl', function($scope, $state, $timeout, $http, $q, 
         $state.go('dashboard');
       });
   });
+
+
+  /**
+   * Seed the sjcl random function with Math.random() in the case where we are
+   * on a crappy browser (IE) and we've yet to get enough entropy from the 
+   * sjcl entropy collector.
+   *
+   * it sucks, but this is our last minute fix for IE support.  Our fix going
+   * forward will be to use window.msCrypto on ie11, and on ie10 request
+   * some mouse movement from the user (maybe?).
+   * 
+   */
+  function ensureEntropy() {
+    var deferred = $q.defer();
+
+    var isEnough = function() {
+      return sjcl.random.isReady() !== sjcl.random._NOT_READY;
+    }
+
+    if(isEnough()){
+      deferred.resolve();
+      return deferred.promise;
+    } 
+
+    for (var i = 0; i < 8; i++) {
+      sjcl.random.addEntropy(Math.random(), 32, "Math.random()");
+    }
+    
+    if(isEnough()){
+      deferred.resolve();
+    } else {
+      $scope.errors.usernameErrors.push('Couldn\'t get enough entropy');
+      deferred.reject();
+    }
+    
+    return deferred.promise;
+  }
 
   function submitRegistration() {
     signingKeys = new SigningKeys();
