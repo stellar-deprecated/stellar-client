@@ -113,6 +113,8 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
   };
 
   Wallet.purgeLocal = function() {
+    if (!Options.PERSISTENT_SESSION) { return; }
+    
     catchAndSwallowSecurityErrors(function() {
       ipCookie.remove("localWalletKey");
       delete sessionStorage.wallet;
@@ -174,13 +176,14 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
 
     return $http.post(url, data)
       .success(function (response) {
-        if (!Options.PERSISTENT_SESSION) { return; }
         this.saveLocal();
 
       }.bind(this));
   };
 
   Wallet.prototype.saveLocal = function() {
+    if (!Options.PERSISTENT_SESSION) { return; }
+
     var self = this;
     var loginWalletKey = sjcl.random.randomWords(Wallet.SETTINGS.KEY_SIZE / 4);
     var encryptedWalletKey = Wallet.encryptData(this.key, loginWalletKey);
