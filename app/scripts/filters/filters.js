@@ -88,6 +88,9 @@ module.filter('rpamount', function () {
             out = amount.to_human(opts);
         }
 
+        // Floor the balance
+        out = out.split('.')[0];
+
         return out;
     };
 });
