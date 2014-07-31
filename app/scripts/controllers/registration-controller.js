@@ -276,21 +276,40 @@ sc.controller('RegistrationCtrl', function($scope, $state, $timeout, $http, $q, 
     // add the default contact
     wallet.mainData.contacts[Options.stellar_contact.destination_address] = Options.stellar_contact;
 
+    return tryWalletUpload(wallet);
+  }
+
+  function tryWalletUpload(wallet, attempts) {
+    attempts = attempts || 0;
+
     // Upload the new wallet to the server.
     return wallet.sync('create').catch(function(err) {
       var data = {
         username: $scope.data.username,
         email: $scope.data.email
       };
-      $http.post(Options.API_SERVER + "/failedRegistration", data);
-      
-      FlashMessages.add({
-        title: 'Registration Error',
-        info: 'There was an error during registration. Please contact us at hello@stellar.org to retrieve your account.',
-        type: 'error'
-      });
 
-      return $q.reject();
+      if (attempts >= Options.MAX_WALLET_ATTEMPTS) {
+        FlashMessages.add({
+          title: 'Registration Error',
+          info: 'There was an error during registration. Please contact us at hello@stellar.org to retrieve your account.',
+          type: 'error'
+        });
+
+        $http.post(Options.API_SERVER + "/failedRegistration", data);
+
+        return $q.reject();
+      }
+
+      if (attempts == 0) {
+        FlashMessages.add({
+          title: 'The first attempt to save your wallet failed.',
+          info: 'Retrying...',
+          type: 'error'
+        });
+      }
+
+      return tryWalletUpload(wallet, attempts + 1);
     });
   }
 });
