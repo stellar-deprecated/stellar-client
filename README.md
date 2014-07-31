@@ -52,3 +52,7 @@ gulp develop
  3. Commit your changes (`git commit -am 'Add some feature'`)
  4. Push to the branch (`git push origin my-new-feature`)
  5. Create a new Pull Request
+
+
+## License
+Stellar Client is open source and permissively licensed under the ISC license. See the LICENSE file for more details.
