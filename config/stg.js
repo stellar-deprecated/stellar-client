@@ -35,7 +35,7 @@ var Options = {
     REPORT_ERRORS : true,
     SENTRY_DSN : "https://4574695240794dc090caaa3f2d02fd6c@app.getsentry.com/27687",
     // Number of transactions each page has in balance tab notifications
-    transactions_per_page: 50,
+    transactions_per_page: 25,
 
     LOGOUT_WITH_REFRESH: true
 };
