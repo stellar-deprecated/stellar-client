@@ -1,6 +1,9 @@
 <div class="login client-section">
     <div class="container">
-        <div ng-include="'templates/flash-message-container.html'"></div>
+    
+        <div ng-show="messages.length" ng-controller="FlashMessageCtrl">
+            <div ng-include="'templates/flash-message-container.html'"></div>
+        </div>
 
         <h1 class="title">Log in</h1>
 
