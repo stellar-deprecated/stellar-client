@@ -14,7 +14,7 @@ sc.service('transactionHistory', function($rootScope, stNetwork, session, contac
    * Initializes the transaction history once the network is connected.
    */
   function init() {
-    $rootScope.$on('$netConnected', function() {
+    function initHistory() {
       history = [];
 
       remote = stNetwork.remote;
@@ -24,7 +24,14 @@ sc.service('transactionHistory', function($rootScope, stNetwork, session, contac
       account.on('transaction', processNewTransaction);
 
       remote.once('disconnected', cleanupListeners);
-    });
+    }
+    if ($rootScope.connected) {
+        initHistory();
+    } else {
+      $rootScope.$on('$netConnected', function() {
+        initHistory();
+      });
+    }
   }
 
   /**
@@ -86,7 +93,7 @@ sc.service('transactionHistory', function($rootScope, stNetwork, session, contac
   function processTransaction(tx, meta, isNew) {
     var processedTxn = JsonRewriter.processTxn(tx, meta, session.get('address'));
 
-    
+
     if (processedTxn) {
       var transaction = processedTxn.transaction;
 
