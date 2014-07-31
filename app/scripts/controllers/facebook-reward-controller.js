@@ -37,8 +37,8 @@ sc.controller('FacebookRewardCtrl', function ($scope, $http, session) {
           $scope.reward.error = {};
           $scope.reward.title = "Your Facebook account is not eligible.";
           $scope.reward.subtitle = "Please check back for other ways to participate soon.";
-          $scope.reward.error.info = "Your Facebook account is too new to qualify. Stay tuned for new ways to grab stellars.";
-          $scope.reward.error.panel = "Sorry, your Facebook account is too new."
+          $scope.reward.error.info = "We do spam detection checks on Facebook.  Sorry but your account isn't eligible. We are improving our detection algorithms, so please check back. And we will release new ways to grab stellars soon.";
+          $scope.reward.error.panel = "Sorry, your Facebook account isn't eligible."
           $scope.reward.error.action = null;
           break;
         case 'already_taken':
