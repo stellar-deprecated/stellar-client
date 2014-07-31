@@ -16,7 +16,7 @@ var Options = {
     stellar_contact: {
         destination: "StellarFoundation",
         destination_address: "gpjh5ZsnpfLy1FYD8V9b7oNbwZqXMFF7Ha",
-        domain: "gostellar.org",
+        domain: "stellar.org",
         type: "federation_record"
     },
 
@@ -24,7 +24,7 @@ var Options = {
 
     APP_ID: '1512347158994532',
     DOMAIN_NAME: 'stellar.local.dev',
-    DEFAULT_FEDERATION_DOMAIN: 'gostellar.org',
+    DEFAULT_FEDERATION_DOMAIN: 'stellar.org',
     API_SERVER: 'http://localhost:3001',
     WALLET_SERVER: 'http://localhost:3000',
 
