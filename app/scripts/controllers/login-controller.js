@@ -50,7 +50,7 @@ sc.controller('LoginCtrl', function($scope, $state, $http, $timeout, $q, session
     sessionStorage['display_reload_message'] = false;
     FlashMessages.add({
       title: 'Logout',
-      info: 'You\'ve been automatically logged out.',
+      info: 'If you refresh you will be automatically logged out since it isn\'t safe to keep your password on disk.',
       type: 'error'
     });
   }
