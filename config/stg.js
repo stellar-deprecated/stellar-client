@@ -1,7 +1,7 @@
 var Options = {
     server: {
         "trusted" : true,
-        "websocket_ip" : "public-01-stg.gostellar.org",
+        "websocket_ip" : "test.stellar.org",
         "websocket_port" : 9001,
         "websocket_ssl" : true
     },
@@ -22,10 +22,10 @@ var Options = {
     INFLATION_DEST: 'g4eRqgZfzfj3132y17iaf2fp6HQj1gofjt',
 
     APP_ID: '1514787142083867',
-    DOMAIN_NAME: 'stg.gostellar.org',
-    DEFAULT_FEDERATION_DOMAIN: 'stellar-stg.gostellar.org',
-    API_SERVER: 'https://api-stg.gostellar.org',
-    WALLET_SERVER: 'https://wallet-stg.gostellar.org',
+    DOMAIN_NAME: 'stg.stellar.org',
+    DEFAULT_FEDERATION_DOMAIN: 'stellar-stg.stellar.org',
+    API_SERVER: 'https://api-stg.stellar.org',
+    WALLET_SERVER: 'https://wallet-stg.stellar.org',
 
     // If set, login will persist across sessions (page reload). This is mostly
     // intended for developers, be careful about using this in a real setting.
