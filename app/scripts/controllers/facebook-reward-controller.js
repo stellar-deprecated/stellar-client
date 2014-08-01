@@ -120,7 +120,7 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, session
   }
 
   // if
-  if (FB) {
+  if (typeof FB !== 'undefined') {
     $rootScope.fbinit = true;
   }
 });
