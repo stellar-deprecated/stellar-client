@@ -7,11 +7,13 @@ window.fbAsyncInit = function() {
         cookie     : true, // enable cookies to allow the server to access the session
         xfbml      : true  // parse XFBML
     });
-    var rootscope =angular.element(document).injector().get("$rootScope");
-    rootscope.$apply(function () {
-      rootscope.fbinit = true;
-      rootscope.$broadcast('fbinit');
-    });
+    if (angular && angular.element(document) && angular.element(document).injector()) {
+      var rootscope = angular.element(document).injector().get("$rootScope");
+      rootscope.$apply(function () {
+        rootscope.fbinit = true;
+        rootscope.$broadcast('fbinit');
+      });
+    }
 };
 
 // Load the facebook SDK asynchronously

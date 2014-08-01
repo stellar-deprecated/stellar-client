@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('FacebookRewardCtrl', function ($scope, $http, session) {
+sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, session) {
   $scope.reward = {
     rewardType: 1,
     title: 'Receive your first stellars on us!',
@@ -118,5 +118,10 @@ sc.controller('FacebookRewardCtrl', function ($scope, $http, session) {
           $scope.reward.subtitle = "You are on the waiting list! You will get your stellars tomorrow.";
         }
       });
+  }
+
+  // if
+  if (typeof FB !== 'undefined') {
+    $rootScope.fbinit = true;
   }
 });
