@@ -17,7 +17,6 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, session
           $scope.reward.title = 'You connected your Facebook!';
           $scope.reward.subtitle = null;
           break;
-        case 'reward_error':
         case 'reward_queued':
           $scope.reward.title = "You connected your Facebook!";
           getPlaceInLine();
