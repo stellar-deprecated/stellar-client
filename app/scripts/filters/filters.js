@@ -37,7 +37,10 @@ module.filter('addressToUsername', function (session) {
  */
 module.filter('rpamount', function () {
     return function (input, options) {
-        opts = jQuery.extend(true, {}, options);
+        defaults = {
+            floor: true
+        };
+        opts = jQuery.extend(true, defaults, options);
 
         if ("number" === typeof opts) {
             opts = {
@@ -75,7 +78,7 @@ module.filter('rpamount', function () {
 
         // But we will cut off after five significant decimals
         if ("number" !== typeof opts.max_sig_digits) {
-            opts.max_sig_digits = 5;
+            opts.max_sig_digits = 6;
         }
 
         var out = amount.to_human(opts);
@@ -89,7 +92,9 @@ module.filter('rpamount', function () {
         }
 
         // Floor the balance
-        out = out.split('.')[0];
+        if (opts.floor) {
+            out = out.split('.')[0];
+        }
 
         return out;
     };
