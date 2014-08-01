@@ -8,6 +8,7 @@ var sc = angular.module('stellarClient');
      walletAddressLoaded
  */
 sc.controller('AppCtrl', function($scope, $rootScope, stNetwork, session, $state, $element, FlashMessages) {
+    $rootScope.reserve=50000000;
     $rootScope.balance=0;
     $rootScope.accountStatus = 'connecting';
     // implements account listener cleanup, added to $rootScope.account to be called in logout event
@@ -18,7 +19,7 @@ sc.controller('AppCtrl', function($scope, $rootScope, stNetwork, session, $state
     var accountObj;
 
 
-    $scope.$on('$netConnected', handleAccountLoad); 
+    $scope.$on('$netConnected', handleAccountLoad);
     $scope.$on('walletAddressLoaded', function() {
         if (stNetwork.connected) {
             handleAccountLoad();
@@ -34,7 +35,7 @@ sc.controller('AppCtrl', function($scope, $rootScope, stNetwork, session, $state
             info: 'For your security, you have been logged out because your browser is idle. Please log back in to continue using Stellar.',
             type: 'error'
         });
-        
+
     });
 
     $($element).click(function(){ session.act(); });
