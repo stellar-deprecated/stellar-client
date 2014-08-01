@@ -11,8 +11,10 @@ sc.controller('TransactionHistoryCtrl', function($scope, transactionHistory) {
   };
 
   $scope.$on("transactionHistory.historyUpdated", function(e, history) {
-    $scope.history = history;
-    newHistory();
+    $scope.$apply(function(){
+      $scope.history = history;
+      newHistory();
+    });
   })
 
   $scope.history = [];
@@ -117,7 +119,7 @@ sc.controller('TransactionHistoryCtrl', function($scope, transactionHistory) {
   // and using $scope.sortOptions.columns[0].sortingAlgorithm for custom sort predicates.
   // Consider adding this functionality to a fork of ng-grid.
   function sortTransactionHistory(){
-      
+
     var sortPredicate = getSortPredicate($scope.sortOptions.fields[0], $scope.sortOptions.directions[0]);
     $scope.sortedHistory.sort(sortPredicate);
   }
