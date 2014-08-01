@@ -47,12 +47,12 @@ gulp develop
 
 ## Contributing
 
- 1. Fork it ( https://github.com/stellar/stellar-client/fork )
+ 1. [Fork this project](https://github.com/stellar/stellar-client/fork)
  2. Create your feature branch (`git checkout -b my-new-feature`)
  3. Commit your changes (`git commit -am 'Add some feature'`)
- 4. Push to the branch (`git push origin my-new-feature`)
+ 4. Push to the branch (`git push -u origin my-new-feature`)
  5. Create a new Pull Request
 
-
 ## License
+
 Stellar Client is open source and permissively licensed under the ISC license. See the LICENSE file for more details.
