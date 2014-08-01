@@ -3,6 +3,9 @@
 var sc = angular.module('stellarClient');
 
 sc.controller('RegistrationCtrl', function($scope, $state, $timeout, $http, $q, session, debounce, singletonPromise, Wallet, FlashMessages) {
+  // Provide a default value to protect against stale config files.
+  Options.MAX_WALLET_ATTEMPTS = Options.MAX_WALLET_ATTEMPTS || 3;
+
   $scope.data = {
     username:             '',
     email:                '',
@@ -288,9 +291,6 @@ sc.controller('RegistrationCtrl', function($scope, $state, $timeout, $http, $q, 
         username: $scope.data.username,
         email: $scope.data.email
       };
-
-      // Provide a default value to protect against stale config files.
-      Options.MAX_WALLET_ATTEMPTS = Options.MAX_WALLET_ATTEMPTS || 3;
 
       if (attempts >= Options.MAX_WALLET_ATTEMPTS) {
         FlashMessages.add({
