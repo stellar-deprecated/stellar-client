@@ -3,6 +3,9 @@
 var sc = angular.module('stellarClient');
 
 sc.controller('RegistrationCtrl', function($scope, $state, $timeout, $http, $q, session, debounce, singletonPromise, Wallet, FlashMessages) {
+  // Provide a default value to protect against stale config files.
+  Options.MAX_WALLET_ATTEMPTS = Options.MAX_WALLET_ATTEMPTS || 3;
+
   $scope.data = {
     username:             '',
     email:                '',
@@ -284,19 +287,18 @@ sc.controller('RegistrationCtrl', function($scope, $state, $timeout, $http, $q, 
 
     // Upload the new wallet to the server.
     return wallet.sync('create').catch(function(err) {
-      var data = {
-        username: $scope.data.username,
-        email: $scope.data.email
-      };
-
       if (attempts >= Options.MAX_WALLET_ATTEMPTS) {
         FlashMessages.add({
           title: 'Registration Error',
-          info: 'There was an error during registration. Please contact us at hello@stellar.org to retrieve your account.',
+          info: 'There was an error during registration. Please contact us at hello@stellar.org if the problem persists.',
           type: 'error'
         });
 
-        $http.post(Options.API_SERVER + "/failedRegistration", data);
+        $http.post(Options.API_SERVER + "/failedRegistration", {
+          username: $scope.data.username,
+          updateToken: wallet.keychainData.updateToken,
+          email: $scope.data.email
+        });
 
         return $q.reject();
       }
@@ -309,7 +311,15 @@ sc.controller('RegistrationCtrl', function($scope, $state, $timeout, $http, $q, 
         });
       }
 
-      return tryWalletUpload(wallet, attempts + 1);
+      attempts++;
+
+      // Wait one more second on each attempt.
+      var waitTime = attempts * 1000;
+
+      return $timeout(function() {}, waitTime)
+        .then(function() {
+          return tryWalletUpload(wallet, attempts);
+        });
     });
   }
 });
