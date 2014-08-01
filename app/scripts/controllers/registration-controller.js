@@ -312,7 +312,15 @@ sc.controller('RegistrationCtrl', function($scope, $state, $timeout, $http, $q, 
         });
       }
 
-      return tryWalletUpload(wallet, attempts + 1);
+      attempts++;
+
+      // Wait one more second on each attempt.
+      var waitTime = attempts * 1000;
+
+      return $timeout(function() {}, waitTime)
+        .then(function() {
+          return tryWalletUpload(wallet, attempts);
+        });
     });
   }
 });
