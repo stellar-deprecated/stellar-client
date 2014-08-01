@@ -12,8 +12,6 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
 
   $scope.rewardStatusIcons = {
     'incomplete': 'icon icon-lock',
-    'pending': 'icon icon-lock',
-    'reward_error': 'icon icon-clock',
     'reward_queued': 'icon icon-clock',
     'needs_fbauth': 'icon icon-clock',
     'sending': 'icon icon-clock',
