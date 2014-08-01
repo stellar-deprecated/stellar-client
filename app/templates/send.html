@@ -125,7 +125,7 @@
 <group ng-show="mode=='confirm'" class="mode-confirm">
     <div>
         <p l10n="l10n" class="literal info">You are sending</p>
-        <p class="amount_feedback"><span class="value">{{send.amount_feedback | rpamount}}&#32;</span><span class="currency">{{send.amount_feedback | rpcurrency}}</span></p>
+        <p class="amount_feedback"><span class="value">{{send.amount_feedback | rpamount:{ floor: false } }}&#32;</span><span class="currency">{{send.amount_feedback | rpcurrency}}</span></p>
         <p l10n="l10n" class="literal info">to</p>
         <div class="dest_feedback">
             <div ng-show="send.recipient_name" class="recipient-name">{{send.recipient_name}}</div>
