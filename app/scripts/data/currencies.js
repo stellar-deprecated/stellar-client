@@ -31,5 +31,6 @@ var StellarDefaultCurrencyList=
     {value: 'MXN', name: 'MXN - Mexican Peso', order: 0},
     {value: 'KRW', name: 'KRW - South Korean Won', order: 0},
     {value: 'TWD', name: 'TWD - New Taiwan Dollar', order: 0},
-    {value: 'HKD', name: 'HKD - Hong Kong Dollar', order: 0}
+    {value: 'HKD', name: 'HKD - Hong Kong Dollar', order: 0},
+    {value: 'WSk', name: 'WSK - Whiskey (ml)', order: 0}
 ];
