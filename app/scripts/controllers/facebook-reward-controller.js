@@ -67,10 +67,6 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, session
     fbLoginStart($http, username, updateToken, facebookLoginSuccess, facebookLoginError);
   };
 
-  $scope.disableButon = function () {
-    return !fbinit && !FB;
-  }
-
   function facebookLoginSuccess(status) {
     $scope.rewards[1].status = status;
     $scope.updateRewards();
