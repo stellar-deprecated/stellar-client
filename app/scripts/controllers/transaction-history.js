@@ -84,7 +84,7 @@ sc.controller('TransactionHistoryCtrl', function($scope, transactionHistory) {
         field: 'transaction.amount',
         displayName: 'Amount',
         width: '20%',
-        cellTemplate: '<span>{{ row.getProperty(col.field).to_human() }} STR</span>',
+        cellTemplate: '<span>{{ row.getProperty(col.field).to_human() }} {{row.getProperty(col.field).currency().to_human()}}</span>',
         sortFn: function(a, b){
           return a.to_number() - b.to_number();
         }
