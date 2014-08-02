@@ -26,18 +26,6 @@ sc.controller('AppCtrl', function($scope, $rootScope, stNetwork, session, $state
         }
     });
 
-    $scope.$on('idleLogout', function(e, args) {
-        var loggedOutAt = args.loggedOutAt;
-
-        $state.transitionTo('logout');
-        FlashMessages.add({
-            title: 'You\'ve been logged out',
-            info: 'For your security, you have been logged out because your browser is idle. Please log back in to continue using Stellar.',
-            type: 'error'
-        });
-
-    });
-
     $($element).click(function(){ session.act(); });
     $($element).keypress(function(){ session.act(); });
 

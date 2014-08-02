@@ -15,6 +15,14 @@ sc.controller('LoginCtrl', function($scope, $state, $http, $timeout, $q, session
     return deriveId().then(performLogin);
   });
 
+  if(location.search.match('idle')) {
+    FlashMessages.add({
+      title: 'You\'ve been logged out',
+      info: 'For your security, you have been logged out because your browser is idle. Please log back in to continue using Stellar.',
+      type: 'error'
+    });
+  }
+
   function deriveId() {
     //TODO: actually make Wallet.deriveId Promiseable
     //HACK: use timeout to turn an expensive synchronous operation into a promise
