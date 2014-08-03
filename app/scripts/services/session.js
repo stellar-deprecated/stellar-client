@@ -34,8 +34,7 @@ sc.service('session', function($rootScope, $http, $timeout, stNetwork, Wallet) {
     var self = this;
 
     this.idleTimeout = $timeout(function() {
-      self.logout();
-      $rootScope.$broadcast('idleLogout', {loggedOutAt: new Date()});
+      self.logout(true);
     }, Options.IDLE_LOGOUT_TIMEOUT || 15 * 60 * 1000);
   };
 
@@ -87,20 +86,25 @@ sc.service('session', function($rootScope, $http, $timeout, stNetwork, Wallet) {
     }
   };
 
-  Session.prototype.logout = function() {
+  Session.prototype.logout = function(idle) {
     try {
       sessionStorage['display_reload_message'] = false;
     } catch (e) {}
 
     Wallet.purgeLocal();
-    cache = {};
-    delete $rootScope.account;
-    stNetwork.shutdown();
-    this.clearIdleTimeout();
 
     // HACK: Ensure that the app's state is reset by reloading the page.
     if (Options.LOGOUT_WITH_REFRESH) {
-      location.reload();
+      if(idle) {
+        location.search = 'idle';
+      } else {
+        location.href = location.origin;
+      }
+    } else {
+      cache = {};
+      delete $rootScope.account;
+      stNetwork.shutdown();
+      this.clearIdleTimeout();
     }
   };
 
