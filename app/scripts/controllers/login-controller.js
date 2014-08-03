@@ -60,7 +60,7 @@ sc.controller('LoginCtrl', function($scope, $state, $http, $timeout, $q, session
     } catch (e) {}
     FlashMessages.add({
       title: 'Logout',
-      info: 'If you refresh you will be automatically logged out since it isn\'t safe to keep your password on disk.',
+      info: 'You refreshed the page, which unfortunately means you\'ll have to sign in again. This is necessary because your password (used to access your account) is kept locally in your browser tab and never sent to our servers.',
       type: 'error'
     });
   }
