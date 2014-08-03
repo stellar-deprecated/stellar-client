@@ -1,5 +1,6 @@
 <div class="body">
-    <h2>Receive <strong>{{giveawayAmount}} stellars</strong> on us!</h2>
+    <h2>Receive <strong>{{giveawayAmount*.25}} stellars</strong> on us!</h2>
+    <p>{{giveawayAmount*.75}} more will be sent to you over the next week so come back to check.</p>
     <a href="" ng-show="!describe" ng-click="describe = true">Why Facebook?</a>
     <p ng-show="describe">We are currently using Facebook as a verification method to avoid spam but hope to add other methods soon. We will not post on your Facebook.</p>
 </div>
