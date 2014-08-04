@@ -124,7 +124,7 @@ module.directive('rpStdt', function () {
             if (!ctrl) return;
 
             var validator = function(value) {
-                if (!value || (!isNaN(parseFloat(value)) && isFinite(value) && value >= 0 && value < Math.pow(2,32) - 1)) {
+                if (!value || (!isNaN(parseFloat(value)) && isFinite(value) && value >= 0 && value <= Math.pow(2,32) - 1)) {
                     ctrl.$setValidity('rpStdt', true);
                     return value;
                 } else {
