@@ -30,7 +30,7 @@ sc.controller('SendRewardCtrl', function ($rootScope, $scope, $http, stNetwork, 
   };
 
   function validateTransaction(tx){
-    var minAmount = $scope.giveawayAmount * .2 * 1000000;
+    var minAmount = $scope.giveawayAmount * .025 * 1000000;
     return tx && tx.type == "sent" && tx.amount.to_number() >= minAmount;
   }
 
