@@ -26,7 +26,15 @@
     <script src="scripts/config.js"></script>
     <script src="scripts/raven-setup.js"></script>
     <script src="bower_components/modernizr/modernizr.js"></script>
+    <script src="bower_components/modernizr/feature-detects/dataview-api.js"></script>
+    <script src="scripts/utilities/supported-browser.js"></script>
     <!-- endbuild -->
+
+    <script type="text/javascript">  
+        if(!isSupportedBrowser()) {
+          window.location = "/unsupported.html";
+        }
+    </script>
 </head>
 <body ng-controller="AppCtrl">
 <div class="app-wrapper">
