@@ -18,6 +18,9 @@ sc.controller('AppCtrl', function($scope, $rootScope, stNetwork, session, $state
     var mySetInflation;
     var accountObj;
 
+    $scope.getLogoLink = function () {
+        return session.get('loggedIn') ? '#/' : 'http://www.stellar.org';
+    }
 
     $scope.$on('$netConnected', handleAccountLoad);
     $scope.$on('walletAddressLoaded', function() {

@@ -47,7 +47,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" ng-href="{{ session.get('loggedIn') ? '#/' : 'http://www.stellar.org'}}">STELLAR</a>
+                <a class="navbar-brand" ng-href="{{getLogoLink()}}">STELLAR</a>
             </div>
             <div class="collapse navbar-collapse" id="navbar">
                 <ul class="nav navbar-nav navbar-right" ng-hide="session.get('loggedIn')">
