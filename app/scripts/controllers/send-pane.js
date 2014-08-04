@@ -54,7 +54,7 @@ sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout'
         if (newVal == oldVal || !newVal) {
             return;
         }
-        
+
         // raw address without any parameters
         var address = webutil.stripRippleAddress($scope.send.recipient);
 
@@ -128,8 +128,7 @@ sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout'
         send.show_dt_field = ($routeParams.dt
             || send.dt
             || send.recipient_info.dest_tag_required)
-            && !send.bitcoin
-            && !send.federation;
+            && !send.bitcoin;
     };
 
     $scope.update_destination = function () {
@@ -294,7 +293,6 @@ sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout'
                         'loaded': true,
                         'exists': true,
                         'Balance': data.account_data.Balance,
-
                         // Flags
                         'disallow_xtr': data.account_data.Flags & stellar.Remote.flags.account_root.DisallowXTR,
                         'dest_tag_required': data.account_data.Flags & stellar.Remote.flags.account_root.RequireDestTag
@@ -967,7 +965,6 @@ sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout'
             } else {
                 dt = webutil.getDestTagFromAddress($scope.send.recipient);
             }
-
             tx.destination_tag(dt ? +dt : undefined); // 'cause +dt is NaN when dt is undefined
 
             tx.payment($rootScope.account.Account, addrress, amount.to_json());
