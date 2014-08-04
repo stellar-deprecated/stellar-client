@@ -1,8 +1,54 @@
-$avenir: 'Avenir W01';
+// $avenir: 'Avenir W01';
 $avenir-book: 300;
 $avenir-medium: 500;
 $avenir-heavy: 800;
 $avenir-black: 900;
+
+// Font weight aliases.
+// We are currently using Clear Sans with 100, 300, 700
+$clear-sans: 'Clear Sans';
+$light-weight: 100;
+$book-weight: 300;
+$medium-weight: 700;
+$heavy-weight: 700;
+$black-weight: 700;
+
+// Currently hotlinks to our theme's font files. Temporary until we get a proper cdn
+@font-face {
+    font-family: 'Clear Sans';
+    font-style: normal;
+    font-weight: 100;
+    src: local('ClearSans-Thin'), local('Clear Sans Thin'),
+         url('https://www.stellar.org/wp-content/themes/stellar/fonts/ClearSans-Thin.eot'),
+         url('https://www.stellar.org/wp-content/themes/stellar/fonts/ClearSans-Thin.eot?#iefix') format('embedded-opentype'),
+         url('https://www.stellar.org/wp-content/themes/stellar/fonts/ClearSans-Thin.woff') format('woff'),
+         url('https://www.stellar.org/wp-content/themes/stellar/fonts/ClearSans-Thin.ttf') format('truetype'),
+         url('https://www.stellar.org/wp-content/themes/stellar/fonts/ClearSans-Thin.svg') format('svg');
+}
+
+@font-face {
+    font-family: 'Clear Sans';
+    font-style: normal;
+    font-weight: 300;
+    src: local('ClearSans-Light'), local('Clear Sans Light'),
+         url('https://www.stellar.org/wp-content/themes/stellar/fonts/ClearSans-Light.eot'),
+         url('https://www.stellar.org/wp-content/themes/stellar/fonts/ClearSans-Light.eot?#iefix') format('embedded-opentype'),
+         url('https://www.stellar.org/wp-content/themes/stellar/fonts/ClearSans-Light.woff') format('woff'),
+         url('https://www.stellar.org/wp-content/themes/stellar/fonts/ClearSans-Light.ttf') format('truetype'),
+         url('https://www.stellar.org/wp-content/themes/stellar/fonts/ClearSans-Light.svg') format('svg');
+}
+
+@font-face {
+    font-family: 'Clear Sans';
+    font-style: normal;
+    font-weight: 700;
+    src: local('ClearSans-Bold'), local('Clear Sans Bold'),
+         url('https://www.stellar.org/wp-content/themes/stellar/fonts/ClearSans-Bold.eot'),
+         url('https://www.stellar.org/wp-content/themes/stellar/fonts/ClearSans-Bold.eot?#iefix') format('embedded-opentype'),
+         url('https://www.stellar.org/wp-content/themes/stellar/fonts/ClearSans-Bold.woff') format('woff'),
+         url('https://www.stellar.org/wp-content/themes/stellar/fonts/ClearSans-Bold.ttf') format('truetype'),
+         url('https://www.stellar.org/wp-content/themes/stellar/fonts/ClearSans-Bold.svg') format('svg');
+}
 
 .title {
 
