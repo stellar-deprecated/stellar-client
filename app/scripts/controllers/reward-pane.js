@@ -155,21 +155,21 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
         title: 'You have rewards waiting to be claimed!',
         info: 'Click here to claim your rewards.',
         type: 'success',
-        action: claimRewards
+        action: $scope.claimRewards
       });
     }
 
     return $q.when();
   }
 
-  function claimRewards() {
+  $scope.claimRewards = function() {
     var data = {
       username: session.get('username'),
       updateToken: session.get('wallet').keychainData.updateToken
     };
 
     return $http.post(Options.API_SERVER + '/user/claimRewards', data);
-  }
+  };
 
   $scope.updateRewards()
     .then(setupFairyTxListener)
