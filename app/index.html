@@ -30,7 +30,7 @@
     <script src="scripts/utilities/supported-browser.js"></script>
     <!-- endbuild -->
 
-    <script type="text/javascript">  
+    <script type="text/javascript">
         if(!isSupportedBrowser()) {
           window.location = "/unsupported.html";
         }
@@ -47,7 +47,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#/">STELLAR</a>
+                <a class="navbar-brand" ng-href="{{ session.get('loggedIn') ? '#/' : 'http://www.stellar.org'}}">STELLAR</a>
             </div>
             <div class="collapse navbar-collapse" id="navbar">
                 <ul class="nav navbar-nav navbar-right" ng-hide="session.get('loggedIn')">
