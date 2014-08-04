@@ -119,18 +119,18 @@ sc.controller('RegistrationCtrl', function($scope, $state, $timeout, $http, $q, 
       $scope.errors.usernameErrors.push('This username is taken.');
     }
 
-    if(!registration.email.value && $scope.noEmailWarning == false) {
-      validInput = false;
-      $scope.noEmailWarning = true;
+    // if(!registration.email.value && $scope.noEmailWarning == false) {
+    //   validInput = false;
+    //   $scope.noEmailWarning = true;
 
-      // Scroll up to the poptip.
-      $timeout(function() {
-        $('html, body').animate({scrollTop: $('.poptip').offset().top - 15}, 400);
-      }, 20);
-    } else if(registration.email.value && !$scope.data.email) {
-      validInput = false;
-      $scope.errors.emailErrors.push('Invalid email address.');
-    }
+    //   // Scroll up to the poptip.
+    //   $timeout(function() {
+    //     $('html, body').animate({scrollTop: $('.poptip').offset().top - 15}, 400);
+    //   }, 20);
+    // } else if(registration.email.value && !$scope.data.email) {
+    //   validInput = false;
+    //   $scope.errors.emailErrors.push('Invalid email address.');
+    // }
 
     $scope.validators.forEach(function(validator){
       validInput = validator() && validInput;
@@ -209,7 +209,7 @@ sc.controller('RegistrationCtrl', function($scope, $state, $timeout, $http, $q, 
 
     var data = {
       username: $scope.data.username,
-      email: $scope.data.email,
+      // email: $scope.data.email,
       address: signingKeys.address
     };
 
