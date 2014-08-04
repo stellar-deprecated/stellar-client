@@ -1,0 +1,129 @@
+<!doctype html>
+<html class="no-js" ng-app="stellarClient">
+<head>
+    <meta charset="utf-8">
+    <title>Stellar - Unsupported Browser</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <link rel="icon" type="image/png" href="/images/favicon.png">
+
+    <link rel="stylesheet" href="https://fast.fonts.net/cssapi/d96d4bc8-5740-4ee1-b1ab-eafb3bdf7f1e.css">
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+
+    <!-- build:css styles/vendor.css -->
+    <!-- bower:css -->
+    <link rel="stylesheet" href="bower_components/fontawesome/css/font-awesome.css" />
+    <link rel="stylesheet" href="bower_components/ng-grid/ng-grid.css" />
+    <!-- endbower -->
+    <!-- endbuild -->
+
+    <!-- build:css({.tmp,app}) styles/main.css -->
+    <link rel="stylesheet" href="styles/main.css">
+    <!-- endbuild -->
+
+    <script src="https://cdn.ravenjs.com/1.1.15/jquery,native/raven.min.js"></script>
+    <!-- build:js scripts/vendor/head.js -->
+    <script src="scripts/config.js"></script>
+    <script src="scripts/raven-setup.js"></script>
+    <script src="bower_components/modernizr/modernizr.js"></script>
+    <script src="bower_components/modernizr/feature-detects/dataview-api.js"></script>
+    <script src="scripts/utilities/supported-browser.js"></script>
+    <!-- endbuild -->
+
+    <script type="text/javascript">  
+        if(isSupportedBrowser()) {
+          window.location = "/";
+        }
+    </script>
+</head>
+<body ng-controller="AppCtrl">
+<div class="app-wrapper">
+    <nav class="client-nav navbar" role="navigation" ng-controller="NavCtrl">
+        <div class="client-section client-inner-nav container navbar-default">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#/">STELLAR</a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+                <ul class="nav navbar-nav navbar-right" ng-hide="session.get('loggedIn')">
+                    <li><a href="#/login" ui-sref="login">LOG IN</a></li>
+                    <li><a href="#/register" ui-sref="register" class="sign-up">SIGN UP</a></li>
+                </ul>
+
+                <ul class="nav navbar-nav navbar-right ng-hide" ng-show="session.get('loggedIn')">
+                    <li><a href="#/settings">{{ session.get('username') }}</a></li>
+                    <li><a href="#/logout" ui-sref="logout">LOG OUT</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="client-container" ui-view>
+        <div class="browser_unsupported client-section">
+          <div class="container">
+            <div class="modalStatus error-modalStatus">
+              <h2 class="modalStatus-title">Oops!</h2>
+              <p class="modalStatus-info">
+                <strong>We're sorry but it appears that your browser isn't supported by the Stellar client.</strong>
+                We need your browser to support both Javascript, Websockets and Typed Arrays in order to correctly
+                function.
+              </p>
+              <p class="modalStatus-info">
+                  We suggest you install the latest version of either
+                  <a href="https://www.google.com/chrome/browser/">Google Chrome</a>
+                  or
+                  <a href="https://www.mozilla.org/firefox/">Mozilla Firefox</a>
+              </p>
+              <p class="modalStatus-info">
+                Sorry for the inconvenience, <br>
+                &mdash; The Stellar Team
+              </p>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <div id="footer-wrapper">
+        <footer id="colophon" class="site-footer container" role="contentinfo">
+            <nav id="footer-navigation" class="clear" role="navigation">
+                <div class="menu-footer-menu-container">
+                    <ul id="menu-footer-menu" class="menu">
+                        <li><a href="https://www.stellar.org/about/">About</a></li>
+                        <li><a href="https://www.stellar.org/api/">API</a></li>
+                        <li><a href="https://www.stellar.org/jobs/">Jobs</a></li>
+                        <li><a href="https://www.stellar.org/stats/">Stats</a></li>
+                        <li><a href="https://www.stellar.org/privacy-policy/">Privacy Policy</a></li>
+                        <li><a href="https://www.stellar.org/terms-of-service/">Terms of Service</a></li>
+                        <li><a href="https://forum.stellar.org">Forum</a></li>
+                    </ul>
+                </div>
+            </nav>
+            <div class="site-info">
+                <p>
+                    <i class="icon icon-heart"></i>
+                    <a href="http://stellar.org/">Stellar</a> is a not-for-profit.
+                </p>
+            </div>
+        </footer>
+    </div>
+</div>
+
+
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-53373928-1', 'auto');
+    ga('send', 'pageview');
+
+</script>
+
+</body>
+</html>
