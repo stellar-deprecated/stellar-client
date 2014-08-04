@@ -41,6 +41,10 @@
       }
     }
 
+    &.clickable {
+      cursor: pointer;
+    }
+
     .flash-title,
     .flash-info {
       display: block;
