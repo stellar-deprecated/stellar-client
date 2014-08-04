@@ -16,6 +16,7 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
     'reward_error': 'icon icon-clock',
     'reward_queued': 'icon icon-clock',
     'needs_fbauth': 'icon icon-clock',
+    'ready': 'icon icon-clock',
     'sending': 'icon icon-clock',
     'sent': 'icon icon-tick',
     'unverified': 'icon icon-clock',
@@ -59,6 +60,7 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
       'reward_queued': 1,
       'needs_fbauth': 1,
       'unverified': 1,
+      'ready': 1,
       'sending': 1,
       'sent': 2,
       'ineligible': 2
@@ -145,5 +147,31 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
     return $scope.showRewardsComplete;
   }
 
-  $scope.updateRewards().then(setupFairyTxListener);
+  function processReadyRewards() {
+    var readyRewards = _.where($scope.rewards, {status: 'ready'});
+
+    if(readyRewards.length > 0) {
+      $rootScope.$broadcast('flashMessage', {
+        title: 'You have rewards waiting to be claimed!',
+        info: 'Click here to claim your rewards.',
+        type: 'success',
+        action: claimRewards
+      });
+    }
+
+    return $q.when();
+  }
+
+  function claimRewards() {
+    var data = {
+      username: session.get('username'),
+      updateToken: session.get('wallet').keychainData.updateToken
+    };
+
+    return $http.post(Options.API_SERVER + '/user/claimRewards', data);
+  }
+
+  $scope.updateRewards()
+    .then(setupFairyTxListener)
+    .then(processReadyRewards);
 });
