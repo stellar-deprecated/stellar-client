@@ -19,22 +19,6 @@
     }
   }
 
-  .news-items {
-    margin: 55px 0 0 0;
-    padding: 25px 0 0 0;
-    border-top: 1px solid #eee;
-    li {
-      list-style: none;
-      width: 45%;
-      float: left;
-      font-size: 20px;
-      font-weight: 300;
-      &:first-child {
-        margin-right: 5%;
-      }
-    }
-  }
-
   @media (max-width: $phone-width) {
     h1 {
       margin: 0;
@@ -52,12 +36,5 @@
         }
       }
     }
-    .news-items {
-      li {
-        width: 100%;
-        margin-bottom: 25px;
-      }
-    }
-
   }
 }
