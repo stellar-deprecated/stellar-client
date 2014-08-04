@@ -4444,7 +4444,7 @@ var stellar =
 	var Seed             = __webpack_require__(10).Seed;
 	var SerializedObject = __webpack_require__(12).SerializedObject;
 	var RippleError      = __webpack_require__(13).RippleError;
-	var hashprefixes     = __webpack_require__(26);
+	var hashprefixes     = __webpack_require__(27);
 	var config           = __webpack_require__(21);
 
 	function Transaction(remote) {
@@ -5355,7 +5355,7 @@ var stellar =
 	var extend    = __webpack_require__(43);
 	var UInt160 = __webpack_require__(8).UInt160;
 	var utils = __webpack_require__(19);
-	var Float = __webpack_require__(27).Float;
+	var Float = __webpack_require__(26).Float;
 
 	//
 	// Currency support
@@ -10155,37 +10155,6 @@ var stellar =
 /* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/**
-	 * Prefix for hashing functions.
-	 *
-	 * These prefixes are inserted before the source material used to
-	 * generate various hashes. This is done to put each hash in its own
-	 * "space." This way, two different types of objects with the
-	 * same binary data will produce different hashes.
-	 *
-	 * Each prefix is a 4-byte value with the last byte set to zero
-	 * and the first three bytes formed from the ASCII equivalent of
-	 * some arbitrary string. For example "TXN".
-	 */
-
-	// transaction plus signature to give transaction ID
-	exports.HASH_TX_ID           = 0x54584E00; // 'TXN'
-	// transaction plus metadata
-	exports.HASH_TX_NODE         = 0x534E4400; // 'TND'
-	// inner node in tree
-	exports.HASH_INNER_NODE      = 0x4D494E00; // 'MIN'
-	// leaf node in tree
-	exports.HASH_LEAF_NODE       = 0x4D4C4E00; // 'MLN'
-	// inner transaction to sign
-	exports.HASH_TX_SIGN         = 0x53545800; // 'STX'
-	// inner transaction to sign (TESTNET)
-	exports.HASH_TX_SIGN_TESTNET = 0x73747800; // 'stx'
-
-
-/***/ },
-/* 27 */
-/***/ function(module, exports, __webpack_require__) {
-
 	// Convert a JavaScript number to IEEE-754 Double Precision
 	// value represented as an array of 8 bytes (octets)
 	//
@@ -10293,6 +10262,37 @@ var stellar =
 	    .join('')
 	    .replace(/(.)(.{11})(.{52})/, "$1 $2 $3")
 	}
+
+/***/ },
+/* 27 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Prefix for hashing functions.
+	 *
+	 * These prefixes are inserted before the source material used to
+	 * generate various hashes. This is done to put each hash in its own
+	 * "space." This way, two different types of objects with the
+	 * same binary data will produce different hashes.
+	 *
+	 * Each prefix is a 4-byte value with the last byte set to zero
+	 * and the first three bytes formed from the ASCII equivalent of
+	 * some arbitrary string. For example "TXN".
+	 */
+
+	// transaction plus signature to give transaction ID
+	exports.HASH_TX_ID           = 0x54584E00; // 'TXN'
+	// transaction plus metadata
+	exports.HASH_TX_NODE         = 0x534E4400; // 'TND'
+	// inner node in tree
+	exports.HASH_INNER_NODE      = 0x4D494E00; // 'MIN'
+	// leaf node in tree
+	exports.HASH_LEAF_NODE       = 0x4D4C4E00; // 'MLN'
+	// inner transaction to sign
+	exports.HASH_TX_SIGN         = 0x53545800; // 'STX'
+	// inner transaction to sign (TESTNET)
+	exports.HASH_TX_SIGN_TESTNET = 0x73747800; // 'stx'
+
 
 /***/ },
 /* 28 */
@@ -15096,8 +15096,12 @@ var stellar =
 	  },
 	  
 	  _mouseCollector: function (ev) {
-	    var x = ev.x || ev.clientX || ev.offsetX || 0, y = ev.y || ev.clientY || ev.offsetY || 0;
-	    sjcl.random.addEntropy([x,y], 2, "mouse");
+	    try {
+	      var x = ev.x || ev.clientX || ev.offsetX || 0, y = ev.y || ev.clientY || ev.offsetY || 0;
+	      sjcl.random.addEntropy([x,y], 2, "mouse");
+	    } catch (err) {
+	      // Event originated from a secure element. No mouse position available.
+	    }
 	  },
 	  
 	  _loadTimeCollector: function (ev) {
