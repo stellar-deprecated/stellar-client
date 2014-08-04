@@ -37,6 +37,10 @@
         line-height: 45px
       }
     }
+
+    .destination-tag {
+      padding: 0;
+    }
   }
 
   .send-error p {
@@ -131,9 +135,14 @@
   background-color: lighten($in-progress, 50%);
 }
 
-// UGH:  due to the fact that we override padding on form inputs, thus 
+// UGH:  due to the fact that we override padding on form inputs, thus
 // destroying compatibility witht the bootstrap grid, we have to remove
 // padding here as well
 .send-form-status-container {
   padding: 0;
+}
+
+// since the destination tag description is huge, we'll remove the linehight
+#dest-tag-desc {
+  line-height: normal;
 }
