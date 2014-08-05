@@ -11,19 +11,19 @@
         <form role="form" name="registration" class="form-horizontal stellar-form" ng-controller="RegistrationCtrl" novalidate>
             <div class="form-group">
                 <div class="row">
-                    <div class="errors col-md-offset-3 col-md-6">
+                    <div class="errors col-sm-offset-3 col-sm-6">
                         <div class="tip">{{ errors.usernameErrors.join('\n') }}</div>
                     </div>
                 </div>
                 <div class="row">
-                    <label for="username" class="col-md-3">USERNAME</label>
-                    <div class="col-md-6">
+                    <label for="username" class="col-sm-3">USERNAME</label>
+                    <div class="col-sm-6">
                         <div class="input-icon-wrapper">
                             <input id="username" type="text" class="form-control" ng-class="{'input-error': errors.usernameErrors.length}" ng-model="data.username" ng-change="checkUsername()">
                             <i class="icon icon-user"></i>
                         </div>
                     </div>
-                    <div class="col-md-3 info">
+                    <div class="col-sm-3 info">
                         <i class="username-status status glyphicon" ng-class="usernameClass()"></i>
                         <span class="tip">Make it memorable.</span>
                     </div>
@@ -34,16 +34,16 @@
     <!--
         <div class="form-group container">
             <div class="row">
-                <div class="errors col-md-offset-6 col-md-6">
+                <div class="errors col-sm-offset-6 col-sm-6">
                     <div class="tip">{{ errors.emailErrors.join('\n') }}</div>
                 </div>
             </div>
             <div class="row">
-                <label for="email" class="col-md-3">
+                <label for="email" class="col-sm-3">
                     EMAIL
                     <span class="tip">(optional)</span>
                 </label>
-                <div class="col-md-6">
+                <div class="col-sm-6">
                     <div class="input-icon-wrapper">
                         <input id="email" name="email" type="email" class="form-control" ng-model="data.email" ng-change="errors.emailErrors = []">
                         <i class="icon icon-email"></i>
@@ -64,7 +64,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3 info">
+                <div class="col-sm-3 info">
                     <i class="username-status status glyphicon glyphicon-none"></i>
                     <span class="tip">For password recovery.</span>
                 </div>
@@ -85,7 +85,7 @@
 
             <div class="form-group">
                 <div class="row">
-                    <div class="col-md-offset-3 col-md-6">
+                    <div class="col-sm-offset-3 col-sm-6">
                         <button type="submit" class="btn btn-default stellar-button" ng-click="attemptRegistration()"
                             ng-disabled="loading">{{attemptRegistration.isLoading() ? 'Sending...' : 'Submit'}}</button>
                     </div>

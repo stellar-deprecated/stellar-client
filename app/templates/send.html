@@ -14,7 +14,7 @@
 <form name="sendForm" role="form" ng-show="mode=='form'" ng-submit="send_prepared()" class="stellar-form">
     <div class="row form-group">
         <div class="row">
-            <div rp-errors="send_destination" class="errors col-md-offset-3 col-md-6">
+            <div rp-errors="send_destination" class="errors col-sm-offset-3 col-sm-6">
                 <div rp-error-valid ng-show="send.recipient != send.recipient_address" class="success tip">wallet address found: {{send.recipient_address}}</div>
                 <div rp-error-on="required" l10n="l10n" class="tip">Please enter a recipient.</div>
                 <div rp-error-on="rpDest" l10n="l10n" class="tip">Recipient should be either a name from your contact list or Stellar/Bitcoin address.</div>
@@ -22,12 +22,12 @@
             </div>
         </div>
         <div class="row">
-            <label for="send_destination" l10n="l10n" class="col-md-3">SEND TO</label>
-            <div class="col-md-6 send-address right-inner-addon">
+            <label for="send_destination" l10n="l10n" class="col-sm-3">SEND TO</label>
+            <div class="col-sm-6 send-address right-inner-addon">
                 <input id="send_destination" name="send_destination" type="text" rp-combobox="recipient_query" ng-class="{error: required || rpDest || federation}" ng-model="send.recipient" rp-dest="rp-dest" rp-dest-address="rp-dest-address" rp-dest-contact="rp-dest-contact" rp-dest-bitcoin="rp-dest-bitcoin" rp-dest-email="rp-dest-email" required="required" rp-autofill="$routeParams.to" rp-focus="rp-focus" class="form-control stellar-input"/>
                 <i class="glyphicon glyphicon-globe"></i>
             </div>
-            <div class="col-md-3 tip">Stellar name or address.</div>
+            <div class="col-sm-3 tip">Stellar name or address.</div>
         </div>
     </div>
     <div class="row form-group" ng-show="send.show_dt_field" >
@@ -46,7 +46,7 @@
     </div>
     <div class="form-group">
         <div class="row">
-            <div rp-errors="send_amount" class="errors col-md-offset-3 col-md-6">
+            <div rp-errors="send_amount" class="errors col-sm-offset-3 col-sm-6">
                 <div rp-error-on="required" l10n="l10n" class="tip">Please enter an amount.</div>
                 <div rp-error-on="rpAmount" l10n="l10n" class="tip">Not a valid amount.</div>
                 <div rp-error-on="rpAmountPositive" l10n="l10n" class="tip">Amount must be greater than zero.</div>
@@ -62,12 +62,12 @@
             </div>
         </div>
         <div class="row">
-            <label for="send_amount" l10n="l10n" class="col-md-3">AMOUNT</label>
-                <div class="col-md-6 send-amount right-inner-addon">
+            <label for="send_amount" l10n="l10n" class="col-sm-3">AMOUNT</label>
+                <div class="col-sm-6 send-amount right-inner-addon">
                     <input id="send_amount" name="send_amount" type="text" ng-model="send.amount" required="required" rp-autofill="$routeParams.amount" rp-autofill-amount="rp-autofill-amount" rp-amount="rp-amount" rp-amount-positive="rp-amount-positive" rp-amount-xtr-limit="rp-amount-xtr-limit" rp-amount-xtr-limit-currency="{{send.currency}}" class="form-control stellar-input"/>
                     <i>STR</i>
                 </div>
-                <div class="col-md-3 tip">Type in the amount to send.</div>
+                <div class="col-sm-3 tip">Type in the amount to send.</div>
         </div>
     </div>
     <div ng-show="$routeParams.st || send.st" class="row form-group">
@@ -125,7 +125,7 @@
     </div>
     <div class="form-group">
         <div class="row">
-            <div class="col-md-offset-3 col-md-6 " ng-show="send.currency_code == 'STR'">
+            <div class="col-sm-offset-3 col-sm-6 " ng-show="send.currency_code == 'STR'">
                 <button type="submit" ng-disabled="sendForm.$invalid || send.self || !send.recipient_resolved || account.max_spend.to_number() < send.amount * 1000000 || send.fund_status !== 'none'" l10n="l10n" class="btn btn-default submit stellar-button">Send</button>
             </div>
         </div>
