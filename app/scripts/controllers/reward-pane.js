@@ -110,18 +110,7 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
       .success(function (response) {
         // Update the status of the user's rewards.
         response.data.rewards.forEach(function (reward) {
-
-            /*
-            if(reward.rewardType==4 && $scope.rewards.length<5) // I know this isn't the right place
-            {
-                $scope.rewards.push( { status: "", updateReward: function (status) {
-                    $scope.reward.status = status;
-                }});
-            }
-            */
-
-            if(reward.rewardType!=4)
-                $scope.rewards[reward.rewardType].updateReward(reward.status);
+          $scope.rewards[reward.rewardType].updateReward(reward.status);
         });
 
         $scope.giveawayAmount = response.data.giveawayAmount;
