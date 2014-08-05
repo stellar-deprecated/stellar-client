@@ -28,6 +28,14 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
   */
   $scope.rewards = [];
 
+  // HACK: Reward type 4 requires the user to claim, but has no interface.
+  $scope.rewards[4] = {
+    status: 'incomplete',
+    hidden: true,
+    updateReward: function(status) {
+      $scope.rewards[4].status = status;
+    }
+  };
 
   $scope.$watch($scope.rewards, function (newValue, oldValue, scope) {
     $scope.sortedRewards = $scope.rewards.slice();
@@ -71,7 +79,11 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
       return order[a.status] - order[b.status];
     });
 
-    $scope.rewardProgress = $scope.rewards.map(function (reward) {
+    var visibleRewards = $scope.rewards.filter(function(reward) {
+      return !reward.hidden;
+    });
+
+    $scope.rewardProgress = visibleRewards.map(function (reward) {
       return reward.status;
     });
 
