@@ -20,5 +20,11 @@ sc.factory('FlashMessages', function($rootScope) {
     result.messages = [];
   };
 
+  result.dismissById = function(id) {
+    result.messages = result.messages.filter(function(message) {
+      return message.id !== id;
+    });
+  };
+
   return result;
 });

@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session, TutorialHelper, singletonPromise) {
+sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session, TutorialHelper, singletonPromise, FlashMessages) {
   $scope.showRewards = false;
   $scope.showRewardsComplete = null;
   $scope.selectedReward = null;
@@ -28,6 +28,14 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
   */
   $scope.rewards = [];
 
+  // HACK: Reward type 4 requires the user to claim, but has no interface.
+  $scope.rewards[4] = {
+    status: 'incomplete',
+    hidden: true,
+    updateReward: function(status) {
+      $scope.rewards[4].status = status;
+    }
+  };
 
   $scope.$watch($scope.rewards, function (newValue, oldValue, scope) {
     $scope.sortedRewards = $scope.rewards.slice();
@@ -71,7 +79,11 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
       return order[a.status] - order[b.status];
     });
 
-    $scope.rewardProgress = $scope.rewards.map(function (reward) {
+    var visibleRewards = $scope.rewards.filter(function(reward) {
+      return !reward.hidden;
+    });
+
+    $scope.rewardProgress = visibleRewards.map(function (reward) {
       return reward.status;
     });
 
@@ -110,18 +122,7 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
       .success(function (response) {
         // Update the status of the user's rewards.
         response.data.rewards.forEach(function (reward) {
-
-            /*
-            if(reward.rewardType==4 && $scope.rewards.length<5) // I know this isn't the right place
-            {
-                $scope.rewards.push( { status: "", updateReward: function (status) {
-                    $scope.reward.status = status;
-                }});
-            }
-            */
-
-            if(reward.rewardType!=4)
-                $scope.rewards[reward.rewardType].updateReward(reward.status);
+          $scope.rewards[reward.rewardType].updateReward(reward.status);
         });
 
         $scope.giveawayAmount = response.data.giveawayAmount;
@@ -165,6 +166,7 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
 
     if(readyRewards.length > 0) {
       $rootScope.$broadcast('flashMessage', {
+        id: 'claimRewards',
         title: 'You have rewards waiting to be claimed!',
         template: 'templates/claim-flash-message.html',
         type: 'success'
@@ -187,10 +189,15 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
             reward.updateReward('sending');
           }
         });
+
+        FlashMessages.dismissById('claimRewards')
       });
   });
 
-  $rootScope.$on('claimRewards', $scope.claimRewards);
+  $rootScope.$on('claimRewards', function(callback) {
+    $scope.claimRewards()
+      .then(callback);
+  });
 
   $scope.updateRewards()
     .then(setupFairyTxListener)
