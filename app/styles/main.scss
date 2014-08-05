@@ -48,12 +48,6 @@ body {
   min-height: 100vh;
 }
 
-@media (max-width: $phone-width) {
-  .stellar-form .form-group .errors .tip {
-    width: 100%;
-  }
-}
-
 .stellar-form {
   margin-top: 0;
 
