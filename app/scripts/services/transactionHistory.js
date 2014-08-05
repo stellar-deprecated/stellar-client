@@ -86,7 +86,7 @@ sc.service('transactionHistory', function($rootScope, stNetwork, session, contac
   }
 
   /**
-   * Clean up a transactions, add it to the history, and add the addresse to the contacts list.
+   * Clean up a transactions, add it to the history, and add the counterparty and issuer addresses to the contacts list.
    *
    * NOTE:  this does not, and should not do an $apply.  It gets expensive doing that on every transaction
    */
@@ -99,6 +99,7 @@ sc.service('transactionHistory', function($rootScope, stNetwork, session, contac
 
       if (processedTxn.tx_type === "Payment" && processedTxn.tx_result === "tesSUCCESS" && transaction) {
         contacts.addContact(transaction.counterparty);
+        contacts.addContact(transaction.amount.issuer().to_json());
 
         if (isNew) {
           history.unshift(processedTxn);
