@@ -28,6 +28,7 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
   */
   $scope.rewards = [];
 
+
   $scope.$watch($scope.rewards, function (newValue, oldValue, scope) {
     $scope.sortedRewards = $scope.rewards.slice();
   });
@@ -95,6 +96,10 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
     firstRequest = false;
   };
 
+    var delayReward={ status: "", updateReward: function (status) {
+        $scope.reward.status = status;
+    }};
+
   $scope.updateRewards = function() {
     var config = {
       params: {
@@ -108,7 +113,11 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
       .success(function (response) {
         // Update the status of the user's rewards.
         response.data.rewards.forEach(function (reward) {
-          $scope.rewards[reward.rewardType].updateReward(reward.status);
+            if(reward.rewardType==4 && $scope.rewards.length<5) // I know this isn't the right place
+            {
+                $scope.rewards.push(delayReward);
+            }
+                $scope.rewards[reward.rewardType].updateReward(reward.status);
         });
 
         $scope.giveawayAmount = response.data.giveawayAmount;
