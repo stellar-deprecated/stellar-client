@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session, TutorialHelper) {
+sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session, TutorialHelper, singletonPromise) {
   $scope.showRewards = false;
   $scope.showRewardsComplete = null;
   $scope.selectedReward = null;
@@ -16,6 +16,7 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
     'reward_error': 'icon icon-clock',
     'reward_queued': 'icon icon-clock',
     'needs_fbauth': 'icon icon-clock',
+    'ready': 'icon icon-clock',
     'sending': 'icon icon-clock',
     'sent': 'icon icon-tick',
     'unverified': 'icon icon-clock',
@@ -59,6 +60,7 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
       'reward_queued': 1,
       'needs_fbauth': 1,
       'unverified': 1,
+      'ready': 1,
       'sending': 1,
       'sent': 2,
       'ineligible': 2
@@ -145,5 +147,39 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
     return $scope.showRewardsComplete;
   }
 
-  $scope.updateRewards().then(setupFairyTxListener);
+  function processReadyRewards() {
+    var readyRewards = _.where($scope.rewards, {status: 'ready'});
+
+    if(readyRewards.length > 0) {
+      $rootScope.$broadcast('flashMessage', {
+        title: 'You have rewards waiting to be claimed!',
+        template: 'templates/claim-flash-message.html',
+        type: 'success'
+      });
+    }
+
+    return $q.when();
+  }
+
+  $scope.claimRewards = singletonPromise(function() {
+    var data = {
+      username: session.get('username'),
+      updateToken: session.get('wallet').keychainData.updateToken
+    };
+
+    return $http.post(Options.API_SERVER + '/user/claimRewards', data)
+      .then(function() {
+        $scope.rewards.forEach(function(reward) {
+          if(reward.status == 'ready') {
+            reward.updateReward('sending');
+          }
+        });
+      });
+  });
+
+  $rootScope.$on('claimRewards', $scope.claimRewards);
+
+  $scope.updateRewards()
+    .then(setupFairyTxListener)
+    .then(processReadyRewards);
 });

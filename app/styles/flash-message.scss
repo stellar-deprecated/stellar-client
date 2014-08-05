@@ -41,10 +41,18 @@
       }
     }
 
+    &.clickable {
+      cursor: pointer;
+    }
+
+    .flash-body {
+      margin: 0 40px;
+    }
+
     .flash-title,
-    .flash-info {
+    .flash-info{
       display: block;
-      margin: 6px 40px;
+      margin: 6px 0;
     }
 
     .flash-title {
@@ -56,6 +64,10 @@
     .flash-info {
       font-size: 16px;
       margin-bottom: 14px;
+    }
+
+    .flash-template {
+      margin-bottom: 12px;
     }
 
     .icon-close {

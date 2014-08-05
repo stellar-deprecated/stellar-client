@@ -1,6 +1,7 @@
 /**
  * To show flash messages broadcast a "flashMassage" event with an object
- * containing a title, info, and optional type ("error" or "success").
+ * containing a title, info, optional type ("error" or "success"), and an
+ * optional template that is rendered inside the flash message.
  */
 sc.controller('FlashMessageCtrl', function ($scope, $rootScope, FlashMessages) {
   $scope.FlashMessages = FlashMessages;
