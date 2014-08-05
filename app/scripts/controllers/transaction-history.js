@@ -90,6 +90,12 @@ sc.controller('TransactionHistoryCtrl', function($scope, transactionHistory) {
         }
       },
       {
+        field: 'transaction.amount',
+        displayName: 'Issuer',
+        width: '20%',
+        cellTemplate: '<span class="address">{{ row.getProperty(col.field).issuer().to_json() | addressToUsername }}</span>'
+      },
+      {
         field: 'date',
         displayName: 'Date',
         width: '20%',

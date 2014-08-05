@@ -26,6 +26,9 @@ module.filter('addressToUsername', function (session) {
             return contact.destination + "@" + contact.domain;
           }
         }
+        if (!input){
+            return Options.stellar_contact.destination;
+        }
         return input;
     };
 });
