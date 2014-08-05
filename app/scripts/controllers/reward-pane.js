@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session, TutorialHelper) {
+sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session, TutorialHelper, singletonPromise) {
   $scope.showRewards = false;
   $scope.showRewardsComplete = null;
   $scope.selectedReward = null;
@@ -161,14 +161,21 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
     return $q.when();
   }
 
-  $scope.claimRewards = function() {
+  $scope.claimRewards = singletonPromise(function() {
     var data = {
       username: session.get('username'),
       updateToken: session.get('wallet').keychainData.updateToken
     };
 
-    return $http.post(Options.API_SERVER + '/user/claimRewards', data);
-  };
+    return $http.post(Options.API_SERVER + '/user/claimRewards', data)
+      .then(function() {
+        $scope.rewards.forEach(function(reward) {
+          if(reward.status == 'ready') {
+            reward.updateReward('sending');
+          }
+        });
+      });
+  });
 
   $rootScope.$on('claimRewards', $scope.claimRewards);
 

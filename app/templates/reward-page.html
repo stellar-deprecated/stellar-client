@@ -41,7 +41,9 @@
             <div class="body">
                 Your reward is ready to be claimed!
             </div>
-            <button class="stellar-button btn btn-default" ng-click="claimRewards()">Claim now</button>
+            <button class="stellar-button btn btn-default" ng-disable="claimRewards.isLoading()" ng-click="claimRewards()">
+                {{ claimRewards.isLoading() ? 'Loading...': 'Claim now' }}
+            </button>
         </div>
     </div>
 
