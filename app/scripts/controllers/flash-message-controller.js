@@ -1,7 +1,7 @@
 /**
  * To show flash messages broadcast a "flashMassage" event with an object
  * containing a title, info, optional type ("error" or "success"), and an
- * optional action that is performed when the message is clicked.
+ * optional template that is rendered inside the flash message.
  */
 sc.controller('FlashMessageCtrl', function ($scope, $rootScope, FlashMessages) {
   $scope.FlashMessages = FlashMessages;
@@ -14,9 +14,5 @@ sc.controller('FlashMessageCtrl', function ($scope, $rootScope, FlashMessages) {
 
   $scope.dismissMessage = function(index) {
     FlashMessages.dismiss(index);
-  };
-
-  $scope.executeMessage = function(index) {
-    FlashMessages.execute(index);
   };
 });

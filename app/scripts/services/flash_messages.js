@@ -12,14 +12,6 @@ sc.factory('FlashMessages', function($rootScope) {
     result.messages.splice(index, 1);
   };
 
-  result.execute = function(index) {
-    var action = result.messages[index].action;
-    if (action) {
-      action();
-      result.dismiss(index);
-    }
-  };
-
   result.add = function(message) {
     $rootScope.$broadcast('flashMessage', message);
   };

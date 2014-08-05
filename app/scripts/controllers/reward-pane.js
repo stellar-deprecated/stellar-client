@@ -153,9 +153,8 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
     if(readyRewards.length > 0) {
       $rootScope.$broadcast('flashMessage', {
         title: 'You have rewards waiting to be claimed!',
-        info: 'Click here to claim your rewards.',
-        type: 'success',
-        action: $scope.claimRewards
+        template: 'templates/claim-flash-message.html',
+        type: 'success'
       });
     }
 
@@ -170,6 +169,8 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
 
     return $http.post(Options.API_SERVER + '/user/claimRewards', data);
   };
+
+  $rootScope.$on('claimRewards', $scope.claimRewards);
 
   $scope.updateRewards()
     .then(setupFairyTxListener)
