@@ -95,6 +95,10 @@ body {
           }
         }
       }
+
+      @media (max-width: $phone-width) {
+        width: 100%;
+      }
     }
 
     label {
@@ -171,6 +175,18 @@ body {
   fieldset[disabled] .form-control {
     cursor: text;
     background-color: white;
+  }
+}
+
+@media (max-width: $phone-width) {
+  .stellar-form {
+    .form-group {
+      .errors {
+        .tip {
+          width: 100%;
+        }
+      }
+    }
   }
 }
 
