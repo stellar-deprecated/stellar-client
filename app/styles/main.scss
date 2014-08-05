@@ -48,6 +48,12 @@ body {
   min-height: 100vh;
 }
 
+@media (max-width: $phone-width) {
+  .stellar-form .form-group .errors .tip {
+    width: 100%;
+  }
+}
+
 .stellar-form {
   margin-top: 0;
 
@@ -59,6 +65,10 @@ body {
       height: 40px;
 
       .tip {
+        width: 100%;
+        @media (min-width: $screen-sm-min) {
+          width: auto;
+        }
         margin-left:15px;
         margin-right: 15px;
         display: inline;
@@ -80,7 +90,7 @@ body {
 
         &:before {
           border: solid;
-          border-color: #D41B32 transparent;
+          border-color: $error transparent;
           border-width: 6px 6px 0 6px;
           bottom: -6px;
           content: "";
@@ -94,10 +104,6 @@ body {
             border-color: $success transparent;
           }
         }
-      }
-
-      @media (max-width: $phone-width) {
-        width: 100%;
       }
     }
 
@@ -175,18 +181,6 @@ body {
   fieldset[disabled] .form-control {
     cursor: text;
     background-color: white;
-  }
-}
-
-@media (max-width: $phone-width) {
-  .stellar-form {
-    .form-group {
-      .errors {
-        .tip {
-          width: 100%;
-        }
-      }
-    }
   }
 }
 
