@@ -15,13 +15,14 @@ sc.controller('LoginCtrl', function($rootScope, $scope, $state, $http, $timeout,
     return deriveId().then(performLogin);
   });
 
-  if(location.search.match('idle')) {
+  if (location.search.match('idle')) {
     FlashMessages.add({
       title: 'You\'ve been logged out',
       info: 'For your security, you have been logged out because your browser is idle. Please log back in to continue using Stellar.',
       type: 'error'
     });
-  } else if ($rootScope.recoveringUsername) {
+  }
+  if ($rootScope.recoveringUsername) {
     $rootScope.recoveringUsername = false;
     FlashMessages.add({
       title: 'Username emailed',
