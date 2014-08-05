@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session, TutorialHelper, singletonPromise) {
+sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session, TutorialHelper, singletonPromise, FlashMessages) {
   $scope.showRewards = false;
   $scope.showRewardsComplete = null;
   $scope.selectedReward = null;
@@ -166,6 +166,7 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
 
     if(readyRewards.length > 0) {
       $rootScope.$broadcast('flashMessage', {
+        id: 'claimRewards',
         title: 'You have rewards waiting to be claimed!',
         template: 'templates/claim-flash-message.html',
         type: 'success'
@@ -188,10 +189,15 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
             reward.updateReward('sending');
           }
         });
+
+        FlashMessages.dismissById('claimRewards')
       });
   });
 
-  $rootScope.$on('claimRewards', $scope.claimRewards);
+  $rootScope.$on('claimRewards', function(callback) {
+    $scope.claimRewards()
+      .then(callback);
+  });
 
   $scope.updateRewards()
     .then(setupFairyTxListener)
