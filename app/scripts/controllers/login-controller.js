@@ -21,6 +21,12 @@ sc.controller('LoginCtrl', function($scope, $state, $http, $timeout, $q, session
       info: 'For your security, you have been logged out because your browser is idle. Please log back in to continue using Stellar.',
       type: 'error'
     });
+  } else if (location.search.match('recovery')) {
+    FlashMessages.add({
+      title: 'Username emailed',
+      info: 'Your username has been emailed to you; please check your inbox.',
+      type: 'info'
+    });
   }
 
   function deriveId() {
