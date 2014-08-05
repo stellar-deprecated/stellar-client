@@ -9,7 +9,7 @@
     </div>
 
     <div ng-hide="reward.error">
-        <div class="content" ng-class="{active: reward.status != 'sent' && reward.status != 'needs_fbauth' && reward.status != 'reward_queued' && reward.status != 'sending' && reward.status != 'reward_error'}">
+        <div class="content" ng-class="{active: reward.status == 'incomplete' || reward.status == 'pending' || reward.status == 'unverified' || reward.status == 'ineligible'}">
             <div ng-include="reward.template"></div>
         </div>
 
@@ -35,6 +35,15 @@
                 You did it!
             </div>
             <button class="stellar-button btn btn-default" ng-click="closeReward()">Continue</button>
+        </div>
+
+        <div class="content sent" ng-class="{active: reward.status == 'ready'}">
+            <div class="body">
+                Your reward is ready to be claimed!
+            </div>
+            <button class="stellar-button btn btn-default" ng-disable="claimRewards.isLoading()" ng-click="claimRewards()">
+                {{ claimRewards.isLoading() ? 'Loading...': 'Claim now' }}
+            </button>
         </div>
     </div>
 
