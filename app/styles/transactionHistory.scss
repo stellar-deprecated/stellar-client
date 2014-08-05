@@ -72,6 +72,14 @@
       left: auto;
       right: 10px;
     }
+
+    .col1, .col2, .col5 {
+      text-align: center;
+    }
+    .col4 {
+      text-align: right;
+    }
+
   }
 
   .tx-paging {
