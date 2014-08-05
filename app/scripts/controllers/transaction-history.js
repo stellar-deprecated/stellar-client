@@ -76,30 +76,35 @@ sc.controller('TransactionHistoryCtrl', function($scope, transactionHistory) {
       {
         field: 'date',
         displayName: 'Date',
-        cellTemplate: '<span am-time-ago="row.getProperty(col.field)"></span>'
+        cellTemplate: '<span am-time-ago="row.getProperty(col.field)"></span>',
+        cellClass: 'date'
       },
       {
         field: 'transaction.type',
         displayName: 'Type',
         cellTemplate: '<i ng-class="typeIcons[row.getProperty(col.field)]"></i> ' +
-                      '<span class="tx-type">{{ row.getProperty(col.field) }}</span>'
+                      '<span class="tx-type">{{ row.getProperty(col.field) }}</span>',
+        cellClass: 'type'
       },
       {
         field: 'transaction.type',
         displayName: '',
         sortable: false,
-        cellTemplate: '<span class="tx-direction">{{ row.getProperty(col.field) === "sent" ? "to" : "from" }}</span>'
+        cellTemplate: '<span class="tx-direction">{{ row.getProperty(col.field) === "sent" ? "to" : "from" }}</span>',
+        cellClass: 'action'
       },
       {
         field: 'transaction.counterparty',
         displayName: '',
         sortable: false,
-        cellTemplate: '<span class="address">{{ row.getProperty(col.field) | addressToUsername }}</span>'
+        cellTemplate: '<span class="address">{{ row.getProperty(col.field) | addressToUsername }}</span>',
+        cellClass: 'counterparty'
       },
       {
         field: 'transaction.amount',
         displayName: 'Amount',
         cellTemplate: '<span>{{ row.getProperty(col.field).to_human() }}</span>',
+        cellClass: 'amount',
         sortFn: function(a, b){
           return a.to_number() - b.to_number();
         }
@@ -108,6 +113,7 @@ sc.controller('TransactionHistoryCtrl', function($scope, transactionHistory) {
         field: 'transaction.amount',
         displayName: 'Currency',
         cellTemplate: '<span>{{row.getProperty(col.field).currency().to_human()}}</span>',
+        cellClass: 'currency',
         sortFn: function(a, b){
           return a.to_number() - b.to_number();
         }
@@ -115,7 +121,8 @@ sc.controller('TransactionHistoryCtrl', function($scope, transactionHistory) {
       {
         field: 'transaction.amount',
         displayName: 'Issuer',
-        cellTemplate: '<span class="address">{{ row.getProperty(col.field).issuer().to_json() | addressToUsername }}</span>'
+        cellTemplate: '<span class="address">{{ row.getProperty(col.field).issuer().to_json() | addressToUsername }}</span>',
+        cellClass: 'issuer'
       }
     ]
   };
