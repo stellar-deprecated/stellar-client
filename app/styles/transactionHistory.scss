@@ -90,3 +90,18 @@
     }
   }
 }
+
+@media (max-width: 1000px) {
+  .transaction-history {
+    .tx-grid {
+      .type {
+        .icon {
+          margin-right: 0;
+        }
+        .tx-type {
+          display: none;
+        }
+      }
+    }
+  }
+}
