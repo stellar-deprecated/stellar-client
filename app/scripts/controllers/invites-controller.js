@@ -112,6 +112,18 @@ sc.controller('InvitesCtrl', function($scope, $http, $q, session, invites, singl
     });
 
     $scope.getInvites();
+
+    // TODO: dev only remove below
+    $scope.getInviteCode = function () {
+        var data = {
+            username: session.get('username'),
+            updateToken: session.get('wallet').keychainData.updateToken
+        }
+        $http.post(Options.API_SERVER + "/requestInvite", data)
+        .success(function () {
+            $scope.getInvites();
+        })
+    }
 });
 
 sc.filter('includeInviteActionFilter', function () {
