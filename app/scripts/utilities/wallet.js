@@ -11,6 +11,9 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
     if(this.mainData.contacts) {
       delete this.mainData.contacts;
     }
+    if(this.mainData.stellar_contact) {
+      delete this.mainData.stellar_contact;
+    }
   };
 
   /**

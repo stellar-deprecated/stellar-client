@@ -270,8 +270,7 @@ sc.controller('RegistrationCtrl', function($scope, $state, $timeout, $http, $q, 
       mainData: {
         username: $scope.data.username,
         email: $scope.data.email,
-        server: Options.server,
-        stellar_contact: Options.stellar_contact
+        server: Options.server
       }
     });
 

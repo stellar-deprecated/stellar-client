@@ -12,13 +12,6 @@ var Options = {
         "track": false
     },
 
-    stellar_contact: {
-        destination: "StellarFoundation",
-        destination_address: "gpjh5ZsnpfLy1FYD8V9b7oNbwZqXMFF7Ha",
-        domain: "stellar.org",
-        type: "federation_record"
-    },
-
     INFLATION_DEST: 'g4eRqgZfzfj3132y17iaf2fp6HQj1gofjt',
 
     APP_ID: '1411202179109031',
