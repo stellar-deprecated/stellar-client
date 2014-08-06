@@ -1,15 +1,15 @@
 // $avenir: 'Avenir W01';
-$avenir-book: 300;
-$avenir-medium: 500;
-$avenir-heavy: 800;
-$avenir-black: 900;
+$book-weight: 300;
+$medium-weight: 500;
+$heavy-weight: 800;
+$heavy-weight: 900;
 
 // Font weight aliases.
 // We are currently using Clear Sans with 100, 300, 700
 $clear-sans: 'Clear Sans';
 $light-weight: 100;
 $book-weight: 300;
-$medium-weight: 700;
+$medium-weight: 300;
 $heavy-weight: 700;
 $black-weight: 700;
 
@@ -52,10 +52,10 @@ $black-weight: 700;
 
 .title {
 
-  font-weight: $avenir-medium;
+  font-weight: $book-weight;
 }
 
 .info {
 
-  font-weight: $avenir-book;
+  font-weight: $book-weight;
 }

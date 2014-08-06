@@ -31,7 +31,7 @@
 
     .show-address {
       color: #B6BAB9;
-      font-weight: $avenir-book;
+      font-weight: $book-weight;
       cursor: pointer;
       @include transition(color 200ms ease-in-out);
 
