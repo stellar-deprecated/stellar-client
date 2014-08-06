@@ -56,6 +56,7 @@
                 </ul>
 
                 <ul class="nav navbar-nav navbar-right ng-hide" ng-show="session.get('loggedIn')">
+                    <li><a href="#/invites">invite ({{rootScope.invitesLeft}})</a></li>
                     <li><a href="#/settings">{{ session.get('username') }}</a></li>
                     <li><a href="#/logout" ui-sref="logout">LOG OUT</a></li>
                 </ul>
