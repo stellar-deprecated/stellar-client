@@ -42,12 +42,7 @@ stellarClient.config(function($httpProvider, $stateProvider, $urlRouterProvider,
       authenticate: false
     })
     .state('register', {
-      url:         '/register',
-      templateUrl: 'states/register.html',
-      authenticate: false
-    })
-    .state('register-inviteCode', {
-      url:         '/register/:inviteCode',
+      url:         '/register?inviteCode',
       templateUrl: 'states/register.html',
       authenticate: false
     })
