@@ -58,7 +58,10 @@ sc.controller('InvitesCtrl', function($scope, $http, $q, session, invites, singl
                 return !invite.inviteeId;
             },
             action: function (invite) {
-
+                invites.cancel(invite)
+                .success(function () {
+                    $scope.getInvites();
+                });
             }
         },
         {

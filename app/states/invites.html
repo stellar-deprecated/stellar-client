@@ -18,7 +18,7 @@
             <span ng-bind="getInviteStatus(invite)"></span>
                 <span ng-repeat="action in inviteActions | includeInviteActionFilter:invite" ng-init="innerFirst = $first; innerLast = $last">
                 {{!innerFirst ? " " : ""}}
-                <a href="" ng-click="action.action" >{{action.text}}</a>
+                <a href="" ng-click="action.action(invite)" >{{action.text}}</a>
                 {{!innerLast ? " |" : ""}}
                 </span>
             </div>
