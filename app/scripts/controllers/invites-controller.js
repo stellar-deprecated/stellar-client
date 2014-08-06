@@ -25,6 +25,8 @@ sc.controller('InvitesCtrl', function($scope, $http, $q, session, invites, singl
     $scope.getInviteStatus = function (invite) {
         if (invite.claimedAt) {
             return 'signed up! 500 STR sent';
+        } else if (invite.inviteeId) {
+            return 'accepted but waiting for Facebook auth';
         } else {
             return 'pending';
         }
