@@ -48,7 +48,15 @@ sc.controller('InvitesCtrl', function($scope, $http, $q, session, invites, singl
                 return !invite.inviteeId;
             },
             action: function (invite) {
-
+                invites.resend(invite)
+                .success(function () {
+                    $scope.getInvites();
+                })
+                .error(function (error) {
+                    if (error.code == "time_limit") {
+                        // TODO: show error 'wait a little bit before resednign'
+                    }
+                })
             }
         },
         {

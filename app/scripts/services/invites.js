@@ -17,6 +17,11 @@ sc.service('invites', function($http, session) {
             data.inviteId = invite.inviteId;
 
             return $http.post(Options.API_SERVER + "/invites/cancel", data);
+        },
+        resend: function (invite) {
+            data.inviteId = invite.inviteId;
+
+            return $http.post(Options.API_SERVER + "/invites/resend", data);
         }
     }
 });
