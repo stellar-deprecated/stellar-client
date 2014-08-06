@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session, TutorialHelper, singletonPromise, FlashMessages) {
+sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session, TutorialHelper, singletonPromise, FlashMessages, contacts) {
   $scope.showRewards = false;
   $scope.showRewardsComplete = null;
   $scope.selectedReward = null;
@@ -145,7 +145,8 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
     }
 
     turnOffFairyTxListener = $scope.$on('$appTxNotification', function (event, tx) {
-      if (tx.counterparty == session.get('wallet').mainData.stellar_contact.destination_address) {
+      var fairyContact = contacts.getContactByEmail('StellarFoundation@stellar.org');
+      if (fairyContact && tx.counterparty == fairyContact.destination_address) {
         $scope.updateRewards();
       }
     });

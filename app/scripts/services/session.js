@@ -4,7 +4,7 @@ var sc = angular.module('stellarClient');
 
 var cache = {};
 
-sc.service('session', function($rootScope, $http, $timeout, stNetwork, Wallet) {
+sc.service('session', function($rootScope, $http, $timeout, stNetwork, Wallet, contacts) {
   var Session = function() {};
 
   Session.prototype.get = function(name){ return cache[name]; };
@@ -109,19 +109,10 @@ sc.service('session', function($rootScope, $http, $timeout, stNetwork, Wallet) {
   };
 
   function checkFairyAddress() {
-    var session = this;
     $http.get(Options.API_SERVER + "/fairy")
     .success(function (response) {
-      var wallet = session.get('wallet');
-      var contacts = wallet.mainData.contacts;
       var federation_record = response.data.federation_json;
-      if (wallet.mainData.stellar_contact.destination_address != federation_record.destination_address) {
-        // add it as the stellar contact
-        wallet.mainData.stellar_contact = federation_record;
-        // add this record to the contacts list
-        contacts[federation_record.destination_address] = federation_record;
-        wallet.sync('update');
-      }
+      contacts.addContact(federation_record);
     });
   }
 
