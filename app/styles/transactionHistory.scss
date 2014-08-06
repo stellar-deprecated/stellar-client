@@ -73,11 +73,17 @@
       right: 10px;
     }
 
-    .type, .action, .currency {
-      text-align: center;
-    }
     .amount {
-      text-align: right;
+      position: relative;
+      span {
+        line-height: 0;
+        &.address.issuer {
+          position: absolute;
+          left: 0;
+          top: 52px;
+          color: $grey;
+        }
+      }
     }
 
   }
@@ -91,12 +97,13 @@
   }
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 520px) {
   .transaction-history {
     .tx-grid {
-      .type {
+      .type.ngCell {
         .icon {
           margin-right: 0;
+          padding-left: 14px;
         }
         .tx-type {
           display: none;
