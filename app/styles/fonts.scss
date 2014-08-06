@@ -1,41 +1,32 @@
-// $avenir: 'Avenir W01';
+// Font weight aliases.
+// We are currently using Clear Sans with 300, 300, 700
+$clear-sans: 'Clear Sans';
 $book-weight: 300;
 $medium-weight: 500;
-$heavy-weight: 800;
-$heavy-weight: 900;
-
-// Font weight aliases.
-// We are currently using Clear Sans with 100, 300, 700
-$clear-sans: 'Clear Sans';
-$light-weight: 100;
-$book-weight: 300;
-$medium-weight: 300;
 $heavy-weight: 700;
-$black-weight: 700;
-
-// Currently hotlinks to our theme's font files. Temporary until we get a proper cdn
-@font-face {
-    font-family: 'Clear Sans';
-    font-style: normal;
-    font-weight: 100;
-    src: local('ClearSans-Thin'), local('Clear Sans Thin'),
-         url('https://www.stellar.org/wp-content/themes/stellar/fonts/ClearSans-Thin.eot'),
-         url('https://www.stellar.org/wp-content/themes/stellar/fonts/ClearSans-Thin.eot?#iefix') format('embedded-opentype'),
-         url('https://www.stellar.org/wp-content/themes/stellar/fonts/ClearSans-Thin.woff') format('woff'),
-         url('https://www.stellar.org/wp-content/themes/stellar/fonts/ClearSans-Thin.ttf') format('truetype'),
-         url('https://www.stellar.org/wp-content/themes/stellar/fonts/ClearSans-Thin.svg') format('svg');
-}
 
 @font-face {
     font-family: 'Clear Sans';
     font-style: normal;
     font-weight: 300;
     src: local('ClearSans-Light'), local('Clear Sans Light'),
-         url('https://www.stellar.org/wp-content/themes/stellar/fonts/ClearSans-Light.eot'),
-         url('https://www.stellar.org/wp-content/themes/stellar/fonts/ClearSans-Light.eot?#iefix') format('embedded-opentype'),
-         url('https://www.stellar.org/wp-content/themes/stellar/fonts/ClearSans-Light.woff') format('woff'),
-         url('https://www.stellar.org/wp-content/themes/stellar/fonts/ClearSans-Light.ttf') format('truetype'),
-         url('https://www.stellar.org/wp-content/themes/stellar/fonts/ClearSans-Light.svg') format('svg');
+        url('../fonts/ClearSans-Light.eot'),
+        url('../fonts/ClearSans-Light.eot?#iefix') format('embedded-opentype'),
+        url('../fonts/ClearSans-Light.woff') format('woff'),
+        url('../fonts/ClearSans-Light.ttf') format('truetype'),
+        url('../fonts/ClearSans-Light.svg') format('svg');
+}
+
+@font-face {
+    font-family: 'Clear Sans';
+    font-style: normal;
+    font-weight: 500;
+    src: local('ClearSans-Medium'), local('Clear Sans Medium'),
+        url('../fonts/ClearSans-Medium.eot'),
+        url('../fonts/ClearSans-Medium.eot?#iefix') format('embedded-opentype'),
+        url('../fonts/ClearSans-Medium.woff') format('woff'),
+        url('../fonts/ClearSans-Medium.ttf') format('truetype'),
+        url('../fonts/ClearSans-Medium.svg') format('svg');
 }
 
 @font-face {
@@ -43,11 +34,11 @@ $black-weight: 700;
     font-style: normal;
     font-weight: 700;
     src: local('ClearSans-Bold'), local('Clear Sans Bold'),
-         url('https://www.stellar.org/wp-content/themes/stellar/fonts/ClearSans-Bold.eot'),
-         url('https://www.stellar.org/wp-content/themes/stellar/fonts/ClearSans-Bold.eot?#iefix') format('embedded-opentype'),
-         url('https://www.stellar.org/wp-content/themes/stellar/fonts/ClearSans-Bold.woff') format('woff'),
-         url('https://www.stellar.org/wp-content/themes/stellar/fonts/ClearSans-Bold.ttf') format('truetype'),
-         url('https://www.stellar.org/wp-content/themes/stellar/fonts/ClearSans-Bold.svg') format('svg');
+        url('../fonts/ClearSans-Bold.eot'),
+        url('../fonts/ClearSans-Bold.eot?#iefix') format('embedded-opentype'),
+        url('../fonts/ClearSans-Bold.woff') format('woff'),
+        url('../fonts/ClearSans-Bold.ttf') format('truetype'),
+        url('../fonts/ClearSans-Bold.svg') format('svg');
 }
 
 .title {
