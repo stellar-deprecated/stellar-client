@@ -57,7 +57,7 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, session
     }
   };
   // add this reward to the parent scope's reward array
-  $scope.rewards.push($scope.reward);
+  $scope.rewards[$scope.reward.rewardType] = $scope.reward;
 
   $scope.reward.template = 'templates/facebook-button.html';
 

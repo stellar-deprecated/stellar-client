@@ -72,6 +72,20 @@
       left: auto;
       right: 10px;
     }
+
+    .amount {
+      position: relative;
+      span {
+        line-height: 0;
+        &.address.issuer {
+          position: absolute;
+          left: 0;
+          top: 52px;
+          color: $grey;
+        }
+      }
+    }
+
   }
 
   .tx-paging {
@@ -79,6 +93,22 @@
 
     .next-page {
       float: right;
+    }
+  }
+}
+
+@media (max-width: 520px) {
+  .transaction-history {
+    .tx-grid {
+      .type.ngCell {
+        .icon {
+          margin-right: 0;
+          padding-left: 14px;
+        }
+        .tx-type {
+          display: none;
+        }
+      }
     }
   }
 }

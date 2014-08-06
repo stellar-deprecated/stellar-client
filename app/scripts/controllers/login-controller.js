@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('LoginCtrl', function($scope, $state, $http, $timeout, $q, session, singletonPromise, Wallet, FlashMessages) {
+sc.controller('LoginCtrl', function($rootScope, $scope, $state, $http, $timeout, $q, session, singletonPromise, Wallet, FlashMessages) {
   $scope.username   = null;
   $scope.password   = null;
   $scope.loginError = null;
@@ -15,11 +15,19 @@ sc.controller('LoginCtrl', function($scope, $state, $http, $timeout, $q, session
     return deriveId().then(performLogin);
   });
 
-  if(location.search.match('idle')) {
+  if (location.search.match('idle')) {
     FlashMessages.add({
       title: 'You\'ve been logged out',
       info: 'For your security, you have been logged out because your browser is idle. Please log back in to continue using Stellar.',
       type: 'error'
+    });
+  }
+  if ($rootScope.recoveringUsername) {
+    $rootScope.recoveringUsername = false;
+    FlashMessages.add({
+      title: 'Username emailed',
+      info: 'Your username has been emailed to you; please check your inbox.',
+      type: 'info'
     });
   }
 

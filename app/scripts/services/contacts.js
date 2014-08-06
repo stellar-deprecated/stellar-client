@@ -21,7 +21,8 @@ sc.service('contacts', function(session, rpReverseFederation) {
         if (result) {
           // Add the reverse federation info to the user's wallet.
           contacts[address] = result;
-          wallet.sync("update");
+          // TODO: re-enable after we sort our load issues (and batch the sync);
+          // wallet.sync("update");
         }
       })
     ;

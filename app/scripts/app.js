@@ -36,6 +36,11 @@ stellarClient.config(function($httpProvider, $stateProvider, $urlRouterProvider,
       templateUrl: 'states/recovery.html',
       authenticate: false
     })
+    .state('username-recovery', {
+      url:         '/username-recovery',
+      templateUrl: 'states/username_recovery.html',
+      authenticate: false
+    })
     .state('register', {
       url:         '/register',
       templateUrl: 'states/register.html',
@@ -59,7 +64,7 @@ stellarClient.config(function($httpProvider, $stateProvider, $urlRouterProvider,
       url:         '/settings',
       templateUrl: 'states/settings.html',
       authenticate: true
-    }) 
+    })
   ;
 
   $urlRouterProvider.otherwise('/dashboard');

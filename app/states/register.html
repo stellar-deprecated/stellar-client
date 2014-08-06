@@ -1,6 +1,8 @@
 <div class="registration client-section">
     <div class="container">
-        <h1 class="title">Create Your Account</h1>
+        <div class="row">
+            <h1 class="title">Create Your Account</h1>
+        </div>
 
         <div ng-show="messages.length" ng-controller="FlashMessageCtrl">
             <div ng-include="'templates/flash-message-container.html'"></div>
@@ -8,26 +10,35 @@
 
         <form role="form" name="registration" class="form-horizontal stellar-form" ng-controller="RegistrationCtrl" novalidate>
             <div class="form-group">
-                <div class="errors col-sm-12">
-                    <div class="tip col-sm-offset-6 col-sm-3">{{ errors.usernameErrors.join('\n') }}</div>
-                </div>
-                <label for="username" class="col-sm-3">USERNAME</label>
-                <div class="col-sm-6">
-                    <div class="input-icon-wrapper">
-                        <input id="username" type="text" class="form-control" ng-class="{'input-error': errors.usernameErrors.length}" ng-model="data.username" ng-change="checkUsername()">
-                        <i class="icon icon-user"></i>
+                <div class="row">
+                    <div class="errors col-sm-offset-3 col-sm-6">
+                        <div class="tip">{{ errors.usernameErrors.join('\n') }}</div>
                     </div>
                 </div>
-                <div class="col-sm-3 info">
-                    <i class="username-status status glyphicon" ng-class="usernameClass()"></i>
-                    <span class="tip">Make it memorable.</span>
+                <div class="row">
+                    <label for="username" class="col-sm-3">USERNAME</label>
+                    <div class="col-sm-6">
+                        <div class="input-icon-wrapper">
+                            <input id="username" type="text" class="form-control" ng-class="{'input-error': errors.usernameErrors.length}" ng-model="data.username" ng-change="checkUsername()">
+                            <i class="icon icon-user"></i>
+                        </div>
+                    </div>
+                    <div class="col-sm-3 info">
+                        <i class="username-status status glyphicon" ng-class="usernameClass()"></i>
+                        <span class="tip">Make it memorable.</span>
+                    </div>
                 </div>
             </div>
 
-<!--             <div class="form-group">
-                <div class="errors col-sm-12">
-                    <div class="tip col-sm-offset-6 col-sm-3">{{ errors.emailErrors.join('\n') }}</div>
+
+    <!--
+        <div class="form-group container">
+            <div class="row">
+                <div class="errors col-sm-offset-6 col-sm-6">
+                    <div class="tip">{{ errors.emailErrors.join('\n') }}</div>
                 </div>
+            </div>
+            <div class="row">
                 <label for="email" class="col-sm-3">
                     EMAIL
                     <span class="tip">(optional)</span>
@@ -48,7 +59,6 @@
                                     I want to add my email.
                                 </button>
                                 <div class="poptip-ignore" ng-click="ignoreEmail()">
-                                    Continue without email.
                                 </div>
                             </span>
                         </div>
@@ -58,20 +68,27 @@
                     <i class="username-status status glyphicon glyphicon-none"></i>
                     <span class="tip">For password recovery.</span>
                 </div>
-            </div> -->
+            </div>
+        </div>
+
+    -->
 
             <div class="password-container" ng-include="'templates/password.html'"></div>
 
             <div class="form-group terms">
-                <div class="col-sm-offset-3 col-sm-6 tip">
-                    By clicking the button, you agree to our <a href="https://www.stellar.org/terms-of-service" target="_blank">Terms</a>.
+                <div class="row">
+                    <div class="col-sm-offset-3 col-sm-6 tip">
+                        By clicking the button, you agree to our <a href="https://www.stellar.org/terms-of-service" target="_blank">Terms</a>.
+                    </div>
                 </div>
             </div>
 
             <div class="form-group">
-                <div class="col-sm-offset-3 col-sm-6">
-                    <button type="submit" class="btn btn-default stellar-button" ng-click="attemptRegistration()"
-                        ng-disabled="loading">{{attemptRegistration.isLoading() ? 'Sending...' : 'Submit'}}</button>
+                <div class="row">
+                    <div class="col-sm-offset-3 col-sm-6">
+                        <button type="submit" class="btn btn-default stellar-button" ng-click="attemptRegistration()"
+                            ng-disabled="loading">{{attemptRegistration.isLoading() ? 'Sending...' : 'Submit'}}</button>
+                    </div>
                 </div>
             </div>
         </form>

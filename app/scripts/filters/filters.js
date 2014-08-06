@@ -26,6 +26,9 @@ module.filter('addressToUsername', function (session) {
             return contact.destination + "@" + contact.domain;
           }
         }
+        if (!input){
+            return ""; // no issuer for STR
+        }
         return input;
     };
 });
