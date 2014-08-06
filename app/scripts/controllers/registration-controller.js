@@ -271,13 +271,9 @@ sc.controller('RegistrationCtrl', function($scope, $state, $timeout, $http, $q, 
         username: $scope.data.username,
         email: $scope.data.email,
         server: Options.server,
-        contacts: {},
         stellar_contact: Options.stellar_contact
       }
     });
-
-    // add the default contact
-    wallet.mainData.contacts[Options.stellar_contact.destination_address] = Options.stellar_contact;
 
     return tryWalletUpload(wallet);
   }

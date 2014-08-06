@@ -4,7 +4,7 @@ var Amount = stellar.Amount;
 
 var sc = angular.module('stellarClient');
 
-sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout','session','stNetwork', 'rpFederation', 'rpReverseFederation', 'rpTracker', function($rootScope, $scope, $routeParams, $timeout, session, $network, $federation, $reverseFederation, $rpTracker )
+sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout','session','stNetwork', 'rpFederation', 'rpReverseFederation', 'rpTracker', 'contacts', function($rootScope, $scope, $routeParams, $timeout, session, $network, $federation, $reverseFederation, $rpTracker, contacts )
 {
     var timer;
 
@@ -982,14 +982,10 @@ sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout'
         tx.on('success', function (res) {
             $scope.onTransactionSuccess(res, tx);
 
-            // add the recipient federation info to the user's wallet
-            var wallet = session.get('wallet');
-            var contacts = wallet.mainData.contacts;
+            // Add the recipient federation info to the contact list.
             var federation_record = send.federation_record;
             if (federation_record && !contacts[federation_record.destination_address]) {
-                contacts[federation_record.destination_address] = federation_record;
-                // TODO: re-enable after we sort our load issues (and batch the sync);
-                // wallet.sync("update");
+                contacts.addContact(federation_record);
             }
 
             $rpTracker.track('Send result', {

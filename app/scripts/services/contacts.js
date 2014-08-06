@@ -2,16 +2,27 @@
 
 var sc = angular.module('stellarClient');
 
-sc.service('contacts', function(session, rpReverseFederation) {
+sc.service('contacts', function(rpReverseFederation) {
+  var contactsByAddress = {};
+  var contactsByFederatedName = {};
+
   /**
    * If the address is not in the contact list, try to create a contact by
    * reverse federating the address.
    */
-  function addContact(address) {
-    var wallet = session.get('wallet');
-    var contacts = wallet.mainData.contacts;
+  function addContact(federatedContact) {
+    contactsByAddress[federatedContact.destination_address] = federatedContact;
 
-    if (contacts[address]) {
+    var federatedName = federatedContact.destination + '@' + federatedContact.domain;
+    contactsByFederatedName[federatedName] = federatedContact;
+  }
+
+  /**
+   * If the address is not in the contact list, try to create a contact by
+   * reverse federating the address.
+   */
+  function addAddress(address) {
+    if (contactsByAddress[address]) {
       // Address is already in the contact list.
       return;
     }
@@ -20,7 +31,7 @@ sc.service('contacts', function(session, rpReverseFederation) {
       .then(function (result) {
         if (result) {
           // Add the reverse federation info to the user's wallet.
-          contacts[address] = result;
+          addContact(result);
           // TODO: re-enable after we sort our load issues (and batch the sync);
           // wallet.sync("update");
         }
@@ -28,7 +39,18 @@ sc.service('contacts', function(session, rpReverseFederation) {
     ;
   }
 
+  function getContactByAddress(address) {
+    return contactsByAddress[address];
+  }
+
+  function getContactByFederatedName(federatedName) {
+    return contactsByFederatedName[federatedName];
+  }
+
   return {
-    addContact: addContact
+    addContact: addContact,
+    addAddress: addAddress,
+    getContactByAddress: getContactByAddress,
+    getContactByFederatedName: getContactByFederatedName
   }
 });
