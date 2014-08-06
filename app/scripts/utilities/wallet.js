@@ -22,8 +22,15 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
   Wallet.decrypt = function(encryptedWallet, id, key){
     var rawKey = sjcl.codec.hex.toBits(key);
 
-    var mainData = Wallet.decryptData(encryptedWallet.mainData, rawKey);
     var keychainData = Wallet.decryptData(encryptedWallet.keychainData, rawKey);
+    var mainData;
+    try {
+      mainData = Wallet.decryptData(encryptedWallet.mainData, rawKey);
+    } catch(err) {
+      // If the mainData get corrupted, reset it.
+      // https://github.com/stellar/stellar-client/issues/566
+      mainData = {};
+    }
 
     var options = {
       id:           id,
