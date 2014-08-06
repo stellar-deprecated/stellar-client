@@ -5,6 +5,12 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
 
     this.keychainData = options.keychainData || {};
     this.mainData = options.mainData || {};
+
+    // HACK: Remove old contact lists to reduce the wallet size.
+    // TODO: Remove this if we need to store contacts in the wallet.
+    if(this.mainData.contacts) {
+      delete this.mainData.contacts;
+    }
   };
 
   /**
