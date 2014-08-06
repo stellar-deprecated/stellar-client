@@ -10,8 +10,8 @@
 
 var module = angular.module('stellarClient');
 
-module.factory('rpFederation', ['$q', '$rootScope', '$http', 'rpStellarTxt', 'session',
-        function ($q, $scope, $http, $txt, session) {
+module.factory('rpFederation', ['$q', '$rootScope', '$http', 'rpStellarTxt',
+        function ($q, $scope, $http, $txt) {
     var txts = {};
 
     function check_email(email) {

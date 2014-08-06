@@ -98,8 +98,8 @@ sc.service('transactionHistory', function($rootScope, stNetwork, session, contac
       var transaction = processedTxn.transaction;
 
       if (processedTxn.tx_type === "Payment" && processedTxn.tx_result === "tesSUCCESS" && transaction) {
-        contacts.addContact(transaction.counterparty);
-        contacts.addContact(transaction.amount.issuer().to_json());
+        contacts.fetchContactByAddress(transaction.counterparty);
+        contacts.fetchContactByAddress(transaction.amount.issuer().to_json());
 
         if (isNew) {
           history.unshift(processedTxn);

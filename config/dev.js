@@ -12,14 +12,6 @@ var Options = {
         "track": false
     },
 
-
-    stellar_contact: {
-        destination: "StellarFoundation",
-        destination_address: "gpjh5ZsnpfLy1FYD8V9b7oNbwZqXMFF7Ha",
-        domain: "stellar.org",
-        type: "federation_record"
-    },
-
     INFLATION_DEST: 'gJB1W4wbxvMVawvXeo4hz3bwaf2qnWHL2x',
 
     APP_ID: '1512347158994532',
@@ -40,5 +32,7 @@ var Options = {
     transactions_per_page: 25,
 
     LOGOUT_WITH_REFRESH: true,
-    MAX_WALLET_ATTEMPTS: 3
+    MAX_WALLET_ATTEMPTS: 3,
+
+    MAX_CONTACT_AGE: 24 * 60 * 60 * 1000 // One day in milliseconds.
 };
