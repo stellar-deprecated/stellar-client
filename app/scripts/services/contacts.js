@@ -24,8 +24,8 @@ sc.service('contacts', function($q, rpFederation, rpReverseFederation) {
   contactsByEmail = contactsByEmail || {};
 
   /**
-   * If the address is not in the contact list, try to create a contact by
-   * reverse federating the address.
+   * Add a federation record to the contact list with the date cached, so that
+   * it can be cached in local storage and updated as needed.
    */
   function addContact(federatedContact) {
     federatedContact.dateCached = Date.now();
@@ -45,10 +45,22 @@ sc.service('contacts', function($q, rpFederation, rpReverseFederation) {
     return federatedContact;
   }
 
+  /**
+   * Returns the federation record for a given address or undefined.
+   *
+   * This function does not make federation requests and is suitable for
+   * use in filters and other synchronous code.
+   */
   function getContactByAddress(address) {
     return contactsByAddress[address];
   }
 
+  /**
+   * Returns a promise to the federation record for a given address.
+   *
+   * If there is no record in the cache or the record is too old,
+   * then a reverse federation request will be made.
+   */
   function fetchContactByAddress(address) {
     var deferred = $q.defer();
 
@@ -73,6 +85,12 @@ sc.service('contacts', function($q, rpFederation, rpReverseFederation) {
     return deferred.promise;
   }
 
+  /**
+   * Returns a promise to the federation record for a given email.
+   *
+   * If there is no record in the cache or the record is too old,
+   * then a federation request will be made.
+   */
   function fetchContactByEmail(email) {
     var deferred = $q.defer();
 
