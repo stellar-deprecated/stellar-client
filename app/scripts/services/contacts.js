@@ -2,79 +2,105 @@
 
 var sc = angular.module('stellarClient');
 
-sc.service('contacts', function(rpReverseFederation) {
+Options.MAX_CONTACT_AGE = Options.MAX_CONTACT_AGE || 24 * 60 * 60 * 1000; // One day in milliseconds.
+
+sc.service('contacts', function($q, rpFederation, rpReverseFederation) {
   var contactsByAddress;
-  var contactsByFederatedName;
+  var contactsByEmail;
 
   // Try to load the contact list from localStorage.
   try {
     if (localStorage.stellarContactsByAddress) {
       contactsByAddress = JSON.parse(localStorage.stellarContactsByAddress);
     }
-    if (localStorage.stellarContactsByFederatedName) {
-      contactsByFederatedName = JSON.parse(localStorage.stellarContactsByFederatedName);
+    if (localStorage.stellarContactsByEmail) {
+      contactsByEmail = JSON.parse(localStorage.stellarContactsByEmail);
     }
   } catch(err) {
     // Unable to access localStorage.
   }
 
   contactsByAddress = contactsByAddress || {};
-  contactsByFederatedName = contactsByFederatedName || {};
+  contactsByEmail = contactsByEmail || {};
 
   /**
    * If the address is not in the contact list, try to create a contact by
    * reverse federating the address.
    */
   function addContact(federatedContact) {
-    federatedContect.dateCached = Date.now();
+    federatedContact.dateCached = Date.now();
     contactsByAddress[federatedContact.destination_address] = federatedContact;
 
-    var federatedName = federatedContact.destination + '@' + federatedContact.domain;
-    contactsByFederatedName[federatedName] = federatedContact;
+    var email = federatedContact.destination + '@' + federatedContact.domain;
+    contactsByEmail[email] = federatedContact;
 
     // Try to save the contact list to localStorage.
     try {
       localStorage.stellarContactsByAddress = JSON.stringify(contactsByAddress);
-      localStorage.stellarContactsByFederatedName = JSON.stringify(contactsByFederatedName);
+      localStorage.stellarContactsByEmail = JSON.stringify(contactsByEmail);
     } catch(err) {
       // Unable to access localStorage.
     }
-  }
 
-  /**
-   * If the address is not in the contact list, try to create a contact by
-   * reverse federating the address.
-   */
-  function addAddress(address) {
-    if (contactsByAddress[address]) {
-      // Address is already in the contact list.
-      return;
-    }
-
-    rpReverseFederation.check_address(address)
-      .then(function (result) {
-        if (result) {
-          // Add the reverse federation info to the user's wallet.
-          addContact(result);
-          // TODO: re-enable after we sort our load issues (and batch the sync);
-          // wallet.sync("update");
-        }
-      })
-    ;
+    return federatedContact;
   }
 
   function getContactByAddress(address) {
     return contactsByAddress[address];
   }
 
-  function getContactByFederatedName(federatedName) {
-    return contactsByFederatedName[federatedName];
+  function fetchContactByAddress(address) {
+    var deferred = $q.defer();
+
+    var contact = contactsByAddress[address];
+    if (contact && contact.dateCached > Date.now() - Options.MAX_CONTACT_AGE) {
+      deferred.resolve(contact);
+    } else {
+      rpReverseFederation.check_address(address)
+        .then(function (result) {
+          if (result) {
+            // Add the reverse federation info to the user's wallet.
+            contact = addContact(result);
+            deferred.resolve(contact);
+          }
+        },
+        function () {
+          deferred.reject();
+        })
+      ;
+    }
+
+    return deferred.promise;
+  }
+
+  function fetchContactByEmail(email) {
+    var deferred = $q.defer();
+
+    var contact = contactsByEmail[email];
+    if (contact && contact.dateCached < Date.now() - Options.MAX_CONTACT_AGE) {
+      deferred.resolve(contact);
+    } else {
+      federation.check_email(email)
+        .then(function (result) {
+          if (result) {
+            // Add the reverse federation info to the user's wallet.
+            contact = addContact(result);
+            deferred.resolve(contact);
+          }
+        },
+        function () {
+          deferred.reject();
+        })
+      ;
+    }
+
+    return deferred.promise;
   }
 
   return {
     addContact: addContact,
-    addAddress: addAddress,
     getContactByAddress: getContactByAddress,
-    getContactByFederatedName: getContactByFederatedName
+    fetchContactByAddress: fetchContactByAddress,
+    fetchContactByEmail: fetchContactByEmail
   }
 });
