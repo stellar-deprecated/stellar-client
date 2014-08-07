@@ -55,7 +55,7 @@
                 </ul>
 
                 <ul class="nav navbar-nav navbar-right ng-hide" ng-show="session.get('loggedIn')">
-                    <li><a href="#/invites">invite ({{rootScope.invitesLeft}})</a></li>
+                    <li><a href="#/invites">invite ({{(session.getUser().getInvites() | unsentInvitesFilter).length}})</a></li>
                     <li><a href="#/settings">{{ session.get('username') }}</a></li>
                     <li><a href="#/logout" ui-sref="logout">LOG OUT</a></li>
                 </ul>
@@ -193,6 +193,7 @@
 <script src="scripts/utilities/bruteRequest.js"></script>
 <script src="scripts/utilities/singletonPromise.js"></script>
 <script src="scripts/utilities/jsonrewriter.js"></script>
+<script src="scripts/utilities/userprivateinfo.js"></script>
 
 <script src="scripts/services/session.js"></script>
 <script src="scripts/services/network.js"></script>

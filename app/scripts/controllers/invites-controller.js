@@ -2,18 +2,14 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('InvitesCtrl', function($scope, $http, $q, session, invites, singletonPromise) {
+sc.controller('InvitesCtrl', function($scope, $http, $q, $filter, session, invites, singletonPromise) {
 
     $scope.invitesLeft = function () {
-        return _.filter($scope.invites, $scope.unsentInviteFilter).length;
-    }
-    $scope.invitesSent = function () {
-        return _.filter($scope.invites, $scope.sentInviteFilter).length;
+        return $filter('unsentInvitesFilter')(session.getUser().getInvites()).length;
     }
 
-    // filters for unsent invites
-    $scope.unsentInviteFilter = function (invite) {
-        return !invite.emailedTo;
+    $scope.invitesSent = function () {
+        return $filter('sentInvitesFilter')(session.getUser().getInvites()).length;
     }
 
     // filters for invites that have been sent

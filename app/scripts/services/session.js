@@ -4,7 +4,7 @@ var sc = angular.module('stellarClient');
 
 var cache = {};
 
-sc.service('session', function($rootScope, $http, $timeout, stNetwork, Wallet, contacts) {
+sc.service('session', function($rootScope, $http, $timeout, stNetwork, Wallet, contacts, UserPrivateInfo) {
   var Session = function() {};
 
   Session.prototype.get = function(name){ return cache[name]; };
@@ -45,6 +45,7 @@ sc.service('session', function($rootScope, $http, $timeout, stNetwork, Wallet, c
   };
 
   Session.prototype.login = function(wallet) {
+    var self = this;
     try {
       sessionStorage['display_reload_message'] = "display";
     } catch (e) {}
@@ -61,6 +62,12 @@ sc.service('session', function($rootScope, $http, $timeout, stNetwork, Wallet, c
     this.put('username', wallet.mainData.username);
     this.put('signingKeys', signingKeys);
     this.put('address', signingKeys.address);
+
+    // Store a user object for the currently authenticated user
+    UserPrivateInfo.load(this.get('username'), this.get('wallet').keychainData.updateToken)
+      .then(function (user) {
+        self.put('userPrivateInfo', user);
+      })
 
     // check for the most up to date fairy address
     checkFairyAddress.bind(this)();
@@ -107,6 +114,10 @@ sc.service('session', function($rootScope, $http, $timeout, stNetwork, Wallet, c
       this.clearIdleTimeout();
     }
   };
+
+  Session.prototype.getUser = function () {
+    return this.get('userPrivateInfo');
+  }
 
   function checkFairyAddress() {
     $http.get(Options.API_SERVER + "/fairy")
