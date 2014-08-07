@@ -18,6 +18,7 @@
 		line-height: 1.25em;
 	}
 	#inviteForm {
+		padding-top: 15px;
 		input[type="email"] {
 			font-size: 18px;
 			height: auto;
@@ -42,10 +43,18 @@
 			float: left;
 		}
 		.email {
-			font-size: 18px;
+			font-size: 16px;
 			width: 35%;
+			font-weight: $book-weight;
 		}
 		.status {
+			font-size: 12px;
+			&.success {
+				color: $success;
+			}
+			&.pending {
+				color: $pending;
+			}
 			
 		}
 		.invite-actions {

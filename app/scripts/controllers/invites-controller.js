@@ -35,15 +35,15 @@ sc.controller('InvitesCtrl', function($scope, $http, $q, session, invites, singl
     $scope.inviteStatus = {
         success: {
             text: "signed up! 500 STR sent",
-            class: "class"
+            class: "success"
         },
         waiting: {
             text: "accepted but waiting for Facebook auth",
-            class: "class"
+            class: "pending"
         },
         pending: {
             text: "pending",
-            class: "class"
+            class: "pending"
         }
     };
 
