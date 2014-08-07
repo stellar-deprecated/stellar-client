@@ -53,6 +53,8 @@ gulp develop
  4. Push to the branch (`git push -u origin my-new-feature`)
  5. Create a new Pull Request
 
+If you are wanting to help and not sure what to work on look for issues with the [contribute label](https://github.com/stellar/stellar-client/issues?q=is%3Aopen+is%3Aissue+label%3Acontribute).
+
 ## License
 
 Stellar Client is open source and permissively licensed under the ISC license. See the LICENSE file for more details.

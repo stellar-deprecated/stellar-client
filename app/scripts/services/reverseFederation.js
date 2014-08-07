@@ -10,7 +10,7 @@
 
 var module = angular.module('stellarClient');
 
-module.factory('rpReverseFederation', function ($q, $http, rpStellarTxt, session) {
+module.factory('rpReverseFederation', function ($q, $http, rpStellarTxt) {
     var txts = {};
     var results = {};
 

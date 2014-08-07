@@ -4,7 +4,7 @@ var Amount = stellar.Amount;
 
 var sc = angular.module('stellarClient');
 
-sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout','session','stNetwork', 'rpFederation', 'rpReverseFederation', 'rpTracker', function($rootScope, $scope, $routeParams, $timeout, session, $network, $federation, $reverseFederation, $rpTracker )
+sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout','session','stNetwork', 'rpTracker', 'contacts', function($rootScope, $scope, $routeParams, $timeout, session, $network, $rpTracker, contacts)
 {
     var timer;
 
@@ -176,7 +176,7 @@ sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout'
         }
         else if (send.federation) {
             send.path_status = "fed-check";
-            $federation.check_email(recipient)
+            contacts.fetchContactByEmail(recipient)
                 .then(function (result) {
                     // Check if this request is still current, exit if not
                     var now_recipient = send.recipient_actual || send.recipient_address;
@@ -220,7 +220,7 @@ sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout'
         }
         else {
             send.path_status = "fed-check";
-            $reverseFederation.check_address(recipient)
+            contacts.fetchContactByAddress(recipient)
                 .then(function (result) {
                     // Check if this request is still current, exit if not
                     if (recipient !== send.recipient_address) return;
@@ -981,15 +981,6 @@ sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout'
 
         tx.on('success', function (res) {
             $scope.onTransactionSuccess(res, tx);
-
-            // add the recipient federation info to the user's wallet
-            var wallet = session.get('wallet');
-            var contacts = wallet.mainData.contacts;
-            var federation_record = send.federation_record;
-            if (federation_record && !contacts[federation_record.destination_address]) {
-                contacts[federation_record.destination_address] = federation_record;
-                wallet.sync("update");
-            }
 
             $rpTracker.track('Send result', {
                 'Status': 'success',

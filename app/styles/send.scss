@@ -1,9 +1,9 @@
 .send-pane {
   form > div {
     .send-amount {
-      padding: 0;
 
       i {
+        margin-right: 15px;
         font-size: 12px;
         font-style: normal;
         top: 21px;
@@ -21,9 +21,9 @@
     }
 
     .send-address {
-      padding: 0;
 
       i {
+        margin-right: 15px;
         top: 5px;
       }
 
@@ -68,7 +68,7 @@
     .amount_feedback,
     .recipient-name {
       font-size: 46px;
-      font-weight: $avenir-book;
+      font-weight: $book-weight;
     }
 
     .recipient-address {

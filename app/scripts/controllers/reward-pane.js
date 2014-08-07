@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session, TutorialHelper, singletonPromise) {
+sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session, TutorialHelper, singletonPromise, FlashMessages, contacts) {
   $scope.showRewards = false;
   $scope.showRewardsComplete = null;
   $scope.selectedReward = null;
@@ -27,6 +27,15 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
   * Holds each reward object.
   */
   $scope.rewards = [];
+
+  // HACK: Reward type 4 requires the user to claim, but has no interface.
+  $scope.rewards[4] = {
+    status: 'incomplete',
+    hidden: true,
+    updateReward: function(status) {
+      $scope.rewards[4].status = status;
+    }
+  };
 
   $scope.$watch($scope.rewards, function (newValue, oldValue, scope) {
     $scope.sortedRewards = $scope.rewards.slice();
@@ -70,7 +79,11 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
       return order[a.status] - order[b.status];
     });
 
-    $scope.rewardProgress = $scope.rewards.map(function (reward) {
+    var visibleRewards = $scope.rewards.filter(function(reward) {
+      return !reward.hidden;
+    });
+
+    $scope.rewardProgress = visibleRewards.map(function (reward) {
       return reward.status;
     });
 
@@ -94,6 +107,7 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
 
     firstRequest = false;
   };
+
 
   $scope.updateRewards = function() {
     var config = {
@@ -131,7 +145,8 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
     }
 
     turnOffFairyTxListener = $scope.$on('$appTxNotification', function (event, tx) {
-      if (tx.counterparty == session.get('wallet').mainData.stellar_contact.destination_address) {
+      var fairyContact = contacts.getContactByEmail('StellarFoundation@stellar.org');
+      if (fairyContact && tx.counterparty == fairyContact.destination_address) {
         $scope.updateRewards();
       }
     });
@@ -152,6 +167,7 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
 
     if(readyRewards.length > 0) {
       $rootScope.$broadcast('flashMessage', {
+        id: 'claimRewards',
         title: 'You have rewards waiting to be claimed!',
         template: 'templates/claim-flash-message.html',
         type: 'success'
@@ -174,10 +190,15 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
             reward.updateReward('sending');
           }
         });
+
+        FlashMessages.dismissById('claimRewards')
       });
   });
 
-  $rootScope.$on('claimRewards', $scope.claimRewards);
+  $rootScope.$on('claimRewards', function(callback) {
+    $scope.claimRewards()
+      .then(callback);
+  });
 
   $scope.updateRewards()
     .then(setupFairyTxListener)

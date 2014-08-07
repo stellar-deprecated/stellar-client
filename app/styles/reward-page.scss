@@ -19,7 +19,7 @@
   }
 
   .reward-page-title {
-    font-weight: $avenir-heavy;
+    font-weight: $heavy-weight;
     font-size: 16px;
     height: 50px;
     line-height: 50px;
@@ -58,7 +58,7 @@
 
     .body,
     .info {
-      font-weight: $avenir-medium;
+      font-weight: $medium-weight;
       font-size: 16px;
       text-align: center;
     }
@@ -97,20 +97,17 @@
             margin-bottom: 20px;
           }
 
+          .button-col-left {
+            padding-right:5px;
+          }
+          .button-col-right {
+            padding-left:5px;
+          }
           button {
             margin: 0 0;
 
             &:not(:hover) {
               color: #474747;
-            }
-
-            &.cancel {
-              width: 25%;
-            }
-
-            &.submit {
-              width: calc(75% - 20px);
-              float: right;
             }
           }
 

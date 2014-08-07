@@ -11,7 +11,7 @@ sc.controller('RegistrationRewardCtrl', function ($scope, session) {
     status: 'sent'
   };
 
-  $scope.rewards.push($scope.reward);
+  $scope.rewards[$scope.reward.rewardType] = $scope.reward;
 
   var action = $scope.reward.action;
 });

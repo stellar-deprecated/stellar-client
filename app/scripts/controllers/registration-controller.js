@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('RegistrationCtrl', function($scope, $state, $timeout, $http, $q, session, debounce, singletonPromise, Wallet, FlashMessages) {
+sc.controller('RegistrationCtrl', function($scope, $state, $stateParams, $timeout, $http, $q, session, debounce, singletonPromise, Wallet, FlashMessages) {
   // Provide a default value to protect against stale config files.
   Options.MAX_WALLET_ATTEMPTS = Options.MAX_WALLET_ATTEMPTS || 3;
 
@@ -10,7 +10,8 @@ sc.controller('RegistrationCtrl', function($scope, $state, $timeout, $http, $q, 
     username:             '',
     email:                '',
     password:             '',
-    passwordConfirmation: ''
+    passwordConfirmation: '',
+    inviteCode:           $stateParams.inviteCode
   };
 
   $scope.status = {
@@ -170,13 +171,13 @@ sc.controller('RegistrationCtrl', function($scope, $state, $timeout, $http, $q, 
 
   /**
    * Seed the sjcl random function with Math.random() in the case where we are
-   * on a crappy browser (IE) and we've yet to get enough entropy from the 
+   * on a crappy browser (IE) and we've yet to get enough entropy from the
    * sjcl entropy collector.
    *
    * it sucks, but this is our last minute fix for IE support.  Our fix going
    * forward will be to use window.msCrypto on ie11, and on ie10 request
    * some mouse movement from the user (maybe?).
-   * 
+   *
    */
   function ensureEntropy() {
     var deferred = $q.defer();
@@ -188,19 +189,19 @@ sc.controller('RegistrationCtrl', function($scope, $state, $timeout, $http, $q, 
     if(isEnough()){
       deferred.resolve();
       return deferred.promise;
-    } 
+    }
 
     for (var i = 0; i < 8; i++) {
       sjcl.random.addEntropy(Math.random(), 32, "Math.random()");
     }
-    
+
     if(isEnough()){
       deferred.resolve();
     } else {
       $scope.errors.usernameErrors.push('Couldn\'t get enough entropy');
       deferred.reject();
     }
-    
+
     return deferred.promise;
   }
 
@@ -210,7 +211,8 @@ sc.controller('RegistrationCtrl', function($scope, $state, $timeout, $http, $q, 
     var data = {
       username: $scope.data.username,
       // email: $scope.data.email,
-      address: signingKeys.address
+      address: signingKeys.address,
+      inviteCode: $scope.data.inviteCode
     };
 
     // Submit the registration data to the server.
@@ -270,14 +272,9 @@ sc.controller('RegistrationCtrl', function($scope, $state, $timeout, $http, $q, 
       mainData: {
         username: $scope.data.username,
         email: $scope.data.email,
-        server: Options.server,
-        contacts: {},
-        stellar_contact: Options.stellar_contact
+        server: Options.server
       }
     });
-
-    // add the default contact
-    wallet.mainData.contacts[Options.stellar_contact.destination_address] = Options.stellar_contact;
 
     return tryWalletUpload(wallet);
   }

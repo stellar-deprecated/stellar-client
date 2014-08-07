@@ -2,7 +2,9 @@
   padding-bottom: 80px;
 
   .input-icon-wrapper {
+
     .icon {
+      margin-right:15px;
       color: #D8D8D8;
       margin-right: 15px;
     }
@@ -26,7 +28,6 @@
     .stellar-form {
       .form-group {
         .errors {
-          height: auto;
         }
         label {
           line-height: 2em;

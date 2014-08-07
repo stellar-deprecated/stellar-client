@@ -5,6 +5,15 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
 
     this.keychainData = options.keychainData || {};
     this.mainData = options.mainData || {};
+
+    // HACK: Remove old contact lists to reduce the wallet size.
+    // TODO: Remove this if we need to store contacts in the wallet.
+    if(this.mainData.contacts) {
+      delete this.mainData.contacts;
+    }
+    if(this.mainData.stellar_contact) {
+      delete this.mainData.stellar_contact;
+    }
   };
 
   /**
@@ -22,8 +31,15 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
   Wallet.decrypt = function(encryptedWallet, id, key){
     var rawKey = sjcl.codec.hex.toBits(key);
 
-    var mainData = Wallet.decryptData(encryptedWallet.mainData, rawKey);
     var keychainData = Wallet.decryptData(encryptedWallet.keychainData, rawKey);
+    var mainData;
+    try {
+      mainData = Wallet.decryptData(encryptedWallet.mainData, rawKey);
+    } catch(err) {
+      // If the mainData get corrupted, reset it.
+      // https://github.com/stellar/stellar-client/issues/566
+      mainData = {};
+    }
 
     var options = {
       id:           id,

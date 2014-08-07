@@ -17,7 +17,7 @@ sc.controller('SendRewardCtrl', function ($rootScope, $scope, $http, stNetwork, 
     }
   }
   // add this reward to the parent scope's reward array
-  $scope.rewards.push($scope.reward);
+  $scope.rewards[$scope.reward.rewardType] = $scope.reward;
 
   $scope.reward.template = 'templates/send-stellar.html';
 

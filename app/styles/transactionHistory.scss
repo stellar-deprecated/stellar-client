@@ -25,10 +25,6 @@
     .ngTopPanel {
       background-color: transparent;
       line-height: 70px;
-
-      .ngHeaderCell:hover {
-        background-color: rgba($light-grey, 0.5);
-      }
     }
 
     .ngRow {
@@ -72,6 +68,20 @@
       left: auto;
       right: 10px;
     }
+
+    .amount {
+      position: relative;
+      span {
+        line-height: 0;
+        &.address.issuer {
+          position: absolute;
+          left: 0;
+          top: 52px;
+          color: $grey;
+        }
+      }
+    }
+
   }
 
   .tx-paging {
@@ -79,6 +89,22 @@
 
     .next-page {
       float: right;
+    }
+  }
+}
+
+@media (max-width: 520px) {
+  .transaction-history {
+    .tx-grid {
+      .type.ngCell {
+        .icon {
+          margin-right: 0;
+          padding-left: 14px;
+        }
+        .tx-type {
+          display: none;
+        }
+      }
     }
   }
 }

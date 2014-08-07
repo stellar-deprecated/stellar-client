@@ -8,23 +8,19 @@ var Base = stellar.Base;
 /**
 * Turn a stellar address into a username
 */
-module.filter('addressToUsername', function (session) {
+module.filter('addressToUsername', function (contacts) {
     return function (input, options) {
-        var wallet = session.get('wallet');
-        if(!wallet) {
-            return input;
-        }
+        var contact = contacts.getContactByAddress(input);
 
-        if (!wallet.mainData.contacts) {
-            wallet.mainData.contacts = {};
-        }
-        if (wallet.mainData.contacts[input]) {
-          var contact = wallet.mainData.contacts[input];
+        if (contact) {
           if (contact.domain == Options.DEFAULT_FEDERATION_DOMAIN) {
             return contact.destination;
           } else {
             return contact.destination + "@" + contact.domain;
           }
+        }
+        if (!input){
+            return ""; // no issuer for STR
         }
         return input;
     };
