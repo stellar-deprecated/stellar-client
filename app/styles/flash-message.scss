@@ -92,3 +92,49 @@
 #dashboard-flash-messages {
   background-color: $grey-background;
 }
+
+.invite-messages {
+  background-color: $grey-background;
+  .invite-message {
+    margin: 25px 0;
+    border: 1px solid $stellar-blue;
+    border-radius: 3px;
+    background: fade_out($stellar-blue,0.95) url(../images/stroopy.gif) no-repeat 15px center;
+    background-size: 40px;
+    padding: 15px 0 15px 70px;
+    color: $stellar-blue;
+    p {
+      float: left;
+      font-size: 18px;
+      font-weight: $book-weight;
+      margin: 8px 0 0 0;
+    }
+    button {
+      float: right;
+      margin-right: 15px;
+      background: $stellar-blue;
+      border: 1px solid darken($stellar-blue, 10);
+      border-radius: 3px;
+      color: #fff;
+      padding: 8px 15px;
+      &:hover {
+        background: darken($stellar-blue, 5);
+      }
+    }
+
+  }
+  @media (max-width: $phone-width) {
+    .invite-message {
+      background-position: 5px 15px;
+      padding: 5px 0 5px 55px; 
+      p {
+        font-size: 16px;
+      }
+      button {
+        float: none;
+        margin: 10px 0;
+        width: 95%;
+      }
+    }
+  }
+}
