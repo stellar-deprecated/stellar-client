@@ -1,27 +1,31 @@
 <div class="invite-page" ng-controller="InvitesCtrl">
-    <button ng-click="getInviteCode()">get invite code</button>
-    <h1>Share stellar with a friend</h1>
-    <p>We will send you 500STR for every friend you invite, once they authenticate successfully with Facebook</p>
-    <form id="inviteForm" role="form" name="inviteForm" novalidate>
-        <div class="form-group row">
-            <div class="col-sm-4">
-                <input class="form-control" ng-model="inviteEmail" name="email" type="email" ng-change="emailError = null"/>
+    <div class="container">
+        <h1 class="title">Share stellar with a friend</h1>
+        <button class="dev-invite" ng-click="getInviteCode()">get invite code</button>
+        <h3>We will send you 500STR for every friend you invite, once they authenticate successfully with Facebook</h3>
+        <form id="inviteForm" role="form" name="inviteForm" novalidate>
+            <div class="form-group row">
+                <div class="col-sm-5 col-md-5">
+                    <input class="form-control" ng-model="inviteEmail" name="email" type="email" ng-change="emailError = null"/>
+                </div>
+                <div class="col-sm-3 col-md-5">
+                    <button type="submit" class="btn btn-default stellar-button" ng-disabled="attemptSendInvite.isLoading() || invitesLeft() <= 0" ng-click="attemptSendInvite()">{{attemptSendInvite.isLoading() ? 'Sending...' : invitesLeft() + ' invites left'}}</button>
+                </div>
             </div>
-            <div class="col-sm-3">
-                <button type="submit" class="btn btn-default stellar-button" ng-disabled="attemptSendInvite.isLoading() || invitesLeft() <= 0" ng-click="attemptSendInvite()">{{attemptSendInvite.isLoading() ? 'Sending...' : invitesLeft() + ' invites left'}}</button>
-            </div>
-        </div>
-    </form>
-    <h1>Invites ({{ invitesSent() }})</h1>
-    <div class="invites">
-        <div class="invite-row" ng-repeat="invite in invites | filter:sentInviteFilter">
-            <span>{{invite.emailedTo}}</span>
-            <span ng-bind="getInviteStatus(invite)"></span>
-                <span ng-repeat="action in inviteActions | includeInviteActionFilter:invite" ng-init="innerFirst = $first; innerLast = $last">
-                {{!innerFirst ? " " : ""}}
-                <a href="" ng-click="action.action(invite)" >{{action.text}}</a>
-                {{!innerLast ? " |" : ""}}
-                </span>
+        </form>
+        
+        <div class="invites">
+            <h2>Invites ({{ invitesSent() }})</h2>
+            <div class="invite-row" ng-repeat="invite in invites | filter:sentInviteFilter">
+                <span class="email">{{invite.emailedTo}}</span>
+                <span class="status"ng-bind="getInviteStatus(invite)"></span>
+                <div class="invite-actions">
+                    <span ng-repeat="action in inviteActions | includeInviteActionFilter:invite" ng-init="innerFirst = $first; innerLast = $last">
+                    {{!innerFirst ? " " : ""}}
+                    <a href="" ng-click="action.action(invite)" >{{action.text}}</a>
+                    {{!innerLast ? " | " : ""}}
+                    </span>
+                </div>
             </div>
         </div>
     </div>
