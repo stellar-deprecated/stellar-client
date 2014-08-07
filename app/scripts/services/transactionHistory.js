@@ -112,7 +112,7 @@ sc.service('transactionHistory', function($rootScope, $q, stNetwork, session, co
       allTransactionsLoaded = true;
     }
 
-    $rootScope.$broadcast('transactionHistory.historyUpdated', history.slice());
+    $rootScope.$broadcast('transactionHistory.historyUpdated');
   }
 
   /**
@@ -127,7 +127,7 @@ sc.service('transactionHistory', function($rootScope, $q, stNetwork, session, co
       $rootScope.$broadcast('$appTxNotification', tx.transaction);
     }
 
-    $rootScope.$broadcast('transactionHistory.historyUpdated', history.slice());
+    $rootScope.$broadcast('transactionHistory.historyUpdated');
   }
 
   /**
