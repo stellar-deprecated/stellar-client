@@ -2,6 +2,7 @@
 	.title {
 		border-bottom: 1px solid $grey-border;
 		line-height: 1.25em;
+		padding-bottom: 10px;
 	}
 	.dev-invite {
 		float: right;
@@ -9,7 +10,44 @@
 	h2 {
 		font-size: 18px;
 		line-height: 1.25em;
-		padding-bottom: 5px;
-		border-bottom: 1px solid $grey-border;
+		padding-bottom: 10px;
+		margin-bottom: 0;
+	}
+	h3 {
+		font-size: 16px;
+	}
+	#inviteForm {
+		input[type="email"] {
+			font-size: 18px;
+			height: auto;
+			padding: 9px 8px;
+		}
+	}
+	.invite-row {
+		float: left;
+		width: 100%;
+		padding: 10px 0;
+	}
+	.invites {
+		margin-top: 55px;
+		line-height: 1.8em;
+		.invite-row{
+			border-top: 1px solid $grey-border;
+			
+		}
+		span {
+			display: block;
+			float: left;
+		}
+		.email {
+			font-size: 18px;
+			width: 35%;
+		}
+		.status {
+			
+		}
+		.invite-actions {
+			float: right;
+		}
 	}
 }
