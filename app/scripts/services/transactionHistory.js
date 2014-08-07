@@ -45,7 +45,8 @@ sc.service('transactionHistory', function($rootScope, $q, stNetwork, session, co
   }
 
   function getPage(pageNumber) {
-    var transactionsNeeded = pageNumber * Options.transactions_per_page;
+    // Always keep one extra page of transactions.
+    var transactionsNeeded = (pageNumber + 1) * Options.transactions_per_page;
 
     if (!allTransactionsLoaded && history.length < transactionsNeeded) {
       return requestTransactions().then(function() {
@@ -53,11 +54,12 @@ sc.service('transactionHistory', function($rootScope, $q, stNetwork, session, co
       });
     } else {
       var startIndex = (pageNumber - 1) * Options.transactions_per_page;
+      var endIndex = pageNumber * Options.transactions_per_page;
 
       if (history.length <= startIndex) {
         return $q.reject();
       } else {
-        var transactions = history.slice(startIndex, transactionsNeeded);
+        var transactions = history.slice(startIndex, endIndex);
         return $q.when(transactions);
       }
     }
