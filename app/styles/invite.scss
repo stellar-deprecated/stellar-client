@@ -15,12 +15,14 @@
 	}
 	h3 {
 		font-size: 16px;
+		line-height: 1.25em;
 	}
 	#inviteForm {
 		input[type="email"] {
 			font-size: 18px;
 			height: auto;
 			padding: 9px 8px;
+			margin-bottom: 15px;
 		}
 	}
 	.invite-row {
@@ -31,7 +33,7 @@
 	.invites {
 		margin-top: 55px;
 		line-height: 1.8em;
-		.invite-row{
+		.invite-row {
 			border-top: 1px solid $grey-border;
 			
 		}
@@ -48,6 +50,23 @@
 		}
 		.invite-actions {
 			float: right;
+		}
+	}
+
+	@media (max-width: $phone-width) {
+		.invites {
+			.invite-row {
+				span {
+					width: 100%;
+				}
+				.invite-actions {
+					float: left;
+					span {
+						display: inline;
+						width: auto;
+					}
+				}
+			}
 		}
 	}
 }
