@@ -42,19 +42,20 @@
 
       .dash-balance {
         color: $dark-grey;
-        font-weight: $avenir-black;
+        font-weight: $heavy-weight;
         white-space: nowrap;
         font-size: 84px;
         line-height: 42px;
+        letter-spacing: -0.0025em;
       }
 
       .dash-balance-info {
         color: $info-grey;
-        font-weight: $avenir-book;
+        font-weight: $book-weight;
         font-size: 17px;
 
         b {
-          font-weight: $avenir-heavy;
+          font-weight: $heavy-weight;
         }
       }
 
@@ -145,7 +146,7 @@
     }
 
     .tx-tip {
-      font-weight: $avenir-medium;
+      font-weight: $medium-weight;
       font-size: 20px;
       color: $dark-grey;
       background-color: white;
@@ -199,7 +200,7 @@
         background-color: white;
 
         .amount {
-          font-weight: $avenir-black;
+          font-weight: $heavy-weight;
         }
       }
     }

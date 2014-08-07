@@ -10,7 +10,7 @@
   li {
     margin: 3px 0;
     padding: 0 0;
-    font-weight: $avenir-medium;
+    font-weight: $medium-weight;
     font-size: 20px;
     list-style-type: none;
     cursor: pointer;
@@ -67,7 +67,7 @@
 
       .subtitle {
         color: $info-grey;
-        font-weight: $avenir-book;
+        font-weight: $book-weight;
         font-size: 17px;
         display: block;
         margin-left: 51px;
