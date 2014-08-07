@@ -13,12 +13,12 @@
                 </div>
             </div>
         </form>
-        
+
         <div class="invites">
             <h2>Invites ({{ invitesSent() }})</h2>
             <div class="invite-row" ng-repeat="invite in invites | filter:sentInviteFilter">
                 <span class="email">{{invite.emailedTo}}</span>
-                <span class="status"ng-bind="getInviteStatus(invite)"></span>
+                <span class="status" ng-class="getInviteStatus(invite).class">{{getInviteStatus(invite).text}}</span>
                 <div class="invite-actions">
                     <span ng-repeat="action in inviteActions | includeInviteActionFilter:invite" ng-init="innerFirst = $first; innerLast = $last">
                     {{!innerFirst ? " " : ""}}
