@@ -111,7 +111,7 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
       var encryptedWallet            = localStorage.wallet;
       var localWalletKey             = ipCookie("localWalletKey");
       var encryptedWalletKey         = localStorage.encryptedWalletKey;
-      var canAttemptLocalStorageLoad = encryptedWallet && localWalletKey && encryptedWallet;
+      var canAttemptLocalStorageLoad = encryptedWallet && localWalletKey && encryptedWalletKey;
 
       if (!canAttemptLocalStorageLoad) { return; }
 
