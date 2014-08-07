@@ -121,10 +121,10 @@ sc.service('transactionHistory', function($rootScope, $q, stNetwork, session, co
   function processNewTransaction(data) {
     currentOffset++;
 
-    var tx = processTransaction(data.transaction, data.meta);
+    var tx = processTransaction(data.transaction, data.meta, true);
 
     if (tx.tx_result === "tesSUCCESS" && tx.transaction) {
-      $rootScope.$broadcast('$appTxNotification', tx.transaction, true);
+      $rootScope.$broadcast('$appTxNotification', tx.transaction);
     }
 
     $rootScope.$broadcast('transactionHistory.historyUpdated', history.slice());
