@@ -68,6 +68,9 @@ sc.service('session', function($rootScope, $http, $timeout, stNetwork, Wallet, c
       .then(function (user) {
         self.put('userPrivateInfo', user);
       })
+      .then(function () {
+        $rootScope.$broadcast('userLoaded');
+      })
 
     // check for the most up to date fairy address
     checkFairyAddress.bind(this)();

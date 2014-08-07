@@ -32,7 +32,6 @@ sc.service('invites', function($http, session) {
 
 sc.filter('unsentInvitesFilter', function () {
     return function (invites) {
-        console.log(invites);
         return _.filter(invites, function (invite) {
             return !invite.emailedTo;
         })

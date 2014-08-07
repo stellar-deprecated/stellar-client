@@ -4,6 +4,10 @@ var sc = angular.module('stellarClient');
 
 sc.controller('InvitesCtrl', function($scope, $http, $q, $filter, session, invites, singletonPromise) {
 
+    $scope.getInvites = function () {
+        return session.getUser().getInvites();
+    }
+
     $scope.invitesLeft = function () {
         return $filter('unsentInvitesFilter')(session.getUser().getInvites()).length;
     }
@@ -12,19 +16,14 @@ sc.controller('InvitesCtrl', function($scope, $http, $q, $filter, session, invit
         return $filter('sentInvitesFilter')(session.getUser().getInvites()).length;
     }
 
-    // filters for invites that have been sent
-    $scope.sentInviteFilter = function (invite) {
-        return invite.emailedTo;
-    }
-
     // returns a 'status' for the given invite (send, pending, facebookauth)
     $scope.getInviteStatus = function (invite) {
         if (invite.claimedAt) {
             return $scope.inviteStatus['success'];
         } else if (invite.inviteeId) {
-            return $scope.inviteStatus['pending'];
-        } else {
             return $scope.inviteStatus['waiting'];
+        } else {
+            return $scope.inviteStatus['pending'];
         }
     }
 
@@ -63,7 +62,7 @@ sc.controller('InvitesCtrl', function($scope, $http, $q, $filter, session, invit
             action: function (invite) {
                 invites.resend(invite)
                 .success(function () {
-                    $scope.getInvites();
+                    session.getUser().refresh();
                 })
                 .error(function (error) {
                     if (error.code == "time_limit") {
@@ -81,7 +80,7 @@ sc.controller('InvitesCtrl', function($scope, $http, $q, $filter, session, invit
             action: function (invite) {
                 invites.cancel(invite)
                 .success(function () {
-                    $scope.getInvites();
+                    session.getUser().refresh();
                 });
             }
         },
@@ -97,20 +96,6 @@ sc.controller('InvitesCtrl', function($scope, $http, $q, $filter, session, invit
         }
     ]
 
-    $scope.getInvites = function () {
-        var data = {
-          username: session.get('username'),
-          updateToken: session.get('wallet').keychainData.updateToken
-        };
-        return $http.post(Options.API_SERVER + "/users/show", data)
-            .success(function (response) {
-                $scope.invites = response.data.invites;
-            })
-            .error(function (response) {
-                // TODO: show flash message error
-            })
-    }
-
     $scope.attemptSendInvite = singletonPromise(function () {
         // use angulars check value method to determine if it's a proper email
         if (!$scope.inviteEmail && inviteForm.email.value) {
@@ -123,7 +108,8 @@ sc.controller('InvitesCtrl', function($scope, $http, $q, $filter, session, invit
 
         return invites.send($scope.inviteEmail)
             .success(function (response) {
-                $scope.getInvites();
+                session.getUser().refresh();
+                $scope.invites = session.getUser().getInvites();
             })
             .then(function () {
                 $('#inviteForm').each(function(){
@@ -131,8 +117,6 @@ sc.controller('InvitesCtrl', function($scope, $http, $q, $filter, session, invit
                 });
             })
     });
-
-    $scope.getInvites();
 
     // TODO: dev only remove below
     $scope.getInviteCode = function () {
@@ -142,7 +126,7 @@ sc.controller('InvitesCtrl', function($scope, $http, $q, $filter, session, invit
         }
         $http.post(Options.API_SERVER + "/requestInvite", data)
         .success(function () {
-            $scope.getInvites();
+            session.getUser().refresh();
         })
     }
 });

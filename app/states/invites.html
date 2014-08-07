@@ -16,7 +16,7 @@
 
         <div class="invites">
             <h2>Invites ({{ invitesSent() }})</h2>
-            <div class="invite-row" ng-repeat="invite in invites | filter:sentInviteFilter">
+            <div class="invite-row" ng-repeat="invite in getInvites() | sentInvitesFilter">
                 <span class="email">{{invite.emailedTo}}</span>
                 <span class="status" ng-class="getInviteStatus(invite).class">{{getInviteStatus(invite).text}}</span>
                 <div class="invite-actions">

@@ -56,6 +56,12 @@
         <div class="send-container client-section" ng-include="'templates/send.html'" ng-show="tab==='send'"></div>
         <div class="receive-container client-section" ng-include="'templates/receive.html'" ng-show="$root.tab==='receive'"></div>
     </div>
+
+    <div class="client-section" id="invite-task-messages" ng-show="task" ng-controller="TaskMessageCtrl">
+        <p>You've got a pending invite!</p>
+        <button ng-click="openFacebookPane()">enter code</button>
+    </div>
+
     <div class="client-section" id="dashboard-flash-messages" ng-show="messages.length" ng-controller="FlashMessageCtrl">
         <div ng-include="'templates/flash-message-container.html'"></div>
     </div>
