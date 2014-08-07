@@ -1,0 +1,15 @@
+.invite-page {
+	.title {
+		border-bottom: 1px solid $grey-border;
+		line-height: 1.25em;
+	}
+	.dev-invite {
+		float: right;
+	}
+	h2 {
+		font-size: 18px;
+		line-height: 1.25em;
+		padding-bottom: 5px;
+		border-bottom: 1px solid $grey-border;
+	}
+}
