@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.service('transactionHistory', function($rootScope, stNetwork, session, contacts) {
+sc.service('transactionHistory', function($rootScope, $q, stNetwork, session, contacts) {
   // TODO: move history to an object, mapping hash -> transaction
   // then use an array of hashes to establish order
   var history = [];
@@ -10,21 +10,29 @@ sc.service('transactionHistory', function($rootScope, stNetwork, session, contac
   var remote;
   var account;
 
+  var currentOffset = 0;
+  var allTransactionsLoaded = false;
+
   /**
    * Initializes the transaction history once the network is connected.
    */
   function init() {
+    var deferred = $q.defer();
+
     function initHistory() {
       history = [];
 
       remote = stNetwork.remote;
       account = remote.account(session.get('address'));
 
-      requestTransactions(0);
       account.on('transaction', processNewTransaction);
 
       remote.once('disconnected', cleanupListeners);
+
+      requestTransactions()
+        .then(deferred.resolve);
     }
+
     if ($rootScope.connected) {
         initHistory();
     } else {
@@ -32,40 +40,76 @@ sc.service('transactionHistory', function($rootScope, stNetwork, session, contac
         initHistory();
       });
     }
+
+    return deferred.promise;
+  }
+
+  function getPage(pageNumber) {
+    var transactionsNeeded = pageNumber * Options.transactions_per_page;
+
+    if (!allTransactionsLoaded && history.length < transactionsNeeded) {
+      return requestTransactions().then(function() {
+        return getPage(pageNumber);
+      });
+    } else {
+      var startIndex = (pageNumber - 1) * Options.transactions_per_page;
+
+      if (history.length <= startIndex) {
+        return $q.reject();
+      } else {
+        var transactions = history.slice(startIndex, transactionsNeeded);
+        return $q.when(transactions);
+      }
+    }
+  }
+
+  function lastPage() {
+    if (allTransactionsLoaded) {
+      return Math.ceil(history.length / Options.transactions_per_page);
+    } else {
+      return Infinity;
+    }
   }
 
   /**
    * Request the first page of the transaction history.
    */
-  function requestTransactions(offset) {
+  function requestTransactions() {
+    var deferred = $q.defer();
+
     var txRequest = remote.request_account_tx({
       'account': session.get('address'),
       'ledger_index_min': -1,
       'ledger_index_max': -1,
       'descending': true,
-      //'limit': Options.transactions_per_page,
-      'offset': offset
+      'limit': Options.transactions_per_page,
+      'offset': currentOffset
     });
 
     txRequest.on('success', function(data) {
-      processTransactionSet(offset, data);
+      processTransactionSet(data);
+      deferred.resolve();
     });
     txRequest.request();
+
+    return deferred.promise;
   }
 
   /**
    * Process a set of transactions.
    */
-  function processTransactionSet(lastOffset, data) {
+  function processTransactionSet(data) {
     data.transactions = data.transactions || [];
+
+    currentOffset += data.transactions.length;
 
     data.transactions.forEach(function (transaction) {
       processTransaction(transaction.tx, transaction.meta);
     });
 
     // Request more transactions until there are no more left.
-    if (_.any(data.transactions)) {
-      requestTransactions(lastOffset + data.transactions.length);
+    if (!_.any(data.transactions)) {
+      allTransactionsLoaded = true;
     }
 
     $rootScope.$broadcast('transactionHistory.historyUpdated', history.slice());
@@ -75,6 +119,7 @@ sc.service('transactionHistory', function($rootScope, stNetwork, session, contac
    * Process new transactions as they occur.
    */
   function processNewTransaction(data) {
+    currentOffset++;
 
     var tx = processTransaction(data.transaction, data.meta);
 
@@ -122,6 +167,8 @@ sc.service('transactionHistory', function($rootScope, stNetwork, session, contac
 
   return {
     init: init,
-    history: history
+    history: history,
+    getPage: getPage,
+    lastPage: lastPage
   };
 });
