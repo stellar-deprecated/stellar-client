@@ -123,7 +123,7 @@ gulp.task('images', function () {
 gulp.task('fonts', ['iconfont'], function () {
     return mergeStream(
             $.bowerFiles(),
-            gulp.src('{.tmp,app}/fonts/**/*')
+            gulp.src(['app/fonts/**/*', '.tmp/fonts/**/*'])
         )
         .pipe($.filter('**/*.{eot,svg,ttf,woff}'))
         .pipe($.flatten())
