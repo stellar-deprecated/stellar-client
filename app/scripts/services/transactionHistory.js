@@ -113,8 +113,6 @@ sc.service('transactionHistory', function($rootScope, $q, stNetwork, session, co
     if (!_.any(data.transactions)) {
       allTransactionsLoaded = true;
     }
-
-    $rootScope.$broadcast('transactionHistory.historyUpdated');
   }
 
   /**
