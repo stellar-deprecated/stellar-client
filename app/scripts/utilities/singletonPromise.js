@@ -24,7 +24,6 @@ angular.module('singletonPromise', []).value('singletonPromise', function (fun) 
     loading = true;
 
     try {
-      var result = fun();
       return fun().finally(function() {
         loading = false;
       })
