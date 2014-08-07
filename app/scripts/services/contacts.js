@@ -56,6 +56,16 @@ sc.service('contacts', function($q, rpFederation, rpReverseFederation) {
   }
 
   /**
+   * Returns the federation record for a given email or undefined.
+   *
+   * This function does not make federation requests and is suitable for
+   * use in filters and other synchronous code.
+   */
+  function getContactByEmail(email) {
+    return contactsByEmail[email];
+  }
+
+  /**
    * Returns a promise to the federation record for a given address.
    *
    * If there is no record in the cache or the record is too old,
@@ -98,7 +108,7 @@ sc.service('contacts', function($q, rpFederation, rpReverseFederation) {
     if (contact && contact.dateCached < Date.now() - Options.MAX_CONTACT_AGE) {
       deferred.resolve(contact);
     } else {
-      federation.check_email(email)
+      rpFederation.check_email(email)
         .then(function (result) {
           if (result) {
             // Add the reverse federation info to the user's wallet.
@@ -118,6 +128,7 @@ sc.service('contacts', function($q, rpFederation, rpReverseFederation) {
   return {
     addContact: addContact,
     getContactByAddress: getContactByAddress,
+    getContactByEmail: getContactByEmail,
     fetchContactByAddress: fetchContactByAddress,
     fetchContactByEmail: fetchContactByEmail
   }
