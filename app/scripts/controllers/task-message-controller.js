@@ -1,4 +1,4 @@
-sc.controller('TaskMessageCtrl', function ($scope, $filter, session) {
+sc.controller('TaskMessageCtrl', function ($rootScope, $scope, $state, $filter, session) {
     $scope.getInvitesLeft = function () {
         return $filter('unsentInviteFilter')(session.getUser().getInvites());
     };
@@ -15,7 +15,9 @@ sc.controller('TaskMessageCtrl', function ($scope, $filter, session) {
                 return "Enter code";
             },
             action: function () {
-                // TODO: open the facebook pane
+                console.log('hello');
+                $rootScope.$broadcast('openFacebookReward');
+                $scope.task = null;
             }
         },
         hasNewInvites: {
@@ -29,7 +31,8 @@ sc.controller('TaskMessageCtrl', function ($scope, $filter, session) {
                 return "Share";
             },
             action: function () {
-                // TODO: go to invite pane
+                $state.transitionTo('invites');
+                $scope.task = null;
             }
         }
     }

@@ -200,6 +200,10 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
       .then(callback);
   });
 
+  $scope.$on('openFacebookReward', function () {
+    $scope.selectedReward = 1;
+  })
+
   $scope.updateRewards()
     .then(setupFairyTxListener)
     .then(processReadyRewards);

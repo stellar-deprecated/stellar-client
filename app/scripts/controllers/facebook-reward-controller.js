@@ -62,16 +62,45 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, session
   $scope.reward.template = 'templates/facebook-button.html';
 
   $scope.facebookLogin = function () {
-    var username = session.get('username');
-    var updateToken = session.get('wallet').keychainData.updateToken;
     $scope.loading = true;
-    fbLoginStart($http, username, updateToken, facebookLoginSuccess, facebookLoginError);
+    fbLoginStart($http, claim, facebookLoginError);
   };
 
   function facebookLoginSuccess(status) {
     $scope.rewards[1].status = status;
     $scope.updateRewards();
   }
+
+  /**
+ * Send the facebook auth data to the server to be verified and saved.
+ *
+ * @param {object} data
+ * @param {string} data.username
+ * @param {string} data.updateToken
+ * @param {string} data.fbID
+ * @param {string} data.fbAccessToken
+ * @param {function} success callback
+ * @param {function} error callback
+ */
+function claim(data) {
+  _.extend(data, {
+    username: session.get('username'),
+    updateToken: session.get('wallet').keychainData.updateToken
+  })
+  if ($scope.inviteeCode) {
+    data.inviteeCode = $scope.inviteeCode;
+  }
+  $http.post(Options.API_SERVER + "/claim/facebook", data)
+    .success(
+      function (response) {
+        console.log(response.status);
+        facebookLoginSuccess(response.message);
+      })
+    .error(function (response) {
+        console.log(response.status);
+        facebookLoginError(response);
+      });
+}
 
   function facebookLoginError(response) {
     $scope.loading = false;
@@ -124,4 +153,9 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, session
   if (typeof FB !== 'undefined') {
     $rootScope.fbinit = true;
   }
+
+  // populate the invite code if we have one
+  $scope.$on('userLoaded', function () {
+    $scope.inviteeCode = session.getUser().getInviteeCode();
+  });
 });
