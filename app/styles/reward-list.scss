@@ -34,6 +34,33 @@
       background-color: white;
       border: 1px solid rgba($stellar-blue, 0);
 
+      &:first-child {
+        border: 1px solid rgba($stellar-blue, 1);
+        background: white url(../images/stroopy.gif) no-repeat 75px center;
+        background-size: 35px;
+        i {
+          float: left;
+          padding-right: 65px;
+        }
+        .reward-title {
+          
+        }
+        .reward-step {
+          color: #fff;
+          text-transform: uppercase;
+          width: 100%;
+          display: block;
+          font-size: 12px;
+          
+          .step-label {
+            background: $stellar-blue;
+            padding: 0 3px 2px;
+            border-radius: 3px;
+          }
+
+        }
+      }
+
       i {
         color: $grey;
       }
