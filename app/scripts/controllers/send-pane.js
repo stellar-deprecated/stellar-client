@@ -126,7 +126,6 @@ sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout'
         var send = $scope.send;
 
         send.show_dt_field = ($routeParams.dt
-            || send.dt
             || send.recipient_info.dest_tag_required)
             && !send.bitcoin;
     };
