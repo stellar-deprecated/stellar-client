@@ -5,37 +5,46 @@ sc.controller('TaskMessageCtrl', function ($scope, $filter, session) {
 
     $scope.inviteTasks = {
         hasInviteCode: {
-            text: "Your friend sent you an invite code.",
-            subtext: "Enter it and receive your remaining XXX stellars immediately.",
-            buttonText: "Enter code",
+            getText: function () {
+                return "Your friend sent you an invite code.";
+            },
+            getSubtext: function () {
+                return "Enter it and receive your remaining stellars immediately.";
+            },
+            getButtonText: function () {
+                return "Enter code";
+            },
             action: function () {
                 // TODO: open the facebook pane
             }
         },
         hasNewInvites: {
-            text: "You have received " + $scope.newInvites + " more new invites for your friends!",
-            buttonText: "Share Stellar & get more stellar",
-            action: function () {
-                // TODO: go to invite pane
-            }
-        },
-        receivedFirstInvites: {
-            text: "Share Stellar with a friend! We will send 500 STR for every authenticated friend you invite.",
-            buttonText: $scope.getInvitesLeft + " invites left",
+            getText: function () {
+                return "You have received " + $scope.newInvites + " new invites for your friends!";
+            },
+            getSubtext: function () {
+                return "You will receive stellars for every authenticated friend you invite.";
+            },
+            getButtonText: function () {
+                return "Share";
+            },
             action: function () {
                 // TODO: go to invite pane
             }
         }
     }
 
-    $scope.task = [];
+    $scope.task = null;
 
     function loadTasks() {
         var user = session.getUser();
         user.refresh()
             .then(function () {
-                if (user.getInviteeCode) {
+                if (user.getInviteeCode()) {
                     $scope.task = $scope.inviteTasks['hasInviteCode'];
+                } else if (user.getNewInvites().length > 0) {
+                    $scope.newInvites = user.getNewInvites().length;
+                    $scope.task = $scope.inviteTasks['hasNewInvites'];
                 }
             })
     }

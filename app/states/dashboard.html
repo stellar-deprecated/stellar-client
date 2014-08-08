@@ -60,8 +60,8 @@
     <div class="invite-messages" id="invite-task-messages" ng-show="task" ng-controller="TaskMessageCtrl">
         <div class="container">
             <div class="invite-message row">
-                <p>Share Stellar with a friend! We will send 500 STR for every authenticated friend you invite.</p>
-                <button ng-click="openFacebookPane()">enter code</button>
+                <p>{{task.getText()}}</p>
+                <button ng-click="task.action">{{task.getButtonText()}}</button>
             </div>
         </div>
     </div>

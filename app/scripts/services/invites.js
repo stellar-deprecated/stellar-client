@@ -26,6 +26,11 @@ sc.service('invites', function($http, session) {
             var data = getParams({inviteId: invite.inviteId});
 
             return $http.post(Options.API_SERVER + "/invites/resend", data);
+        },
+        ack: function () {
+            var data = getParams({});
+
+            return $http.post(Options.API_SERVER + "/invites/ack", data);
         }
     }
 });
@@ -45,3 +50,11 @@ sc.filter('sentInvitesFilter', function () {
         })
     }
 });
+
+sc.filter('unseenInvitesFilter', function () {
+    return function (invites) {
+        return _.filter(invites, function (invite) {
+            return !invite.acked;
+        })
+    }
+})

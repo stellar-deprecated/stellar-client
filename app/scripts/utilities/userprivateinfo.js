@@ -1,4 +1,4 @@
-angular.module('stellarClient').factory('UserPrivateInfo', function($http, $q) {
+angular.module('stellarClient').factory('UserPrivateInfo', function($http, $q, $filter) {
     var SHOW_ENDPOINT = Options.API_SERVER + "/users/show";
 
     var UserPrivateInfo = function (username, updateToken, data) {
@@ -48,6 +48,11 @@ angular.module('stellarClient').factory('UserPrivateInfo', function($http, $q) {
 
     UserPrivateInfo.prototype.getInviteeCode = function () {
         return this.inviteeCode;
+    }
+
+    UserPrivateInfo.prototype.getNewInvites = function () {
+        var invites = this.invites;
+        return $filter('unseenInvitesFilter')(invites);
     }
 
     return UserPrivateInfo;
