@@ -86,9 +86,9 @@ function claim(data) {
   _.extend(data, {
     username: session.get('username'),
     updateToken: session.get('wallet').keychainData.updateToken
-  })
-  if ($scope.inviteeCode) {
-    data.inviteeCode = $scope.inviteeCode;
+  });
+  if ($scope.data.inviteeCode) {
+    data.inviteCode = $scope.data.inviteeCode;
   }
   $http.post(Options.API_SERVER + "/claim/facebook", data)
     .success(
@@ -97,8 +97,17 @@ function claim(data) {
         facebookLoginSuccess(response.message);
       })
     .error(function (response) {
-        console.log(response.status);
-        facebookLoginError(response);
+        if (response.code == "invalid_invite_code") {
+          angular.element('#inviteeCode').tooltip(
+            {
+              title: "Invalid code",
+              delay: 1000
+            })
+            .tooltip('show');
+            $scope.loading = false;
+        } else {
+          facebookLoginError(response);
+        }
       });
 }
 
@@ -154,8 +163,11 @@ function claim(data) {
     $rootScope.fbinit = true;
   }
 
+  $scope.data = {};
+  $scope.data.inviteeCode = null;
   // populate the invite code if we have one
   $scope.$on('userLoaded', function () {
-    $scope.inviteeCode = session.getUser().getInviteeCode();
+    // use value since setting the scope variable will ruin the input model
+    $scope.data.inviteeCode = session.getUser().getInviteeCode();
   });
 });
