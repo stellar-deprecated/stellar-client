@@ -24,7 +24,7 @@ sc.service('session', function($rootScope, $http, $timeout, stNetwork, Wallet, c
     }
 
     var wallet = this.get('wallet');
-    if (wallet) {
+    if (wallet && this.isPersistent()) {
       wallet.bumpLocalTimeout();
     }
 
@@ -51,7 +51,7 @@ sc.service('session', function($rootScope, $http, $timeout, stNetwork, Wallet, c
 
     this.put('wallet', wallet);
 
-    if (Options.PERSISTENT_SESSION) {
+    if (this.isPersistent()) {
       wallet.saveLocal();
     }
 
@@ -73,6 +73,32 @@ sc.service('session', function($rootScope, $http, $timeout, stNetwork, Wallet, c
     this.put('loggedIn', true);
   };
 
+  Session.prototype.rememberUser = function() {
+    try {
+      localStorage.rememberUser = true;
+    } catch (err) {}
+  };
+
+  Session.prototype.isPersistent = function() {
+    var rememberUser;
+    try {
+      rememberUser = JSON.parse(localStorage.rememberUser);
+    } catch (err) {}
+
+    return Options.PERSISTENT_SESSION || rememberUser;
+  };
+
+  Session.prototype.syncWallet = function(action) {
+    var wallet = this.get('wallet');
+
+    return wallet.sync(action)
+      .then(function() {
+        if (this.isPersistent()) {
+          wallet.saveLocal();
+        }
+      }.bind(this));
+  }
+
   Session.prototype.loginFromStorage = function($scope) {
     try {
        var wallet = Wallet.loadLocal()
@@ -89,6 +115,7 @@ sc.service('session', function($rootScope, $http, $timeout, stNetwork, Wallet, c
   Session.prototype.logout = function(idle) {
     try {
       sessionStorage['display_reload_message'] = false;
+      localStorage.rememberUser = false;
     } catch (e) {}
 
     Wallet.purgeLocal();

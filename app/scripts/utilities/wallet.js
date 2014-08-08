@@ -121,16 +121,12 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
       return new Wallet(decryptedWallet);
     }
 
-    if (!Options.PERSISTENT_SESSION) { return; }
-
     return catchAndSwallowSecurityErrors(function() {
       return loadFromSession() || loadFromLocal();
     });
   };
 
   Wallet.purgeLocal = function() {
-    if (!Options.PERSISTENT_SESSION) { return; }
-    
     catchAndSwallowSecurityErrors(function() {
       ipCookie.remove("localWalletKey");
       delete sessionStorage.wallet;
@@ -190,16 +186,10 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
     var url = Options.WALLET_SERVER + '/wallets/' + action;
     var data = this.encrypt();
 
-    return $http.post(url, data)
-      .success(function (response) {
-        this.saveLocal();
-
-      }.bind(this));
+    return $http.post(url, data);
   };
 
   Wallet.prototype.saveLocal = function() {
-    if (!Options.PERSISTENT_SESSION) { return; }
-
     var self = this;
     var loginWalletKey = sjcl.random.randomWords(Wallet.SETTINGS.KEY_SIZE / 4);
     var encryptedWalletKey = Wallet.encryptData(this.key, loginWalletKey);
@@ -214,8 +204,6 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
 
 
   Wallet.prototype.bumpLocalTimeout = function() {
-    if (!Options.PERSISTENT_SESSION) { return; }
-
     //TODO: push the cookie timeout foreward
     catchAndSwallowSecurityErrors(function() {
       ipCookie("localWalletKey", ipCookie("localWalletKey"), {expires:Options.IDLE_LOGOUT_TIMEOUT, expirationUnit:'seconds'});
