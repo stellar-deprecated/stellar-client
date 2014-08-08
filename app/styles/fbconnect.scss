@@ -37,4 +37,7 @@
   label {
     font-size: 14px;
   }
+  @media (max-width: $phone-width) {
+    width: 100%;
+  }
 }

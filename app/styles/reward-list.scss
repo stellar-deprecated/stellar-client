@@ -42,9 +42,6 @@
           float: left;
           padding-right: 65px;
         }
-        .reward-title {
-          
-        }
         .reward-step {
           color: #fff;
           text-transform: uppercase;
@@ -58,6 +55,17 @@
             border-radius: 3px;
           }
 
+        }
+
+        @media (max-width: $phone-width) {
+          background-position: 40px 10px;
+          background-size: 25px; 
+          i {
+            padding-right: 35px;
+          }
+          .subtitle {
+            padding-left: 25px;
+          }
         }
       }
 
@@ -103,6 +111,9 @@
   }
   @media (max-width: $phone-width) {
     li {
+      .reward-title {
+        font-size: 18px;
+      }
       .reward-body {
         padding: 10px;
         .subtitle {
