@@ -30,6 +30,11 @@
     }
     > .row {
         padding: 15px 0 15px 0;
+        margin: 0;
+        border-bottom: 1px solid fade_out($grey-border, 0.5);
+        > div:first-child {
+            padding-left: 0;
+        }
     }
 
     .settings-control {
@@ -66,6 +71,7 @@
 
         .icon-email {
             font-size: 12px;
+            padding-right: 10px;
         }
     }
 
