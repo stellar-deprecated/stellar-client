@@ -24,6 +24,7 @@
     "gulp-livereload": "^1.2.0",
     "gulp-load-plugins": "^0.5.0",
     "gulp-ng-annotate": "^0.2.0",
+    "ng-annotate": "0.9.9",
     "gulp-plumber": "^0.6.1",
     "gulp-rename": "^1.2.0",
     "gulp-replace": "^0.3.0",
