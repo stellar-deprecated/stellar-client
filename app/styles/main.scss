@@ -275,36 +275,26 @@ body {
     font-weight: $medium-weight;
     font-size: 15px;
 
-	a {
-      line-height: 1em;
-      margin-top: 3px;
-      padding: 7px 24px;
-      @include transition(color 200ms ease-in-out);
-
-      .glyphicon {
-        opacity: 0.5;
-        font-size: 0.8em;
-        @include transition(opacity 200ms ease-in-out);
-      }
-
-      &:hover {
-        color: $stellar-blue !important;
-        .glyphicon {
-          opacity: 1;
-        }
-      }
-
-    }
-
     &.navbar-nav {
       > li {
         > a {
+          line-height: 1em;
           margin: 3px 0 0 0;
           padding: 10px 24px;
           @include transition(color 200ms ease-in-out);
 
+          .glyphicon {
+            padding-right: 2px;
+            opacity: 0.5;
+            font-size: 0.8em;
+            @include transition(opacity 200ms ease-in-out);
+          }
+
           &:hover {
             color: $stellar-blue;
+            .glyphicon {
+              opacity: 1;
+            }
           }
 
           &.nav-has-invites {
