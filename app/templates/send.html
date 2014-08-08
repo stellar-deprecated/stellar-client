@@ -145,10 +145,9 @@
         <div class="dest_feedback">
             <div ng-show="send.recipient_name" class="recipient-name">{{send.recipient_name}}</div>
             <div class="input-icon-wrapper">
-                <input class="recipient-address" value="{{send.recipient_address}}" disabled>
+                <input class="recipient-address" value="{{send.recipient_address}}{{send.dt ? '?dt=' + send.dt : ''}}" disabled>
                 <i class="glyphicon glyphicon-globe"></i>
             </div>
-            <div ng-show="send.dt" l10n="l10n" class="dt">Destination tag: {{send.dt}}</div>
         </div>
         <group ng-show="send.indirect">
             <p l10n="l10n" class="literal">You will pay at most</p>
