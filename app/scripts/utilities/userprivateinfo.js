@@ -46,6 +46,14 @@ angular.module('stellarClient').factory('UserPrivateInfo', function($http, $q, $
         return this.invites;
     }
 
+    UserPrivateInfo.prototype.getUnsentInvites = function () {
+        return $filter('unsentInvitesFilter')(this.invites);
+    }
+
+    UserPrivateInfo.prototype.getSentInvites = function () {
+        return $filter('sentInvitesFilter')(this.invites);
+    }
+
     UserPrivateInfo.prototype.getInviteeCode = function () {
         return this.inviteeCode;
     }

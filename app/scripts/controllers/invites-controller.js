@@ -5,15 +5,15 @@ var sc = angular.module('stellarClient');
 sc.controller('InvitesCtrl', function($scope, $http, $q, $filter, session, invites, singletonPromise) {
 
     $scope.getInvites = function () {
-        return session.getUser().getInvites();
+        return session.getUser() && session.getUser().getInvites();
     }
 
-    $scope.invitesLeft = function () {
-        return $filter('unsentInvitesFilter')(session.getUser().getInvites()).length;
+    $scope.getUnsentInvites = function () {
+        return session.getUser() && session.getUser().getUnsentInvites();
     }
 
-    $scope.invitesSent = function () {
-        return $filter('sentInvitesFilter')(session.getUser().getInvites()).length;
+    $scope.getSentInvites = function () {
+        return session.getUser() && session.getUser().getSentInvites();
     }
 
     // returns a 'status' for the given invite (send, pending, facebookauth)

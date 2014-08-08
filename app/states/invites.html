@@ -9,14 +9,14 @@
                     <input class="form-control" ng-model="inviteEmail" name="email" type="email" ng-change="emailError = null"/>
                 </div>
                 <div class="col-sm-3 col-md-5">
-                    <button type="submit" class="btn btn-default stellar-button" ng-disabled="attemptSendInvite.isLoading() || invitesLeft() <= 0" ng-click="attemptSendInvite()">{{attemptSendInvite.isLoading() ? 'Sending...' : invitesLeft() + ' invites left'}}</button>
+                    <button type="submit" class="btn btn-default stellar-button" ng-disabled="attemptSendInvite.isLoading() || getUnsentInvites().length <= 0" ng-click="attemptSendInvite()">{{attemptSendInvite.isLoading() ? 'Sending...' : getUnsentInvites().length + ' invites left'}}</button>
                 </div>
             </div>
         </form>
 
-        <div class="invites">
-            <h2>Invites ({{ invitesSent() }})</h2>
-            <div class="invite-row" ng-repeat="invite in getInvites() | sentInvitesFilter">
+        <div class="invites" ng-show="getSentInvites().length">
+            <h2>Sent Invites ({{ getSentInvites().length }})</h2>
+            <div class="invite-row" ng-repeat="invite in getSentInvites()">
                 <span class="email">{{invite.emailedTo}}</span>
                 <span class="status" ng-class="getInviteStatus(invite).class">{{getInviteStatus(invite).text}}</span>
                 <div class="invite-actions">
