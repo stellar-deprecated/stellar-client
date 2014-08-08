@@ -283,6 +283,7 @@ body {
       .glyphicon {
         opacity: 0.5;
         font-size: 0.8em;
+        @include transition(opacity 200ms ease-in-out);
       }
 
       &:hover {
