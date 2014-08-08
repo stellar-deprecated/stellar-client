@@ -38,7 +38,7 @@ angular.module('stellarClient').factory('UserPrivateInfo', function($http, $q, $
 
     UserPrivateInfo.prototype.updateUserInfo = function (data) {
         this.invites = data.invites;
-        this.inviteeCode = data.inviteeCode;
+        this.inviteCode = data.inviteCode;
         this.claimedInviteCode = data.claimedInviteCode;
         this.inviterUsername = data.inviterUsername;
         return $q.resolve;
@@ -56,8 +56,8 @@ angular.module('stellarClient').factory('UserPrivateInfo', function($http, $q, $
         return $filter('sentInvitesFilter')(this.invites);
     }
 
-    UserPrivateInfo.prototype.getInviteeCode = function () {
-        return this.inviteeCode;
+    UserPrivateInfo.prototype.getInviteCode = function () {
+        return this.inviteCode;
     }
 
     UserPrivateInfo.prototype.getInviterUsername = function () {

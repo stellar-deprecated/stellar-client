@@ -3,10 +3,19 @@
 var sc = angular.module('stellarClient');
 
 sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session, TutorialHelper, singletonPromise, FlashMessages, contacts) {
-  $scope.showRewards = false;
+  $scope.showRewards         = false;
   $scope.showRewardsComplete = null;
-  $scope.selectedReward = null;
-  $scope.giveawayAmount=0;
+  $scope.selectedReward      = null;
+  $scope.giveawayAmount      = 0;
+  
+  $scope.data = {};
+  // populate the invite code if we have one
+  $scope.$on('userLoaded', function () {
+    // using data.inviteCode because for some reason the input's model is in a child scope
+    $scope.data.inviteCode = session.getUser().getInviteCode();
+    $scope.data.hasClaimedInviteCode = session.getUser().hasClaimedInviteCode();
+    $scope.data.inviterUsername = session.getUser().getInviterUsername();
+  });
 
   var firstRequest = true;
 
@@ -60,6 +69,18 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
     $scope.selectedReward = null;
     TutorialHelper.clear('dashboard');
   };
+
+  $scope.submitInviteCode = function () {
+    if (_.isEmpty($scope.data.inviteCode)) {
+      $scope.closeReward();
+    } else {
+      console.log("submitting!")
+    }
+  }
+
+  $scope.rewardQueuedButtonTitle = function() {
+    return _.isEmpty($scope.data.inviteCode) ? "Continue" : "Submit Invite Code";
+  }
 
   $scope.computeRewardProgress = function() {
     var order = {

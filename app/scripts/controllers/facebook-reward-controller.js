@@ -10,10 +10,10 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, session
       if (!$scope.data) {
         return;
       }
-      if ($scope.data.inviteeCode && !$scope.data.hasClaimedInviteCode) {
+      if ($scope.data.inviteCode && !$scope.data.hasClaimedInviteCode) {
         return "Enter your invite code now to skip the waitlist!";
-      } else if ($scope.data.inviteeCode && $scope.data.hasClaimedInviteCode) {
-        return "Thanks to your friend " + $scope.data.inivterUsername + " you will skip the waitlist once you connect to Facebook.";
+      } else if ($scope.data.inviteCode && $scope.data.hasClaimedInviteCode) {
+        return "Thanks to your friend " + $scope.data.inviterUsername + " you will skip the waitlist once you connect to Facebook.";
       } else {
         return 'Log in with Facebook'
       }
@@ -98,9 +98,7 @@ function claim(data) {
     username: session.get('username'),
     updateToken: session.get('wallet').keychainData.updateToken
   });
-  if ($scope.data.inviteeCode && !$scope.data.hasClaimedInviteCode) {
-    data.inviteCode = $scope.data.inviteeCode;
-  }
+
   $http.post(Options.API_SERVER + "/claim/facebook", data)
     .success(
       function (response) {
@@ -108,18 +106,8 @@ function claim(data) {
         facebookLoginSuccess(response.message);
       })
     .error(function (response) {
-        if (response.code == "invalid_invite_code") {
-          angular.element('#inviteeCode').tooltip(
-            {
-              title: "Invalid code",
-              delay: 1000
-            })
-            .tooltip('show');
-            $scope.loading = false;
-        } else {
-          facebookLoginError(response);
-        }
-      });
+      facebookLoginError(response);
+    });
 }
 
   function facebookLoginError(response) {
@@ -175,14 +163,4 @@ function claim(data) {
   if (typeof FB !== 'undefined') {
     $rootScope.fbinit = true;
   }
-
-  $scope.data = {};
-  $scope.data.inviteeCode = null;
-  // populate the invite code if we have one
-  $scope.$on('userLoaded', function () {
-    // using data.inviteeCode because for some reason the input's model is in a child scope
-    $scope.data.inviteeCode = session.getUser().getInviteeCode();
-    $scope.data.hasClaimedInviteCode = session.getUser().hasClaimedInviteCode();
-    $scope.data.inivterUsername = session.getUser().getInviterUsername();
-  });
 });

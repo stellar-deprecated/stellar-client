@@ -43,7 +43,7 @@ sc.controller('TaskMessageCtrl', function ($rootScope, $scope, $state, $filter, 
         var user = session.getUser();
         user.refresh()
             .then(function () {
-                if (user.getInviteeCode() && !user.hasClaimedInviteCode()) {
+                if (user.getInviteCode() && !user.hasClaimedInviteCode()) {
                     $scope.task = $scope.inviteTasks['hasInviteCode'];
                 } else if (user.getNewInvites().length > 0) {
                     $scope.newInvites = user.getNewInvites().length;
