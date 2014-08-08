@@ -87,7 +87,7 @@ sc.controller('InvitesCtrl', function($scope, $http, $q, $filter, session, invit
     ]
 
     $scope.attemptSendInvite = singletonPromise(function () {
-        // use angulars check value method to determine if it's a proper email
+        // use angular's check value method to determine if it's a proper email
         if (!$scope.inviteEmail && inviteForm.email.value) {
             $scope.emailError = "Invalid email";
             return $q.reject();
@@ -108,17 +108,7 @@ sc.controller('InvitesCtrl', function($scope, $http, $q, $filter, session, invit
             })
     });
 
-    // TODO: dev only remove below
-    $scope.getInviteCode = function () {
-        var data = {
-            username: session.get('username'),
-            updateToken: session.get('wallet').keychainData.updateToken
-        }
-        $http.post(Options.API_SERVER + "/requestInvite", data)
-        .success(function () {
-            session.getUser().refresh();
-        })
-    }
+
 
     invites.ack()
         .then(function () {
