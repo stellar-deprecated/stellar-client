@@ -83,16 +83,6 @@ sc.controller('InvitesCtrl', function($scope, $http, $q, $filter, session, invit
                     session.getUser().refresh();
                 });
             }
-        },
-        {
-            text: "send stellars to your friend",
-            include: function (invite) {
-                // only include if someone registered with this invite
-                return invite.inviteeId;
-            },
-            action: function (invite) {
-                // TODO: open a send pane for this invitee id
-            }
         }
     ]
 
