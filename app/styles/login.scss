@@ -21,6 +21,17 @@
     }
   }
 
+  .stellar-form .form-group {
+    .remember-me {
+      color: $grey;
+      font-weight: $book-weight;
+    }
+
+    .warning {
+      color: $error;
+    }
+  }
+
   @media (max-width: $phone-width) {
     h1 {
       margin: 0;
