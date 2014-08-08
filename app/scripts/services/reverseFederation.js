@@ -29,11 +29,7 @@ module.factory('rpReverseFederation', function ($q, $http, rpStellarTxt) {
         var txtPromise = rpStellarTxt.get(domain);
 
         if (txtPromise) {
-            if ("function" === typeof txtPromise.then) {
-                txtPromise.then(processTxt, handleNoTxt);
-            } else {
-                processTxt(txtPromise);
-            }
+            txtPromise.then(processTxt, handleNoTxt);
         } else {
             handleNoTxt();
         }

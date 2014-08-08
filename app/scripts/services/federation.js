@@ -30,11 +30,7 @@ module.factory('rpFederation', ['$q', '$rootScope', '$http', 'rpStellarTxt',
         var txtPromise = $txt.get(domain);
 
         if (txtPromise) {
-            if ("function" === typeof txtPromise.then) {
-                txtPromise.then(processTxt, handleNoTxt);
-            } else {
-                processTxt(txtPromise);
-            }
+            txtPromise.then(processTxt, handleNoTxt);
         } else {
             handleNoTxt();
         }

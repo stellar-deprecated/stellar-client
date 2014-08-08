@@ -20,7 +20,7 @@ module.factory('rpStellarTxt', ['$q', '$rootScope',
             } else {
                 var txtPromise = $q.defer();
 
-                txts[domain] = txtPromise;
+                txts[domain] = txtPromise.promise;
 
                 // TODO: change these back to https
                 var urls = [
@@ -41,7 +41,6 @@ module.factory('rpStellarTxt', ['$q', '$rootScope',
                         success: function (data) {
                             $scope.$apply(function() {
                                 var sections = parse(data);
-                                txts[domain] = sections;
                                 txtPromise.resolve(sections);
                             });
                         },

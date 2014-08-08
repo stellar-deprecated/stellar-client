@@ -161,11 +161,13 @@ function claim(data) {
 
     $http.get(Options.API_SERVER + '/claim/placeInLine', config)
       .success(function (result) {
-        if (result.message > 1) {
+
+            $scope.reward.subtitle = "You are on the waiting list! You will get your stellars soon.";
+        /* if (result.message > 1) {
           $scope.reward.subtitle = "You are on the waiting list! Approximate waiting time: " + result.message + " days.";
         } else {
           $scope.reward.subtitle = "You are on the waiting list! You will get your stellars tomorrow.";
-        }
+        } */
       });
   }
 

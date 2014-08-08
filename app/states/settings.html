@@ -1,7 +1,8 @@
 <div class="settings" ng-controller="SettingsCtrl">
     <div class="container">
         <div class="client-section">
-            <h1 class="title">Settings</h1>
+            <h1 class="title">Settings<span class="link-dashboard"><a href="/#/dashboard">&#8592; back to dashboard</a></span></h1>
+
         </div>
 
         <!-- TODO: add user photos
@@ -35,10 +36,8 @@
                     <div class="settings-label col-sm-3">EMAIL</div>
                     <div class="settings-control col-sm-9">
                         <div class="row">
-                            <div class="col-sm-1">
+                            <div class="col-sm-12">
                                 <span class="icon icon-email"/>
-                            </div>
-                            <div class="col-sm-11">
                                 <span>{{email ? email : 'Add your email!'}}</span>
                                 <!-- TODO: show if verified -->
                                 <span class="verified-email-status icon icon-tick" ng-show="email"/>

@@ -3,6 +3,19 @@
     padding-bottom:30px;
 }
 
+.settings {
+    h1.title {
+        position: relative;
+        .link-dashboard {
+            position: absolute;
+            right: 0;
+            font-size: 14px;
+        }
+
+    }
+}
+
+
 .settings-section {
     .title {
         font-size: 18px;
@@ -10,14 +23,18 @@
         padding-bottom:15px;
         .glyphicon {
             padding-right:5px;
-        }
-    }
+        }    }
     button[type="submit"] {
         float:left;
         margin:auto;
     }
     > .row {
         padding: 15px 0 15px 0;
+        margin: 0;
+        border-bottom: 1px solid fade_out($grey-border, 0.5);
+        > div:first-child {
+            padding-left: 0;
+        }
     }
 
     .settings-control {
@@ -54,6 +71,7 @@
 
         .icon-email {
             font-size: 12px;
+            padding-right: 10px;
         }
     }
 
