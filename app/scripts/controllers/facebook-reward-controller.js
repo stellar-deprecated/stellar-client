@@ -6,7 +6,18 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, session
   $scope.reward = {
     rewardType: 1,
     title: 'Receive your first stellars on us!',
-    subtitle: 'Log in with Facebook',
+    getSubtitle: function () {
+      if (!$scope.data) {
+        return;
+      }
+      if ($scope.data.inviteeCode && !$scope.data.hasClaimedInviteCode) {
+        return "Enter your invite code now to skip the waitlist!";
+      } else if ($scope.data.inviteeCode && $scope.data.hasClaimedInviteCode) {
+        return "Thanks to your friend " + $scope.data.inivterUsername + " you will skip the waitlist once you connect to Facebook.";
+      } else {
+        return 'Log in with Facebook'
+      }
+    },
     innerTitle: 'Receive your first stellars',
     status: 'incomplete',
     error: null,
@@ -87,7 +98,7 @@ function claim(data) {
     username: session.get('username'),
     updateToken: session.get('wallet').keychainData.updateToken
   });
-  if ($scope.data.inviteeCode) {
+  if ($scope.data.inviteeCode && !$scope.data.hasClaimedInviteCode) {
     data.inviteCode = $scope.data.inviteeCode;
   }
   $http.post(Options.API_SERVER + "/claim/facebook", data)
@@ -167,7 +178,9 @@ function claim(data) {
   $scope.data.inviteeCode = null;
   // populate the invite code if we have one
   $scope.$on('userLoaded', function () {
-    // use value since setting the scope variable will ruin the input model
+    // using data.inviteeCode because for some reason the input's model is in a child scope
     $scope.data.inviteeCode = session.getUser().getInviteeCode();
+    $scope.data.hasClaimedInviteCode = session.getUser().hasClaimedInviteCode();
+    $scope.data.inivterUsername = session.getUser().getInviterUsername();
   });
 });

@@ -6,7 +6,7 @@
             	<span class="step-label">Next Step</span>
             </span>
             <span class="reward-title">{{ reward.error.panel || reward.title }}</span>
-            <span class="subtitle" ng-show="reward.subtitle">{{reward.subtitle}}</span>
+            <span class="subtitle" ng-show="reward.subtitle || reward.getSubtitle()">{{reward.subtitle || reward.getSubtitle()}}</span>
         </div>
     </li>
 </ul>

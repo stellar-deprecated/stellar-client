@@ -1,9 +1,14 @@
 <div class="body">
-    <h2>Receive <strong>{{giveawayAmount*.125}} stellars</strong> on us now!</h2>
-    <p>And {{giveawayAmount*.875}} more will be sent to you soon so come back to check.</p>
+    <div ng-show="!data.hasClaimedInviteCode">
+        <h2>Receive <strong>{{giveawayAmount*.125}} stellars</strong> on us now!</h2>
+        <p>And {{giveawayAmount*.875}} more will be sent to you soon so come back to check.</p>
+    </div>
+    <div ng-show="data.hasClaimedInviteCode">
+        <h2>Receive <strong>{{giveawayAmount}} stellars</strong> on us now!</h2>
+    </div>
     <a href="" ng-show="!describe" ng-click="describe = true">Why Facebook?</a>
     <p ng-show="describe">We are currently using Facebook as a verification method to avoid spam but hope to add other methods soon. We will not post on your Facebook.</p>
-    <form class="form-group invite-fb-form">
+    <form class="form-group invite-fb-form" ng-show="!data.hasClaimedInviteCode">
         <label>Enter Invite Code</label>
         <input id="inviteeCode" class="form-control" type="text" ng-model="data.inviteeCode"
         data-toggle="tooltip" data-placement="right" data-template='<div class="tooltip error-tip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>' />
