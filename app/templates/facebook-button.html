@@ -3,6 +3,10 @@
     <p>And {{giveawayAmount*.875}} more will be sent to you soon so come back to check.</p>
     <a href="" ng-show="!describe" ng-click="describe = true">Why Facebook?</a>
     <p ng-show="describe">We are currently using Facebook as a verification method to avoid spam but hope to add other methods soon. We will not post on your Facebook.</p>
+    <form class="form-group invite-fb-form">
+        <label>Enter Invite Code</label>
+        <input class="form-control" type="text" />
+    </form>
 </div>
 <div class="fbconnect">
     <button class="fbbutton" ng-click="facebookLogin()" ng-show="fbinit">
