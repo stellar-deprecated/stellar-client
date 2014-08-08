@@ -275,13 +275,35 @@ body {
     font-weight: $medium-weight;
     font-size: 15px;
 
-    a {
-      margin-top: 3px;
-      padding: 7px 24px;
-      @include transition(color 200ms ease-in-out);
+    &.navbar-nav {
+      > li {
+        > a {
+          margin: 3px 0 0 0;
+          padding: 10px 24px;
+          @include transition(color 200ms ease-in-out);
 
-      &:hover {
-        color: $stellar-blue !important;
+          &:hover {
+            color: $stellar-blue;
+          }
+
+          &.nav-has-invites {
+            span {
+              background: $stellar-blue;
+              border: 1px solid darken($stellar-blue, 10);
+              color: #fff;             
+              border-radius: 3px;
+              padding: 3px;
+              font-size: 0.9em;
+            }
+            &:hover {
+              span {
+                background: darken($stellar-blue, 5);
+                color: #fff;
+              } 
+            }
+
+          }
+        }
       }
     }
 

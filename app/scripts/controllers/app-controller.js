@@ -15,6 +15,11 @@ sc.controller('AppCtrl', function($scope, $rootScope, stNetwork, session, $state
         $scope.getInvitesLeft = function () {
             return session.getUser() && session.getUser().getUnsentInvites().length;
         }
+        $scope.getInvitesClass = function () {
+            return $scope.getInvitesLeft() > 0 
+                ? 'nav-has-invites'
+                : null;
+        }
     });
 
     $rootScope.reserve=50000000;
