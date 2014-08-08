@@ -15,7 +15,9 @@
     <div class="row form-group">
         <div class="row">
             <div rp-errors="send_destination" class="errors col-sm-offset-3 col-sm-6">
-                <div rp-error-valid ng-show="send.recipient != send.recipient_address" class="success tip">wallet address found: {{send.recipient_address}}</div>
+                <div rp-error-valid ng-show="send.recipient != send.recipient_address" class="success tip">
+                    wallet address found: {{send.recipient_address}}<span ng-show="send.dt">?dt={{send.dt}}</span>
+                </div>
                 <div rp-error-on="required" l10n="l10n" class="tip">Please enter a recipient.</div>
                 <div rp-error-on="rpDest" l10n="l10n" class="tip">Recipient should be either a name from your contact list or Stellar/Bitcoin address.</div>
                 <div rp-error-on="federation" l10n="l10n" class="tip">This person isn't on Stellar yet.</div>
