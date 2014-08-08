@@ -60,7 +60,7 @@
     <div class="invite-messages" id="invite-task-messages" ng-show="task" ng-controller="TaskMessageCtrl">
         <div class="container">
             <div class="invite-message row">
-                <p>{{task.getText()}}</p>
+                <p>{{task.getText()}} {{task.getSubtext()}}</p>
                 <button ng-click="task.action()">{{task.getButtonText()}}</button>
             </div>
         </div>
