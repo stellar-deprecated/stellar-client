@@ -55,8 +55,8 @@
                 </ul>
 
                 <ul class="nav navbar-nav navbar-right ng-hide" ng-show="session.get('loggedIn')">
-                    <li><a href="#/settings">{{ session.get('username') }}</a></li>
-                    <li><a href="#/logout" ui-sref="logout">LOG OUT</a></li>
+                    <li><a href="#/settings"><span class="glyphicon glyphicon-cog"></span> {{ session.get('username') }}</a></li>
+                    <li><a href="#/logout" ui-sref="logout"><span class="glyphicon glyphicon-log-out"></span> LOG OUT</a></li>
                 </ul>
             </div>
         </div>
