@@ -38,6 +38,15 @@
             <div class="form-group">
                 <div class="row">
                     <div class="col-sm-offset-3 col-sm-6">
+                        <input type="checkbox" id="remember-me" name="remember-me" ng-model="rememberMe">
+                        <label for="remember-me" class="remember-me"> Remember me</label>
+                        <div class="warning" ng-show="rememberMe"><span class="warning-title">WARNING</span> Allowing your browser to keep you logged in makes it easier for attackers to steal your wallet if they have access to your computer.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-offset-3 col-sm-6">
                         <button type="submit" class="stellar-button btn btn-default" ng-click="attemptLogin()">{{attemptLogin.isLoading() ? 'Logging in...' : 'Log in'}}</button>
                     </div>
                 </div>

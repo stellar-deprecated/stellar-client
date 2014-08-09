@@ -108,7 +108,8 @@ body {
       line-height: 42px;
     }
 
-    input {
+    input[type="text"],
+    input[type="password"] {
       height: 42px;
       border-radius: 2px;
       color: $dark-grey;
