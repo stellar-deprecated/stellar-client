@@ -29,7 +29,7 @@
             </div>
             <form class="form-group invite-fb-form" ng-show="!data.hasClaimedInviteCode">
                 <label>Jump to the front of the line by entering an invite code below</label>
-                <input class="form-control" type="text" ng-model="data.inviteCode"
+                <input id="inviteCode" class="form-control" type="text" ng-model="data.inviteCode"
                 data-toggle="tooltip" data-placement="right" data-template='<div class="tooltip error-tip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>' />
             </form>
             <button class="stellar-button btn btn-default" ng-click="submitInviteCode()">{{rewardQueuedButtonTitle()}}</button>
