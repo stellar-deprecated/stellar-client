@@ -10,9 +10,10 @@ sc.controller('RegistrationCtrl', function($scope, $state, $stateParams, $timeou
     username:             '',
     email:                '',
     password:             '',
-    passwordConfirmation: '',
-    inviteCode:           $stateParams.inviteCode
+    passwordConfirmation: ''
   };
+
+  session.put('inviteCode', $stateParams.inviteCode);
 
   $scope.status = {
     usernameAvailable:    null,
@@ -212,7 +213,7 @@ sc.controller('RegistrationCtrl', function($scope, $state, $stateParams, $timeou
       username: $scope.data.username,
       // email: $scope.data.email,
       address: signingKeys.address,
-      inviteCode: $scope.data.inviteCode
+      inviteCode: session.get('inviteCode')
     };
 
     // Submit the registration data to the server.

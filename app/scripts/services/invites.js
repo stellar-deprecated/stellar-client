@@ -4,34 +4,33 @@ var sc = angular.module('stellarClient');
 
 sc.service('invites', function($http, session) {
 
-    function getParams(attrs) {
-        return _.extend(attrs, {
-                username: session.get('username'),
-                updateToken: session.get('wallet').keychainData.updateToken
-            });
+    function inviteAction(path, params) {
+        params = params || {};
+        _.extend(params, {
+            username:    session.get('username'),
+            updateToken: session.get('wallet').keychainData.updateToken
+        })
+
+         return $http.post(Options.API_SERVER + "/invites/" + path, params);
     }
 
     return {
         send: function (email) {
-            var data = getParams({email: email});
-
-            return $http.post(Options.API_SERVER + "/invites/send", data);
+            return inviteAction('send', {email: email});
         },
         cancel: function (invite) {
-            var data = getParams({inviteId: invite.inviteId});
-
-            return $http.post(Options.API_SERVER + "/invites/cancel", data);
+            return inviteAction('cancel', {inviteId: invite.inviteId});
         },
         resend: function (invite) {
-            var data = getParams({inviteId: invite.inviteId});
-
-            return $http.post(Options.API_SERVER + "/invites/resend", data);
+            return inviteAction('resend', {inviteId: invite.inviteId});
         },
         ack: function () {
-            var data = getParams({});
-
-            return $http.post(Options.API_SERVER + "/invites/ack", data);
+            return inviteAction('ack');
+        },
+        claim: function (inviteCode) {
+            return inviteAction('claim', {inviteCode: inviteCode});
         }
+
     }
 });
 

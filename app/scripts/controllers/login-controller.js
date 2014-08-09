@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('LoginCtrl', function($rootScope, $scope, $state, $http, $timeout, $q, session, singletonPromise, Wallet, FlashMessages) {
+sc.controller('LoginCtrl', function($rootScope, $scope, $state, $http, $timeout, $q, session, singletonPromise, Wallet, FlashMessages, invites) {
   $scope.username   = null;
   $scope.password   = null;
   $scope.loginError = null;
@@ -45,6 +45,11 @@ sc.controller('LoginCtrl', function($rootScope, $scope, $state, $http, $timeout,
         Wallet.open(body.data, id, $scope.username, $scope.password)
           .then(function(wallet) {
             session.login(wallet);
+
+            if(session.get('inviteCode')) {
+              invites.claim(session.get('inviteCode'));
+            }
+
             $state.go('dashboard');
           });
       })
