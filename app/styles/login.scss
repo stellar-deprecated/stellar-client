@@ -22,13 +22,37 @@
   }
 
   .stellar-form .form-group {
-    .remember-me {
-      color: $grey;
-      font-weight: $book-weight;
-    }
-
     .warning {
-      color: $error;
+      padding: 15px 20px;
+      background-color: #FFEBE6;
+      border: 1px solid #FFD5E0;
+      border-radius: 2px;
+      position: relative;
+      color: #242321;
+
+      &:before {
+        border-style: solid;
+        border-color: #FFD5E0 transparent;
+        border-width: 0 6px 8px 6px;
+        top: -9px;
+        content: "";
+        position: absolute;
+        left: 20px;
+      }
+
+      &:after {
+        border-style: solid;
+        border-color: #FFEBE6 transparent;
+        border-width: 0 6px 8px 6px;
+        top: -8px;
+        content: "";
+        position: absolute;
+        left: 20px;
+      }
+
+      .warning-title {
+        color: $error;
+      }
     }
   }
 
