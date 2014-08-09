@@ -9,10 +9,11 @@
         top: 21px;
       }
 
-      input {
+      input[type="text"] {
         font-size: 48px;
         height: auto;
         padding-right: 50px;
+        height: auto;
       }
 
       + .tip {
@@ -27,7 +28,7 @@
         top: 5px;
       }
 
-      input {
+      input[type="text"] {
         font-size: 22px;
         height: auto;
         padding-right: 36px;
