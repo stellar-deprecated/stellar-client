@@ -5,13 +5,13 @@ var sc = angular.module('stellarClient');
 sc.service('transactionHistory', function($rootScope, $q, stNetwork, session, contacts) {
   // TODO: move history to an object, mapping hash -> transaction
   // then use an array of hashes to establish order
-  var history = [];
+  var history;
 
   var remote;
   var account;
 
-  var currentOffset = 0;
-  var allTransactionsLoaded = false;
+  var currentOffset;
+  var allTransactionsLoaded;
 
   /**
    * Initializes the transaction history once the network is connected.
@@ -21,6 +21,8 @@ sc.service('transactionHistory', function($rootScope, $q, stNetwork, session, co
 
     function initHistory() {
       history = [];
+      currentOffset = 0;
+      allTransactionsLoaded = false;
 
       remote = stNetwork.remote;
       account = remote.account(session.get('address'));
