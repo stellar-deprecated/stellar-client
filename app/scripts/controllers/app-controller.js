@@ -8,7 +8,7 @@ var sc = angular.module('stellarClient');
      walletAddressLoaded
  */
 sc.controller('AppCtrl', function($scope, $rootScope, stNetwork, session, $state, $element, FlashMessages) {
-    $rootScope.reserve=50000000;
+    $rootScope.reserve=20000000;
     $rootScope.balance=0;
     $rootScope.accountStatus = 'connecting';
     // implements account listener cleanup, added to $rootScope.account to be called in logout event
