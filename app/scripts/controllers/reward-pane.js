@@ -29,7 +29,7 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
     'sending': 'icon icon-clock',
     'sent': 'icon icon-tick',
     'unverified': 'icon icon-clock',
-    'ineligible': 'icon icon-lock' // TODO: Use yeild sign icon.
+    'ineligible': 'icon icon-lock' // TODO: Use yield sign icon.
   };
 
   /**
@@ -39,7 +39,7 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
 
   // HACK: Reward type 4 requires the user to claim, but has no interface.
   $scope.rewards[4] = {
-    status: 'incomplete',
+    status: 'sent',
     hidden: true,
     updateReward: function(status) {
       $scope.rewards[4].status = status;

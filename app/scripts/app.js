@@ -97,7 +97,7 @@ stellarClient.run(function($rootScope, $state, ipCookie, session, FlashMessages)
 
       case '/login':
         // If the user has persistent login enabled, try to login from local storage.
-        if(Options.PERSISTENT_SESSION && !session.get('loggedIn')){
+        if(session.isPersistent() && !session.get('loggedIn')){
           session.loginFromStorage($rootScope);
 
           if(session.get('loggedIn')){

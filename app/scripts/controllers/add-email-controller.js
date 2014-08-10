@@ -28,7 +28,7 @@ sc.controller('AddEmailCtrl', function ($scope, $rootScope, $http, $state, sessi
       function addEmailSuccess(response) {
         // Store the email address in the wallet.
         wallet.mainData.email = $scope.email;
-        wallet.sync('update');
+        session.syncWallet('update');
 
         // Switch to the verify overlay.
         $scope.rewards[2].status = "unverified";
