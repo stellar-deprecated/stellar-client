@@ -93,8 +93,9 @@ sc.controller('AppCtrl', function($scope, $rootScope, stNetwork, session, $state
             // As per json wire format convention, real ledger entries are CamelCase,
             // e.g. OwnerCount, additional convenience fields are lower case, e.g.
             // reserve, max_spend.
-            var reserve_base = Amount.from_json(""+remote._reserve_base),
-                reserve_inc  = Amount.from_json(""+remote._reserve_inc),
+            // TODO: get this for real
+            var reserve_base = Amount.from_json(""+20000000), //Amount.from_json(""+remote._reserve_base),
+                reserve_inc  = Amount.from_json(""+5000000), //Amount.from_json(""+remote._reserve_inc),
                 owner_count  = $rootScope.account.OwnerCount || "0";
             $rootScope.account.reserve_base = reserve_base;
             $rootScope.account.reserve = reserve_base.add(reserve_inc.product_human(owner_count));
