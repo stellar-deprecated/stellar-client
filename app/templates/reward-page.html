@@ -27,7 +27,7 @@
             <div class="body">
                 You're in the queue and should receive your reward soon!
             </div>
-            <form class="form-group invite-fb-form" ng-show="!data.hasClaimedInviteCode">
+            <form class="form-group invite-fb-form" ng-show="!data.hasClaimedInviteCode && reward.status != 'ready'">
                 <label>Jump to the front of the line by entering an invite code below</label>
                 <input id="inviteCode" class="form-control" type="text" ng-model="data.inviteCode"
                 data-toggle="tooltip" data-placement="right" data-template='<div class="tooltip error-tip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>' />
