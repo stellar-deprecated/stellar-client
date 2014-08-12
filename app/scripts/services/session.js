@@ -53,6 +53,8 @@ sc.service('session', function($rootScope, $http, $timeout, stNetwork, Wallet, c
 
     if (this.isPersistent()) {
       wallet.saveLocal();
+    } else {
+      this.setIdleTimeout();
     }
 
     var signingKeys = wallet.keychainData.signingKeys;
@@ -68,7 +70,6 @@ sc.service('session', function($rootScope, $http, $timeout, stNetwork, Wallet, c
     $rootScope.$broadcast('walletAddressLoaded', {account: signingKeys.address, secret: signingKeys.secret});
     stNetwork.init();
 
-    this.setIdleTimeout();
     // Set loggedIn to be true to signify that it is safe to use the session variables.
     this.put('loggedIn', true);
   };
