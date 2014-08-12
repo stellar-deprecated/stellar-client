@@ -87,6 +87,10 @@
   .tx-paging {
     margin-top: 20px;
 
+    button {
+      width: auto;
+    }
+
     .next-page {
       float: right;
     }
