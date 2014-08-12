@@ -2,12 +2,12 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session, TutorialHelper, singletonPromise, FlashMessages, contacts) {
+sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session, TutorialHelper, singletonPromise, FlashMessages, contacts, invites) {
   $scope.showRewards         = false;
   $scope.showRewardsComplete = null;
   $scope.selectedReward      = null;
   $scope.giveawayAmount      = 0;
-  
+
   $scope.data = {};
   // populate the invite code if we have one
   $scope.$on('userLoaded', function () {
@@ -74,7 +74,16 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
     if (_.isEmpty($scope.data.inviteCode)) {
       $scope.closeReward();
     } else {
-      console.log("submitting!")
+      console.log('claiming');
+      invites.claim($scope.data.inviteCode)
+        .success(function (response) {
+          $scope.updateRewards();
+        })
+        .error(function (response) {
+          if (response.status == "fail") {
+            Util.showError($('.invite-fb-form [data-toggle=tooltip'), response.message);
+          }
+        })
     }
   }
 

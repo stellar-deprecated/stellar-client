@@ -50,6 +50,18 @@ body {
   min-height: 100vh;
 }
 
+.error-tip {
+  .tooltip-inner {
+      background-color: $error;
+  }
+  .top.tooltip-arrow {
+    border-top-color: $error !important;
+  }
+  .right.tooltip-arrow {
+      border-right-color: $error !important;
+  }
+}
+
 .stellar-form {
   margin-top: 0;
 
@@ -302,7 +314,7 @@ body {
             span {
               background: $stellar-blue;
               border: 1px solid darken($stellar-blue, 10);
-              color: #fff;             
+              color: #fff;
               border-radius: 3px;
               padding: 3px;
               font-size: 0.9em;
@@ -311,7 +323,7 @@ body {
               span {
                 background: darken($stellar-blue, 5);
                 color: #fff;
-              } 
+              }
             }
 
           }

@@ -11,7 +11,7 @@ sc.service('invites', function($http, session) {
             updateToken: session.get('wallet').keychainData.updateToken
         })
 
-         return $http.post(Options.API_SERVER + "/invites/" + path, params);
+        return $http.post(Options.API_SERVER + "/invites/" + path, params);
     }
 
     return {

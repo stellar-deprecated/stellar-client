@@ -65,9 +65,7 @@ sc.controller('InvitesCtrl', function($scope, $http, $q, $filter, session, invit
                     session.getUser().refresh();
                 })
                 .error(function (error) {
-                    if (error.code == "time_limit") {
-                        // TODO: show error 'wait a little bit before resednign'
-                    }
+                    Util.showError($('#'+invite.inviteId+" .invite-actions"), error.message);
                 })
             }
         },
@@ -101,6 +99,9 @@ sc.controller('InvitesCtrl', function($scope, $http, $q, $filter, session, invit
                 session.getUser().refresh();
                 $scope.invites = session.getUser().getInvites();
             })
+            .error(function (response) {
+                Util.showError($("#invite-email"), response.message);
+            })
             .then(function () {
                 $('#inviteForm').each(function(){
                     this.reset();
@@ -109,6 +110,7 @@ sc.controller('InvitesCtrl', function($scope, $http, $q, $filter, session, invit
     });
 
 
+angular.element('#testing').tooltip({title: 'held'}).tooltip('show');
 
     invites.ack()
         .then(function () {
