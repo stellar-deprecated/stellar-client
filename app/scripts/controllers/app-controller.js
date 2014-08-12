@@ -9,13 +9,9 @@ var sc = angular.module('stellarClient');
  */
 sc.controller('AppCtrl', function($scope, $rootScope, stNetwork, session, $state, $element, FlashMessages) {
     $rootScope.reserve=20000000;
-    $rootScope.balance=0;
+    $rootScope.balance=null;
     $rootScope.accountStatus = 'connecting';
-    // implements account listener cleanup, added to $rootScope.account to be called in logout event
-    var listenerCleanupFn;
 
-    var myHandleAccountEntry;
-    var mySetInflation;
     var accountObj;
 
     $scope.getLogoLink = function () {
@@ -34,7 +30,7 @@ sc.controller('AppCtrl', function($scope, $rootScope, stNetwork, session, $state
 
     function reset()
     {
-        $rootScope.balance=0;
+        $rootScope.balance=null;
         $rootScope.accountStatus = 'connecting';
     }
 
@@ -51,63 +47,48 @@ sc.controller('AppCtrl', function($scope, $rootScope, stNetwork, session, $state
 
         accountObj = remote.account(keys.address);
 
-        // We need a reference to these functions after they're bound, so we can
-        // unregister them if the account is unloaded.
-        myHandleAccountEntry = handleAccountEntry;
-        mySetInflation = setInflation;
-
-        accountObj.on('entry', myHandleAccountEntry);
-        accountObj.on('entry', mySetInflation);
-
-        listenerCleanupFn = function () {
-            accountObj.removeListener("entry", myHandleAccountEntry);
-            accountObj.removeListener("entry", mySetInflation);
-        }
-
-        remote.once('disconnected', listenerCleanupFn);
-
         accountObj.entry(function (err, entry) {
             $rootScope.$apply(function() {
                 if (err) {
                     switch(err.remote.error) {
                         case 'actNotFound':
                             // The account is unfunded.
+                            $rootScope.balance = 0;
                             $rootScope.accountStatus = 'loaded';
                             break;
                         default:
                             $rootScope.accountStatus = 'error';
                     }
                 } else {
+                    handleAccountEntry(entry.account_data);
+                    setInflation(entry.account_data);
                     $rootScope.accountStatus = 'loaded';
                 }
             });
         });
     };
 
-    function handleAccountEntry(data)
-    {
+    function handleAccountEntry(data) {
         var remote = stNetwork.remote;
-        $scope.$apply(function () {
-            $rootScope.account = data;
+        $rootScope.account = data;
 
-            // As per json wire format convention, real ledger entries are CamelCase,
-            // e.g. OwnerCount, additional convenience fields are lower case, e.g.
-            // reserve, max_spend.
-            // TODO: get this for real
-            var reserve_base = Amount.from_json(""+20000000), //Amount.from_json(""+remote._reserve_base),
-                reserve_inc  = Amount.from_json(""+5000000), //Amount.from_json(""+remote._reserve_inc),
-                owner_count  = $rootScope.account.OwnerCount || "0";
-            $rootScope.account.reserve_base = reserve_base;
-            $rootScope.account.reserve = reserve_base.add(reserve_inc.product_human(owner_count));
-            $rootScope.account.reserve_to_add_trust = reserve_base.add(reserve_inc.product_human(owner_count+1));
+        // As per json wire format convention, real ledger entries are CamelCase,
+        // e.g. OwnerCount, additional convenience fields are lower case, e.g.
+        // reserve, max_spend.
+        // TODO: get this for real
+        var reserve_base = Amount.from_json(""+20000000), //Amount.from_json(""+remote._reserve_base),
+            reserve_inc  = Amount.from_json(""+5000000), //Amount.from_json(""+remote._reserve_inc),
+            owner_count  = $rootScope.account.OwnerCount || "0";
+        $rootScope.account.reserve_base = reserve_base;
+        $rootScope.account.reserve = reserve_base.add(reserve_inc.product_human(owner_count));
+        $rootScope.account.reserve_to_add_trust = reserve_base.add(reserve_inc.product_human(owner_count+1));
 
-            // Maximum amount user can spend
-            var bal = Amount.from_json(data.Balance);
-            $rootScope.balance=data.Balance;
-            $rootScope.reserve=$rootScope.account.reserve;
-            $rootScope.account.max_spend = bal.subtract($rootScope.account.reserve);
-            $rootScope.$broadcast("accountLoaded", $rootScope.account);
-        });
+        // Maximum amount user can spend
+        var bal = Amount.from_json(data.Balance);
+        $rootScope.balance=data.Balance;
+        $rootScope.reserve=$rootScope.account.reserve;
+        $rootScope.account.max_spend = bal.subtract($rootScope.account.reserve);
+        $rootScope.$broadcast("accountLoaded", $rootScope.account);
     }
 
     function setInflation(account) {
@@ -131,8 +112,6 @@ sc.controller('AppCtrl', function($scope, $rootScope, stNetwork, session, $state
 
           tx.submit();
         }
-
-        accountObj.removeListener("entry", mySetInflation);
     }
 
 });
