@@ -8,7 +8,14 @@ sc.controller('LoginCtrl', function($rootScope, $scope, $state, $http, $timeout,
   $scope.rememberMe = false;
   $scope.loginError = null;
 
-  $scope.attemptLogin = singletonPromise(function() {
+  // HACK: Perform AJAX login, but send a POST request to a hidden iframe to
+  // coax Chrome into offering to remember the password.
+  $scope.attemptLogin = function() {
+    $scope.asyncLogin();
+    return true;
+  };
+
+  $scope.asyncLogin = singletonPromise(function() {
     $scope.loginError = null;
     if (!$scope.username || !$scope.password) {
       return $q.reject("Username or password cannot be blank");
