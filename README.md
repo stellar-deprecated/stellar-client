@@ -31,9 +31,6 @@ npm install
 # Install app dependencies
 bower install
 
-# Set your initial (development) configuration
-gulp config
-
 # (optional) Install phantomjs for automated testing
 brew install phantomjs
 
@@ -44,6 +41,19 @@ brew install phantomjs
 ```bash
 gulp develop
 ```
+
+By default, your client will be running against the `stg` environment, which is connected to the stellar testnet.
+
+## Testing against the production wallet and api services
+
+Switching what service endpoints your client is talking too is as simple as running a gulp task and restarting your dev server.
+
+```bash
+gulp config-prd
+gulp develop
+```
+
+`gulp config-prd` will overwrite app/scripts/config.js with the values from config/prd.js, pointing you at the production apis.
 
 ## Contributing
 
