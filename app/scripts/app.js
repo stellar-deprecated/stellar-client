@@ -107,8 +107,7 @@ stellarClient.run(function($rootScope, $state, ipCookie, session, FlashMessages,
             if(toParams.inviteCode) {
               invites.claim(toParams.inviteCode)
               .success(function (response) {
-                console.log('update rewards');
-                $rootScope.$broadcast('update-rewards');
+                $rootScope.$broadcast('invite-claimed');
               });
             }
             $state.transitionTo('dashboard');

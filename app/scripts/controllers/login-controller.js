@@ -60,8 +60,7 @@ sc.controller('LoginCtrl', function($rootScope, $scope, $state, $http, $timeout,
             if(session.get('inviteCode')) {
               invites.claim(session.get('inviteCode'))
               .success(function (response) {
-                console.log('update rewards');
-                $rootscope.$broadcast('update-rewards');
+                $rootScope.$broadcast('invite-claimed');
               });
             }
 
