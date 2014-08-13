@@ -1,4 +1,10 @@
 angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) {
+
+  var SWALLOWED_SECURITY_ERRORS = _([
+    'SecurityError',
+    'QuotaExceededError'
+  ]);
+
   var Wallet = function(options){
     this.id = options.id;
     this.key = options.key;
@@ -416,21 +422,23 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
     return JSON.parse(data);
   };
 
+  function catchAndSwallowSecurityErrors(fn) {
+    try {
+      return fn();
+    } catch(err) {
+      console.log(err)
+      // Safari throws this exception when interacting with localstorage
+      // if the current user has their privacy settings set to reject cookies
+      // and other data.  We swallow it silently.
+      if(SWALLOWED_SECURITY_ERRORS.contains(err.name)) { 
+        return; 
+      } else {
+        throw err;
+      }
+    }
+  }
+
   return Wallet;
 });
 
-function catchAndSwallowSecurityErrors(fn) {
-  try {
-    return fn();
-  } catch(err) {
-    // Safari throws this exception when interacting with localstorage
-    // if the current user has their privacy settings set to reject cookies
-    // and other data.  We swallow it silently.
-    if(err.name == "SecurityError"){ 
-      return; 
-    } else {
-      throw err;
-    }
-  }
-}
 
