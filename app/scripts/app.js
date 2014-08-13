@@ -92,17 +92,17 @@ stellarClient.run(function($rootScope, $state, ipCookie, session, FlashMessages,
 
   $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){
 
-    switch(toState.url){
-
-      case '/login':
+    switch(toState.name){
+      case 'register':
+      case 'login':
         // If the user has persistent login enabled, try to login from local storage.
         if(session.isPersistent() && !session.get('loggedIn')) {
 
           session.loginFromStorage($rootScope);
 
           if(session.get('loggedIn')){
-            if(session.get('inviteCode')) {
-              invites.claim(session.get('inviteCode'))
+            if(toParams.inviteCode) {
+              invites.claim(toParams.inviteCode)
               .success(function (response) {
                 console.log('update rewards');
                 $rootScope.$broadcast('update-rewards');
@@ -117,7 +117,7 @@ stellarClient.run(function($rootScope, $state, ipCookie, session, FlashMessages,
         }
         break;
 
-      case '/logout':
+      case 'logout':
         if(session.get('loggedIn')) {
           session.logout();
         }

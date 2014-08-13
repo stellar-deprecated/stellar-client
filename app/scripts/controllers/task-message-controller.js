@@ -12,7 +12,7 @@ sc.controller('TaskMessageCtrl', function ($rootScope, $scope, $state, $filter, 
                 return "Enter it and receive your remaining stellars immediately.";
             },
             getButtonText: function () {
-                return "Enter code";
+                return "Claim Reward";
             },
             action: function () {
                 console.log('hello');
