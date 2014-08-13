@@ -3,6 +3,7 @@
 var sc = angular.module('stellarClient');
 
 sc.controller('InvitesCtrl', function($scope, $http, $q, $filter, session, invites, singletonPromise) {
+    var INVITE_LINK = "https://launch.stellar.org/#/register?inviteCode=";
 
     $scope.getInvites = function () {
         return session.getUser() && session.getUser().getInvites();
@@ -44,16 +45,22 @@ sc.controller('InvitesCtrl', function($scope, $http, $q, $filter, session, invit
 
     $scope.inviteActions = [
         {
+            type: "copy",
             text: "copy invite link",
             include: function (invite) {
                 // only include this action for invites that haven't been used yet
                 return !invite.inviteeId;
             },
             action: function (invite) {
-
+                return INVITE_LINK + invite.inviteId;
+            },
+            copyAction: function (invite) {
+                Util.showTooltip($('#'+invite.inviteId+" #copy-link"), "Copied!",
+                    'info', 'top');
             }
         },
         {
+            type: "resend",
             text: "re-send invite",
             include: function (invite) {
                 // only include this action for invites that haven't been used yet
@@ -65,11 +72,13 @@ sc.controller('InvitesCtrl', function($scope, $http, $q, $filter, session, invit
                     session.getUser().refresh();
                 })
                 .error(function (error) {
-                    Util.showError($('#'+invite.inviteId+" .invite-actions"), error.message);
+                    Util.showTooltip($('#'+invite.inviteId+" .invite-actions"), error.message,
+                        'error', 'top');
                 })
             }
         },
         {
+            type: "cancel",
             text: "cancel",
             include: function (invite) {
                 // only include this action for invites that haven't been used yet
@@ -108,9 +117,6 @@ sc.controller('InvitesCtrl', function($scope, $http, $q, $filter, session, invit
                 });
             })
     });
-
-
-angular.element('#testing').tooltip({title: 'held'}).tooltip('show');
 
     invites.ack()
         .then(function () {

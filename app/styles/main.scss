@@ -30,6 +30,7 @@ $mobile-width: 992px;
 @import "news.scss";
 @import "invite.scss";
 @import "footer.scss";
+@import "tooltip.scss";
 
 body {
   height: 100%;
@@ -49,18 +50,6 @@ body {
   -ms-flex-direction: column;
   flex-direction: column;
   min-height: 100vh;
-}
-
-.error-tip {
-  .tooltip-inner {
-      background-color: $error;
-  }
-  .top.tooltip-arrow {
-    border-top-color: $error !important;
-  }
-  .right.tooltip-arrow {
-      border-right-color: $error !important;
-  }
 }
 
 .right-inner-addon {

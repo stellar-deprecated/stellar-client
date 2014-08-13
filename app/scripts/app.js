@@ -12,10 +12,13 @@ var stellarClient = angular.module('stellarClient', [
   'rt.debounce',
   'singletonPromise',
   'ui.router',
-  'vr.passwordStrength'
+  'vr.passwordStrength',
+  'ngClipboard'
 ]);
 
-stellarClient.config(function($httpProvider, $stateProvider, $urlRouterProvider, RavenProvider) {
+stellarClient.config(function($httpProvider, $stateProvider, $urlRouterProvider, RavenProvider, ngClipProvider) {
+
+  ngClipProvider.setPath("bower_components/zeroclipboard/dist/ZeroClipboard.swf");
 
   if(Options.REPORT_ERRORS !== true) {
     RavenProvider.development(true);
