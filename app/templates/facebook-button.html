@@ -4,7 +4,7 @@
         <p>You will receive a starter amount of stellars to explore. Look for learning programs in the future for opportunities to receive additional stellars.</p>
     </div>
     <div ng-show="data.hasClaimedInviteCode">
-        <h2>You have been invited to receive <strong>bonus stellars</strong> on us now!</h2>
+        <h2>{{data.inviterUsername}} has invited you to receive <strong>stellars</strong> on us!</h2>
     </div>
     <a href="" ng-show="!describe" ng-click="describe = true">Why Facebook?</a>
     <p ng-show="describe">We are currently using Facebook as a verification method to avoid spam but hope to add other methods soon. We will not post on your Facebook.</p>
