@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('RegistrationCtrl', function($scope, $state, $stateParams, $timeout, $http, $q, session, debounce, singletonPromise, Wallet, FlashMessages) {
+sc.controller('RegistrationCtrl', function($rootScope, $scope, $state, $stateParams, $timeout, $http, $q, session, debounce, singletonPromise, Wallet, FlashMessages, invites) {
   // Provide a default value to protect against stale config files.
   Options.MAX_WALLET_ATTEMPTS = Options.MAX_WALLET_ATTEMPTS || 3;
 
@@ -164,6 +164,13 @@ sc.controller('RegistrationCtrl', function($scope, $state, $stateParams, $timeou
         // Initialize the session with the new wallet.
         session.login(wallet);
 
+        if(session.get('inviteCode')) {
+          invites.claim(session.get('inviteCode'))
+          .success(function (response) {
+            $rootScope.$broadcast('invite-claimed');
+          });
+        }
+
         // Take the user to the dashboard.
         $state.go('dashboard');
       });
@@ -212,8 +219,7 @@ sc.controller('RegistrationCtrl', function($scope, $state, $stateParams, $timeou
     var data = {
       username: $scope.data.username,
       // email: $scope.data.email,
-      address: signingKeys.address,
-      inviteCode: session.get('inviteCode')
+      address: signingKeys.address
     };
 
     // Submit the registration data to the server.
