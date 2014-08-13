@@ -52,7 +52,7 @@ sc.controller('InvitesCtrl', function($scope, $http, $q, $filter, session, invit
                 return !invite.inviteeId;
             },
             action: function (invite) {
-                return INVITE_LINK + invite.inviteId;
+                return INVITE_LINK + invite.inviteCode;
             },
             copyAction: function (invite) {
                 Util.showTooltip($('#'+invite.inviteId+" #copy-link"), "Copied!",
