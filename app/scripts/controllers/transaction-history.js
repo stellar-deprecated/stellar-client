@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('TransactionHistoryCtrl', function($scope, transactionHistory) {
+sc.controller('TransactionHistoryCtrl', function($scope, transactionHistory, $translate) {
   $scope.typeIcons = {
     'sent': 'icon icon-send',
     'received': 'icon icon-receive'
@@ -39,9 +39,47 @@ sc.controller('TransactionHistoryCtrl', function($scope, transactionHistory) {
     currentPage: 1
   };
 
-  transactionHistory.init()
-    .then(updateTransactionPage);
-
+  $scope.columns = [
+    {
+      field: 'transaction.type',
+      displayName: '',
+      sortable: false,
+      maxWidth: '150',
+      cellTemplate: '<i ng-class="typeIcons[row.getProperty(col.field)]"></i> ' +
+        '<span class="tx-type">{{ row.getProperty(col.field) }}</span>',
+      cellClass: 'type'
+    },
+    {
+      field: 'transaction.amount',
+      displayName: '',
+      sortable: false,
+      width: '20%',
+      cellTemplate: '<span>{{ row.getProperty(col.field).to_human() }} {{row.getProperty(col.field).currency().to_human()}}</span>' +
+        '<span class="address issuer">{{ row.getProperty(col.field).issuer().to_json() | addressToUsername }}</span>',
+      cellClass: 'amount'
+    },
+    {
+      field: 'date',
+      displayName: '',
+      sortable: false,
+      width: '20%',
+      cellTemplate: '<span am-time-ago="row.getProperty(col.field)"></span>'
+    },
+    {
+      field: 'transaction.type',
+      displayName: '',
+      sortable: false,
+      width: '60',
+      cellTemplate: '<span class="tx-direction">{{ row.getProperty(col.field) === "sent" ? "to" : "from" }}</span>'
+    },
+    {
+      field: 'transaction.counterparty',
+      displayName: '',
+      sortable: false,
+      width: '*',
+      cellTemplate: '<span class="address">{{ row.getProperty(col.field) | addressToUsername }}</span>'
+    }
+  ];
   $scope.transactionGrid = {
     data: 'transactionPage',
     enableRowSelection: false,
@@ -53,46 +91,16 @@ sc.controller('TransactionHistoryCtrl', function($scope, transactionHistory) {
     headerRowHeight: '70',
     rowHeight: '70',
     rowTemplate: '<div ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell {{col.cellClass}}"><div class="ngVerticalBar" ng-style="{height: rowHeight}">&nbsp;</div><div ng-cell></div></div>',
-    columnDefs: [
-      {
-        field: 'transaction.type',
-        displayName: 'Type',
-        sortable: false,
-        maxWidth: '150',
-        cellTemplate: '<i ng-class="typeIcons[row.getProperty(col.field)]"></i> ' +
-                      '<span class="tx-type">{{ row.getProperty(col.field) }}</span>',
-        cellClass: 'type'
-      },
-      {
-        field: 'transaction.amount',
-        displayName: 'Amount',
-        sortable: false,
-        width: '20%',
-        cellTemplate: '<span>{{ row.getProperty(col.field).to_human() }} {{row.getProperty(col.field).currency().to_human()}}</span>' +
-                      '<span class="address issuer">{{ row.getProperty(col.field).issuer().to_json() | addressToUsername }}</span>',
-        cellClass: 'amount'
-      },
-      {
-        field: 'date',
-        displayName: 'Date',
-        sortable: false,
-        width: '20%',
-        cellTemplate: '<span am-time-ago="row.getProperty(col.field)"></span>'
-      },
-      {
-        field: 'transaction.type',
-        displayName: '',
-        sortable: false,
-        width: '60',
-        cellTemplate: '<span class="tx-direction">{{ row.getProperty(col.field) === "sent" ? "to" : "from" }}</span>'
-      },
-      {
-        field: 'transaction.counterparty',
-        displayName: '',
-        sortable: false,
-        width: '*',
-        cellTemplate: '<span class="address">{{ row.getProperty(col.field) | addressToUsername }}</span>'
-      }
-    ]
+    columnDefs: 'columns'
   };
+
+  transactionHistory.init()
+    .then(updateTransactionPage);
+
+  $translate(['dashboard.grid.type', 'dashboard.grid.amount', 'dashboard.grid.date'])
+    .then(function(translations) {
+      $scope.columns[0].displayName = translations['dashboard.grid.type'];
+      $scope.columns[1].displayName = translations['dashboard.grid.amount'];
+      $scope.columns[2].displayName = translations['dashboard.grid.date'];
+    });
 });

@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('DashboardCtrl', function($rootScope, $scope, $timeout, $state, session, TutorialHelper) {
+sc.controller('DashboardCtrl', function($rootScope, $scope, $timeout, $state, session, TutorialHelper, $translate) {
     $rootScope.tab = 'none';
     $rootScope.showTab = false;
 
@@ -29,9 +29,9 @@ sc.controller('DashboardCtrl', function($rootScope, $scope, $timeout, $state, se
 
     $scope.statusMessage = function(){
         switch($rootScope.accountStatus){
-          case 'connecting': return 'Connecting...';
-          case 'loaded':     return 'Connected!';
-          case 'error':      return 'Connection error!';
+          case 'connecting': return $translate.instant('global.connecting');
+          case 'loaded':     return $translate.instant('global.connected');
+          case 'error':      return $translate.instant('global.connection_error');
         }
     };
 

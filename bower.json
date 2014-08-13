@@ -17,7 +17,9 @@
     "lodash": "~2.4.1",
     "angular-raven": "~0.5.6",
     "ng-grid": "deckar01/ng-grid",
-    "angular-cookie": "~4.0.2"
+    "angular-cookie": "~4.0.2",
+    "angular-translate": "~2.2.0",
+    "angular-translate-loader-static-files": "~2.2.0"
   },
   "devDependencies": {},
   "resolutions": {

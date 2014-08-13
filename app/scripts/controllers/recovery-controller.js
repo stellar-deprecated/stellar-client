@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('RecoveryCtrl', function($scope, $state, $http, $timeout, session, Wallet) {
+sc.controller('RecoveryCtrl', function($scope, $state, $http, $timeout, session, Wallet, $translate) {
   $scope.username = null;
   $scope.userRecoveryCode = null;
   $scope.serverRecoveryCode = null;
@@ -15,10 +15,10 @@ sc.controller('RecoveryCtrl', function($scope, $state, $http, $timeout, session,
     }
 
     if (!$scope.serverRecoveryCode) {
-      $scope.recoveryError = "Please enter your recovery code.";
+      $scope.recoveryError = $translate.instant('recovery.enter_recovery_code');
     }
     if (!$scope.username) {
-      $scope.usernameError = "Please enter your username.";
+      $scope.usernameError = $translate.instant('recovery.enter_username');
     }
 
     if ($scope.recoverError || $scope.usernameError) {
@@ -48,23 +48,23 @@ sc.controller('RecoveryCtrl', function($scope, $state, $http, $timeout, session,
         if (body.data && body.data.serverRecoveryCode) {
           $scope.serverRecoveryCode = body.data.serverRecoveryCode;
         } else {
-          $scope.recoveryError = 'An error occurred.';
+          $scope.recoveryError = $translate.instant('recovery.error_occurred');
         }
       })
       .error(function(body, status) {
         switch(status) {
           case 400:
             if (body.code == 'invalid') {
-              $scope.recoveryError = 'Invalid username or recovery code.';
+              $scope.recoveryError = $translate.instant('recovery.invalid_username_or_code');
             } else if (body.code == 'disabled') {
-              $scope.recoveryError = 'Recovery has been disabled for this account.';
+              $scope.recoveryError = $translate.instant('recovery.recovery_disabled_for_account');
             }
             break;
           case 0:
             $scope.recoveryError = 'Unable to contact the server.';
             break;
           default:
-            $scope.recoveryError = 'An error occurred.';
+            $scope.recoveryError = $translate.instant('recovery.error_occurred');
         }
       });
   }
@@ -88,19 +88,19 @@ sc.controller('RecoveryCtrl', function($scope, $state, $http, $timeout, session,
           session.login(wallet);
           $state.go('change_password');
         } else {
-          $scope.recoveryError = 'An error occurred.';
+          $scope.recoveryError = $translate.instant('recovery.error_occurred');
         }
       })
       .error(function(body, status) {
         switch(status) {
           case 404:
-            $scope.recoveryError = 'Invalid recoveryId.';
+            $scope.recoveryError = $translate.instant('recovery.invalid_recovery_id');
             break;
           case 0:
-            $scope.recoveryError = 'Unable to contact the server.';
+            $scope.recoveryError = $translate.instant('recovery.unable_to_contact_server');
             break;
           default:
-            $scope.recoveryError = 'An error occurred.';
+            $scope.recoveryError = $translate.instant('recovery.error_occurred');
         }
       });
   }

@@ -5,7 +5,7 @@
             <div ng-include="'templates/flash-message-container.html'"></div>
         </div>
         <div class="row">
-            <h1 class="title">Log in</h1>
+            <h1 class="title">{{'login.login' | translate}}</h1>
         </div>
 
         <iframe name="chrome-password-manager-fix" src="about:blank" style="display:none;"></iframe>
@@ -18,7 +18,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <label for="username" class="col-sm-3">USERNAME</label>
+                    <label for="username" class="col-sm-3">{{'global.username' | translate | uppercase}}</label>
                     <div class="col-sm-6 input-icon-wrapper">
                         <input id="username" type="text" class="form-control" ng-model="username">
                         <i class="icon icon-user"></i>
@@ -30,7 +30,7 @@
                     <div class="errors col-sm-12"></div>
                 </div>
                 <div class="row">
-                    <label for="password" class="col-sm-3">PASSWORD</label>
+                    <label for="password" class="col-sm-3">{{'global.password' | translate | uppercase}}</label>
                     <div class="col-sm-6 input-icon-wrapper">
                         <input id="password" type="password" class="form-control" ng-model="password">
                         <i class="icon icon-key"></i>
@@ -41,24 +41,24 @@
                 <div class="row">
                     <div class="col-sm-offset-3 col-sm-6">
                         <input type="checkbox" id="remember-me" name="remember-me" ng-model="rememberMe">
-                        <label for="remember-me" class="remember-me"> Remember me</label>
-                        <div class="warning" ng-show="rememberMe"><span class="warning-title">WARNING</span> This saves your password on your local disk, meaning an attacker with access to your files could steal your wallet. </div>
+                        <label for="remember-me" class="remember-me"> {{'login.remember_me' | translate}}</label>
+                        <div class="warning" ng-show="rememberMe"><span class="warning-title">{{'global.warning' | translate | uppercase}}</span> {{'login.remember_me_warning_text' | translate }}</div>
                     </div>
                 </div>
             </div>
             <div class="form-group">
                 <div class="row">
                     <div class="col-sm-offset-3 col-sm-6">
-                        <button type="submit" class="stellar-button btn btn-default">{{asyncLogin.isLoading() ? 'Logging in...' : 'Log in'}}</button>
+                        <button type="submit" class="stellar-button btn btn-default">{{asyncLogin.isLoading() ? ('login.logging_in' | translate) : ('login.login' | translate)}}</button>
                     </div>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-offset-3 col-sm-6">
-                    <span class="recovery-info"><a href="#/username-recovery">Forgot username?</a></span>
+                    <span class="recovery-info"><a href="#/username-recovery">{{'login.forgot_username_question' | translate}}</a></span>
                 </div>
                 <div class="col-sm-offset-3 col-sm-6">
-                    <span class="recovery-info"><a href="#/recovery">Forgot password?</a></span>
+                    <span class="recovery-info"><a href="#/recovery">{{'login.forgot_password_question' | translate}}</a></span>
                 </div>
             </div>
         </form>

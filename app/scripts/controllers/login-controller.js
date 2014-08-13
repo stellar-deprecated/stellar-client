@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('LoginCtrl', function($rootScope, $scope, $state, $http, $timeout, $q, session, singletonPromise, Wallet, FlashMessages) {
+sc.controller('LoginCtrl', function($rootScope, $scope, $state, $http, $timeout, $q, session, singletonPromise, Wallet, FlashMessages, $translate) {
   $scope.username   = null;
   $scope.password   = null;
   $scope.rememberMe = false;
@@ -18,25 +18,31 @@ sc.controller('LoginCtrl', function($rootScope, $scope, $state, $http, $timeout,
   $scope.asyncLogin = singletonPromise(function() {
     $scope.loginError = null;
     if (!$scope.username || !$scope.password) {
-      return $q.reject("Username or password cannot be blank");
+      return $q.reject($translate.instant('login.username_password_cannot_be_blank'));
     }
     return deriveId().then(performLogin);
   });
 
   if (location.search.match('idle')) {
-    FlashMessages.add({
-      title: 'You\'ve been logged out',
-      info: 'For your security, you have been logged out because your browser is idle. Please log back in to continue using Stellar.',
-      type: 'error'
-    });
+    $translate(['login.you_have_been_logged_out', 'login.logout_security'])
+      .then(function(translations) {
+        FlashMessages.add({
+          title: translations['login.you_have_been_logged_out'],
+          info: translations['login.logout_security'],
+          type: 'error'
+        });
+      });
   }
   if ($rootScope.recoveringUsername) {
     $rootScope.recoveringUsername = false;
-    FlashMessages.add({
-      title: 'Username emailed',
-      info: 'Your username has been emailed to you; please check your inbox.',
-      type: 'info'
-    });
+    $translate(['login.username_emailed', 'login.username_emailed_check_inbox'])
+      .then(function(translations) {
+        FlashMessages.add({
+          title: translations['login.username_emailed'],
+          info: translations['login.username_emailed_check_inbox'],
+          type: 'info'
+        });
+      });
   }
 
   function deriveId() {
@@ -62,25 +68,28 @@ sc.controller('LoginCtrl', function($rootScope, $scope, $state, $http, $timeout,
       .error(function(body, status) {
         switch(status) {
           case 404:
-            $scope.loginError = 'Invalid username or password.';
+            $scope.loginError = $translate.instant('login.invalid_username_or_password');
             break;
           case 0:
-            $scope.loginError = 'Unable to contact the server.';
+            $scope.loginError = $translate.instant('login.unable_to_contact_server');
             break;
           default:
-            $scope.loginError = 'An error occurred.';
+            $scope.loginError = $translate.instant('login.error_occurred');
         }
       });
   }
 
-  if (sessionStorage['display_reload_message'] === "display") {
-    try {
-      sessionStorage['display_reload_message'] = false;
-    } catch (e) {}
-    FlashMessages.add({
-      title: 'Logout',
-      info: 'You refreshed the page, which unfortunately means you\'ll have to sign in again. This is necessary because your password (used to access your account) is kept locally in your browser tab and never sent to our servers.',
-      type: 'error'
+  $translate(['login.logout', 'login.logout_refreshed'])
+    .then(function(translations) {
+      if (sessionStorage['display_reload_message'] === "display") {
+        try {
+          sessionStorage['display_reload_message'] = false;
+        } catch (e) {}
+        FlashMessages.add({
+          title: translations['login.logout'],
+          info: translations['login.logout_refreshed'],
+          type: 'error'
+        });
+      }
     });
-  }
 });

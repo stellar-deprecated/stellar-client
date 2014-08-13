@@ -1,4 +1,4 @@
-sc.controller('AddEmailCtrl', function ($scope, $rootScope, $http, $state, session) {
+sc.controller('AddEmailCtrl', function ($scope, $rootScope, $http, $state, session, $translate) {
   $scope.loading = false;
   $scope.errors = [];
 
@@ -48,7 +48,7 @@ sc.controller('AddEmailCtrl', function ($scope, $rootScope, $http, $state, sessi
               $scope.errors.push("Server error.");
           }
         } else {
-          $scope.errors.push("Server error.");
+          $scope.errors.push($translate('global.server_error'));
         }
         $scope.loading = false;
       }

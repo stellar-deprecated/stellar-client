@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('RegistrationCtrl', function($scope, $state, $stateParams, $timeout, $http, $q, session, debounce, singletonPromise, Wallet, FlashMessages) {
+sc.controller('RegistrationCtrl', function($scope, $state, $stateParams, $timeout, $http, $q, session, debounce, singletonPromise, Wallet, FlashMessages, $translate) {
   // Provide a default value to protect against stale config files.
   Options.MAX_WALLET_ATTEMPTS = Options.MAX_WALLET_ATTEMPTS || 3;
 
@@ -55,11 +55,11 @@ sc.controller('RegistrationCtrl', function($scope, $state, $stateParams, $timeou
         function (response){
           switch(response && response.code) {
             case 'already_taken':
-              $scope.errors.usernameErrors.push('This username is taken.');
+              $scope.errors.usernameErrors.push($translate.instant('register.username_taken'));
               $scope.status.usernameAvailable = false;
               break;
             default:
-              $scope.errors.usernameErrors.push('An error occurred.');
+              $scope.errors.usernameErrors.push($translate.instant('register.error_occurred'));
               $scope.status.usernameAvailable = null;
           }
         });
@@ -68,15 +68,15 @@ sc.controller('RegistrationCtrl', function($scope, $state, $stateParams, $timeou
 
   function getUsernameError(username) {
     if (username.length < 3 || username.length > 20) {
-      return "Username must be between 3 and 20 characters";
+      return $translate.instant('register.username_length_constraint', {min: 3, max: 20});
     }
      if(!username.match(/^[a-zA-Z0-9].*[a-zA-Z0-9]$/))
      {
-         return "Must start and end with a letter or number.";
+         return $translate.instant('register.username_start_end_constraint');
      }
     if (!username.match(/^[a-zA-Z0-9]+([._-]+[a-zA-Z0-9]+)*$/)) {
       //return "Must start and end with a letter, and may contain \".\", \"_\", or \"-\"";
-        return "Only letters numbers or ._-";
+        return $translate.instant('register.username_chars_constraint');
     }
     return null;
   }
@@ -113,11 +113,11 @@ sc.controller('RegistrationCtrl', function($scope, $state, $stateParams, $timeou
 
     if(!$scope.data.username){
       validInput = false;
-      $scope.errors.usernameErrors.push('The username field is required.');
+      $scope.errors.usernameErrors.push($translate.instant('register.username_field_required'));
     }
     else if($scope.status.usernameAvailable === false){
       validInput = false;
-      $scope.errors.usernameErrors.push('This username is taken.');
+      $scope.errors.usernameErrors.push($translate.instant('register.username_taken'));
     }
 
     // if(!registration.email.value && $scope.noEmailWarning == false) {
@@ -198,7 +198,7 @@ sc.controller('RegistrationCtrl', function($scope, $state, $stateParams, $timeou
     if(isEnough()){
       deferred.resolve();
     } else {
-      $scope.errors.usernameErrors.push('Couldn\'t get enough entropy');
+      $scope.errors.usernameErrors.push($translate.instant('register.could_not_get_entropy'));
       deferred.reject();
     }
 
@@ -222,13 +222,13 @@ sc.controller('RegistrationCtrl', function($scope, $state, $stateParams, $timeou
 
   function showRegistrationErrors(response) {
     var usernameErrorMessages = {
-      'already_taken': 'The username is taken.',
-      'invalid': 'Username must start and end with a letter, and may contain ".", "_", or "-"'
+      'already_taken': $translate.instant('register.username_taken'),
+      'invalid': $translate.instant('register.username_start_end_constraint')
     };
 
     var emailErrorMessages = {
-      'already_taken': 'The email is taken.',
-      'invalid': 'The email is invalid.'
+      'already_taken': $translate.instant('register.email_taken'),
+      'invalid': $translate.instant('register.email_invalid')
     };
 
     if (response && response.status == "fail") {
@@ -286,8 +286,8 @@ sc.controller('RegistrationCtrl', function($scope, $state, $stateParams, $timeou
     return wallet.sync('create').catch(function(err) {
       if (attempts >= Options.MAX_WALLET_ATTEMPTS) {
         FlashMessages.add({
-          title: 'Registration Error',
-          info: 'There was an error during registration. Please contact us at hello@stellar.org if the problem persists.',
+          title: $translate.instant('register.registration_error'),
+          info: $translate.instant('register.registration_error_info', {email: 'hello@stellar.org'}),
           type: 'error'
         });
 
@@ -302,8 +302,8 @@ sc.controller('RegistrationCtrl', function($scope, $state, $stateParams, $timeou
 
       if (attempts == 0) {
         FlashMessages.add({
-          title: 'The first attempt to save your wallet failed.',
-          info: 'Retrying...',
+          title: $translate.instant('register.first_attempt_walled_save_failed'),
+          info: $translate.instant('register.retrying'),
           type: 'error'
         });
       }

@@ -1,12 +1,12 @@
 <div class="receive-pane pane" ng-controller="ReceivePaneCtrl">
     <div class="pane-close" ng-click="closePane()">
-        <span>Close</span>
+        <span>{{'global.close' | translate}}</span>
         <i class="icon icon-times-circle-thin"></i>
     </div>
-    <div l10n="l10n" class="literal title">Receive Stellars</div>
+    <div l10n="l10n" class="literal title">{{'receive.receive_stellars' | translate}}</div>
     <form name="receiveForm" id="receiveForm" role="form" class="row-padding-small mode-form stellar-form">
         <div class="row form-group">
-            <label for="receive_username" class="col-sm-3 username-title">YOUR USERNAME</label>
+            <label for="receive_username" class="col-sm-3 username-title">{{'receive.your_username' | translate | uppercase}}</label>
             <div class="col-sm-6 receive-username">
                 <i class="icon icon-user"></i>
                 <span class="username">{{username}}</span>
@@ -14,14 +14,14 @@
         </div>
         <div class="row form-group info-row">
             <div class="col-sm-12 receive-info">
-                <span class="info">Give your username to other people so they can send you money.</span>
+                <span class="info">{{'receive.your_username_info' | translate}}</span>
             </div>
         </div>
         <div class="row form-group show-address-row">
-            <span class="show-address" ng-click="toggleAddress()">{{ showAddress ? 'Hide' : 'Show' }} your Stellar Address</span>
+            <span class="show-address" ng-click="toggleAddress()">{{ showAddress ? ('receive.hide_your_stellar_address' | translate) : ('receive.show_your_stellar_address' | translate) }}</span>
         </div>
         <div class="row form-group address-row" ng-show="showAddress">
-            <label for="receive_address" class="col-sm-3 address-title">YOUR STELLAR ADDRESS</label>
+            <label for="receive_address" class="col-sm-3 address-title">{{'receive.your_stellar_address' | translate | uppercase}}</label>
             <div class="col-sm-6 receive-address">
                 <i class="glyphicon glyphicon-globe"></i>
                 <span class="address">{{currentAddress()}}</span>

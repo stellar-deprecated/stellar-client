@@ -2,49 +2,49 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, session) {
+sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, session, $translate) {
   $scope.reward = {
     rewardType: 1,
-    title: 'Receive your first stellars on us!',
-    subtitle: 'Log in with Facebook',
-    innerTitle: 'Receive your first stellars',
+    title: null, // Waiting for translations to load
+    subtitle: null,
+    innerTitle: null,
     status: 'incomplete',
     error: null,
     updateReward: function (status) {
       $scope.reward.status = status;
       switch (status) {
         case 'sent':
-          $scope.reward.title = 'You connected your Facebook!';
+          $scope.reward.title = $translate.instant('rewards.you_connected_facebook');
           $scope.reward.subtitle = null;
           break;
         case 'reward_error':
         case 'reward_queued':
-          $scope.reward.title = "You connected your Facebook!";
+          $scope.reward.title = $translate.instant('rewards.you_connected_facebook');
           getPlaceInLine();
           break;
         case 'sending':
-          $scope.reward.title = "You connected your Facebook!";
-          $scope.reward.subtitle = "...you should be receiving your reward shortly!";
+          $scope.reward.title = $translate.instant('rewards.you_connected_facebook');
+          $scope.reward.subtitle = $translate.instant('rewards.you_should_be_receiving_reward_shortly');
           break;
         case 'unverified':
           $scope.reward.error = {};
           $scope.reward.error.template = "templates/facebook-verify-error.html";
-          $scope.reward.error.panel = "Almost there! Verify your Facebook account.";
+          $scope.reward.error.panel = $translate.instant('rewards.verify_facebook');
           $scope.reward.error.action = function () {
             $scope.reward.error = null
           };
           break;
         case 'ineligible':
           $scope.reward.error = {};
-          $scope.reward.title = "Your Facebook account is not eligible.";
-          $scope.reward.subtitle = "Please check back for other ways to participate soon.";
-          $scope.reward.error.info = "Our spam detection checks say your Facebook account isn't eligible. If you are a legitimate user, we apologize and are improving our detection algorithms. And we will release new ways to grab stellars soon, so please check back.";
-          $scope.reward.error.panel = "Sorry, your Facebook account isn't eligible."
+          $scope.reward.title = $translate.instant('rewards.your_facebook_not_eligible');
+          $scope.reward.subtitle = $translate.instant('rewards.check_other_ways_to_participate');
+          $scope.reward.error.info = $translate.instant('rewards.spam_detection_facebook');
+          $scope.reward.error.panel = $translate.instant('rewards.sorry_your_facebook_not_eligible');
           $scope.reward.error.action = null;
           break;
         case 'already_taken':
           $scope.reward.error = {};
-          $scope.reward.error.info = "This Facebook account is already in use.";
+          $scope.reward.error.info = $translate.instant('rewards.facebook_account_already_in_use');
           $scope.reward.error.action = function () {
             $scope.reward.error = null
           };
@@ -56,6 +56,12 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, session
       }
     }
   };
+  $translate(['rewards.receiver_first_stellars', 'rewards.login_with_facebook'])
+    .then(function(translations) {
+      $scope.reward.title = translations['rewards.receiver_first_stellars'];
+      $scope.reward.subtitle = translations['rewards.login_with_facebook'];
+      $scope.reward.innerTitle = translations['rewards.receiver_first_stellars'];
+    });
   // add this reward to the parent scope's reward array
   $scope.rewards[$scope.reward.rewardType] = $scope.reward;
 
@@ -113,7 +119,7 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, session
     $http.get(Options.API_SERVER + '/claim/placeInLine', config)
       .success(function (result) {
 
-            $scope.reward.subtitle = "You are on the waiting list! You will get your stellars soon.";
+            $scope.reward.subtitle = $translate.instant('rewards.you_are_on_the_waiting_list');
         /* if (result.message > 1) {
           $scope.reward.subtitle = "You are on the waiting list! Approximate waiting time: " + result.message + " days.";
         } else {

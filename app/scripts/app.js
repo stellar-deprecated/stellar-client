@@ -12,14 +12,26 @@ var stellarClient = angular.module('stellarClient', [
   'rt.debounce',
   'singletonPromise',
   'ui.router',
-  'vr.passwordStrength'
+  'vr.passwordStrength',
+  'pascalprecht.translate'
 ]);
 
-stellarClient.config(function($httpProvider, $stateProvider, $urlRouterProvider, RavenProvider) {
+stellarClient.config(function($httpProvider, $stateProvider, $urlRouterProvider, RavenProvider, $translateProvider) {
 
   if(Options.REPORT_ERRORS !== true) {
     RavenProvider.development(true);
   }
+
+  $translateProvider.useStaticFilesLoader({
+      prefix: 'scripts/locale/',
+      suffix: '.json'
+    })
+    .registerAvailableLanguageKeys(['en'], {
+      'en_US': 'en',
+      'en_UK': 'en'
+    })
+    .determinePreferredLanguage()
+    .fallbackLanguage('en');
 
   sjcl.random.startCollectors();
 
