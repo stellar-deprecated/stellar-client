@@ -4,13 +4,6 @@ label {
   line-height: 42px;
 }
 
-button {
-  width: 100%;
-  margin-bottom: 40px;
-  font-weight: $heavy-weight;
-  font-size: 17px;
-}
-
 input[type="text"],
 input[type="password"] {
   height: 42px;
@@ -108,6 +101,13 @@ button,
 
 .stellar-form {
   margin-top: 0;
+
+  button {
+    width: 100%;
+    margin-bottom: 40px;
+    font-weight: $heavy-weight;
+    font-size: 17px;
+  }
 
   .form-group {
     margin-top: 0;
