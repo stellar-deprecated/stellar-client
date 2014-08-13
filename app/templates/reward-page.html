@@ -18,32 +18,22 @@
                 Oh, happy day!
             </div>
             <div class="info">
-                Almost there - log in with Facebook to get these stellars.
+                Almost there - log in with Facebook to get your stellars.
             </div>
             <button class="stellar-button btn btn-default" ng-click="toggleReward(1)">Continue</button>
         </div>
 
         <div class="content sent" ng-class="{active: reward.status == 'reward_queued' || reward.status == 'sending' || reward.status == 'reward_error'}">
-            <div class="body">
-                You're in the queue and should receive your reward soon!
+            <div class="body" >
+                Your stellars are on the way!
             </div>
-            <button class="stellar-button btn btn-default" ng-click="closeReward()">Continue</button>
         </div>
 
-        <div class="content sent" ng-class="{active: reward.status == 'sent'}">
+        <div class="content sent" ng-class="{active: reward.status == 'sent' || reward.status == 'ready'}">
             <div class="body">
-                You did it!
+                You did it! Your stellars are on the way!
             </div>
             <button class="stellar-button btn btn-default" ng-click="closeReward()">Continue</button>
-        </div>
-
-        <div class="content sent" ng-class="{active: reward.status == 'ready'}">
-            <div class="body">
-                Your reward is ready to be claimed!
-            </div>
-            <button class="stellar-button btn btn-default" ng-disable="claimRewards.isLoading()" ng-click="claimRewards()">
-                {{ claimRewards.isLoading() ? 'Loading...': 'Claim now' }}
-            </button>
         </div>
     </div>
 

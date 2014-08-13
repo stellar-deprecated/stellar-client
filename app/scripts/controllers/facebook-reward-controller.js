@@ -5,9 +5,20 @@ var sc = angular.module('stellarClient');
 sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, session) {
   $scope.reward = {
     rewardType: 1,
-    title: 'Receive your first stellars on us!',
-    subtitle: 'Log in with Facebook',
-    innerTitle: 'Receive your first stellars',
+    title: 'Receive stellars on us!',
+    getSubtitle: function () {
+      if (!$scope.data) {
+        return;
+      }
+      if ($scope.data.inviteCode && !$scope.data.hasClaimedInviteCode) {
+        return "Enter your invite code now to receive stellars!";
+      } else if ($scope.data.inviteCode && $scope.data.hasClaimedInviteCode) {
+        return "Thanks to " + $scope.data.inviterUsername + " you will receive stellars once you connect to Facebook.";
+      } else {
+        return 'Log in with Facebook'
+      }
+    },
+    innerTitle: 'Receive stellars',
     status: 'incomplete',
     error: null,
     updateReward: function (status) {
@@ -31,7 +42,8 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, session
           $scope.reward.error.template = "templates/facebook-verify-error.html";
           $scope.reward.error.panel = "Almost there! Verify your Facebook account.";
           $scope.reward.error.action = function () {
-            $scope.reward.error = null
+            $scope.reward.error = null,
+            $scope.reward.status = 'incomplete';
           };
           break;
         case 'ineligible':
@@ -46,7 +58,8 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, session
           $scope.reward.error = {};
           $scope.reward.error.info = "This Facebook account is already in use.";
           $scope.reward.error.action = function () {
-            $scope.reward.error = null
+            $scope.reward.error = null,
+            $scope.reward.status = 'incomplete';
           };
           break;
         case 'fake':
@@ -62,16 +75,42 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, session
   $scope.reward.template = 'templates/facebook-button.html';
 
   $scope.facebookLogin = function () {
-    var username = session.get('username');
-    var updateToken = session.get('wallet').keychainData.updateToken;
     $scope.loading = true;
-    fbLoginStart($http, username, updateToken, facebookLoginSuccess, facebookLoginError);
+    fbLoginStart($http, claim, facebookLoginError);
   };
 
   function facebookLoginSuccess(status) {
     $scope.rewards[1].status = status;
     $scope.updateRewards();
   }
+
+  /**
+ * Send the facebook auth data to the server to be verified and saved.
+ *
+ * @param {object} data
+ * @param {string} data.username
+ * @param {string} data.updateToken
+ * @param {string} data.fbID
+ * @param {string} data.fbAccessToken
+ * @param {function} success callback
+ * @param {function} error callback
+ */
+function claim(data) {
+  _.extend(data, {
+    username: session.get('username'),
+    updateToken: session.get('wallet').keychainData.updateToken
+  });
+
+  $http.post(Options.API_SERVER + "/claim/facebook", data)
+    .success(
+      function (response) {
+        console.log(response.status);
+        facebookLoginSuccess(response.message);
+      })
+    .error(function (response) {
+      facebookLoginError(response);
+    });
+}
 
   function facebookLoginError(response) {
     $scope.loading = false;

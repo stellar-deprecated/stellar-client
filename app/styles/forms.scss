@@ -34,7 +34,8 @@ input[type="password"] {
 }
 
 button, 
-.btn, 
+.btn,
+.btn-default, 
 .stellar-button, 
 .btn-stellar {
   height: 45px;
@@ -96,6 +97,13 @@ button,
       &:hover {
         color: $error;
       }
+    }
+  }
+
+  &[disabled] {
+    color: $grey;
+    &:hover {
+      color: $grey;
     }
   }
 }

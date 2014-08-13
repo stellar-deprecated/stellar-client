@@ -1,0 +1,35 @@
+.tooltip.error {
+  .tooltip-inner {
+      background-color: $error;
+  }
+  .top.tooltip-arrow {
+    border-top-color: $error !important;
+  }
+  .right.tooltip-arrow {
+      border-right-color: $error !important;
+  }
+  .left.tooltip-arrow {
+    border-left-color: $error !important;
+  }
+  .bottom.tooltip-arrow {
+      border-bottom-color: $error !important;
+  }
+}
+
+.tooltip.info {
+  .tooltip-inner {
+      background-color: $stellar-blue;
+  }
+  .top.tooltip-arrow {
+    border-top-color: $stellar-blue !important;
+  }
+  .right.tooltip-arrow {
+      border-right-color: $stellar-blue !important;
+  }
+  .left.tooltip-arrow {
+    border-left-color: $stellar-blue !important;
+  }
+  .bottom.tooltip-arrow {
+      border-bottom-color: $stellar-blue !important;
+  }
+}

@@ -8,6 +8,20 @@ var sc = angular.module('stellarClient');
      walletAddressLoaded
  */
 sc.controller('AppCtrl', function($scope, $rootScope, stNetwork, session, $state, $element, FlashMessages) {
+    $scope.$on('userLoaded', function () {
+        $scope.getSentInvites = function () {
+            return session.getUser() && session.getUser().getSentInvites().length;
+        }
+        $scope.getInvitesLeft = function () {
+            return session.getUser() && session.getUser().getUnsentInvites().length;
+        }
+        $scope.getInvitesClass = function () {
+            return $scope.getInvitesLeft() > 0 
+                ? 'nav-has-invites'
+                : null;
+        }
+    });
+
     $rootScope.reserve=20000000;
     $rootScope.balance=0;
     $rootScope.accountStatus = 'connecting';

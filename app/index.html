@@ -55,8 +55,9 @@
                 </ul>
 
                 <ul class="nav navbar-nav navbar-right ng-hide" ng-show="session.get('loggedIn')">
-                    <li><a href="#/settings"><span class="glyphicon glyphicon-cog"></span> {{ session.get('username') }}</a></li>
-                    <li><a href="#/logout" ui-sref="logout"><span class="glyphicon glyphicon-log-out"></span> LOG OUT</a></li>
+                    <li><a href="#/invites" ng-show="getInvitesLeft() || getSentInvites()" ng-class="getInvitesClass()"><span>invite ({{getInvitesLeft()}})</span></a></li>
+                    <li><a href="#/settings"><span class="glyphicon glyphicon-cog"></span>{{ session.get('username') }}</a></li>
+                    <li><a href="#/logout" ui-sref="logout"><span class="glyphicon glyphicon-log-out"></span>LOG OUT</a></li>
                 </ul>
             </div>
         </div>
@@ -126,6 +127,8 @@
 <script src="bower_components/angular-raven/angular-raven.js"></script>
 <script src="bower_components/ng-grid/build/ng-grid.js"></script>
 <script src="bower_components/ng-grid/plugins/ng-grid-flexible-height.js"></script>
+<script src="bower_components/zeroclipboard/dist/ZeroClipboard.js"></script>
+<script src="bower_components/ng-clip/src/ngClip.js"></script>
 <script src="scripts/utilities/sjcl.js"></script>
 <script src="scripts/libraries/sjcl-scrypt.js"></script>
 <!-- endbuild -->
@@ -181,6 +184,8 @@
 <script src="scripts/controllers/flash-message-controller.js"></script>
 <script src="scripts/controllers/claim-flash-message-controller.js"></script>
 <script src="scripts/controllers/username-recovery-controller.js"></script>
+<script src="scripts/controllers/invites-controller.js"></script>
+<script src="scripts/controllers/task-message-controller.js"></script>
 
 <script src="scripts/directives/directives.js"></script>
 <script src="scripts/directives/validators.js"></script>
@@ -191,6 +196,7 @@
 <script src="scripts/utilities/bruteRequest.js"></script>
 <script src="scripts/utilities/singletonPromise.js"></script>
 <script src="scripts/utilities/jsonrewriter.js"></script>
+<script src="scripts/utilities/userprivateinfo.js"></script>
 
 <script src="scripts/services/session.js"></script>
 <script src="scripts/services/network.js"></script>
@@ -202,6 +208,7 @@
 <script src="scripts/services/flash_messages.js"></script>
 <script src="scripts/services/transactionHistory.js"></script>
 <script src="scripts/services/contacts.js"></script>
+<script src="scripts/services/invites.js"></script>
 
 <!-- endbuild -->
 </body>

@@ -2,11 +2,20 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session, TutorialHelper, singletonPromise, FlashMessages, contacts) {
-  $scope.showRewards = false;
+sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session, TutorialHelper, singletonPromise, FlashMessages, contacts, invites) {
+  $scope.showRewards         = false;
   $scope.showRewardsComplete = null;
-  $scope.selectedReward = null;
-  $scope.giveawayAmount=0;
+  $scope.selectedReward      = null;
+  $scope.giveawayAmount      = 0;
+
+  $scope.data = {};
+  // populate the invite code if we have one
+  $scope.$on('userLoaded', function () {
+    // using data.inviteCode because for some reason the input's model is in a child scope
+    $scope.data.inviteCode = session.getUser().getInviteCode();
+    $scope.data.hasClaimedInviteCode = session.getUser().hasClaimedInviteCode();
+    $scope.data.inviterUsername = session.getUser().getInviterUsername();
+  });
 
   var firstRequest = true;
 
@@ -60,6 +69,27 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
     $scope.selectedReward = null;
     TutorialHelper.clear('dashboard');
   };
+
+  $scope.submitInviteCode = function () {
+    if (_.isEmpty($scope.data.inviteCode)) {
+      $scope.closeReward();
+    } else {
+      console.log('claiming');
+      invites.claim($scope.data.inviteCode)
+        .success(function (response) {
+          $scope.updateRewards();
+        })
+        .error(function (response) {
+          if (response.status == "fail") {
+            Util.showError($('.invite-fb-form [data-toggle=tooltip'), response.message);
+          }
+        })
+    }
+  }
+
+  $scope.rewardQueuedButtonTitle = function() {
+    return _.isEmpty($scope.data.inviteCode) ? "Continue" : "Submit Invite Code";
+  }
 
   $scope.computeRewardProgress = function() {
     var order = {
@@ -168,7 +198,7 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
     if(readyRewards.length > 0) {
       $rootScope.$broadcast('flashMessage', {
         id: 'claimRewards',
-        title: 'You have rewards waiting to be claimed!',
+        title: 'You have stellars waiting to be claimed!',
         template: 'templates/claim-flash-message.html',
         type: 'success'
       });
@@ -195,10 +225,34 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
       });
   });
 
+  function getInviteClaimedFlashMessageInfo() {
+    var facebookClaimed =
+      $scope.rewards[1].status == "sending" ||
+      $scope.rewards[1].status == "sent" ||
+      $scope.rewards[1].status == 'ready';
+    if (facebookClaimed) {
+      return "Claim your reward now!";
+    } else {
+      return "Connect with Facebook to claim your reward!";
+    }
+  }
+
   $rootScope.$on('claimRewards', function(callback) {
     $scope.claimRewards()
       .then(callback);
   });
+
+  $scope.$on('openFacebookReward', function () {
+    $scope.selectedReward = 1;
+  })
+
+  $scope.$on('invite-claimed', function () {
+    $scope.updateRewards()
+      .then(function () {
+        FlashMessages.add({title: "Invite claimed!", info: getInviteClaimedFlashMessageInfo()});
+      })
+      .then(processReadyRewards);
+  })
 
   $scope.updateRewards()
     .then(setupFairyTxListener)

@@ -14,8 +14,8 @@ var $ = require('gulp-load-plugins')();
 
 
 //composite tasks
-gulp.task('default', ['clean'], function () { 
-    gulp.start('build'); 
+gulp.task('default', ['clean'], function () {
+    gulp.start('build');
 });
 gulp.task('develop', ['watch']);
 gulp.task('build',   ['html', 'images', 'fonts']);
@@ -76,7 +76,7 @@ gulp.task('scripts:templateCache', function() {
     return mergeStream(templates, states)
 });
 
-gulp.task('html', ['config', 'styles', 'scripts'], function (done) {
+gulp.task('html', ['config', 'styles', 'scripts', 'flash'], function (done) {
     git.long(function (revision) {
 
         var jsFilter = $.filter('**/*.js');
@@ -97,7 +97,7 @@ gulp.task('html', ['config', 'styles', 'scripts'], function (done) {
             .pipe(cssFilter)
             .pipe($.replace('bower_components/bootstrap-sass-official/vendor/assets/fonts/bootstrap','fonts'))
             .pipe($.csso())
-            .pipe($.rev())  
+            .pipe($.rev())
             .pipe(cssFilter.restore())
             .pipe($.useref.restore())
             .pipe($.useref())
@@ -109,6 +109,12 @@ gulp.task('html', ['config', 'styles', 'scripts'], function (done) {
             .once('end', done)
             .once('finish', done);
     });
+});
+
+gulp.task('flash', function () {
+    return gulp.src('app/**/*.swf')
+        .pipe(gulp.dest('dist'))
+        .pipe($.size());
 });
 
 gulp.task('images', function () {

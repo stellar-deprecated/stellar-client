@@ -28,7 +28,9 @@ $mobile-width: 992px;
 @import "settings.scss";
 @import "toggle.scss";
 @import "news.scss";
+@import "invite.scss";
 @import "footer.scss";
+@import "tooltip.scss";
 
 body {
   height: 100%;
@@ -49,8 +51,6 @@ body {
   flex-direction: column;
   min-height: 100vh;
 }
-
-
 
 .right-inner-addon {
   position: relative;
@@ -83,25 +83,47 @@ body {
     font-weight: $medium-weight;
     font-size: 15px;
 
-    a {
-      line-height: 1em;
-      margin-top: 3px;
-      padding: 7px 24px;
-      @include transition(color 200ms ease-in-out);
+    &.navbar-nav {
+      > li {
+        > a {
+          line-height: 1em;
+          margin: 3px 0 0 0;
+          padding: 10px 24px;
+          @include transition(color 200ms ease-in-out);
 
-      .glyphicon {
-        opacity: 0.5;
-        font-size: 0.8em;
-        @include transition(opacity 200ms ease-in-out);
-      }
+          .glyphicon {
+            padding-right: 2px;
+            opacity: 0.5;
+            font-size: 0.8em;
+            @include transition(opacity 200ms ease-in-out);
+          }
 
-      &:hover {
-        color: $stellar-blue !important;
-        .glyphicon {
-          opacity: 1;
+          &:hover {
+            color: $stellar-blue;
+            .glyphicon {
+              opacity: 1;
+            }
+          }
+
+          &.nav-has-invites {
+            span {
+              background: $stellar-blue;
+              border: 1px solid darken($stellar-blue, 10);
+              color: #fff;
+              border-radius: 3px;
+              padding: 3px;
+              font-size: 0.9em;
+            }
+            &:hover {
+              span {
+                background: darken($stellar-blue, 5);
+                color: #fff;
+              }
+            }
+
+          }
         }
       }
-
     }
 
     .sign-up {

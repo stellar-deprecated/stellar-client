@@ -1,0 +1,35 @@
+<div class="invite-page" ng-controller="InvitesCtrl">
+    <div class="container">
+        <h1 class="title">Send your friends an invite code and we'll give them stellars.</h1>
+        <h3>Your friend will still need to login with Facebook but they will be funded immediately with your code.</h3>
+        <form id="inviteForm" role="form" name="inviteForm" novalidate>
+            <div class="form-group row">
+                <div class="col-sm-2">
+                    <label>Friend's Email:</label>
+                </div>
+                <div class="col-sm-5 col-md-5">
+                     <input id="invite-email" class="form-control" ng-model="inviteEmail" name="email" type="email" ng-change="emailError = null" data-toggle="tooltip" data-placement="top" data-template='<div class="tooltip error-tip" role="tooltip"><div class="tooltip-arrow top"></div><div class="tooltip-inner"></div></div>'/>
+                </div>
+                <div class="col-sm-4">
+                    <button type="submit" class="btn btn-default stellar-button" ng-disabled="attemptSendInvite.isLoading() || getUnsentInvites().length <= 0" ng-click="attemptSendInvite()">{{attemptSendInvite.isLoading() ? 'Sending...' : getUnsentInvites().length + ' invites left'}}</button>
+                </div>
+            </div>
+        </form>
+
+        <div class="invites" ng-show="getSentInvites().length">
+            <h2>Sent Invites ({{ getSentInvites().length }})</h2>
+            <div id="{{invite.inviteId}}" class="invite-row" ng-repeat="invite in getSentInvites()">
+                <span class="email">{{invite.emailedTo}}</span>
+                <span class="status" ng-class="getInviteStatus(invite).class">{{getInviteStatus(invite).text}}</span>
+                <div class="invite-actions">
+                    <span ng-repeat="action in inviteActions | includeInviteActionFilter:invite" ng-init="innerFirst = $first; innerLast = $last">
+                    {{!innerFirst ? " " : ""}}
+                    <a href="" ng-click="action.action(invite)" ng-show="action.type != 'copy'">{{action.text}}</a>
+                    <a id="copy-link" href="" clip-copy="action.action(invite)" clip-click="action.copyAction(invite)" ng-show="action.type == 'copy'">{{action.text}}</a>
+                    {{!innerLast ? " | " : ""}}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

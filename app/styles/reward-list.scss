@@ -34,6 +34,41 @@
       background-color: white;
       border: 1px solid rgba($stellar-blue, 0);
 
+      &:first-child {
+        border: 1px solid rgba($stellar-blue, 1);
+        background: white url(../images/stroopy.gif) no-repeat 75px center;
+        background-size: 35px;
+        i {
+          float: left;
+          padding-right: 65px;
+        }
+        .reward-step {
+          color: #fff;
+          text-transform: uppercase;
+          width: 100%;
+          display: block;
+          font-size: 11px;
+          
+          .step-label {
+            background: $stellar-blue;
+            padding: 0 3px 1px;
+            border-radius: 3px;
+          }
+
+        }
+
+        @media (max-width: $phone-width) {
+          background-position: 40px 10px;
+          background-size: 25px; 
+          i {
+            padding-right: 35px;
+          }
+          .subtitle {
+            padding-left: 25px;
+          }
+        }
+      }
+
       i {
         color: $grey;
       }
@@ -76,6 +111,9 @@
   }
   @media (max-width: $phone-width) {
     li {
+      .reward-title {
+        font-size: 18px;
+      }
       .reward-body {
         padding: 10px;
         .subtitle {

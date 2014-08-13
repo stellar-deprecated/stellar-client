@@ -12,10 +12,13 @@ var stellarClient = angular.module('stellarClient', [
   'rt.debounce',
   'singletonPromise',
   'ui.router',
-  'vr.passwordStrength'
+  'vr.passwordStrength',
+  'ngClipboard'
 ]);
 
-stellarClient.config(function($httpProvider, $stateProvider, $urlRouterProvider, RavenProvider) {
+stellarClient.config(function($httpProvider, $stateProvider, $urlRouterProvider, RavenProvider, ngClipProvider) {
+
+  ngClipProvider.setPath("bower_components/zeroclipboard/dist/ZeroClipboard.swf");
 
   if(Options.REPORT_ERRORS !== true) {
     RavenProvider.development(true);
@@ -65,6 +68,11 @@ stellarClient.config(function($httpProvider, $stateProvider, $urlRouterProvider,
       templateUrl: 'states/settings.html',
       authenticate: true
     })
+    .state('invites', {
+      url:         '/invites',
+      templateUrl: 'states/invites.html',
+      authenticate: true
+    })
   ;
 
   $urlRouterProvider.otherwise('/dashboard');
@@ -82,20 +90,26 @@ stellarClient.run(function($location, $state, ipCookie){
     }
 });
 
-stellarClient.run(function($rootScope, $state, ipCookie, session, FlashMessages){
+stellarClient.run(function($rootScope, $state, ipCookie, session, FlashMessages, invites){
   $rootScope.balance = 'loading...';
-
 
   $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){
 
-    switch(toState.url){
-
-      case '/login':
+    switch(toState.name){
+      case 'register':
+      case 'login':
         // If the user has persistent login enabled, try to login from local storage.
-        if(session.isPersistent() && !session.get('loggedIn')){
+        if(session.isPersistent() && !session.get('loggedIn')) {
+
           session.loginFromStorage($rootScope);
 
           if(session.get('loggedIn')){
+            if(toParams.inviteCode) {
+              invites.claim(toParams.inviteCode)
+              .success(function (response) {
+                $rootScope.$broadcast('invite-claimed');
+              });
+            }
             $state.transitionTo('dashboard');
 
             // Prevent the original destination state from loading.
@@ -105,7 +119,7 @@ stellarClient.run(function($rootScope, $state, ipCookie, session, FlashMessages)
         }
         break;
 
-      case '/logout':
+      case 'logout':
         if(session.get('loggedIn')) {
           session.logout();
         }

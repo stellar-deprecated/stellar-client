@@ -56,6 +56,15 @@
         <div class="send-container client-section" ng-include="'templates/send.html'" ng-show="tab==='send'"></div>
         <div class="receive-container client-section" ng-include="'templates/receive.html'" ng-show="$root.tab==='receive'"></div>
     </div>
+
+    <div class="invite-messages" id="invite-task-messages" ng-show="task" ng-controller="TaskMessageCtrl">
+        <div class="container">
+            <div class="invite-message row">
+                <p>{{task.getText()}} {{task.getSubtext()}}</p>
+                <button ng-click="task.action()">{{task.getButtonText()}}</button>
+            </div>
+        </div>
+    </div>
     <div class="client-section" id="dashboard-flash-messages" ng-show="messages.length" ng-controller="FlashMessageCtrl">
         <div ng-include="'templates/flash-message-container.html'"></div>
     </div>
