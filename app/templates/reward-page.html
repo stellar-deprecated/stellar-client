@@ -24,11 +24,14 @@
         </div>
 
         <div class="content sent" ng-class="{active: reward.status == 'reward_queued' || reward.status == 'sending' || reward.status == 'reward_error'}">
-            <div class="body">
-                You're in the queue and should receive your reward soon!
+            <div class="body" ng-show="reward.status != sending">
+                Here are some stellars to get you started!
+            </div>
+            <div class="body" ng-show="reward.status == sending">
+                Your stellars are on the way!
             </div>
             <form class="form-group invite-fb-form" ng-show="!data.hasClaimedInviteCode && reward.status != 'sending' && reward.status != 'sending'">
-                <label>Jump to the front of the line by entering an invite code below</label>
+                <label>Receive more by entering an invite code below:</label>
                 <input id="inviteCode" class="form-control" type="text" ng-model="data.inviteCode" data-toggle="tooltip" data-placement="right" data-template='<div class="tooltip error-tip right" role="tooltip"><div class="tooltip-arrow right"></div><div class="tooltip-inner"></div></div>'/>
             </form>
             <button class="stellar-button btn btn-default" ng-click="submitInviteCode()" ng-show="reward.status != 'sending' && reward.status != 'sending'">{{rewardQueuedButtonTitle()}}</button>

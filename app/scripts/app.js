@@ -87,9 +87,8 @@ stellarClient.run(function($location, $state, ipCookie){
     }
 });
 
-stellarClient.run(function($rootScope, $state, ipCookie, session, FlashMessages){
+stellarClient.run(function($rootScope, $state, ipCookie, session, FlashMessages, invites){
   $rootScope.balance = 'loading...';
-
 
   $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){
 
@@ -97,10 +96,18 @@ stellarClient.run(function($rootScope, $state, ipCookie, session, FlashMessages)
 
       case '/login':
         // If the user has persistent login enabled, try to login from local storage.
-        if(session.isPersistent() && !session.get('loggedIn')){
+        if(session.isPersistent() && !session.get('loggedIn')) {
+
           session.loginFromStorage($rootScope);
 
           if(session.get('loggedIn')){
+            if(session.get('inviteCode')) {
+              invites.claim(session.get('inviteCode'))
+              .success(function (response) {
+                console.log('update rewards');
+                $rootScope.$broadcast('update-rewards');
+              });
+            }
             $state.transitionTo('dashboard');
 
             // Prevent the original destination state from loading.

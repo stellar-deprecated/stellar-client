@@ -29,7 +29,7 @@ sc.controller('InvitesCtrl', function($scope, $http, $q, $filter, session, invit
 
     $scope.inviteStatus = {
         success: {
-            text: "signed up! 500 STR sent",
+            text: "signed up!",
             class: "success"
         },
         waiting: {

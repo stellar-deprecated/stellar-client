@@ -198,7 +198,7 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
     if(readyRewards.length > 0) {
       $rootScope.$broadcast('flashMessage', {
         id: 'claimRewards',
-        title: 'You have rewards waiting to be claimed!',
+        title: 'You have stellars waiting to be claimed!',
         template: 'templates/claim-flash-message.html',
         type: 'success'
       });
@@ -232,6 +232,11 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
 
   $scope.$on('openFacebookReward', function () {
     $scope.selectedReward = 1;
+  })
+
+  $scope.$on('update-rewards', function () {
+    $scope.updateRewards()
+      .then(processReadyRewards);
   })
 
   $scope.updateRewards()

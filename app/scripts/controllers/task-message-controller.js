@@ -22,7 +22,7 @@ sc.controller('TaskMessageCtrl', function ($rootScope, $scope, $state, $filter, 
         },
         hasNewInvites: {
             getText: function () {
-                return "You have received " + $scope.newInvites + " new invites for your friends!";
+                return "You have received " + $scope.newInvites + " new invite for your friends!";
             },
             getSubtext: function () {
                 return "You will receive stellars for every authenticated friend you invite.";
