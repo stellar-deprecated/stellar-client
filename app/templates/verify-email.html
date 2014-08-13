@@ -6,25 +6,21 @@
     <div class="add-email-item" ng-class="{active: reward.status == 'incomplete'}">
         <form role="form" name="addEmailForm" class="stellar-form" ng-controller="AddEmailCtrl" ng-submit="addEmail()" novalidate>
             <div class="form-group">
-                <div class="row">
-                    <div class="errors col-sm-12">
-                        <div class="tip">{{ errors.join('\n') }}</div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-12">
-                        <input id="email" name="email" type="email" class="form-control" ng-class="{'input-error': errors.length}" placeholder="Email Address" ng-model="email" ng-change="errors = []">
-                    </div>
+                <div class="errors col-sm-12">
+                    <div class="tip">{{ errors.join('\n') }}</div>
                 </div>
             </div>
             <div class="form-group">
-                <div class="row">
-                    <div class="col-xs-3 button-col-left">
-                        <button type="button" class="cancel stellar-button btn btn-default" ng-click="cancel()">Cancel</button>
-                    </div>
-                    <div class="col-xs-9 button-col-right">
-                        <button type="submit" class="submit stellar-button btn btn-default" ng-class="{loading: loading}" ng-disabled="loading">{{loading ? 'Loading...' : 'Submit' }}</button>
-                    </div>
+                <div class="col-sm-12">
+                    <input id="email" name="email" type="email" class="form-control" ng-class="{'input-error': errors.length}" placeholder="Email Address" ng-model="email" ng-change="errors = []">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-xs-3 button-col-left">
+                    <button type="button" class="cancel stellar-button btn btn-default" ng-click="cancel()">Cancel</button>
+                </div>
+                <div class="col-xs-9 button-col-right">
+                    <button type="submit" class="submit stellar-button btn btn-default" ng-class="{loading: loading}" ng-disabled="loading">{{loading ? 'Loading...' : 'Submit' }}</button>
                 </div>
             </div>
         </form>
@@ -35,19 +31,18 @@
                 <div class="errors col-sm-12">
                     <div class="tip col-sm-offset-6 col-sm-6">{{ errors.join('\n') }}</div>
                 </div>
-                <div class="row">
-                    <div class="col-sm-12">
-                        <input id="emailActivationCode" type="text" class="form-control" ng-class="{'input-error': errors.length}" placeholder="Recovery Code" ng-model="emailActivationCode" ng-change="errors = []">
-                    </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <input id="emailActivationCode" type="text" class="form-control" ng-class="{'input-error': errors.length}" placeholder="Recovery Code" ng-model="emailActivationCode" ng-change="errors = []">
                 </div>
             </div>
             <div class="form-group">
-                <div class="row">
-                    <div class="col-xs-3 button-col-left">
-                        <button type="button" class="cancel stellar-button btn btn-default" ng-click="back()">Back</button>
-                    </div>
-                    <div class="col-xs-9 button-col-right">
-                        <button type="submit" class="submit stellar-button btn btn-default" ng-class="{loading: loading}" ng-disabled="loading">{{loading ? 'Loading...' : 'Submit' }}</button>
+                <div class="col-xs-3 button-col-left">
+                    <button type="button" class="cancel stellar-button btn btn-default" ng-click="back()">Back</button>
+                </div>
+                <div class="col-xs-9 button-col-right">
+                    <button type="submit" class="submit stellar-button btn btn-default" ng-class="{loading: loading}" ng-disabled="loading">{{loading ? 'Loading...' : 'Submit' }}</button>
                 </div>
             </div>
         </form>

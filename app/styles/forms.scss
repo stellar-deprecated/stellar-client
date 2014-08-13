@@ -5,6 +5,7 @@ label {
 }
 
 input[type="text"],
+input[type="email"],
 input[type="password"] {
   height: 42px;
   border-radius: 2px;
@@ -117,7 +118,6 @@ button,
       height: 40px;
 
       .tip {
-        width: 100%;
         @media (min-width: $screen-sm-min) {
           width: auto;
         }
