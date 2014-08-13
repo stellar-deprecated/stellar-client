@@ -1,13 +1,13 @@
 <div class="recovery client-section">
     <div class="container">
-        <h1 class="title">Password Recovery</h1>
+        <h1 class="title">{{'recovery.password_recovery' | translate}}</h1>
 
         <form role="form" class="form-horizontal stellar-form" ng-controller="RecoveryCtrl">
             <div class="form-group">
                 <div class="errors col-sm-12">
                     <div class="tip col-sm-offset-6 col-sm-3">{{ usernameError }}</div>
                 </div>
-                <label for="username" class="col-sm-3">USERNAME</label>
+                <label for="username" class="col-sm-3">{{'global.username' | translate | uppercase}}</label>
                 <div class="col-sm-6">
                     <input id="username" type="text" class="form-control" ng-model="username" ng-change="usernameError = null">
                 </div>
@@ -16,14 +16,14 @@
                 <div class="errors col-sm-12">
                     <div class="tip col-sm-offset-6 col-sm-3">{{ recoveryError }}</div>
                 </div>
-                <label for="recovery-code" class="col-sm-3">RECOVERY CODE</label>
+                <label for="recovery-code" class="col-sm-3">{{'recovery.recovery_code' | translate | uppercase}}</label>
                 <div class="col-sm-6">
                     <input id="recovery-code" type="text" class="form-control" ng-model="userRecoveryCode" ng-change="recoveryError = null" autocomplete="off">
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-offset-3 col-sm-6">
-                    <button type="submit" class="stellar-button btn btn-default" ng-click="attemptRecovery()" ng-disabled="recovering">{{recovering ? 'Recovering...' : 'Recover my password'}}</button>
+                    <button type="submit" class="stellar-button btn btn-default" ng-click="attemptRecovery()" ng-disabled="recovering">{{recovering ? ('recovery.recovering' | translate) : ('recovery.recover_my_password' | translate)}}</button>
                 </div>
             </div>
         </form>

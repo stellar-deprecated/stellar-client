@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('SettingsCtrl', function($scope, $http, $q, $timeout, $state, session) {
+sc.controller('SettingsCtrl', function($scope, $http, $q, $timeout, $state, session, $translate) {
   var wallet = session.get('wallet');
 
   $scope.email = wallet.mainData.email;
@@ -29,7 +29,7 @@ sc.controller('SettingsCtrl', function($scope, $http, $q, $timeout, $state, sess
       $scope.toggle.email.on = response.data.email;
     })
     .error(function (response) {
-      $scope.toggle.error = "Server error";
+      $scope.toggle.error = $translate.instant('global.server_error');
       $scope.toggle.disableToggles = true;
       // TODO retry
     });
@@ -88,7 +88,7 @@ sc.controller('SettingsCtrl', function($scope, $http, $q, $timeout, $state, sess
     if ($scope.toggle.disableToggles) {
       if ($scope.toggle.error) {
         // if we're disabling these toggles, let the user know
-        showError(toggle.wrapper, "Server error.");
+        showError(toggle.wrapper, $translate.instant('global.server_error'));
       }
       return;
     }
@@ -114,7 +114,7 @@ sc.controller('SettingsCtrl', function($scope, $http, $q, $timeout, $state, sess
             }
         }
       } else {
-        showError(toggle.wrapper, "Server error.");
+        showError(toggle.wrapper, $translate.instant('global.server_error'));
       }
     });
   }

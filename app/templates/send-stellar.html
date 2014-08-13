@@ -1,9 +1,14 @@
 <div class="info">
-	<h2>Send your first <strong>25</strong> - receive <strong>25</strong> in return. </h2>
-	<small> If you're looking for a recipient, these nonprofits, <a href="http://www.bravenewsoftware.org/">bravenewsoftware</a>, <a href="http://intelligence.org/">miri</a> or <a href="http://www.missionbit.com/">missionbit</a>, accept stellars. Just type their name into Send. </small>
+	<h2 translate="rewards.send_first_stellars_receive_in_return" translate-value-stellars="25"></h2>
+	<small>
+        {{'rewards.nonprofits_recipients_prefix' | translate}}
+        <a href="http://www.bravenewsoftware.org/">bravenewsoftware</a>,
+        <a href="http://intelligence.org/">miri</a>
+        or <a href="http://www.missionbit.com/">missionbit</a>,
+        {{'rewards.nonprofits_recipients_suffix' | translate}}</small>
 </div>
 
 <div class="send-stellar">
     <img src="../images/right-up-arrow.svg" class="send-arrow"/>
-    <button class="btn btn-default stellar-button" ng-click="sendTutorial()">Get started now!</button>
+    <button class="btn btn-default stellar-button" ng-click="sendTutorial()">{{'rewards.get_started_now' | translate}}</button>
 </div>

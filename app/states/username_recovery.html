@@ -1,7 +1,7 @@
 <div class="recovery client-section">
     <div class="container">
         <div class="row">
-            <h1 class="title">Username Recovery</h1>
+            <h1 class="title">{{'username_recovery.username_recovery' | translate}}</h1>
         </div>
 
         <form name="recoverform" role="form" class="form-horizontal stellar-form" ng-controller="UsernameRecoveryCtrl" novalidate>
@@ -10,15 +10,15 @@
                     <div class="tip col-sm-offset-6 col-sm-3">{{ emailError }}</div>
                 </div>
                 <div class="row">
-                    <label for="email" class="col-sm-3">EMAIL</label>
+                    <label for="email" class="col-sm-3">{{'global.email' | translate | uppercase}}</label>
                     <div class="col-sm-6">
                         <input name="email" id="email" type="email" class="form-control" ng-model="email" ng-change="emailError = null">
                     </div>
-                </row>
+                </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-offset-3 col-sm-6">
-                    <button type="submit" class="stellar-button btn btn-default" ng-click="attemptRecovery()" ng-disabled="attemptRecovery.isLoading()">{{attemptRecovery.isLoading() ? 'Recovery...' : 'Recover username'}}</button>
+                    <button type="submit" class="stellar-button btn btn-default" ng-click="attemptRecovery()" ng-disabled="attemptRecovery.isLoading()">{{attemptRecovery.isLoading() ? ('username_recovery.recovering' | translate) : ('username_recovery.recover_username' | translate)}}</button>
                 </div>
             </div>
         </form>

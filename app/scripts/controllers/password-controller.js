@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('PasswordCtrl', function($scope, passwordStrengthComputations) {
+sc.controller('PasswordCtrl', function($scope, passwordStrengthComputations, $translate) {
   $scope.loading = false;
   $scope.passwordConfirmation = '';
 
@@ -58,10 +58,10 @@ sc.controller('PasswordCtrl', function($scope, passwordStrengthComputations) {
     if(!$scope.data.password) return '';
 
     var strength = passwordStrengthComputations.getStrength($scope.data.password);
-    if(strength < 25) return 'WEAK';
-    if(strength < 50) return 'ALMOST';
-    if(strength < 75) return 'GOOD';
-    return 'STRONG';
+    if(strength < 25) return $translate.instant('password.strength_weak').toUpperCase();
+    if(strength < 50) return $translate.instant('password.strength_almost').toUpperCase();
+    if(strength < 75) return $translate.instant('password.strength_good').toUpperCase();
+    return $translate.instant('password.strength_strong').toUpperCase();
   };
 
   // Validate the passwords are valid and matching.
@@ -74,15 +74,15 @@ sc.controller('PasswordCtrl', function($scope, passwordStrengthComputations) {
 
     if(!$scope.data.password){
       validInput = false;
-      $scope.errors.passwordErrors.push('The password field is required.');
+      $scope.errors.passwordErrors.push($translate.instant('password.password_required'));
     }
     else if(!$scope.status.passwordValid){
       validInput = false;
-      $scope.errors.passwordErrors.push('The password is not strong enough.');
+      $scope.errors.passwordErrors.push($translate.instant('password.password_not_strong'));
     }
     else if(!$scope.status.passwordConfirmValid){
       validInput = false;
-      $scope.errors.passwordConfirmErrors.push('The passwords do not match.');
+      $scope.errors.passwordConfirmErrors.push($translate.instant('password.passwords_not_match'));
     }
 
     return validInput;

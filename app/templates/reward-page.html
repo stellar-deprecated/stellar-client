@@ -1,6 +1,6 @@
 <div class="reward-page" ng-class="{active: selectedReward == reward.rewardType, error: reward.error}">
     <div class="pane-close" ng-click="closeReward()">
-        <span>Close</span>
+        <span>{{'global.close' | translate}}</span>
         <i class="icon icon-times-circle-thin"></i>
     </div>
     <div class="reward-page-title">
@@ -15,41 +15,41 @@
 
         <div class="content awaiting-payout" ng-class="{active: reward.status == 'needs_fbauth'}">
             <div class="body">
-                Oh, happy day!
+                {{'rewards.happy_day' | translate}}
             </div>
             <div class="info">
-                Almost there - log in with Facebook to get these stellars.
+                {{'rewards.almost_there' | translate}}
             </div>
-            <button class="stellar-button btn btn-default" ng-click="toggleReward(1)">Continue</button>
+            <button class="stellar-button btn btn-default" ng-click="toggleReward(1)">{{'rewards.continue' | translate}}</button>
         </div>
 
         <div class="content sent" ng-class="{active: reward.status == 'reward_queued' || reward.status == 'sending' || reward.status == 'reward_error'}">
             <div class="body">
-                You're in the queue and should receive your reward soon!
+                {{'rewards.you_are_in_the_queue' | translate}}
             </div>
-            <button class="stellar-button btn btn-default" ng-click="closeReward()">Continue</button>
+            <button class="stellar-button btn btn-default" ng-click="closeReward()">{{'rewards.continue' | translate}}</button>
         </div>
 
         <div class="content sent" ng-class="{active: reward.status == 'sent'}">
             <div class="body">
-                You did it!
+                {{'rewards.you_did_it' | translate}}
             </div>
-            <button class="stellar-button btn btn-default" ng-click="closeReward()">Continue</button>
+            <button class="stellar-button btn btn-default" ng-click="closeReward()">{{'rewards.continue' | translate}}</button>
         </div>
 
         <div class="content sent" ng-class="{active: reward.status == 'ready'}">
             <div class="body">
-                Your reward is ready to be claimed!
+                {{'rewards.reward_ready_to_be_claimed' | translate}}
             </div>
             <button class="stellar-button btn btn-default" ng-disable="claimRewards.isLoading()" ng-click="claimRewards()">
-                {{ claimRewards.isLoading() ? 'Loading...': 'Claim now' }}
+                {{ claimRewards.isLoading() ? ('global.loading' | translate) : ('global.claim_now' | translate) }}
             </button>
         </div>
     </div>
 
     <div class="error" ng-class="{active: reward.error}" ng-show="reward.error">
         <div class="body">
-            Oops!
+            {{'rewards.oops' | translate}}
         </div>
         <div class="info">
             <div ng-include="reward.error.template" ng-show="reward.error && reward.error.template"></div>

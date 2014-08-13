@@ -11,21 +11,21 @@
             </div>
             <div class="row controls">
                 <div class="dash-info-container col-xs-12 col-sm-6 col-sm-push-3">
-                    <span ng-show="$root.accountStatus == 'loaded'" class="dash-balance-info ng-hide">Current Balance <b>Stellars</b></span>
+                    <span ng-show="$root.accountStatus == 'loaded'" class="dash-balance-info ng-hide">{{'dashboard.current_balance' | translate}} <b>Stellars</b></span>
                 </div>
                 <div class="dash-receive-container col-xs-12 col-sm-3 col-sm-pull-6">
                     <button class="stellar-button btn btn-default" ng-click="openReceive()" ng-show="!showTab || tab != 'receive'">
                         <i class="icon icon-receive"></i>
                         Receive
                     </button>
-                    <div class="no-button" ng-show="showTab && tab == 'receive'"><i class="icon icon-receive"></i>Receive</div>
+                    <div class="no-button" ng-show="showTab && tab == 'receive'"><i class="icon icon-receive"></i>{{'dashboard.receive' | translate}}</div>
                 </div>
                 <div class="dash-send-container col-xs-12 col-sm-3">
                     <button class="stellar-button btn btn-default" ng-click="openSend()" ng-show="!showTab || tab != 'send'">
                         <i class="icon icon-send"></i>
                         Send
                     </button>
-                    <div class="no-button" ng-show="showTab && tab == 'send'"><i class="icon icon-send"></i>Send</div>
+                    <div class="no-button" ng-show="showTab && tab == 'send'"><i class="icon icon-send"></i>{{'dashboard.send' | translate}}</div>
                 </div>
             </div>
             <div class="row arrow-row">
@@ -45,7 +45,7 @@
             <div class="client-section">
                 <div class="tx-tip" ng-show="showTransaction" ng-click="clearNotification()">
                     <div class="tx-type"><i class="icon icon-receive"></i></div><!-- Prevent space between inline blocks
-                 --><div class="tx-message">You received <span class="amount">
+                 --><div class="tx-message">{{'dashboard.you_received' | translate}} <span class="amount">
                         {{ newTransaction.amount.to_human() }} {{ newTransaction.currency }}</span>
                     </div>
                 </div>

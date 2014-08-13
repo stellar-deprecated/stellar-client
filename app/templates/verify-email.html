@@ -1,6 +1,6 @@
 <div class="info">
-    Verify your email address to activate your password recovery feature.<br>
-    Your recovery code will be sent to your email.
+    {{'recovery.verify_your_email_to_activate_password_recovery' | translate}}<br>
+    {{'recovery.recovery_code_will_be_send_email' | translate}}
 </div>
 <div class="verify-email">
     <div class="add-email-item" ng-class="{active: reward.status == 'incomplete'}">
@@ -20,10 +20,10 @@
             <div class="form-group">
                 <div class="row">
                     <div class="col-xs-3 button-col-left">
-                        <button type="button" class="cancel stellar-button btn btn-default" ng-click="cancel()">Cancel</button>
+                        <button type="button" class="cancel stellar-button btn btn-default" ng-click="cancel()">{{'global.cancel' | translate}}</button>
                     </div>
                     <div class="col-xs-9 button-col-right">
-                        <button type="submit" class="submit stellar-button btn btn-default" ng-class="{loading: loading}" ng-disabled="loading">{{loading ? 'Loading...' : 'Submit' }}</button>
+                        <button type="submit" class="submit stellar-button btn btn-default" ng-class="{loading: loading}" ng-disabled="loading">{{loading ? ('global.loading' | translate) : ('global.submit' | translate) }}</button>
                     </div>
                 </div>
             </div>
@@ -44,10 +44,10 @@
             <div class="form-group">
                 <div class="row">
                     <div class="col-xs-3 button-col-left">
-                        <button type="button" class="cancel stellar-button btn btn-default" ng-click="back()">Back</button>
+                        <button type="button" class="cancel stellar-button btn btn-default" ng-click="back()">{{'global.back' | translate}}</button>
                     </div>
                     <div class="col-xs-9 button-col-right">
-                        <button type="submit" class="submit stellar-button btn btn-default" ng-class="{loading: loading}" ng-disabled="loading">{{loading ? 'Loading...' : 'Submit' }}</button>
+                        <button type="submit" class="submit stellar-button btn btn-default" ng-class="{loading: loading}" ng-disabled="loading">{{loading ? ('global.loading' | translate) : ('global.submit' | translate) }}</button>
                 </div>
             </div>
         </form>

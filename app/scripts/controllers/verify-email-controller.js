@@ -1,4 +1,4 @@
-sc.controller('VerifyEmailCtrl', function ($scope, $rootScope, $http, $state, session, Wallet) {
+sc.controller('VerifyEmailCtrl', function ($scope, $rootScope, $http, $state, session, Wallet, $translate) {
   var wallet = session.get('wallet');
   $scope.email = wallet.mainData.email;
   $scope.loading = false;
@@ -42,7 +42,7 @@ sc.controller('VerifyEmailCtrl', function ($scope, $rootScope, $http, $state, se
               break;
             case 'invalid':
               if (response.data && response.data.field == 'recovery_code') {
-                $scope.errors.push('Invalid recovery code.');
+                $scope.errors.push($translate.instant('recovery.invalid_code'));
               }
               break;
           }
@@ -72,10 +72,10 @@ sc.controller('VerifyEmailCtrl', function ($scope, $rootScope, $http, $state, se
             $state.transitionTo('login');
             break;
           default:
-            $scope.errors.push('Server error.');
+            $scope.errors.push($translate.instant('global.server_error'));
         }
       } else {
-        $scope.errors.push('Server error.');
+        $scope.errors.push($translate.instant('global.server_error'));
       }
     });
   }

@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session, TutorialHelper, singletonPromise, FlashMessages, contacts) {
+sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session, TutorialHelper, singletonPromise, FlashMessages, contacts, $translate) {
   $scope.showRewards = false;
   $scope.showRewardsComplete = null;
   $scope.selectedReward = null;
@@ -98,11 +98,14 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
     $scope.showRewardsComplete = (completedRewards.length == $scope.rewards.length);
 
     if($scope.showRewardsComplete && !firstRequest) {
-      $rootScope.$broadcast('flashMessage', {
-        title: 'Oh, happy day!',
-        info: 'You unlocked all the rewards.',
-        type: 'success'
-      });
+      $translate(['rewards.happy_day', 'rewards.unlocked_all_rewards'])
+        .then(function(translations) {
+          $rootScope.$broadcast('flashMessage', {
+            title: translations['rewards.happy_day'],
+            info: translations['rewards.unlocked_all_rewards'],
+            type: 'success'
+          });
+        });
     }
 
     firstRequest = false;
@@ -166,12 +169,15 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
     var readyRewards = _.where($scope.rewards, {status: 'ready'});
 
     if(readyRewards.length > 0) {
-      $rootScope.$broadcast('flashMessage', {
-        id: 'claimRewards',
-        title: 'You have rewards waiting to be claimed!',
-        template: 'templates/claim-flash-message.html',
-        type: 'success'
-      });
+      $translate(['rewards.awards_waiting_to_be_claimed'])
+        .then(function(translations) {
+          $rootScope.$broadcast('flashMessage', {
+            id: 'claimRewards',
+            title: translations['rewards.awards_waiting_to_be_claimed'],
+            template: 'templates/claim-flash-message.html',
+            type: 'success'
+          });
+        });
     }
 
     return $q.when();

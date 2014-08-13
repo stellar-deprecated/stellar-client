@@ -2,12 +2,12 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('SendRewardCtrl', function ($rootScope, $scope, $http, stNetwork, session, TutorialHelper) {
+sc.controller('SendRewardCtrl', function ($rootScope, $scope, $http, stNetwork, session, TutorialHelper, $translate) {
   $scope.reward = {
     rewardType: 3,
-    title: 'Send stellars!',
-    subtitle: 'Learn to send',
-    innerTitle: 'Learn to send stellars',
+    title: null, // Waiting for translations to load
+    subtitle: null,
+    innerTitle: null,
     status: 'incomplete',
     updateReward: function (status) {
       $scope.reward.status = status;
@@ -15,7 +15,15 @@ sc.controller('SendRewardCtrl', function ($rootScope, $scope, $http, stNetwork, 
       	removeSentTxListener();
       }
     }
-  }
+  };
+
+  $translate(['rewards.send_stellars', 'rewards.learn_to_send'])
+    .then(function(translations) {
+      $scope.reward.title = translations['rewards.send_stellars'];
+      $scope.reward.subtitle = translations['rewards.learn_to_send'];
+      $scope.reward.innerTitle = translations['rewards.send_stellars'];
+    });
+
   // add this reward to the parent scope's reward array
   $scope.rewards[$scope.reward.rewardType] = $scope.reward;
 
