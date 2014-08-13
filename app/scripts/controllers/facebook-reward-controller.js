@@ -11,9 +11,9 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, session
         return;
       }
       if ($scope.data.inviteCode && !$scope.data.hasClaimedInviteCode) {
-        return "Enter your invite code now to skip the waitlist!";
+        return "Enter your invite code now to get bonus stellars!";
       } else if ($scope.data.inviteCode && $scope.data.hasClaimedInviteCode) {
-        return "Thanks to your friend " + $scope.data.inviterUsername + " you will skip the waitlist once you connect to Facebook.";
+        return "Thanks to your friend " + $scope.data.inviterUsername + " you will get bonus stellars once you connect to Facebook.";
       } else {
         return 'Log in with Facebook'
       }
