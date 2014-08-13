@@ -5,20 +5,20 @@ var sc = angular.module('stellarClient');
 sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, session) {
   $scope.reward = {
     rewardType: 1,
-    title: 'Receive your first stellars on us!',
+    title: 'Receive stellars on us!',
     getSubtitle: function () {
       if (!$scope.data) {
         return;
       }
       if ($scope.data.inviteCode && !$scope.data.hasClaimedInviteCode) {
-        return "Enter your invite code now to get bonus stellars!";
+        return "Enter your invite code now to receive stellars!";
       } else if ($scope.data.inviteCode && $scope.data.hasClaimedInviteCode) {
-        return "Thanks to your friend " + $scope.data.inviterUsername + " you will get bonus stellars once you connect to Facebook.";
+        return "Thanks to " + $scope.data.inviterUsername + " you will receive stellars once you connect to Facebook.";
       } else {
         return 'Log in with Facebook'
       }
     },
-    innerTitle: 'Receive your first stellars',
+    innerTitle: 'Receive stellars',
     status: 'incomplete',
     error: null,
     updateReward: function (status) {

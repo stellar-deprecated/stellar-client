@@ -24,10 +24,7 @@
         </div>
 
         <div class="content sent" ng-class="{active: reward.status == 'reward_queued' || reward.status == 'sending' || reward.status == 'reward_error'}">
-            <div class="body" ng-show="reward.status != sending">
-                You are on the waitlist.
-            </div>
-            <div class="body" ng-show="reward.status == sending">
+            <div class="body" >
                 Your stellars are on the way!
             </div>
         </div>
