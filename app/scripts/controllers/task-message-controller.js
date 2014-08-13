@@ -30,7 +30,7 @@ sc.controller('TaskMessageCtrl', function ($rootScope, $scope, $state, $filter, 
                 return "";
             },
             getButtonText: function () {
-                return "Share";
+                return "Send Invites";
             },
             action: function () {
                 $state.transitionTo('invites');

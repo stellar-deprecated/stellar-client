@@ -32,9 +32,9 @@
             </div>
         </div>
 
-        <div class="content sent" ng-class="{active: reward.status == 'sent'}">
+        <div class="content sent" ng-class="{active: reward.status == 'sent' || reward.status == 'ready'}">
             <div class="body">
-                You did it!
+                You did it! Your stellars are on the way!
             </div>
             <button class="stellar-button btn btn-default" ng-click="closeReward()">Continue</button>
         </div>
