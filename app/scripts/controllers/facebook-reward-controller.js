@@ -42,7 +42,8 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, session
           $scope.reward.error.template = "templates/facebook-verify-error.html";
           $scope.reward.error.panel = "Almost there! Verify your Facebook account.";
           $scope.reward.error.action = function () {
-            $scope.reward.error = null
+            $scope.reward.error = null,
+            $scope.reward.status = 'incomplete';
           };
           break;
         case 'ineligible':
@@ -57,7 +58,8 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, session
           $scope.reward.error = {};
           $scope.reward.error.info = "This Facebook account is already in use.";
           $scope.reward.error.action = function () {
-            $scope.reward.error = null
+            $scope.reward.error = null,
+            $scope.reward.status = 'incomplete';
           };
           break;
         case 'fake':
