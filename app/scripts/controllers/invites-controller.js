@@ -52,7 +52,7 @@ sc.controller('InvitesCtrl', function($scope, $http, $q, $filter, session, invit
                 return !invite.inviteeId;
             },
             action: function (invite) {
-                return INVITE_LINK + invite.inviteId;
+                return INVITE_LINK + invite.inviteCode;
             },
             copyAction: function (invite) {
                 Util.showTooltip($('#'+invite.inviteId+" #copy-link"), "Copied!",
@@ -109,7 +109,7 @@ sc.controller('InvitesCtrl', function($scope, $http, $q, $filter, session, invit
                 $scope.invites = session.getUser().getInvites();
             })
             .error(function (response) {
-                Util.showError($("#invite-email"), response.message);
+                Util.showTooltip($("#invite-email"), response.message, 'error', 'top');
             })
             .then(function () {
                 $('#inviteForm').each(function(){

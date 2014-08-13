@@ -225,6 +225,18 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
       });
   });
 
+  function getInviteClaimedFlashMessageInfo() {
+    var facebookClaimed =
+      $scope.rewards[1].status == "sending" ||
+      $scope.rewards[1].status == "sent" ||
+      $scope.rewards[1].status == 'ready';
+    if (facebookClaimed) {
+      return "Claim your reward now!";
+    } else {
+      return "Connect with Facebook to claim your reward!";
+    }
+  }
+
   $rootScope.$on('claimRewards', function(callback) {
     $scope.claimRewards()
       .then(callback);
@@ -234,8 +246,11 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
     $scope.selectedReward = 1;
   })
 
-  $scope.$on('update-rewards', function () {
+  $scope.$on('invite-claimed', function () {
     $scope.updateRewards()
+      .then(function () {
+        FlashMessages.add({title: "Invite claimed!", info: getInviteClaimedFlashMessageInfo()});
+      })
       .then(processReadyRewards);
   })
 
