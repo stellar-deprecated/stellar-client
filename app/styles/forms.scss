@@ -1,0 +1,196 @@
+label {
+  font-weight: $heavy-weight;
+  font-size: 15px;
+  line-height: 42px;
+}
+
+button {
+  width: 100%;
+  margin-bottom: 40px;
+  font-weight: $heavy-weight;
+  font-size: 17px;
+}
+
+input[type="text"],
+input[type="password"] {
+  height: 42px;
+  border-radius: 2px;
+  color: $dark-grey;
+
+  &:focus {
+    box-shadow: none;
+    border-color: $stellar-blue;
+
+    + i {
+      color: $stellar-blue;
+    }
+  }
+
+  &.input-error {
+    border-color: $error;
+
+    &:focus {
+      border-color: $error;
+
+      + i {
+        color: $error;
+      }
+    }
+  }
+}
+
+button, 
+.btn, 
+.stellar-button, 
+.btn-stellar {
+  height: 45px;
+  font-weight: $heavy-weight;
+  font-size: 17px;
+  color: black;
+  background-color: $white-grey;
+  border-bottom-color: $grey;
+  border-radius: 2px;
+  box-shadow: 0 -1px 0 0 rgba(black, 0.1) inset;
+  @include transition(border-color 200ms ease-in-out,
+    background-color 200ms ease-in-out,
+    color 200ms ease-in-out,
+    box-shadow 200ms ease-in-out);
+
+  i {
+    color: $grey;
+    @include transition(color 200ms ease-in-out);
+  }
+
+  &:hover {
+    border-color: $stellar-blue;
+    background-color: $stellar-blue;
+    border-bottom-color: $dark-grey;
+    color: white;
+    box-shadow: 0 -1px 0 0 rgba(black, 0) inset;
+
+    i {
+      color: white;
+    }
+  }
+
+  &:focus {
+    outline: none;
+    background-color: $white-grey;
+    color: black;
+
+    &:hover {
+      color: white;
+      background-color: $stellar-blue;
+    }
+  }
+
+  &.cancel {
+    background-color: $light-grey;
+
+    &:hover {
+      border-color: $error;
+      color: $error;
+
+      i {
+        color: $error;
+      }
+    }
+
+    &:focus {
+      outline: none;
+
+      &:hover {
+        color: $error;
+      }
+    }
+  }
+}
+
+.stellar-form {
+  margin-top: 0;
+
+  .form-group {
+    margin-top: 0;
+    margin-bottom: 5px;
+
+    .errors {
+      height: 40px;
+
+      .tip {
+        width: 100%;
+        @media (min-width: $screen-sm-min) {
+          width: auto;
+        }
+        margin-left:15px;
+        margin-right: 15px;
+        display: inline;
+        position: absolute;
+        left: 0px;
+        bottom: 8px;
+        font-weight: $heavy-weight;
+        font-size: 14px;
+        background-color: $error;
+        color: white;
+        line-height: 20px;
+        padding: 4px 12px;
+        border-radius: 2px;
+        @include transition(opacity 200ms ease-in-out);
+
+        &:empty {
+          opacity: 0;
+        }
+
+        &:before {
+          border: solid;
+          border-color: $error transparent;
+          border-width: 6px 6px 0 6px;
+          bottom: -6px;
+          content: "";
+          position: absolute;
+        }
+
+        &.success {
+          background-color: $success;
+
+          &:before {
+            border-color: $success transparent;
+          }
+        }
+      }
+    }
+
+    .tip {
+      font-weight: $book-weight;
+      font-size: 14px;
+      color: $info-grey;
+      line-height: 42px;
+    }
+
+    .info {
+      padding-left: 0;
+
+      .status {
+        width: 40px;
+        height: 40px;
+
+        &.glyphicon,
+        &.icon {
+          padding: 12px 12px;
+        }
+
+        &.glyphicon-none:before,
+        &.icon-none:before {
+          content: "\e013";
+          opacity: 0;
+        }
+      }
+    }
+  }
+
+  .form-control[disabled],
+  .form-control[readonly],
+  fieldset[disabled] .form-control {
+    cursor: text;
+    background-color: white;
+  }
+}

@@ -8,7 +8,9 @@
             <h1 class="title">Log in</h1>
         </div>
 
-        <form role="form" class="form-horizontal stellar-form" ng-controller="LoginCtrl">
+        <iframe name="chrome-password-manager-fix" src="about:blank" style="display:none;"></iframe>
+        <form role="form" class="form-horizontal stellar-form" ng-controller="LoginCtrl" ng-submit="attemptLogin()"
+            action="chrome-password-manager-fix.html" method="post" target="chrome-password-manager-fix">
             <div class="form-group">
                 <div class="row">
                     <div class="errors col-sm-offset-3 col-sm-6">
@@ -47,7 +49,7 @@
             <div class="form-group">
                 <div class="row">
                     <div class="col-sm-offset-3 col-sm-6">
-                        <button type="submit" class="stellar-button btn btn-default" ng-click="attemptLogin()">{{attemptLogin.isLoading() ? 'Logging in...' : 'Log in'}}</button>
+                        <button type="submit" class="stellar-button btn btn-default">{{asyncLogin.isLoading() ? 'Logging in...' : 'Log in'}}</button>
                     </div>
                 </div>
             </div>

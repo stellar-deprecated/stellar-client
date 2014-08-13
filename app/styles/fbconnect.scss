@@ -3,7 +3,7 @@
   text-align: center;
 
   .fbbutton {
-    width: 270px;
+    width: 275px;
     line-height: 24px;
     color: white;
     background-color: #3C569B;
@@ -12,6 +12,10 @@
     border-radius: 2px;
     border: none;
     font-family: "lucida grande","tahoma","verdana","arial","sans-serif";
+    margin: 0;
+    &:hover {
+      background-color:darken(#3C569B, 5);
+    }
 
     .fblogo {
       font-size: 26px;

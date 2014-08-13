@@ -6,6 +6,8 @@ var exec        = require('child_process').exec;
 var mergeStream = require('merge-stream');
 var git         = require('git-rev');
 var karma       = require('karma').server;
+var _           = require('lodash');
+var fs          = require('fs');
 
 // load plugins
 var $ = require('gulp-load-plugins')();
@@ -42,7 +44,7 @@ gulp.task('scripts:lint', function () {
         .pipe($.size());
 });
 
-gulp.task('scripts:unminified', ['scripts:templateCache'], function () {
+gulp.task('scripts:unminified', ['ensure_config', 'scripts:templateCache'], function () {
     return gulp.src('app/**/*.html')
         .pipe($.useref.assets({
             searchPath: ['.tmp', 'app'],
@@ -140,6 +142,19 @@ gulp.task('config', function() {
         .pipe(gulp.dest('app/scripts'))
 });
 
+gulp.task('ensure_config', function() {
+    if(!fs.existsSync("app/scripts/config.js")) {
+        return gulp.start('config-stg');
+    };
+});
+
+_(['dev', 'stg', 'prd']).each(function(env) {
+    gulp.task('config-' + env, function() {
+        process.env.NODE_ENV = env;
+        gulp.start('config');
+    });
+});
+
 gulp.task('clean', function () {
     return gulp.src(['.tmp', 'dist'], { read: false }).pipe($.clean());
 });
@@ -182,7 +197,7 @@ gulp.task('wiredep', function () {
         .pipe(gulp.dest('app'));
 });
 
-gulp.task('watch', ['connect', 'serve'], function () {
+gulp.task('watch', ['ensure_config', 'connect', 'serve'], function () {
     var server = $.livereload();
 
     // watch for changes
