@@ -9,10 +9,10 @@ sc.controller('TaskMessageCtrl', function ($rootScope, $scope, $state, $filter, 
                 return "Your friend sent you an invite code.";
             },
             getSubtext: function () {
-                return "Enter it and receive your remaining stellars immediately.";
+                return "Get your bonus stellars now!";
             },
             getButtonText: function () {
-                return "Claim Reward";
+                return "Claim stellars";
             },
             action: function () {
                 console.log('hello');
@@ -22,10 +22,12 @@ sc.controller('TaskMessageCtrl', function ($rootScope, $scope, $state, $filter, 
         },
         hasNewInvites: {
             getText: function () {
-                return "You have received " + $scope.newInvites + " new invite for your friends!";
+                if($scope.newInvites>1)
+                    return "You have received " + $scope.newInvites + " new invites for your friends!";
+                else return "You have received " + $scope.newInvites + " new invite for your friends!";
             },
             getSubtext: function () {
-                return "You will receive stellars for every authenticated friend you invite.";
+                return "";
             },
             getButtonText: function () {
                 return "Share";
