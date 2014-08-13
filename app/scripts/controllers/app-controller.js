@@ -29,8 +29,10 @@ sc.controller('AppCtrl', function($scope, $rootScope, stNetwork, session, $state
         }
     });
 
-    $($element).click(function(){ session.act(); });
-    $($element).keypress(function(){ session.act(); });
+    if(!session.isPersistent()) {
+        $($element).click(function(){ session.act(); });
+        $($element).keypress(function(){ session.act(); });
+    }
 
     function reset()
     {
