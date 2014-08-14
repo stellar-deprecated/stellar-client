@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('RegistrationCtrl', function($rootScope, $scope, $state, $stateParams, $timeout, $http, $q, session, debounce, singletonPromise, Wallet, FlashMessages, invites) {
+sc.controller('RegistrationCtrl', function($rootScope, $scope, $state, $stateParams, $timeout, $http, $q, session, debounce, singletonPromise, Wallet, FlashMessages, invites, gettext) {
   // Provide a default value to protect against stale config files.
   Options.MAX_WALLET_ATTEMPTS = Options.MAX_WALLET_ATTEMPTS || 3;
 
@@ -53,7 +53,7 @@ sc.controller('RegistrationCtrl', function($rootScope, $scope, $state, $statePar
         function (response){
           switch(response && response.code) {
             case 'already_taken':
-              $scope.errors.usernameErrors.push('This username is taken.');
+              $scope.errors.usernameErrors.push(gettext('This username is taken.'));
               $scope.status.usernameAvailable = false;
               break;
             default:

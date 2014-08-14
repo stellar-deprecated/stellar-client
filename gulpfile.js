@@ -8,6 +8,7 @@ var git         = require('git-rev');
 var karma       = require('karma').server;
 var _           = require('lodash');
 var fs          = require('fs');
+var gettext     = require('gulp-angular-gettext');
 
 // load plugins
 var $ = require('gulp-load-plugins')();
@@ -311,4 +312,19 @@ gulp.task('test', function (done) {
     }, done);
 });
 
+gulp.task('pot', function () {
+  return gulp.src([
+      'app/*.html',
+      'app/states/*.html',
+      'app/templates/*.html',
+      'app/scripts/**/*.js'
+    ])
+    .pipe(gettext.extract('template.pot'))
+    .pipe(gulp.dest('po/'));
+});
 
+gulp.task('translations', function () {
+  return gulp.src('po/pl.po')
+    .pipe(gettext.compile())
+    .pipe(gulp.dest('app/scripts/translations/'));
+});
