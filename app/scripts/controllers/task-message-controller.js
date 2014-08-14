@@ -15,7 +15,6 @@ sc.controller('TaskMessageCtrl', function ($rootScope, $scope, $state, $filter, 
                 return "Claim stellars";
             },
             action: function () {
-                console.log('hello');
                 $rootScope.$broadcast('openFacebookReward');
                 $scope.task = null;
             }
