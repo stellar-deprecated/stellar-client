@@ -45,15 +45,12 @@ sc.controller('TaskMessageCtrl', function ($rootScope, $scope, $state, $filter, 
         if (!user) {
             return;
         }
-        user.refresh()
-            .then(function () {
-                if (user.getInviteCode() && !user.hasClaimedInviteCode()) {
-                    $scope.task = $scope.inviteTasks['hasInviteCode'];
-                } else if (user.getNewInvites().length > 0) {
-                    $scope.newInvites = user.getNewInvites().length;
-                    $scope.task = $scope.inviteTasks['hasNewInvites'];
-                }
-            })
+        if (user.getInviteCode() && !user.hasClaimedInviteCode()) {
+            $scope.task = $scope.inviteTasks['hasInviteCode'];
+        } else if (user.getNewInvites().length > 0) {
+            $scope.newInvites = user.getNewInvites().length;
+            $scope.task = $scope.inviteTasks['hasNewInvites'];
+        }
     }
 
     $scope.$on('userLoaded', function () {
