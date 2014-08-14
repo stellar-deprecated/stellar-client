@@ -44,7 +44,7 @@ gulp.task('scripts:lint', function () {
         .pipe($.size());
 });
 
-gulp.task('scripts:unminified', ['ensure_config', 'scripts:templateCache'], function () {
+gulp.task('scripts:unminified', ['scripts:templateCache'], function () {
     return gulp.src('app/**/*.html')
         .pipe($.useref.assets({
             searchPath: ['.tmp', 'app'],
