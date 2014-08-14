@@ -35,17 +35,6 @@
                     <span>Account</span>
                 </div>
                 <div class="row">
-                    <div class="settings-label col-md-3 col-xs-6">EMAIL</div>
-                    <div class="settings-control col-md-9 col-xs-6">
-                        <div class="icon-col">
-                            <span class="icon icon-email"/>
-                        </div>
-                        <span>{{email ? email : 'Add your email!'}}</span>
-                        <!-- TODO: show if verified -->
-                        <span class="verified-email-status icon icon-tick" ng-show="email"/>
-                    </div>
-                </div>
-                <div class="row">
                     <div class="settings-label col-md-3 col-xs-6">RECOVERY TOKEN</div>
                     <div class="settings-control col-md-9 col-xs-6">
                         <div class="icon-col">
@@ -82,21 +71,62 @@
                     <span>Security</span>
                 </div>
 
-                <!-- TODO change email
                 <div class="row">
-                    <div class="settings-label col-md-6 col-xs-6">EMAIL</div>
-                    <div class="settings-control col-md-6 col-xs-6">
-                        <div class="icon-col">
-                            <span class="icon icon-email"/>
-                        </div>
-                        <div class="change-email-control" ng-show='!changingEmail'>andrew@stellar.org</div>
-                        <input class="change-email-control form-control" ng-show="changingEmail"></input>
-                        <div class="secondary-action" ng-click='changingEmail = !changingEmail'>
-                            <a href="">{{ changingEmail ? 'Cancel' : 'Change Email'}}</a>
+                    <div class="settings-label col-md-3 col-xs-6">EMAIL</div>
+                    <div class="settings-control col-md-9 col-xs-6">
+                        <div class="row">
+                            <div class="icon-col col-xs-1">
+                                <span class="icon icon-email"/>
+                            </div>
+                            <!-- User hasn't added email yet -->
+                            <div class="col-xs-10" ng-show="getEmailState() == 'none'">
+                                <a href="">Add your email</a>
+                            </div>
+                            <!-- Show current email with verified check mark (if verified) -->
+                            <div class="col-xs-10" ng-show="getEmailState() == 'added'">
+                                <div>
+                                    <span class="change-email-control" ng-show='!changingEmail'>andrew@stellar.org</span>
+                                    <span class="verified-email-status icon icon-tick"> Verified</span>
+                                </div>
+                                <div class="secondary-action">
+                                    <a href="">Change email</a>
+                                </div>
+                            </div>
+                            <!-- Change email input -->
+                            <div class="col-xs-10" ng-show="getEmailState() == 'change'">
+                                <div class="row">
+                                    <div class="col-md-5 col-xs-12">
+                                        <input type="text" class="change-email-input form-control" ng-model="newEmail"></input>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 col-xs-12 col-md-push-1">
+                                        <button class="btn btn-default stellar-button settings-confirm-button">Confirm</button>
+                                    </div>
+                                    <div class="settings-cancel-button col-md-1 col-xs-1 col-md-pull-4">
+                                        <a href="">Cancel</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Verify email input -->
+                            <div class="col-xs-10" ng-show="getEmailState() == 'verify'">
+                                <div class="row">
+                                    <div class="col-md-5 col-xs-12">
+                                        <input type="text" class="change-email-input form-control" ng-model="recoveryCode"></input>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 col-xs-12 col-md-push-1">
+                                        <button class="btn btn-default stellar-button settings-confirm-button">Confirm</button>
+                                    </div>
+                                    <div class="settings-cancel-button col-md-1 col-xs-1 col-md-pull-4">
+                                        <a href="">Cancel</a>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-                -->
 
                 <!-- TODO change password
                 <div class="row">
