@@ -29,84 +29,70 @@
         <div class="client-section">
             <div class="settings-section">
                 <div class="title">
-                    <span class="glyphicon glyphicon-credit-card"/>
+                    <div class="icon-col">
+                        <span class="glyphicon glyphicon-credit-card"/>
+                    </div>
                     <span>Account</span>
                 </div>
                 <div class="row">
-                    <div class="settings-label col-sm-3">EMAIL</div>
-                    <div class="settings-control col-sm-9">
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <span class="icon icon-email"/>
-                                <span>{{email ? email : 'Add your email!'}}</span>
-                                <!-- TODO: show if verified -->
-                                <span class="verified-email-status icon icon-tick" ng-show="email"/>
-                            </div>
+                    <div class="settings-label col-md-3 col-xs-6">EMAIL</div>
+                    <div class="settings-control col-md-9 col-xs-6">
+                        <div class="icon-col">
+                            <span class="icon icon-email"/>
                         </div>
+                        <span>{{email ? email : 'Add your email!'}}</span>
+                        <!-- TODO: show if verified -->
+                        <span class="verified-email-status icon icon-tick" ng-show="email"/>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="settings-label col-sm-3">RECOVERY TOKEN</div>
-                    <div class="settings-control col-sm-4">
-                        <div class="row">
-                            <div class="col-sm-1">
-                                <span class="icon icon-key"/>
-                            </div>
-                            <div class="col-sm-8">
-                                <span id="recovertoggle" class="error-block" data-toggle="tooltip" data-placement="right" data-template='<div class="tooltip error-tip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>' st-toggle ctrl="toggle.recover"></span>
-                            </div>
+                    <div class="settings-label col-md-3 col-xs-6">RECOVERY TOKEN</div>
+                    <div class="settings-control col-md-9 col-xs-6">
+                        <div class="icon-col">
+                            <span class="icon icon-key"/>
                         </div>
+                        <span id="recovertoggle" class="error-block" data-toggle="tooltip" data-placement="right" data-template='<div class="tooltip error-tip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>' st-toggle ctrl="toggle.recover"></span>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="settings-label col-sm-3">SEND EMAILS</div>
-                    <div class="settings-control col-sm-4">
-                        <div class="row">
-                            <div class="col-sm-1">
-                                <span class="icon icon-email"/>
-                            </div>
-                            <div class="col-sm-8">
-                                <span id="emailtoggle" class="error-block" data-toggle="tooltip" data-placement="right" data-template='<div class="tooltip error-tip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>' st-toggle ctrl="toggle.email"></span>
-                            </div>
+                    <div class="settings-label col-md-3 col-xs-6">SEND EMAILS</div>
+                    <div class="settings-control col-md-9 col-xs-6">
+                        <div class="icon-col">
+                            <span class="icon icon-email"/>
                         </div>
+                        <span id="emailtoggle" class="error-block" data-toggle="tooltip" data-placement="right" data-template='<div class="tooltip error-tip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>' st-toggle ctrl="toggle.email"></span>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="settings-label col-sm-3">FEDERATION</div>
-                    <div class="settings-control col-sm-4">
-                        <div class="row">
-                            <div class="col-sm-1">
-                                <span class="icon icon-user"/>
-                            </div>
-                            <div class="col-sm-8">
-                                <span id="federatetoggle" class="error-block" data-toggle="tooltip" data-placement="right" data-template='<div class="tooltip error-tip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>' st-toggle ctrl="toggle.federate"></span>
-                            </div>
+                    <div class="settings-label col-md-3 col-xs-6">FEDERATION</div>
+                    <div class="settings-control col-md-9 col-xs-6">
+                        <div class="icon-col">
+                            <span class="icon icon-user"/>
                         </div>
+                        <span id="federatetoggle" class="error-block" data-toggle="tooltip" data-placement="right" data-template='<div class="tooltip error-tip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>' st-toggle ctrl="toggle.federate"></span>
                     </div>
                 </div>
             </div>
 
             <div class="settings-section">
                 <div class="title">
-                    <span class="icon icon-lock"/>
+                    <div class="icon-col">
+                        <span class="icon icon-lock"/>
+                    </div>
                     <span>Security</span>
                 </div>
 
                 <!-- TODO change email
                 <div class="row">
-                    <div class="settings-label col-sm-3">EMAIL</div>
-                    <div class="settings-control col-sm-9">
-                        <div class="row">
-                            <div class="col-sm-1 icon-col">
-                                <span class="icon icon-email"/>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="change-email-control" ng-show='!changingEmail'>andrew@stellar.org</div>
-                                <input class="change-email-control form-control" ng-show="changingEmail"></input>
-                                <div class="secondary-action" ng-click='changingEmail = !changingEmail'>
-                                    <a href="">{{ changingEmail ? 'Cancel' : 'Change Email'}}</a>
-                                </div>
-                            </div>
+                    <div class="settings-label col-md-6 col-xs-6">EMAIL</div>
+                    <div class="settings-control col-md-6 col-xs-6">
+                        <div class="icon-col">
+                            <span class="icon icon-email"/>
+                        </div>
+                        <div class="change-email-control" ng-show='!changingEmail'>andrew@stellar.org</div>
+                        <input class="change-email-control form-control" ng-show="changingEmail"></input>
+                        <div class="secondary-action" ng-click='changingEmail = !changingEmail'>
+                            <a href="">{{ changingEmail ? 'Cancel' : 'Change Email'}}</a>
                         </div>
                     </div>
                 </div>
@@ -158,16 +144,19 @@
                 -->
 
                 <div class="row">
-                    <div class="settings-label col-sm-3">SECRET KEY</div>
-                    <div class="settings-control col-sm-4 row">
-                        <div class="col-sm-1">
-                            <span class="icon icon-key"/>
-                        </div>
-                        <div class="col-sm-10">
-                            <span>{{reveal ? secretKey : '***********************'}}</span>
-                            <div class="secondary-action">
-                                <span id="reveal-key" ng-click="reveal = !reveal">{{reveal ? 'Hide' : 'Reveal'}}</span>
+                    <div class="settings-label col-md-3 col-xs-6">SECRET KEY</div>
+                    <div class="settings-control col-md-9 col-xs-6">
+                        <div ng-hide="reveal">
+                            <div class="icon-col">
+                                <span class="icon icon-key"/>
                             </div>
+                            <span>*************</span>
+                        </div>
+                        <div ng-show="reveal">
+                            <input type="text" class="form-control stellar-input" value="{{secretKey}}"/>
+                        </div>
+                        <div class="secondary-action">
+                            <span id="reveal-key" ng-click="reveal = !reveal">{{reveal ? 'Hide' : 'Reveal'}}</span>
                         </div>
                     </div>
                 </div>

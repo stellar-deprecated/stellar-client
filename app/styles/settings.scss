@@ -15,23 +15,28 @@
     }
 }
 
-
 .settings-section {
     .title {
         font-size: 18px;
         font-weight: bold;
         padding-bottom:15px;
-        .glyphicon {
-            padding-right:5px;
-        }    }
+    }
+
+    .icon-col {
+        width: 25px;
+        display: inline-block;
+    }
+
     button[type="submit"] {
         float:left;
         margin:auto;
     }
-    > .row {
+
+    .row {
         padding: 15px 0 15px 0;
         margin: 0;
         border-bottom: 1px solid fade_out($grey-border, 0.5);
+
         > div:first-child {
             padding-left: 0;
         }
@@ -43,36 +48,25 @@
             display:inline-block;
         }
 
-        .change-email-control {
-            height:34px;
-        }
-
-        .change-password-control {
-            .row:first-of-type {
-                margin-top:0px;
-            }
-            .row {
-                margin-top: 15px;
-                margin-bottom: 15px;
-            }
-        }
-
         .verified-email-status {
             margin-left: 10px;
         }
 
-        .icon-col {
-            max-width: 20px;
-        }
-
         .icon-key {
-            font-size: 10px;
+            font-size: 9px;
         }
 
         .icon-email {
             font-size: 12px;
-            padding-right: 10px;
         }
+    }
+
+    .settings-label {
+        display: inline-block;
+    }
+
+    .settings-control {
+        display: inline-block;
     }
 
     .error-tip {
