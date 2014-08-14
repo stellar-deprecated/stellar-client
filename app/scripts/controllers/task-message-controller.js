@@ -42,6 +42,9 @@ sc.controller('TaskMessageCtrl', function ($rootScope, $scope, $state, $filter, 
 
     function loadTasks() {
         var user = session.getUser();
+        if (!user) {
+            return;
+        }
         user.refresh()
             .then(function () {
                 if (user.getInviteCode() && !user.hasClaimedInviteCode()) {
