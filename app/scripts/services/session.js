@@ -65,6 +65,7 @@ sc.service('session', function($rootScope, $http, $timeout, stNetwork, Wallet, c
     this.put('signingKeys', signingKeys);
     this.put('address', signingKeys.address);
 
+    /*
     // Store a user object for the currently authenticated user
     UserPrivateInfo.load(this.get('username'), this.get('wallet').keychainData.updateToken)
       .then(function (user) {
@@ -73,6 +74,7 @@ sc.service('session', function($rootScope, $http, $timeout, stNetwork, Wallet, c
       .then(function () {
         $rootScope.$broadcast('userLoaded');
       })
+    */
 
     // check for the most up to date fairy address
     checkFairyAddress.bind(this)();
