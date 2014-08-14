@@ -31,7 +31,7 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, session
         case 'reward_error':
         case 'reward_queued':
           $scope.reward.title = "You connected your Facebook!";
-          getPlaceInLine();
+          $scope.reward.subtitle = "You are on the waiting list! You will get your stellars soon.";
           break;
         case 'sending':
           $scope.reward.title = "You connected your Facebook!";
@@ -110,7 +110,7 @@ function claim(data) {
     .error(function (response) {
       facebookLoginError(response);
     });
-}
+  }
 
   function facebookLoginError(response) {
     $scope.loading = false;
@@ -138,27 +138,6 @@ function claim(data) {
     } else {
       $scope.reward.status = 'incomplete';
     }
-  }
-
-  function getPlaceInLine() {
-    // Load the status of the user's rewards.
-    var config = {
-      params:
-        {
-          username: session.get('username')
-        }
-    };
-
-    $http.get(Options.API_SERVER + '/claim/placeInLine', config)
-      .success(function (result) {
-
-            $scope.reward.subtitle = "You are on the waiting list! You will get your stellars soon.";
-        /* if (result.message > 1) {
-          $scope.reward.subtitle = "You are on the waiting list! Approximate waiting time: " + result.message + " days.";
-        } else {
-          $scope.reward.subtitle = "You are on the waiting list! You will get your stellars tomorrow.";
-        } */
-      });
   }
 
   // if
