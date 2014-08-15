@@ -11,7 +11,7 @@
                      <input id="invite-email" class="form-control" ng-model="inviteEmail" name="email" type="email" ng-change="emailError = null" data-toggle="tooltip" data-placement="top" data-template='<div class="tooltip error-tip" role="tooltip"><div class="tooltip-arrow top"></div><div class="tooltip-inner"></div></div>'/>
                 </div>
                 <div class="col-sm-4">
-                    <button type="submit" class="btn btn-default stellar-button" ng-disabled="attemptSendInvite.isLoading() || getUnsentInvites().length <= 0" ng-click="attemptSendInvite()">{{attemptSendInvite.isLoading() ? 'Sending...' : getUnsentInvites().length + ' invites left'}}</button>
+                    <button type="submit" class="btn btn-default" ng-disabled="attemptSendInvite.isLoading() || getUnsentInvites().length <= 0" ng-click="attemptSendInvite()">{{attemptSendInvite.isLoading() ? 'Sending...' : getUnsentInvites().length + ' invites left'}}</button>
                 </div>
             </div>
         </form>
