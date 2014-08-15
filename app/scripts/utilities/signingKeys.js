@@ -8,6 +8,7 @@ var SigningKeys = function(seed){
   if(seed){
     seed = new stellar.Seed().parse_json(seed);
   } else {
+    Util.ensureEntropy();
     seed = new stellar.Seed().random();
   }
 

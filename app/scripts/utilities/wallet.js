@@ -197,6 +197,8 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
 
   Wallet.prototype.saveLocal = function() {
     var self = this;
+
+    Util.ensureEntropy();
     var loginWalletKey = sjcl.random.randomWords(Wallet.SETTINGS.KEY_SIZE / 4);
     var encryptedWalletKey = Wallet.encryptData(this.key, loginWalletKey);
 
@@ -389,6 +391,7 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
     var cipher = new sjcl.cipher[Wallet.SETTINGS.CIPHER_NAME](key);
 
     // Encrypt the blob data in CCM mode using AES and a random 96bit IV.
+    Util.ensureEntropy();
     var rawIV = sjcl.random.randomWords(3);
     var rawCipherText = sjcl.mode[Wallet.SETTINGS.MODE].encrypt(cipher, rawData, rawIV);
 
