@@ -87,38 +87,22 @@
                                 <div>
                                     <span class="change-email-control" ng-show='!changingEmail'>{{email}}</span>
                                     <span class="verified-email-status icon icon-tick" ng-show="emailVerified"> Verified</span>
-                                    <a href="" ng-show="!emailVerified">Verify</a>
+                                    <a href="" ng-show="!emailVerified" ng-click="setEmailState('verify')">Verify</a>
                                 </div>
                                 <div class="secondary-action">
                                     <a href="" ng-click="setEmailState('change')">Change email</a>
                                 </div>
                             </div>
-                            <!-- Change email input -->
-                            <div class="col-xs-10" ng-show="getEmailState() == 'change' || getEmailState() == 'add'">
+                            <!-- Input layout (for add/change email and verify recovery code) -->
+                            <div class="col-xs-10" ng-show="getEmailState() == 'change' || getEmailState() == 'add' || getEmailState() == 'verify'">
                                 <div class="row">
                                     <div class="col-md-5 col-xs-12">
-                                        <input type="text" class="change-email-input form-control" ng-model="newEmail"></input>
+                                        <input placeholder="{{getEmailState() == 'verify' ? 'Recovery Code' : 'Email'}}" type="text" class="change-email-input form-control" ng-model="newEmail"></input>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-4 col-xs-12 col-md-push-1">
                                         <button class="btn btn-default stellar-button settings-confirm-button" ng-click="emailAction()">{{updateEmail.isLoading() ? "Loading..." : "Confirm"}}</button>
-                                    </div>
-                                    <div class="settings-cancel-button col-md-1 col-xs-1 col-md-pull-4">
-                                        <a href="" ng-click="resetEmailState()">Cancel</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Verify email input -->
-                            <div class="col-xs-10" ng-show="getEmailState() == 'verify'">
-                                <div class="row">
-                                    <div class="col-md-5 col-xs-12">
-                                        <input type="text" class="change-email-input form-control" ng-model="recoveryCode"></input>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-4 col-xs-12 col-md-push-1">
-                                        <button class="btn btn-default stellar-button settings-confirm-button">{{updateEmail.isLoading() ? "Loading..." : "Confirm"}}</button>
                                     </div>
                                     <div class="settings-cancel-button col-md-1 col-xs-1 col-md-pull-4">
                                         <a href="" ng-click="resetEmailState()">Cancel</a>

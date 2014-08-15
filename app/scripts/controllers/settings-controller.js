@@ -28,30 +28,43 @@ sc.controller('SettingsCtrl', function($scope, $http, $q, $timeout, $state, sess
       return $scope.addEmail();
     } else if ($scope.emailState == 'change') {
       return $scope.changeEmail();
+    } else if ($scope.emailState == 'verify') {
+      return $scope.verifyEmail();
     } else {
       return;
     }
   });
 
+  $scope.verifyEmail = singletonPromise(function () {
+    // newEmail is the model for the input element they're entering their code into
+    return verifyEmail($scope.newEmail)
+      .then(function () {
+        $scope.refreshAndInitialize();
+      })
+  });
+
   $scope.addEmail = singletonPromise(function () {
     return addEmail($scope.newEmail)
       .then(function () {
-        return session.getUser().refresh();
-      })
-      .then(function () {
-        initializeSettings();
+        $scope.refreshAndInitialize();
       })
   });
 
   $scope.changeEmail = singletonPromise(function () {
-    return changeEmail()
+    return changeEmail($scope.newEmail)
       .then(function () {
-        return session.getUser().refresh();
-      })
-      .then(function () {
-        initializeSettings();
+        $scope.refreshAndInitialize();
       })
   });
+
+  function verifyEmail (code) {
+    var data = {
+      username: session.get('username'),
+      updateToken: session.get('wallet').keychainData.updateToken,
+      recoveryCode: code
+    }
+    return $http.post(Options.API_SERVER + "/user/verifyEmail", data);
+  }
 
   function addEmail (email) {
     var data = {
@@ -69,6 +82,13 @@ sc.controller('SettingsCtrl', function($scope, $http, $q, $timeout, $state, sess
       email: email
     }
     return $http.post(Options.API_SERVER + "/user/changeEmail", data);
+  }
+
+  $scope.refreshAndInitialize = function () {
+    return session.getUser().refresh()
+      .then(function () {
+        initializeSettings();
+      })
   }
 
   // TODO: move into user object and initialize settings
