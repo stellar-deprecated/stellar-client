@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('PasswordCtrl', function($scope, passwordStrengthComputations) {
+sc.controller('PasswordCtrl', function($scope, passwordStrengthComputations, badPasswords) {  
   $scope.loading = false;
   $scope.passwordConfirmation = '';
 
@@ -27,10 +27,23 @@ sc.controller('PasswordCtrl', function($scope, passwordStrengthComputations) {
     }
   };
 
+  passwordStrengthComputations.aspects.sameAsUsername = {
+    weight: 1,
+    strength: function(password) {
+      return $scope.data.username === password ? -1000 : 0
+    }
+  }
+
+  passwordStrengthComputations.aspects.dictionary = {
+    weight: 1,
+    strength: function(password) {
+      return badPasswords.contains(password) ? -1000 : 0
+    }
+  }
+
   $scope.checkPassword = function(){
     $scope.errors.passwordErrors = [];
     $scope.status.passwordValid = (passwordStrengthComputations.getStrength($scope.data.password) > 50);
-
     $scope.checkConfirmPassword();
   };
 
