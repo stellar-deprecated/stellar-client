@@ -38,6 +38,7 @@ angular.module('stellarClient').factory('UserPrivateInfo', function($http, $q, $
         this.inviteCode = data.inviteCode;
         this.claimedInviteCode = data.claimedInviteCode;
         this.inviterUsername = data.inviterUsername;
+        this.email = data.email;
         return $q.resolve;
     }
 
@@ -68,6 +69,14 @@ angular.module('stellarClient').factory('UserPrivateInfo', function($http, $q, $
     UserPrivateInfo.prototype.getNewInvites = function () {
         var invites = this.invites;
         return $filter('unseenInvitesFilter')(invites);
+    }
+
+    UserPrivateInfo.prototype.getEmailAddress = function () {
+        return this.email && this.email.address;
+    }
+
+    UserPrivateInfo.prototype.isEmailVerified = function () {
+        return this.email && this.email.verified;
     }
 
     return UserPrivateInfo;

@@ -80,20 +80,21 @@
                             </div>
                             <!-- User hasn't added email yet -->
                             <div class="col-xs-10" ng-show="getEmailState() == 'none'">
-                                <a href="">Add your email</a>
+                                <a href="" ng-click="setEmailState('add')">Add your email</a>
                             </div>
                             <!-- Show current email with verified check mark (if verified) -->
                             <div class="col-xs-10" ng-show="getEmailState() == 'added'">
                                 <div>
-                                    <span class="change-email-control" ng-show='!changingEmail'>andrew@stellar.org</span>
-                                    <span class="verified-email-status icon icon-tick"> Verified</span>
+                                    <span class="change-email-control" ng-show='!changingEmail'>{{email}}</span>
+                                    <span class="verified-email-status icon icon-tick" ng-show="emailVerified"> Verified</span>
+                                    <a href="" ng-show="!emailVerified">Verify</a>
                                 </div>
                                 <div class="secondary-action">
-                                    <a href="">Change email</a>
+                                    <a href="" ng-click="setEmailState('change')">Change email</a>
                                 </div>
                             </div>
                             <!-- Change email input -->
-                            <div class="col-xs-10" ng-show="getEmailState() == 'change'">
+                            <div class="col-xs-10" ng-show="getEmailState() == 'change' || getEmailState() == 'add'">
                                 <div class="row">
                                     <div class="col-md-5 col-xs-12">
                                         <input type="text" class="change-email-input form-control" ng-model="newEmail"></input>
@@ -101,10 +102,10 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-4 col-xs-12 col-md-push-1">
-                                        <button class="btn btn-default stellar-button settings-confirm-button">Confirm</button>
+                                        <button class="btn btn-default stellar-button settings-confirm-button" ng-click="emailAction()">{{updateEmail.isLoading() ? "Loading..." : "Confirm"}}</button>
                                     </div>
                                     <div class="settings-cancel-button col-md-1 col-xs-1 col-md-pull-4">
-                                        <a href="">Cancel</a>
+                                        <a href="" ng-click="resetEmailState()">Cancel</a>
                                     </div>
                                 </div>
                             </div>
@@ -117,10 +118,10 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-4 col-xs-12 col-md-push-1">
-                                        <button class="btn btn-default stellar-button settings-confirm-button">Confirm</button>
+                                        <button class="btn btn-default stellar-button settings-confirm-button">{{updateEmail.isLoading() ? "Loading..." : "Confirm"}}</button>
                                     </div>
                                     <div class="settings-cancel-button col-md-1 col-xs-1 col-md-pull-4">
-                                        <a href="">Cancel</a>
+                                        <a href="" ng-click="resetEmailState()">Cancel</a>
                                     </div>
                                 </div>
                             </div>

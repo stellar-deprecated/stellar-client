@@ -2,19 +2,76 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('SettingsCtrl', function($scope, $http, $q, $timeout, $state, session) {
+sc.controller('SettingsCtrl', function($scope, $http, $q, $timeout, $state, session, singletonPromise) {
   var wallet = session.get('wallet');
-
-  $scope.email = wallet.mainData.email;
 
   $scope.secretKey = wallet.keychainData.signingKeys.secret;
 
-  $scope.errors = {
-    emailError:           null,
-    passwordError:        null,
-    passwordConfirmError: null
-  };
+  $scope.getEmailState = function () {
+    return $scope.emailState;
+  }
 
+  $scope.setEmailState = function (state) {
+    $scope.emailState = state;
+  }
+
+  $scope.resetEmailState = function () {
+    if ($scope.email) {
+      $scope.emailState = 'added';
+    } else {
+      $scope.emailState = 'none';
+    }
+  }
+
+  $scope.emailAction = singletonPromise(function () {
+    if ($scope.emailState == 'add') {
+      return $scope.addEmail();
+    } else if ($scope.emailState == 'change') {
+      return $scope.changeEmail();
+    } else {
+      return;
+    }
+  });
+
+  $scope.addEmail = singletonPromise(function () {
+    return addEmail($scope.newEmail)
+      .then(function () {
+        return session.getUser().refresh();
+      })
+      .then(function () {
+        initializeSettings();
+      })
+  });
+
+  $scope.changeEmail = singletonPromise(function () {
+    return changeEmail()
+      .then(function () {
+        return session.getUser().refresh();
+      })
+      .then(function () {
+        initializeSettings();
+      })
+  });
+
+  function addEmail (email) {
+    var data = {
+      username: session.get('username'),
+      updateToken: session.get('wallet').keychainData.updateToken,
+      email: email
+    }
+    return $http.post(Options.API_SERVER + "/user/email", data);
+  }
+
+  function changeEmail (email) {
+    var data = {
+      username: session.get('username'),
+      updateToken: session.get('wallet').keychainData.updateToken,
+      email: email
+    }
+    return $http.post(Options.API_SERVER + "/user/changeEmail", data);
+  }
+
+  // TODO: move into user object and initialize settings
   function getSettings() {
     var data = {
       params: {
@@ -22,7 +79,7 @@ sc.controller('SettingsCtrl', function($scope, $http, $q, $timeout, $state, sess
         updateToken: session.get('wallet').keychainData.updateToken
       }
     }
-    $http.get(Options.API_SERVER + "/user/settings", data)
+    return $http.get(Options.API_SERVER + "/user/settings", data)
     .success(function (response) {
       $scope.toggle.recover.on = response.data.recover;
       $scope.toggle.federate.on = response.data.federate;
@@ -119,32 +176,9 @@ sc.controller('SettingsCtrl', function($scope, $http, $q, $timeout, $state, sess
     });
   }
 
-  function updateEmail(email) {
-    var promise = $q.defer();
-    if ($scope.newEmail == '') {
-      promise.resolve();
-    }
-    if (!Util.validateEmail($scope.newEmail)) {
-      promise.reject("Invalid email");
-    }
-    var data = {
-      email: email,
-      username: session.get('username'),
-      updateToken: wallet.keychainData.updateToken
-    };
-    return $http.post(Options.API_SERVER + '/user/email', data)
-    .success(function (response) {
-      promise.resolve();
-    })
-    .error(function (response) {
-      promise.reject(response.message);
-    });
-  }
-
   function updatePassword(password) {
     // TODO
   }
-
 
   function showError(wrapper, title) {
     wrapper.tooltip(
@@ -155,5 +189,14 @@ sc.controller('SettingsCtrl', function($scope, $http, $q, $timeout, $state, sess
       .tooltip('show');
   }
 
-  getSettings();
+  function initializeSettings() {
+    $scope.email = session.getUser().getEmailAddress();
+    $scope.emailVerified = session.getUser().isEmailVerified();
+    $scope.resetEmailState();
+  }
+
+  getSettings()
+    .then(function () {
+      initializeSettings();
+    })
 });
