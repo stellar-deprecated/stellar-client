@@ -14,14 +14,14 @@
                     <span ng-show="$root.accountStatus == 'loaded'" class="dash-balance-info ng-hide">Current Balance <b>Stellars</b></span>
                 </div>
                 <div class="dash-receive-container col-xs-12 col-sm-3 col-sm-pull-6">
-                    <button class="stellar-button btn btn-default" ng-click="openReceive()" ng-show="!showTab || tab != 'receive'">
+                    <button class="btn btn-default" ng-click="openReceive()" ng-show="!showTab || tab != 'receive'">
                         <i class="icon icon-receive"></i>
                         Receive
                     </button>
                     <div class="no-button" ng-show="showTab && tab == 'receive'"><i class="icon icon-receive"></i>Receive</div>
                 </div>
                 <div class="dash-send-container col-xs-12 col-sm-3">
-                    <button class="stellar-button btn btn-default" ng-click="openSend()" ng-show="!showTab || tab != 'send'">
+                    <button class="btn btn-default" ng-click="openSend()" ng-show="!showTab || tab != 'send'">
                         <i class="icon icon-send"></i>
                         Send
                     </button>
