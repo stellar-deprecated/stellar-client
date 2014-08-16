@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('SettingsCtrl', function($scope, $http, $q, $timeout, $state, session, singletonPromise) {
+sc.controller('SettingsCtrl', function($scope, $http, $q, $timeout, $state, session, singletonPromise, rewards) {
   var wallet = session.get('wallet');
 
   $scope.secretKey = wallet.keychainData.signingKeys.secret;
@@ -38,6 +38,7 @@ sc.controller('SettingsCtrl', function($scope, $http, $q, $timeout, $state, sess
   $scope.verifyEmail = singletonPromise(function () {
     // newEmail is the model for the input element they're entering their code into
     return verifyEmail($scope.newEmail)
+      .then(rewards.claimEmail())
       .then(function () {
         $scope.refreshAndInitialize();
       })
