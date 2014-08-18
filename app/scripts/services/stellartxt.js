@@ -30,7 +30,6 @@ module.factory('rpStellarTxt', ['$q', '$rootScope',
                 ];
                 var next = function (xhr, status) {
                     if (!urls.length) {
-                        txts[domain] = {};
                         txtPromise.reject(new Error("No stellar.txt found"));
                         return;
                     }
