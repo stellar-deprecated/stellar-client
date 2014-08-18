@@ -59,6 +59,39 @@
         }
       }
 
+      .dash-currency-line {
+        width: 80%;
+        margin-left: 10%;
+        float: left;
+        padding: 5px 0;
+        border-bottom: 1px solid $grey-border;
+
+        &:first-child {
+          .currency-balance {
+            font-size: 30px;
+            font-weight: $heavy-weight;
+          }
+          .currency-unit {
+            padding-top: 15px;
+          }
+        }
+
+        &:last-child {
+          border-bottom: 0;
+          padding-bottom: 0;
+        }
+
+        .currency-unit {
+          float: left;
+          color: $grey;
+        }
+
+        .currency-balance {
+          float: right;
+          font-size: 18px;
+        }
+      }
+
       button, .no-button {
         padding: 6px 24px;
         width: 100%;
