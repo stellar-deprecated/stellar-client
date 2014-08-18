@@ -1,4 +1,10 @@
+var ROBOTS = /GoogleBot|Bingbot|YandexBot|Baiduspider/i
+
 function isSupportedBrowser() {
+  // whitelist robots so they can scrape the login page
+  if(ROBOTS.test(navigator.userAgent))                { return true; }
+
+  if(typeof Float64Array === "undefined")             { return false; }
   if(!Modernizr.websockets)                           { return false; }
   if(!Modernizr.dataview)                             { return false; }
 

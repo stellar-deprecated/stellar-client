@@ -2,15 +2,15 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('UsernameRecoveryCtrl', function($rootScope, $scope, $http, $state, singletonPromise) {
+sc.controller('UsernameRecoveryCtrl', function($rootScope, $scope, $http, $state, $q, singletonPromise) {
 
     $scope.attemptRecovery = singletonPromise(function () {
         if (!$scope.email && recoverform.email.value) {
             $scope.emailError = "Invalid email";
-            return;
+            return $q.reject();
         } else if (!recoverform.email.value) {
             $scope.emailError = "Email address required";
-            return;
+            return $q.reject();
         }
 
         var config = {

@@ -32,9 +32,6 @@ sc.controller('RegistrationCtrl', function($rootScope, $scope, $state, $statePar
   $scope.validators = [];
   $scope.noEmailWarning = false;
 
-  var wallet = null;
-  var signingKeys = null;
-
   // Checks to see if the supplied username is available.
   // This function is debounced to prevent API calls before the user is finished typing.
   var checkUsername = debounce(2000, function(){
@@ -157,10 +154,15 @@ sc.controller('RegistrationCtrl', function($rootScope, $scope, $state, $statePar
 
   $scope.attemptRegistration = singletonPromise(function() {
     return validateInput()
-      .then(ensureEntropy)
-      .then(submitRegistration)
-      .then(createWallet)
-      .then(function(){
+      .then(function() {
+        var signingKeys = new SigningKeys();
+
+        return submitRegistration(signingKeys)
+          .then(function(response) {
+            return createWallet(response, signingKeys);
+          });
+      })
+      .then(function(wallet){
         // Initialize the session with the new wallet.
         session.login(wallet);
 
@@ -176,46 +178,7 @@ sc.controller('RegistrationCtrl', function($rootScope, $scope, $state, $statePar
       });
   });
 
-
-  /**
-   * Seed the sjcl random function with Math.random() in the case where we are
-   * on a crappy browser (IE) and we've yet to get enough entropy from the
-   * sjcl entropy collector.
-   *
-   * it sucks, but this is our last minute fix for IE support.  Our fix going
-   * forward will be to use window.msCrypto on ie11, and on ie10 request
-   * some mouse movement from the user (maybe?).
-   *
-   */
-  function ensureEntropy() {
-    var deferred = $q.defer();
-
-    var isEnough = function() {
-      return sjcl.random.isReady() !== sjcl.random._NOT_READY;
-    }
-
-    if(isEnough()){
-      deferred.resolve();
-      return deferred.promise;
-    }
-
-    for (var i = 0; i < 8; i++) {
-      sjcl.random.addEntropy(Math.random(), 32, "Math.random()");
-    }
-
-    if(isEnough()){
-      deferred.resolve();
-    } else {
-      $scope.errors.usernameErrors.push('Couldn\'t get enough entropy');
-      deferred.reject();
-    }
-
-    return deferred.promise;
-  }
-
-  function submitRegistration() {
-    signingKeys = new SigningKeys();
-
+  function submitRegistration(signingKeys) {
     var data = {
       username: $scope.data.username,
       // email: $scope.data.email,
@@ -264,11 +227,11 @@ sc.controller('RegistrationCtrl', function($rootScope, $scope, $state, $statePar
     }
   }
 
-  function createWallet(response) {
+  function createWallet(response, signingKeys) {
     var id = Wallet.deriveId($scope.data.username.toLowerCase(), $scope.data.password);
     var key = Wallet.deriveKey(id, $scope.data.username.toLowerCase(), $scope.data.password);
 
-    wallet = new Wallet({
+    var wallet = new Wallet({
       id: id,
       key: key,
       keychainData: {
@@ -283,7 +246,10 @@ sc.controller('RegistrationCtrl', function($rootScope, $scope, $state, $statePar
       }
     });
 
-    return tryWalletUpload(wallet);
+    return tryWalletUpload(wallet)
+      .then(function() {
+        return wallet;
+      });
   }
 
   function tryWalletUpload(wallet, attempts) {

@@ -30,11 +30,11 @@ sc.controller('InvitesCtrl', function($scope, $http, $q, $filter, session, invit
 
     $scope.inviteStatus = {
         success: {
-            text: "signed up!",
+            text: "Received stellars!",
             class: "success"
         },
         waiting: {
-            text: "accepted but waiting for Facebook auth",
+            text: "Waiting for Facebook auth",
             class: "pending"
         },
         pending: {
@@ -81,8 +81,8 @@ sc.controller('InvitesCtrl', function($scope, $http, $q, $filter, session, invit
             type: "cancel",
             text: "cancel",
             include: function (invite) {
-                // only include this action for invites that haven't been used yet
-                return !invite.inviteeId;
+                // only include this action for invites that haven't been claimed yet
+                return !invite.claimedAt;
             },
             action: function (invite) {
                 invites.cancel(invite)

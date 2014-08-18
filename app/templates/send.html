@@ -128,7 +128,7 @@
     <div class="form-group">
         <div class="row">
             <div class="col-sm-offset-3 col-sm-6 " ng-show="send.currency_code == 'STR'">
-                <button type="submit" ng-disabled="sendForm.$invalid || send.self || !send.recipient_resolved || account.max_spend.to_number() < send.amount * 1000000 || send.fund_status !== 'none'" l10n="l10n" class="btn btn-default submit stellar-button">Send</button>
+                <button type="submit" ng-disabled="sendForm.$invalid || send.self || !send.recipient_resolved || account.max_spend.to_number() < send.amount * 1000000 || send.fund_status !== 'none'" l10n="l10n" class="btn btn-default submit">Send</button>
             </div>
         </div>
     </div>
@@ -156,12 +156,12 @@
         <div class="call-to-action">
             <div class="row row-padding-small">
                 <div class="">
-                    <button type="submit" ng-click="send_confirmed()" ng-disabled="confirm_wait" l10n="l10n" class="btn btn-default stellar-button">Confirm transaction</button>
+                    <button type="submit" ng-click="send_confirmed()" ng-disabled="confirm_wait" l10n="l10n" class="btn btn-default">Confirm transaction</button>
                 </div>
             </div>
         </div>
     </div>
-    <button ng-click="cancelConfirm()" l10n="l10n" class="btn btn-block btn-default stellar-button change-button">Change</button>
+    <button ng-click="cancelConfirm()" l10n="l10n" class="btn btn-block btn-default change-button">Change</button>
 </group>
 <group ng-show="mode=='sending'" class="mode-sending">
     <img class="sending-rocket" src="./images/sending.gif"/>
@@ -201,7 +201,7 @@
 <div ng-show="mode=='stellarerror'" class="modalStatus error-modalStatus">
     <div class="modalStatus-title">Oops</div>
     <div class="modalStatus-info">{{error_message}}</div>
-    <button class="btn btn-default btn-stellar modalStatus-btn" ng-click="tryAgain()">Try again</button>
+    <button class="btn btn-default modalStatus-btn" ng-click="tryAgain()">Try again</button>
 </div>
 
 <div ng-show="mode=='status'" class="modalStatus">
@@ -248,7 +248,7 @@
         <p ng-switch on="engine_result"><span ng-switch-when="terNO_LINE" l10n="l10n">You have no trust line in this currency.</span><span ng-switch-default="ng-switch-default" l10n="l10n">Your transaction failed to clear, reason: {{engine_result_message}}</span></p>
     </group>
 
-    <button ng-show="tx_result=='cleared'" class="btn btn-default btn-stellar modalStatus-btn" ng-click="reset()">
+    <button ng-show="tx_result=='cleared'" class="btn btn-default modalStatus-btn" ng-click="reset()">
         <i class="icon icon-send"></i>
         Send another payment
     </button>

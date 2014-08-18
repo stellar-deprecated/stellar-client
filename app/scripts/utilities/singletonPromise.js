@@ -16,33 +16,34 @@
  * @param {Function} fun that will be serialized through the singletonPromise
  * @return {Function} a function that starts the operation, if not already running
  */
-angular.module('singletonPromise', []).value('singletonPromise', function (fun) {
-  var loading = false;
-  var result = function() {
-    if (loading) { return; }
+angular.module('singletonPromise', []).factory('singletonPromise', function ($q) {
+  return function(fun) {  
+    var loading = false;
+    var result = function() {
+      if (loading) { return; }
 
-    loading = true;
-
-    try {
-      return fun().finally(function() {
+      loading = true;
+      try {
+        return $q.when(fun()).finally(function() {
+          loading = false;
+        })
+      } catch (err) {
         loading = false;
-      })
-    } catch (err) {
-      loading = false;
-      throw err;
+        throw err;
+      }
     }
-  }
 
-  /**
-   * Returns whether the wrapped operation is in progress
-   *
-   * @return {Boolean} true if in progress
-   *
-   */
-  result.isLoading = function() {
-    return loading;
-  }
+    /**
+     * Returns whether the wrapped operation is in progress
+     *
+     * @return {Boolean} true if in progress
+     *
+     */
+    result.isLoading = function() {
+      return loading;
+    }
 
-  return result;
+    return result;
+  }
 })
 

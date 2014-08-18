@@ -48,7 +48,7 @@
         color: $happy;
       }
 
-      .stellar-button {
+      .btn {
         margin-top: 20px;
         width: 260px;
         background-color: white;
@@ -134,7 +134,7 @@
         @include transition(opacity 200ms ease-in-out);
       }
 
-      .stellar-button {
+      .btn {
         width: 300px;
       }
     }
