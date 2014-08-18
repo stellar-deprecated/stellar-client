@@ -14,30 +14,30 @@
     .controls {
       text-align: center;
 
-      &.top-row {
-        display: flex;
-      }
-
       > div {
         padding-left: 0;
         padding-right: 0;
+      }
 
-        &.dash-balance-container {
-          padding-top: 20px;
-        }
+      .single-balance-container {
+        padding-top: 20px;
+      }
 
-        &.dash-info-container {
-          margin-top: 16px;
-        }
+      .multi-balance-container {
+        margin-bottom: 35px;
+      }
 
-        &.dash-receive-container,
-        &.dash-send-container {
-          margin-top: 25px;
-        }
+      .dash-info-container {
+        margin-top: 16px;
+      }
 
-        &.img-container {
-          display: none;
-        }
+      .dash-receive-container,
+      .dash-send-container {
+        margin-top: 25px;
+      }
+
+      .img-container {
+        display: none;
       }
 
       .dash-balance {
@@ -53,6 +53,8 @@
         color: $info-grey;
         font-weight: $book-weight;
         font-size: 17px;
+        line-height: 45px;
+        margin-bottom: 10px;
 
         b {
           font-weight: $heavy-weight;
@@ -60,11 +62,9 @@
       }
 
       .dash-currency-line {
-        width: 80%;
-        margin-left: 10%;
-        float: left;
-        padding: 5px 0;
+        margin: 5px 10%;
         border-bottom: 1px solid $grey-border;
+        text-align: left;
 
         &:first-child {
           .currency-balance {
@@ -82,13 +82,15 @@
         }
 
         .currency-unit {
-          float: left;
+          text-align: left;
           color: $grey;
+          padding: 0;
         }
 
         .currency-balance {
-          float: right;
+          text-align: right;
           font-size: 18px;
+          padding: 0;
         }
       }
 
@@ -124,20 +126,24 @@
 
         > div {
           display: inline;
+        }
 
-          &.dash-receive-container,
-          &.dash-send-container {
-            margin-top: 0;
-          }
+        .dash-receive-container,
+        .dash-send-container {
+          margin-top: 0;
+        }
 
-          &.dash-info-container {
-            line-height: 45px;
-            margin-top: 0;
-          }
+        .dash-info-container {
+          line-height: 45px;
+          margin-top: 0;
+        }
 
-          &.img-container {
-            display: inline-block;
-          }
+        .multi-balance-container {
+          margin-bottom: 0;
+        }
+
+        .img-container {
+          display: inline-block;
         }
       }
 
