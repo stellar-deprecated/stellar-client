@@ -181,3 +181,7 @@ sc.controller('SettingsEmailCtrl', function($scope, $http, $q, $timeout, $state,
       .catch($scope.handleServerError($('#email-input')));
   };
 });
+
+sc.controller('SettingsPasswordCtrl', function($scope, $http) {
+  $scope.changePassword
+});
