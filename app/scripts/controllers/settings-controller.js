@@ -7,54 +7,7 @@ sc.controller('SettingsCtrl', function($scope, $http, $q, $timeout, $state, sess
 
   $scope.secretKey = wallet.keychainData.signingKeys.secret;
 
-  $scope.getEmailState = function () {
-    return $scope.emailState;
-  }
-
-  $scope.setEmailState = function (state) {
-    $scope.emailState = state;
-  }
-
-  $scope.resetEmailState = function () {
-    if ($scope.email) {
-      $scope.emailState = 'added';
-    } else {
-      $scope.emailState = 'none';
-    }
-  }
-
-  $scope.emailAction = singletonPromise(function () {
-    if ($scope.emailState == 'change') {
-      return changeEmail();
-    } else if ($scope.emailState == 'verify') {
-      return verifyEmail();
-    } else {
-      return;
-    }
-  });
-
-  function verifyEmail () {
-    // newEmail is the model for the input element they're entering their code into
-    var userRecoveryCode = $scope.newEmail;
-    return session.getUser().verifyEmail(userRecoveryCode)
-      .then(function (response) {
-        return session.get('wallet').storeRecoveryData(userRecoveryCode, response.data.data.serverRecoveryCode);
-      })
-      .then(function () {
-        return $scope.refreshAndInitialize();
-      })
-      .catch(handleServerError($('#email-input')));
-  };
-
-  function changeEmail () {
-    return session.getUser().changeEmail($scope.newEmail)
-      .then(function () {
-        $scope.refreshAndInitialize();
-      })
-      .catch(handleServerError($('#email-input')));
-  };
-
-  function handleServerError (element) {
+  $scope.handleServerError = function (element) {
     return function (error) {
       var message = error.status == 'fail' ? error.message : 'Server error';
       Util.showTooltip(element, message, 'error', 'top');
@@ -64,7 +17,7 @@ sc.controller('SettingsCtrl', function($scope, $http, $q, $timeout, $state, sess
   $scope.refreshAndInitialize = function () {
     return session.getUser().refresh()
       .then(function () {
-        initializeSettings();
+        $scope.$broadcast('settings-refresh');
       })
   }
 
@@ -87,25 +40,6 @@ sc.controller('SettingsCtrl', function($scope, $http, $q, $timeout, $state, sess
       $scope.toggle.disableToggles = true;
       // TODO retry
     });
-  }
-
-  $scope.saveSettings = function() {
-    /*
-    var email = $scope.newEmail;
-    updateEmail(email)
-    .then(function (success) {
-      $scope.settings.email = email;
-      return updatePassword;
-    }, function (error) {
-      $scope.errors.emailError = error;
-      return updatePassword;
-    })
-    .then(function (success) {
-
-    }, function (error) {
-
-    })
-    */
   }
 
   $scope.toggle = {
@@ -186,14 +120,64 @@ sc.controller('SettingsCtrl', function($scope, $http, $q, $timeout, $state, sess
       .tooltip('show');
   }
 
-  function initializeSettings() {
+  getSettings()
+    .then(function () {
+      $scope.$broadcast('settings-refresh');
+    })
+});
+
+sc.controller('SettingsEmailCtrl', function($scope, $http, $q, $timeout, $state, session, singletonPromise, rewards, Wallet) {
+
+  $scope.$on('settings-refresh', function () {
     $scope.email = session.getUser().getEmailAddress();
     $scope.emailVerified = session.getUser().isEmailVerified();
     $scope.resetEmailState();
+  });
+
+  $scope.resetEmailState = function () {
+    if ($scope.email) {
+      $scope.emailState = 'added';
+    } else {
+      $scope.emailState = 'none';
+    }
   }
 
-  getSettings()
-    .then(function () {
-      initializeSettings();
-    })
+  $scope.getEmailState = function () {
+    return $scope.emailState;
+  }
+
+  $scope.setEmailState = function (state) {
+    $scope.emailState = state;
+  }
+
+  $scope.emailAction = singletonPromise(function () {
+    if ($scope.emailState == 'change') {
+      return changeEmail();
+    } else if ($scope.emailState == 'verify') {
+      return verifyEmail();
+    } else {
+      return;
+    }
+  });
+
+  function verifyEmail () {
+    // newEmail is the model for the input element they're entering their code into
+    var userRecoveryCode = $scope.newEmail;
+    return session.getUser().verifyEmail(userRecoveryCode)
+      .then(function (response) {
+        return session.get('wallet').storeRecoveryData(userRecoveryCode, response.data.data.serverRecoveryCode);
+      })
+      .then(function () {
+        return $scope.refreshAndInitialize();
+      })
+      .catch($scope.handleServerError($('#email-input')));
+  };
+
+  function changeEmail () {
+    return session.getUser().changeEmail($scope.newEmail)
+      .then(function () {
+        $scope.refreshAndInitialize();
+      })
+      .catch($scope.handleServerError($('#email-input')));
+  };
 });
