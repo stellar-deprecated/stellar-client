@@ -97,7 +97,7 @@
                             <div class="col-xs-10" ng-show="getEmailState() == 'change' || getEmailState() == 'add' || getEmailState() == 'verify'">
                                 <div class="row">
                                     <div class="col-md-5 col-xs-12">
-                                        <input placeholder="{{getEmailState() == 'verify' ? 'Recovery Code' : 'Email'}}" type="text" class="change-email-input form-control" ng-model="newEmail"></input>
+                                        <input id="email-input" data-toggle="tooltip" placeholder="{{getEmailState() == 'verify' ? 'Recovery Code' : 'Email'}}" type="text" class="change-email-input form-control" ng-model="newEmail"></input>
                                     </div>
                                 </div>
                                 <div class="row">

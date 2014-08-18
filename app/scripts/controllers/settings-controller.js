@@ -64,7 +64,8 @@ sc.controller('SettingsCtrl', function($scope, $http, $q, $timeout, $state, sess
       updateToken: session.get('wallet').keychainData.updateToken,
       recoveryCode: code
     }
-    return $http.post(Options.API_SERVER + "/user/verifyEmail", data);
+    return $http.post(Options.API_SERVER + "/user/verifyEmail", data)
+      .error(handleServerError($('#email-input')));
   }
 
   function addEmail (email) {
@@ -73,7 +74,8 @@ sc.controller('SettingsCtrl', function($scope, $http, $q, $timeout, $state, sess
       updateToken: session.get('wallet').keychainData.updateToken,
       email: email
     }
-    return $http.post(Options.API_SERVER + "/user/email", data);
+    return $http.post(Options.API_SERVER + "/user/email", data)
+      .error(handleServerError($('#email-input')));
   }
 
   function changeEmail (email) {
@@ -82,7 +84,15 @@ sc.controller('SettingsCtrl', function($scope, $http, $q, $timeout, $state, sess
       updateToken: session.get('wallet').keychainData.updateToken,
       email: email
     }
-    return $http.post(Options.API_SERVER + "/user/changeEmail", data);
+    return $http.post(Options.API_SERVER + "/user/changeEmail", data)
+      .error(handleServerError($('#email-input')));
+  }
+
+  function handleServerError (element) {
+    return function (error) {
+      var message = error.status == 'fail' ? error.message : 'Server error';
+      Util.showTooltip(element, message, 'error', 'top');
+    }
   }
 
   $scope.refreshAndInitialize = function () {
