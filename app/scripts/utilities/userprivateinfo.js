@@ -1,4 +1,4 @@
-angular.module('stellarClient').factory('UserPrivateInfo', function($http, $q, $filter) {
+angular.module('stellarClient').factory('UserPrivateInfo', function($http, $q, $filter, Wallet) {
     var SHOW_ENDPOINT = Options.API_SERVER + "/users/show";
 
     var UserPrivateInfo = function (username, updateToken, data) {
@@ -77,6 +77,29 @@ angular.module('stellarClient').factory('UserPrivateInfo', function($http, $q, $
 
     UserPrivateInfo.prototype.isEmailVerified = function () {
         return this.email && this.email.verified;
+    }
+
+    UserPrivateInfo.prototype.changeEmail = function (email) {
+        var data = {
+            username: this.username,
+            updateToken: this.updateToken,
+            email: email
+        }
+        // If we've verified a recovery token, hit changeEmail, else hit email
+        if (this.isEmailVerified()) {
+            return $http.post(Options.API_SERVER + "/user/changeEmail", data);
+        } else {
+            return $http.post(Options.API_SERVER + "/user/email", data);
+        }
+    }
+
+    UserPrivateInfo.prototype.verifyEmail = function (userRecoveryCode) {
+        var data = {
+            username: this.username,
+            updateToken: this.updateToken,
+            recoveryCode: userRecoveryCode
+        }
+        return $http.post(Options.API_SERVER + "/user/verifyEmail", data);
     }
 
     return UserPrivateInfo;

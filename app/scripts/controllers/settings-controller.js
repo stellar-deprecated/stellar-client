@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('SettingsCtrl', function($scope, $http, $q, $timeout, $state, session, singletonPromise, rewards) {
+sc.controller('SettingsCtrl', function($scope, $http, $q, $timeout, $state, session, singletonPromise, rewards, Wallet) {
   var wallet = session.get('wallet');
 
   $scope.secretKey = wallet.keychainData.signingKeys.secret;
@@ -24,69 +24,35 @@ sc.controller('SettingsCtrl', function($scope, $http, $q, $timeout, $state, sess
   }
 
   $scope.emailAction = singletonPromise(function () {
-    if ($scope.emailState == 'add') {
-      return $scope.addEmail();
-    } else if ($scope.emailState == 'change') {
-      return $scope.changeEmail();
+    if ($scope.emailState == 'change') {
+      return changeEmail();
     } else if ($scope.emailState == 'verify') {
-      return $scope.verifyEmail();
+      return verifyEmail();
     } else {
       return;
     }
   });
 
-  $scope.verifyEmail = singletonPromise(function () {
+  function verifyEmail () {
     // newEmail is the model for the input element they're entering their code into
-    return verifyEmail($scope.newEmail)
-      .then(rewards.claimEmail())
+    var userRecoveryCode = $scope.newEmail;
+    return session.getUser().verifyEmail(userRecoveryCode)
+      .then(function (response) {
+        return session.get('wallet').storeRecoveryData(userRecoveryCode, response.data.data.serverRecoveryCode);
+      })
+      .then(function () {
+        return $scope.refreshAndInitialize();
+      })
+      .catch(handleServerError($('#email-input')));
+  };
+
+  function changeEmail () {
+    return session.getUser().changeEmail($scope.newEmail)
       .then(function () {
         $scope.refreshAndInitialize();
       })
-  });
-
-  $scope.addEmail = singletonPromise(function () {
-    return addEmail($scope.newEmail)
-      .then(function () {
-        $scope.refreshAndInitialize();
-      })
-  });
-
-  $scope.changeEmail = singletonPromise(function () {
-    return changeEmail($scope.newEmail)
-      .then(function () {
-        $scope.refreshAndInitialize();
-      })
-  });
-
-  function verifyEmail (code) {
-    var data = {
-      username: session.get('username'),
-      updateToken: session.get('wallet').keychainData.updateToken,
-      recoveryCode: code
-    }
-    return $http.post(Options.API_SERVER + "/user/verifyEmail", data)
-      .error(handleServerError($('#email-input')));
-  }
-
-  function addEmail (email) {
-    var data = {
-      username: session.get('username'),
-      updateToken: session.get('wallet').keychainData.updateToken,
-      email: email
-    }
-    return $http.post(Options.API_SERVER + "/user/email", data)
-      .error(handleServerError($('#email-input')));
-  }
-
-  function changeEmail (email) {
-    var data = {
-      username: session.get('username'),
-      updateToken: session.get('wallet').keychainData.updateToken,
-      email: email
-    }
-    return $http.post(Options.API_SERVER + "/user/changeEmail", data)
-      .error(handleServerError($('#email-input')));
-  }
+      .catch(handleServerError($('#email-input')));
+  };
 
   function handleServerError (element) {
     return function (error) {

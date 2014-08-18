@@ -80,7 +80,7 @@
                             </div>
                             <!-- User hasn't added email yet -->
                             <div class="col-xs-10" ng-show="getEmailState() == 'none'">
-                                <a href="" ng-click="setEmailState('add')">Add your email</a>
+                                <a href="" ng-click="setEmailState('change')">Add your email</a>
                             </div>
                             <!-- Show current email with verified check mark (if verified) -->
                             <div class="col-xs-10" ng-show="getEmailState() == 'added'">
@@ -94,7 +94,7 @@
                                 </div>
                             </div>
                             <!-- Input layout (for add/change email and verify recovery code) -->
-                            <div class="col-xs-10" ng-show="getEmailState() == 'change' || getEmailState() == 'add' || getEmailState() == 'verify'">
+                            <div class="col-xs-10" ng-show="getEmailState() == 'change' || getEmailState() == 'verify'">
                                 <div class="row">
                                     <div class="col-md-5 col-xs-12">
                                         <input id="email-input" data-toggle="tooltip" placeholder="{{getEmailState() == 'verify' ? 'Recovery Code' : 'Email'}}" type="text" class="change-email-input form-control" ng-model="newEmail"></input>
