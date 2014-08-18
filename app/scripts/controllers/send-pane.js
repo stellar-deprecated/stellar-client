@@ -145,7 +145,7 @@ sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout'
         send.self = recipient === $scope.address;
 
         // Trying to send to a Bitcoin address
-        send.bitcoin = !isNaN(Base.decode_check([0, 5], recipient, 'bitcoin'));
+        send.bitcoin = false; // we don't currently support sending to a bitcoin address
 
         // Trying to send to an email/federation address
         // Non-defaulting version: send.federation = ("string" === typeof recipient) && ~recipient.indexOf('@');
