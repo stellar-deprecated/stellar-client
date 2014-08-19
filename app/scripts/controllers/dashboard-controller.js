@@ -72,7 +72,9 @@ sc.controller('DashboardCtrl', function($rootScope, $scope, $timeout, $state, se
         });
 
         accountLinesRequest.on('success', function(result) {
-            processAccountLines(result.lines);
+            $scope.$apply(function() {
+                processAccountLines(result.lines);
+            });
         });
 
         accountLinesRequest.request();
@@ -80,6 +82,7 @@ sc.controller('DashboardCtrl', function($rootScope, $scope, $timeout, $state, se
 
     function processAccountLines(accountLines) {
         $scope.accountLines = accountLines;
+        $scope.balances = {};
 
         accountLines.forEach(function(accountLine) {
             var balance = Number(accountLine.balance);
@@ -97,6 +100,8 @@ sc.controller('DashboardCtrl', function($rootScope, $scope, $timeout, $state, se
         });
         $scope.topCurrencies = sortedCurrencies.slice(0, 2);
     }
+
+    $rootScope.$on('$appTxNotification', fetchCurrencies);
 
     fetchCurrencies();
 });
