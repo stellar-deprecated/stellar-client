@@ -69,7 +69,7 @@
         display: inline-block;
     }
 
-    .change-email-input {
+    .change-email-input, #password-confirmation {
         margin-bottom: 15px;
     }
 
@@ -79,6 +79,7 @@
 
     .settings-confirm-button {
         width:100%;
+        margin-bottom: 0px;
     }
 
     .error-tip {

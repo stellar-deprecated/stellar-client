@@ -113,39 +113,57 @@
                     </div>
                 </div>
 
-                <div class="row" ng-controller="SettingsPasswordCtrl">
+                <div class="row" ng-controller="ChangePasswordCtrl">
                     <div class="settings-label col-md-3 col-xs-6">PASSWORD</div>
                     <div class="settings-control col-md-9 col-xs-6">
                         <div class="row">
                             <div class="icon-col col-xs-1">
                                 <span class="icon icon-key"/>
                             </div>
-                            <div class="col-xs-10" ng-show="!changingPassword">
+                            <div class="col-xs-10" ng-show="!isChangingPassword()">
                                 <div>
                                     <span class="change-email-control">************</span>
                                 </div>
                                 <div class="secondary-action">
-                                    <a href="" ng-click="changingPassword = true">Change password</a>
+                                    <a href="" ng-click="setChangingPassword(true)">Change password</a>
                                 </div>
                             </div>
                             <!-- Input layout -->
-                            <div class="col-xs-10" ng-show="changingPassword">
-                                <div class="row">
-                                    <div class="col-md-5 col-xs-12">
-                                        <input id="email-input" data-toggle="tooltip" placeholder="New Password" type="text" class="change-email-input form-control" ng-model="password"></input>
+                            <div class="col-xs-10 password-container stellar-form" ng-show="isChangingPassword()" ng-controller="PasswordCtrl">
+                                <div class="row form-group" ng-show="errors.passwordErrors.length">
+                                    <div class="errors col-md-5 col-xs-12">
+                                        <div class="tip">{{ errors.passwordErrors.join('\n') }}</div>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-5 col-xs-12">
-                                        <input id="email-input" data-toggle="tooltip" placeholder="Confirm Password" type="text" class="change-email-input form-control" ng-model="confirmPassword"></input>
+                                        <input id="password" type="password" data-toggle="tooltip" placeholder="New Password" class="form-control" ng-class="{'input-error': errors.passwordErrors.length}" ng-model="data.password" ng-change="checkPassword()"></input>
+                                    </div>
+                                </div>
+                                <div class="row form-group" ng-show="errors.passwordConfirmErrors.length">
+                                    <div class="errors col-md-5 col-xs-12">
+                                        <div class="tip">{{ errors.passwordConfirmErrors.join('\n') }}</div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-5 col-xs-12">
+                                        <div class="password-strength {{ data.password | passwordLevel:4 }}" ng-class="{null: data.password == ''}">
+                                            <div class="block1"></div><div class="block2"></div><div class="block3"></div><div class="block4"></div>
+                                        </div>
+                                        <div class="description">{{ passwordStrength() }}</div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-5 col-xs-12">
+                                        <input id="password-confirmation" data-toggle="tooltip" placeholder="Confirm Password" type="password" class="form-control" ng-class="{'input-error': errors.passwordConfirmErrors.length}" ng-model="data.passwordConfirmation" ng-change="checkConfirmPassword()"></input>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-4 col-xs-12 col-md-push-1">
-                                        <button class="btn btn-default stellar-button settings-confirm-button" ng-click="changePassword()">{{updateEmail.isLoading() ? "Loading..." : "Confirm"}}</button>
+                                        <button class="btn btn-default stellar-button settings-confirm-button" ng-click="attemptPasswordChange()">{{updateEmail.isLoading() ? "Loading..." : "Confirm"}}</button>
                                     </div>
                                     <div class="settings-cancel-button col-md-1 col-xs-1 col-md-pull-4">
-                                        <a href="" ng-click="changingPassword = false">Cancel</a>
+                                        <a href="" ng-click="setChangingPassword(false)">Cancel</a>
                                     </div>
                                 </div>
                             </div>

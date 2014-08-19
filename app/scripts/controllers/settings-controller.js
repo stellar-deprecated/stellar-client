@@ -5,6 +5,15 @@ var sc = angular.module('stellarClient');
 sc.controller('SettingsCtrl', function($scope, $http, $q, $timeout, $state, session, singletonPromise, rewards, Wallet) {
   var wallet = session.get('wallet');
 
+  // this scope variable goes here since it lives in different child scopes
+  $scope.changingPassword = false;
+  $scope.setChangingPassword = function (changing) {
+    $scope.changingPassword = changing;
+  }
+  $scope.isChangingPassword = function () {
+    return $scope.changingPassword;
+  }
+
   $scope.secretKey = wallet.keychainData.signingKeys.secret;
 
   $scope.handleServerError = function (element) {
@@ -180,8 +189,4 @@ sc.controller('SettingsEmailCtrl', function($scope, $http, $q, $timeout, $state,
       })
       .catch($scope.handleServerError($('#email-input')));
   };
-});
-
-sc.controller('SettingsPasswordCtrl', function($scope, $http) {
-  $scope.changePassword
 });
