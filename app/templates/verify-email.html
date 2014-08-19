@@ -26,7 +26,7 @@
         </form>
     </div>
     <div class="verify-email-item" ng-class="{active: reward.status == 'unverified'}">
-        <form role="form" class="stellar-form" ng-controller="VerifyEmailCtrl" ng-submit="verifyEmail()">
+        <form role="form" ng-controller="VerifyEmailCtrl" ng-submit="verifyEmail()">
             <div class="form-group">
                 <div class="errors col-sm-12">
                     <div class="tip col-sm-offset-6 col-sm-6">{{ errors.join('\n') }}</div>
