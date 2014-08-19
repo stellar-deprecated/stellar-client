@@ -90,6 +90,20 @@ stellarClient.run(function($location, $state, ipCookie){
     }
 });
 
+stellarClient.factory('$exceptionHandler', ['Raven', function(Raven) {
+  return function(exception, cause) {
+
+    if(exception.message.match(/\[\$sce:insecurl\]/)) {
+      var match = exception.message.match(/URL: (.+)/)
+      if(match) {
+        exception.message = match[1];
+      }
+    } 
+    
+    Raven.captureException(exception, cause);
+  };
+}]);
+
 stellarClient.run(function($rootScope, $state, ipCookie, session, FlashMessages, invites){
   $rootScope.balance = 'loading...';
 
