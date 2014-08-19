@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('DashboardCtrl', function($rootScope, $scope, $timeout, $state, session, TutorialHelper) {
+sc.controller('DashboardCtrl', function($rootScope, $scope, $timeout, $state, session, TutorialHelper, stNetwork) {
     $rootScope.tab = 'none';
     $rootScope.showTab = false;
 
@@ -10,6 +10,11 @@ sc.controller('DashboardCtrl', function($rootScope, $scope, $timeout, $state, se
     $scope.newTransaction = null;
     $scope.username = session.get('username');
     $scope.tutorials = TutorialHelper;
+
+    $scope.accountLines = [];
+    $scope.balances = {};
+    $scope.currencies = [];
+    $scope.topCurrencies = [];
 
     $rootScope.closePane = function(){
       $rootScope.showTab = false;
@@ -59,6 +64,46 @@ sc.controller('DashboardCtrl', function($rootScope, $scope, $timeout, $state, se
         $timeout.cancel(cleanupTimer);
         $scope.showTransaction = false;
     };
+
+    function fetchCurrencies() {
+        var remote = stNetwork.remote;
+        var accountLinesRequest = remote.request_account_lines({
+            'account': session.get('address')
+        });
+
+        accountLinesRequest.on('success', function(result) {
+            $scope.$apply(function() {
+                processAccountLines(result.lines);
+            });
+        });
+
+        accountLinesRequest.request();
+    };
+
+    function processAccountLines(accountLines) {
+        $scope.accountLines = accountLines;
+        $scope.balances = {};
+
+        accountLines.forEach(function(accountLine) {
+            var balance = Number(accountLine.balance);
+
+            if (balance != 0) {
+                var currency = accountLine.currency;
+                $scope.balances[currency] = ($scope.balances[currency] || 0) + balance;
+            }
+        });
+
+        $scope.currencies = Object.getOwnPropertyNames($scope.balances);
+
+        var sortedCurrencies = $scope.currencies.sort(function(a, b) {
+            return $scope.balances[b] - $scope.balances[a];
+        });
+        $scope.topCurrencies = sortedCurrencies.slice(0, 2);
+    }
+
+    $rootScope.$on('$appTxNotification', fetchCurrencies);
+
+    fetchCurrencies();
 });
 
 

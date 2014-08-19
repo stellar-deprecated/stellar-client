@@ -1,26 +1,36 @@
 <div class="dashboard" ng-class="tutorials.get('dashboard')" ng-controller="DashboardCtrl">
     <div class="controls-container client-section">
         <div class="container">
-            <div class="row controls top-row">
-                <div class="img-container col-sm-3"><img src="images/wallet.png"></div>
-                <div class="dash-balance-container col-xs-12 col-sm-6">
-                    <span ng-show="$root.accountStatus == 'loaded'" class="dash-balance" rp-tooltip="{{$root.balance  | rpamount}}  (minimum balance: {{ $root.reserve | rpamount }} STR)" ng-bind-html="$root.balance | rpamount:{rel_precision: 0} | shrinkText:84:6"></span>
-                    <span ng-hide="$root.accountStatus == 'loaded'" class="dash-balance" ng-bind-html="statusMessage() | shrinkText:84:6"></span>
-                </div>
-                <div class="img-container col-sm-3"><img src="images/rocket.png"></div>
-            </div>
             <div class="row controls">
-                <div class="dash-info-container col-xs-12 col-sm-6 col-sm-push-3">
-                    <span ng-show="$root.accountStatus == 'loaded'" class="dash-balance-info ng-hide">Current Balance <b>Stellars</b></span>
+                <div class="dash-balance-container col-xs-12 col-sm-6 col-sm-push-3">
+                    <div class="single-balance-container" ng-hide="currencies.length">
+                        <div ng-show="$root.accountStatus == 'loaded'">
+                            <span class="dash-balance" rp-tooltip="{{$root.balance  | rpamount}}  (minimum balance: {{ $root.reserve | rpamount }} STR)" ng-bind-html="$root.balance | rpamount:{rel_precision: 0} | shrinkText:84:6"></span>
+                            <div class="dash-balance-info">Current Balance <b>Stellars</b></div>
+                        </div>
+                        <span ng-hide="$root.accountStatus == 'loaded'" class="dash-balance" ng-bind-html="statusMessage() | shrinkText:84:6"></span>
+                    </div>
+                    <div class="multi-balance-container" ng-show="currencies.length">
+                        <div class="dash-currency-line row">
+                            <div class="currency-unit col-xs-6">STR</div>
+                            <div class="currency-balance col-xs-6">{{ $root.balance | rpamount:{rel_precision: 0} }}</div>
+                        </div>
+                        <div ng-repeat="currency in topCurrencies" class="dash-currency-line row">
+                            <div class="currency-unit col-xs-6">{{ currency }}</div>
+                            <div class="currency-balance col-xs-6">{{ balances[currency] }}</div>
+                        </div>
+                    </div>
                 </div>
-                <div class="dash-receive-container col-xs-12 col-sm-3 col-sm-pull-6">
+                <div class="dash-receive-container col-sm-3 col-sm-pull-6">
+                    <div class="img-container "><img src="images/wallet.png"></div>
                     <button class="btn btn-default" ng-click="openReceive()" ng-show="!showTab || tab != 'receive'">
                         <i class="icon icon-receive"></i>
                         Receive
                     </button>
                     <div class="no-button" ng-show="showTab && tab == 'receive'"><i class="icon icon-receive"></i>Receive</div>
                 </div>
-                <div class="dash-send-container col-xs-12 col-sm-3">
+                <div class="dash-send-container col-sm-3">
+                    <div class="img-container"><img src="images/rocket.png"></div>
                     <button class="btn btn-default" ng-click="openSend()" ng-show="!showTab || tab != 'send'">
                         <i class="icon icon-send"></i>
                         Send
