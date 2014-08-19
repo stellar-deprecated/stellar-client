@@ -161,8 +161,7 @@ sc.controller('SettingsEmailCtrl', function($scope, $http, session, singletonPro
   });
 
   function verifyEmail () {
-    // newEmail is the model for the input element they're entering their code into
-    var userRecoveryCode = $scope.newEmail;
+    var userRecoveryCode = $scope.recoveryCode;
     return session.getUser().verifyEmail(userRecoveryCode)
       .then(function (response) {
         return session.get('wallet').storeRecoveryData(userRecoveryCode, response.data.data.serverRecoveryCode);
@@ -170,14 +169,20 @@ sc.controller('SettingsEmailCtrl', function($scope, $http, session, singletonPro
       .then(function () {
         return $scope.refreshAndInitialize();
       })
+      .then(function () {
+        $scope.recoveryCode = null;
+      })
       .catch($scope.handleServerError($('#email-input')));
   };
 
   function changeEmail () {
     return session.getUser().changeEmail($scope.newEmail)
       .then(function () {
-        $scope.refreshAndInitialize();
+        return $scope.refreshAndInitialize();
       })
-      .catch($scope.handleServerError($('#email-input')));
+      .then(function () {
+        $scope.newEmail = null;
+      })
+      .catch($scope.handleServerError($('#verify-input')));
   };
 });

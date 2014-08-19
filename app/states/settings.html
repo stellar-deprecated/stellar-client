@@ -93,11 +93,27 @@
                                     <a href="" ng-click="setEmailState('change')">Change email</a>
                                 </div>
                             </div>
-                            <!-- Input layout (for add/change email and verify recovery code) -->
-                            <div class="col-xs-10" ng-show="getEmailState() == 'change' || getEmailState() == 'verify'">
+                            <!-- Input layout (for add/change email) -->
+                            <div class="col-xs-10" ng-show="getEmailState() == 'change'">
                                 <div class="row">
                                     <div class="col-md-5 col-xs-12">
-                                        <input id="email-input" data-toggle="tooltip" placeholder="{{getEmailState() == 'verify' ? 'Recovery Code' : 'Email'}}" type="text" class="change-email-input form-control" ng-model="newEmail"></input>
+                                        <input id="email-input" data-toggle="tooltip" placeholder="Email" type="text" class="form-control" ng-model="newEmail"></input>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 col-xs-12 col-md-push-1">
+                                        <button class="btn btn-default stellar-button settings-confirm-button" ng-click="emailAction()">{{updateEmail.isLoading() ? "Loading..." : "Confirm"}}</button>
+                                    </div>
+                                    <div class="settings-cancel-button col-md-1 col-xs-1 col-md-pull-4">
+                                        <a href="" ng-click="resetEmailState()">Cancel</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Input layout (for verify recovery code) -->
+                            <div class="col-xs-10" ng-show="getEmailState() == 'verify'">
+                                <div class="row">
+                                    <div class="col-md-5 col-xs-12">
+                                        <input id="verify-input" data-toggle="tooltip" placeholder="Recovery Code" type="text" class="form-control" ng-model="recoveryCode"></input>
                                     </div>
                                 </div>
                                 <div class="row">
