@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('SettingsCtrl', function($scope, $http, $q, $timeout, $state, session, singletonPromise, rewards, Wallet) {
+sc.controller('SettingsCtrl', function($scope, $http, $state, session, singletonPromise) {
   var wallet = session.get('wallet');
 
   $scope.secretKey = wallet.keychainData.signingKeys.secret;
@@ -126,7 +126,7 @@ sc.controller('SettingsCtrl', function($scope, $http, $q, $timeout, $state, sess
     })
 });
 
-sc.controller('SettingsEmailCtrl', function($scope, $http, $q, $timeout, $state, session, singletonPromise, rewards, Wallet) {
+sc.controller('SettingsEmailCtrl', function($scope, $http, session, singletonPromise) {
 
   $scope.$on('settings-refresh', function () {
     $scope.email = session.getUser().getEmailAddress();
