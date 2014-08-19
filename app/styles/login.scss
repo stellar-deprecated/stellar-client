@@ -21,7 +21,7 @@
     }
   }
 
-  .stellar-form .form-group {
+  .form-group {
     .warning {
       padding: 15px 20px;
       background-color: #FFEBE6;
@@ -60,17 +60,17 @@
     h1 {
       margin: 0;
     }
-    .stellar-form {
-      .form-group {
-        .errors {
-        }
-        label {
-          line-height: 2em;
-        }
-        button {
-          margin: 15px 0;
-        }
+
+    .form-group {
+      .errors {
+      }
+      label {
+        line-height: 2em;
+      }
+      button {
+        margin: 15px 0;
       }
     }
+    
   }
 }
