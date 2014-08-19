@@ -9,10 +9,13 @@ window.fbAsyncInit = function() {
     });
     if (angular && angular.element(document) && angular.element(document).injector()) {
       var rootscope = angular.element(document).injector().get("$rootScope");
-      rootscope.$apply(function () {
-        rootscope.fbinit = true;
-        rootscope.$broadcast('fbinit');
-      });
+
+      setTimeout(function() {
+        rootscope.$apply(function () {
+          rootscope.fbinit = true;
+          rootscope.$broadcast('fbinit');
+        });
+      }, 0);
     }
 };
 
