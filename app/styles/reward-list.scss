@@ -36,11 +36,16 @@
 
       &:first-child {
         border: 1px solid rgba($stellar-blue, 1);
-        background: white url(../images/stroopy.gif) no-repeat 75px center;
-        background-size: 35px;
+        background: white url(../images/stroopy.gif) no-repeat 40px 10px;
+        background-size: 25px;
         i {
           float: left;
           padding-right: 65px;
+          padding-right: 35px;
+        }
+
+        .subtitle {
+          padding-left: 25px;
         }
         .reward-step {
           color: #fff;
@@ -57,14 +62,21 @@
 
         }
 
-        @media (max-width: $phone-width) {
-          background-position: 40px 10px;
-          background-size: 25px; 
+        @media (min-width: $phone-width) {
+          background-position: 80px 10px;
+          background-size: 35px; 
           i {
-            padding-right: 35px;
+            padding-right: 75px;
           }
           .subtitle {
-            padding-left: 25px;
+            padding-left: 50px;
+          }
+        }
+
+        @media (min-width: $mobile-width) {
+          background-position: 75px center;
+          .subtitle {
+            padding-left: 0px;
           }
         }
       }
