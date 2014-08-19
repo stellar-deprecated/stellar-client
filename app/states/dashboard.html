@@ -19,6 +19,9 @@
                             <div class="currency-unit col-xs-6">{{ currency }}</div>
                             <div class="currency-balance col-xs-6">{{ balances[currency] }}</div>
                         </div>
+                        <div class="dash-links">
+                            <a class="add-currency-link" ng-click="openBalances();" href="#">view all balances({{ currencies.length + 1 }})</a>
+                        </div>
                     </div>
                 </div>
                 <div class="dash-receive-container col-sm-3 col-sm-pull-6">
@@ -62,9 +65,10 @@
             </div>
         </div>
     </div>
-    <div class="send-receive container" ng-class="{open: showTab}">
+    <div class="tab-panes container" ng-class="{open: showTab}">
         <div class="send-container client-section" ng-include="'templates/send.html'" ng-show="tab==='send'"></div>
-        <div class="receive-container client-section" ng-include="'templates/receive.html'" ng-show="$root.tab==='receive'"></div>
+        <div class="receive-container client-section" ng-include="'templates/receive.html'" ng-show="tab==='receive'"></div>
+        <div class="balances-container client-section" ng-include="'templates/balances.html'" ng-show="tab==='balances'"></div>
     </div>
 
     <div class="invite-messages" id="invite-task-messages" ng-show="task" ng-controller="TaskMessageCtrl">

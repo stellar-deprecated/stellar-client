@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('DashboardCtrl', function($rootScope, $scope, $timeout, $state, session, TutorialHelper, stNetwork) {
+sc.controller('DashboardCtrl', function($rootScope, $scope, $timeout, $state, session, TutorialHelper, stNetwork, contacts) {
     $rootScope.tab = 'none';
     $rootScope.showTab = false;
 
@@ -29,6 +29,11 @@ sc.controller('DashboardCtrl', function($rootScope, $scope, $timeout, $state, se
 
     $rootScope.openReceive = function() {
         $rootScope.tab = 'receive';
+        $rootScope.showTab = true;
+    };
+
+    $rootScope.openBalances = function() {
+        $rootScope.tab = 'balances';
         $rootScope.showTab = true;
     };
 
@@ -91,6 +96,8 @@ sc.controller('DashboardCtrl', function($rootScope, $scope, $timeout, $state, se
                 var currency = accountLine.currency;
                 $scope.balances[currency] = ($scope.balances[currency] || 0) + balance;
             }
+
+            contacts.fetchContactByAddress(accountLine.account);
         });
 
         $scope.currencies = Object.getOwnPropertyNames($scope.balances);

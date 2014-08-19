@@ -1,0 +1,24 @@
+
+<div class="pane" ng-class="paneState()">
+    <div class="pane-close" ng-click="closePane()">
+        <span>Close</span>
+        <i class="icon icon-times-circle-thin"></i>
+    </div>
+
+    <div class="balance-currencies">
+        <h4 class="title">Balances</h4>
+        <ul class="currencies-list">
+            <li class="currency-box">
+                <h5>{{ balance | rpamount:{rel_precision: 0} }}</h5>
+                <p>STR</p>
+            </li>
+            <li ng-repeat="accountLine in accountLines" ng-if="accountLine.balance != '0'" class="currency-box">
+                <h5>{{ accountLine.balance }}</h5>
+                <p>{{ accountLine.currency }}</p>
+                <div class="account-container">
+                    <p>{{ accountLine.account | addressToUsername }}</p>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
