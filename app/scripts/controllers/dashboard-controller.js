@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('DashboardCtrl', function($rootScope, $scope, $timeout, $state, $q, session, TutorialHelper, stNetwork) {
+sc.controller('DashboardCtrl', function($rootScope, $scope, $timeout, $state, session, TutorialHelper, stNetwork) {
     $rootScope.tab = 'none';
     $rootScope.showTab = false;
 
@@ -65,9 +65,7 @@ sc.controller('DashboardCtrl', function($rootScope, $scope, $timeout, $state, $q
         $scope.showTransaction = false;
     };
 
-    $scope.fetchCurrencies = function (){
-        var deferred = $q.defer();
-
+    function fetchCurrencies() {
         var remote = stNetwork.remote;
         var accountLinesRequest = remote.request_account_lines({
             'account': session.get('address')
@@ -75,11 +73,9 @@ sc.controller('DashboardCtrl', function($rootScope, $scope, $timeout, $state, $q
 
         accountLinesRequest.on('success', function(result) {
             processAccountLines(result.lines);
-            deferred.resolve();
         });
-        accountLinesRequest.request();
 
-        return deferred.promise;
+        accountLinesRequest.request();
     };
 
     function processAccountLines(accountLines) {
@@ -102,7 +98,7 @@ sc.controller('DashboardCtrl', function($rootScope, $scope, $timeout, $state, $q
         $scope.topCurrencies = sortedCurrencies.slice(0, 2);
     }
 
-    $scope.fetchCurrencies();
+    fetchCurrencies();
 });
 
 
