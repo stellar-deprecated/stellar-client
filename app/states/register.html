@@ -77,8 +77,10 @@
 
             <div class="form-group">
                 <div class="col-sm-offset-3 col-sm-6">
-                    <button type="submit" class="btn btn-default" ng-click="attemptRegistration()"
-                        ng-disabled="loading">{{attemptRegistration.isLoading() ? 'Sending...' : 'Submit'}}</button>
+                    <button type="submit" class="btn btn-default" ng-click="attemptRegistration()" ng-disabled="loading">
+                        <span ng-if="attemptRegistration.isLoading()">Sending...</span>
+                        <span ng-if="!attemptRegistration.isLoading()">Submit</span>
+                    </button>
                 </div>
             </div>
         </form>

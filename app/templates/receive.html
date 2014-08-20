@@ -18,7 +18,10 @@
             </div>
         </div>
         <div class="row form-group show-address-row">
-            <span class="show-address" ng-click="toggleAddress()">{{ showAddress ? 'Hide' : 'Show' }} your Stellar Address</span>
+            <span class="show-address" ng-click="toggleAddress()">
+                <span ng-if="showAddress">Hide your Stellar Address</span>
+                <span ng-if="!showAddress">Show your Stellar Address</span>
+            </span>
         </div>
         <div class="row form-group address-row" ng-show="showAddress">
             <label for="receive_address" class="col-sm-3 address-title" translate>YOUR STELLAR ADDRESS</label>

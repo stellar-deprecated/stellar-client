@@ -20,7 +20,10 @@
                     <button type="button" class="cancel btn btn-default" ng-click="cancel()">Cancel</button>
                 </div>
                 <div class="col-xs-9 button-col-right">
-                    <button type="submit" class="submit btn btn-default" ng-class="{loading: loading}" ng-disabled="loading">{{loading ? 'Loading...' : 'Submit' }}</button>
+                    <button type="submit" class="submit btn btn-default" ng-class="{loading: loading}" ng-disabled="loading">
+                        <span ng-if="loading">Loading...</span>
+                        <span ng-if="!loading">Submit</span>
+                    </button>
                 </div>
             </div>
         </form>
@@ -42,7 +45,10 @@
                     <button type="button" class="cancel btn btn-default" ng-click="back()">Back</button>
                 </div>
                 <div class="col-xs-9 button-col-right">
-                    <button type="submit" class="submit btn btn-default" ng-class="{loading: loading}" ng-disabled="loading">{{loading ? 'Loading...' : 'Submit' }}</button>
+                    <button type="submit" class="submit btn btn-default" ng-class="{loading: loading}" ng-disabled="loading">
+                        <span ng-if="loading">Loading...</span>
+                        <span ng-if="!loading">Submit</span>
+                    </button>
                 </div>
             </div>
         </form>

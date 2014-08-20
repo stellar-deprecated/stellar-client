@@ -16,16 +16,16 @@
                 <div class="dash-receive-container col-xs-12 col-sm-3 col-sm-pull-6">
                     <button class="btn btn-default" ng-click="openReceive()" ng-show="!showTab || tab != 'receive'">
                         <i class="icon icon-receive"></i>
-                        Receive
+                        <span>Receive</span>
                     </button>
-                    <div class="no-button" ng-show="showTab && tab == 'receive'"><i class="icon icon-receive"></i>Receive</div>
+                    <div class="no-button" ng-show="showTab && tab == 'receive'"><i class="icon icon-receive"></i><span>Receive</span></div>
                 </div>
                 <div class="dash-send-container col-xs-12 col-sm-3">
                     <button class="btn btn-default" ng-click="openSend()" ng-show="!showTab || tab != 'send'">
                         <i class="icon icon-send"></i>
-                        Send
+                        <span>Send</span>
                     </button>
-                    <div class="no-button" ng-show="showTab && tab == 'send'"><i class="icon icon-send"></i>Send</div>
+                    <div class="no-button" ng-show="showTab && tab == 'send'"><i class="icon icon-send"></i><span>Send</span></div>
                 </div>
             </div>
             <div class="row arrow-row">

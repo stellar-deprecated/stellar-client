@@ -35,6 +35,18 @@
                     <span>Account</span>
                 </div>
                 <div class="row">
+                    <div class="settings-label col-md-3 col-xs-6">EMAIL</div>
+                    <div class="settings-control col-md-9 col-xs-6">
+                        <div class="icon-col">
+                            <span class="icon icon-email"/>
+                        </div>
+                        <span ng-if="email">{{email}}</span>
+                        <span ng-if="!email">Add your email!</span>
+                        <!-- TODO: show if verified -->
+                        <span class="verified-email-status icon icon-tick" ng-show="email"/>
+                    </div>
+                </div>
+                <div class="row">
                     <div class="settings-label col-md-3 col-xs-6">RECOVERY TOKEN</div>
                     <div class="settings-control col-md-9 col-xs-6">
                         <div class="icon-col">
@@ -187,7 +199,10 @@
                             <input type="text" class="form-control stellar-input" value="{{secretKey}}"/>
                         </div>
                         <div class="secondary-action">
-                            <span id="reveal-key" ng-click="reveal = !reveal">{{reveal ? 'Hide' : 'Reveal'}}</span>
+                            <span id="reveal-key" ng-click="reveal = !reveal">
+                                <span ng-if="reveal">Hide</span>
+                                <span ng-if="!reveal">Reveal</span>
+                            </span>
                         </div>
                     </div>
                 </div>

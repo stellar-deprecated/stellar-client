@@ -1,5 +1,6 @@
 <div ng-controller="ClaimFlashMessageCtrl">
   <button class="btn btn-default" ng-click="claimRewards()" ng-disabled="claimRewards.isLoading()">
-    {{ claimRewards.isLoading() ? 'Loading...' : 'Claim now' }}
+      <span ng-if="claimRewards.isLoading()">Loading...</span>
+      <span ng-if="!claimRewards.isLoading()">Claim now</span>
   </button>
 </div>
