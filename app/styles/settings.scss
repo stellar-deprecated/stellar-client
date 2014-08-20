@@ -32,7 +32,7 @@
         margin:auto;
     }
 
-    .row {
+    > .row {
         padding: 15px 0 15px 0;
         margin: 0;
         border-bottom: 1px solid fade_out($grey-border, 0.5);
@@ -69,6 +69,18 @@
         display: inline-block;
     }
 
+    input {
+        margin-bottom: 15px;
+    }
+
+    .settings-cancel-button {
+        margin-top:15px;
+    }
+
+    .settings-confirm-button {
+        width:100%;
+    }
+
     .error-tip {
         .tooltip-inner {
             background-color: $error;
@@ -80,7 +92,7 @@
 }
 
 .secondary-action {
-    padding-top:15px;
+    padding-top:10px;
 }
 
 #picture {
