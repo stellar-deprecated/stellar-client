@@ -7,7 +7,7 @@ var sc = angular.module('stellarClient');
     waits for:
      walletAddressLoaded
  */
-sc.controller('AppCtrl', function($scope, $rootScope, stNetwork, session, $state, $element, FlashMessages) {
+sc.controller('AppCtrl', function($scope, $rootScope, stNetwork, session, $state, $element, $timeout, FlashMessages) {
     $scope.$on('userLoaded', function () {
         $scope.getSentInvites = function () {
             return session.getUser() && session.getUser().getSentInvites().length;
@@ -64,7 +64,7 @@ sc.controller('AppCtrl', function($scope, $rootScope, stNetwork, session, $state
         accountObj = remote.account(keys.address);
 
         accountObj.entry(function (err, entry) {
-            $rootScope.$apply(function() {
+            $timeout(function() {
                 if (err) {
                     switch(err.remote.error) {
                         case 'actNotFound':
@@ -80,6 +80,7 @@ sc.controller('AppCtrl', function($scope, $rootScope, stNetwork, session, $state
                     setInflation(entry.account_data);
                     $rootScope.accountStatus = 'loaded';
                 }
+
             });
         });
     };

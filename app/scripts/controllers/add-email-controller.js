@@ -32,6 +32,8 @@ sc.controller('AddEmailCtrl', function ($scope, $rootScope, $http, $state, sessi
 
         // Switch to the verify overlay.
         $scope.rewards[2].status = "unverified";
+
+        return session.getUser().refresh();
       }
 
       function addEmailError(response) {

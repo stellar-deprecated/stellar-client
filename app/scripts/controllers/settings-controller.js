@@ -2,19 +2,26 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('SettingsCtrl', function($scope, $http, $q, $timeout, $state, session) {
+sc.controller('SettingsCtrl', function($scope, $http, $state, session, singletonPromise) {
   var wallet = session.get('wallet');
-
-  $scope.email = wallet.mainData.email;
 
   $scope.secretKey = wallet.keychainData.signingKeys.secret;
 
-  $scope.errors = {
-    emailError:           null,
-    passwordError:        null,
-    passwordConfirmError: null
-  };
+  $scope.handleServerError = function (element) {
+    return function (error) {
+      var message = error.status == 'fail' ? error.message : 'Server error';
+      Util.showTooltip(element, message, 'error', 'top');
+    }
+  }
 
+  $scope.refreshAndInitialize = function () {
+    return session.getUser().refresh()
+      .then(function () {
+        $scope.$broadcast('settings-refresh');
+      })
+  }
+
+  // TODO: move into user object and initialize settings
   function getSettings() {
     var data = {
       params: {
@@ -22,7 +29,7 @@ sc.controller('SettingsCtrl', function($scope, $http, $q, $timeout, $state, sess
         updateToken: session.get('wallet').keychainData.updateToken
       }
     }
-    $http.get(Options.API_SERVER + "/user/settings", data)
+    return $http.get(Options.API_SERVER + "/user/settings", data)
     .success(function (response) {
       $scope.toggle.recover.on = response.data.recover;
       $scope.toggle.federate.on = response.data.federate;
@@ -33,25 +40,6 @@ sc.controller('SettingsCtrl', function($scope, $http, $q, $timeout, $state, sess
       $scope.toggle.disableToggles = true;
       // TODO retry
     });
-  }
-
-  $scope.saveSettings = function() {
-    /*
-    var email = $scope.newEmail;
-    updateEmail(email)
-    .then(function (success) {
-      $scope.settings.email = email;
-      return updatePassword;
-    }, function (error) {
-      $scope.errors.emailError = error;
-      return updatePassword;
-    })
-    .then(function (success) {
-
-    }, function (error) {
-
-    })
-    */
   }
 
   $scope.toggle = {
@@ -119,32 +107,9 @@ sc.controller('SettingsCtrl', function($scope, $http, $q, $timeout, $state, sess
     });
   }
 
-  function updateEmail(email) {
-    var promise = $q.defer();
-    if ($scope.newEmail == '') {
-      promise.resolve();
-    }
-    if (!Util.validateEmail($scope.newEmail)) {
-      promise.reject("Invalid email");
-    }
-    var data = {
-      email: email,
-      username: session.get('username'),
-      updateToken: wallet.keychainData.updateToken
-    };
-    return $http.post(Options.API_SERVER + '/user/email', data)
-    .success(function (response) {
-      promise.resolve();
-    })
-    .error(function (response) {
-      promise.reject(response.message);
-    });
-  }
-
   function updatePassword(password) {
     // TODO
   }
-
 
   function showError(wrapper, title) {
     wrapper.tooltip(
@@ -155,5 +120,71 @@ sc.controller('SettingsCtrl', function($scope, $http, $q, $timeout, $state, sess
       .tooltip('show');
   }
 
-  getSettings();
+  getSettings()
+    .then(function () {
+      $scope.$broadcast('settings-refresh');
+    })
+});
+
+sc.controller('SettingsEmailCtrl', function($scope, $http, session, singletonPromise) {
+
+  $scope.$on('settings-refresh', function () {
+    $scope.email = session.getUser().getEmailAddress();
+    $scope.emailVerified = session.getUser().isEmailVerified();
+    $scope.resetEmailState();
+  });
+
+  $scope.resetEmailState = function () {
+    if ($scope.email) {
+      $scope.emailState = 'added';
+    } else {
+      $scope.emailState = 'none';
+    }
+  }
+
+  $scope.getEmailState = function () {
+    return $scope.emailState;
+  }
+
+  $scope.setEmailState = function (state) {
+    $scope.emailState = state;
+  }
+
+  $scope.emailAction = singletonPromise(function () {
+    if ($scope.emailState == 'change') {
+      return changeEmail();
+    } else if ($scope.emailState == 'verify') {
+      return verifyEmail();
+    } else {
+      return;
+    }
+  });
+
+  function verifyEmail () {
+    var verifyToken = $scope.verifyToken;
+    return session.getUser().verifyEmail(verifyToken)
+      .then(function (response) {
+        if (response.data.data && response.data.data.serverRecoveryCode) {
+          return session.get('wallet').storeRecoveryData(verifyToken, response.data.data.serverRecoveryCode);
+        }
+      })
+      .then(function () {
+        return $scope.refreshAndInitialize();
+      })
+      .then(function () {
+        $scope.verifyToken = null;
+      })
+      .catch($scope.handleServerError($('#email-input')));
+  };
+
+  function changeEmail () {
+    return session.getUser().changeEmail($scope.newEmail)
+      .then(function () {
+        return $scope.refreshAndInitialize();
+      })
+      .then(function () {
+        $scope.newEmail = null;
+      })
+      .catch($scope.handleServerError($('#verify-input')));
+  };
 });

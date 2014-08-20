@@ -46,6 +46,9 @@ gulp.task('scripts:lint', function () {
 
 gulp.task('scripts:unminified', ['scripts:templateCache'], function () {
     return gulp.src('app/**/*.html')
+        .pipe($.plumber({errorHandler: function(err) {
+          $.util.log($.util.colors.red(err))  
+        }}))
         .pipe($.useref.assets({
             searchPath: ['.tmp', 'app'],
             types:["js"]

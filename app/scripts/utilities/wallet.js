@@ -141,6 +141,15 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
     });
   };
 
+  Wallet.prototype.storeRecoveryData = function (userRecoveryCode, serverRecoveryCode) {
+    var recoveryId = Wallet.deriveId(userRecoveryCode, serverRecoveryCode);
+    var recoveryKey = Wallet.deriveKey(recoveryId, userRecoveryCode, serverRecoveryCode);
+
+    var data = this.createRecoveryData(recoveryId, recoveryKey);
+
+    return $http.post(Options.WALLET_SERVER + '/wallets/create_recovery_data', data);
+  }
+
   /**
    * Encrypts the wallet's id and key into the recoveryData and sets its the recoveryId.
    *
@@ -451,13 +460,19 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
     try {
       return fn();
     } catch(err) {
-      console.log(err)
-      // Safari throws this exception when interacting with localstorage
-      // if the current user has their privacy settings set to reject cookies
-      // and other data.  We swallow it silently.
-      if(SWALLOWED_SECURITY_ERRORS.contains(err.name)) { 
-        return; 
-      } else {
+      var shouldSwallow = false;
+
+      if(SWALLOWED_SECURITY_ERRORS.contains(err.name)) {
+        shouldSwallow = true;
+      }
+
+      if(err.message === "Access is denied.") {
+        shouldSwallow = true;
+      }
+
+      if(shouldSwallow) {
+        return;
+      }  else {
         throw err;
       }
     }

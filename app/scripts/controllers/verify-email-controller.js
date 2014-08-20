@@ -15,8 +15,12 @@ sc.controller('VerifyEmailCtrl', function ($scope, $rootScope, $http, $state, se
     $scope.errors = [];
 
     verifyEmail()
-      .then(claimReward)
-      .then(storeRecoveryData)
+      .then(function () {
+         $scope.updateRewards();
+      })
+      .then(function () {
+        wallet.storeRecoveryData($scope.emailActivationCode, serverRecoveryCode);
+      })
       .finally(function(){
         $scope.loading = false;
       });
@@ -24,7 +28,7 @@ sc.controller('VerifyEmailCtrl', function ($scope, $rootScope, $http, $state, se
 
   function verifyEmail() {
     var data = {
-      recoveryCode: $scope.emailActivationCode,
+      token: $scope.emailActivationCode,
       username: session.get('username'),
       updateToken: wallet.keychainData.updateToken
     };
@@ -32,6 +36,7 @@ sc.controller('VerifyEmailCtrl', function ($scope, $rootScope, $http, $state, se
     return $http.post(Options.API_SERVER + '/user/verifyEmail', data)
       .success(function(response) {
         serverRecoveryCode = response.data.serverRecoveryCode;
+        return session.getUser().refresh();
       })
       .error(function(response) {
         if (response && response.status == 'fail') {
@@ -48,46 +53,6 @@ sc.controller('VerifyEmailCtrl', function ($scope, $rootScope, $http, $state, se
           }
         }
       });
-  }
-
-  function claimReward() {
-    var data = {
-      recoveryCode: $scope.emailActivationCode,
-      username: session.get('username'),
-      updateToken: wallet.keychainData.updateToken
-    };
-
-    return $http.post(Options.API_SERVER + '/claim/verifyEmail', data)
-    .success(function (response) {
-      $rootScope.$broadcast('emailVerified', response.message);
-    })
-    .error(function (response) {
-      if (response && response.status == 'fail') {
-        switch (response.code) {
-          case 'already_taken':
-            // TODO: this user has already claimed the verify_email reward
-            break;
-          case 'invalid_update_token':
-            // this user's update token is invalid, send to login
-            $state.transitionTo('login');
-            break;
-          default:
-            $scope.errors.push('Server error.');
-        }
-      } else {
-        $scope.errors.push('Server error.');
-      }
-    });
-  }
-
-  function storeRecoveryData(){
-    var userRecoveryCode = $scope.emailActivationCode;
-    var recoveryId = Wallet.deriveId(userRecoveryCode, serverRecoveryCode);
-    var recoveryKey = Wallet.deriveKey(recoveryId, userRecoveryCode, serverRecoveryCode);
-
-    var data = wallet.createRecoveryData(recoveryId, recoveryKey);
-
-    return $http.post(Options.WALLET_SERVER + '/wallets/create_recovery_data', data);
   }
 
   $scope.clear = function() {
