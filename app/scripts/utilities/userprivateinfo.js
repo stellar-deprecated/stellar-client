@@ -93,11 +93,14 @@ angular.module('stellarClient').factory('UserPrivateInfo', function($http, $q, $
         }
     }
 
-    UserPrivateInfo.prototype.verifyEmail = function (userRecoveryCode) {
+    /**
+    * If the user hasn't created their recovery data yet, they verify their email with the recovery code
+    */
+    UserPrivateInfo.prototype.verifyEmail = function (token) {
         var data = {
             username: this.username,
             updateToken: this.updateToken,
-            recoveryCode: userRecoveryCode
+            token: token
         }
         return $http.post(Options.API_SERVER + "/user/verifyEmail", data);
     }

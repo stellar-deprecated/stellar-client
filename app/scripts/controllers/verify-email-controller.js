@@ -28,7 +28,7 @@ sc.controller('VerifyEmailCtrl', function ($scope, $rootScope, $http, $state, se
 
   function verifyEmail() {
     var data = {
-      recoveryCode: $scope.emailActivationCode,
+      token: $scope.emailActivationCode,
       username: session.get('username'),
       updateToken: wallet.keychainData.updateToken
     };
@@ -36,6 +36,7 @@ sc.controller('VerifyEmailCtrl', function ($scope, $rootScope, $http, $state, se
     return $http.post(Options.API_SERVER + '/user/verifyEmail', data)
       .success(function(response) {
         serverRecoveryCode = response.data.serverRecoveryCode;
+        return session.getUser().refresh();
       })
       .error(function(response) {
         if (response && response.status == 'fail') {

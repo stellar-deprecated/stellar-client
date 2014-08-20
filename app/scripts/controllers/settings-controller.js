@@ -161,16 +161,18 @@ sc.controller('SettingsEmailCtrl', function($scope, $http, session, singletonPro
   });
 
   function verifyEmail () {
-    var userRecoveryCode = $scope.recoveryCode;
-    return session.getUser().verifyEmail(userRecoveryCode)
+    var verifyToken = $scope.verifyToken;
+    return session.getUser().verifyEmail(verifyToken)
       .then(function (response) {
-        return session.get('wallet').storeRecoveryData(userRecoveryCode, response.data.data.serverRecoveryCode);
+        if (response.data.data && response.data.data.serverRecoveryCode) {
+          return session.get('wallet').storeRecoveryData(verifyToken, response.data.data.serverRecoveryCode);
+        }
       })
       .then(function () {
         return $scope.refreshAndInitialize();
       })
       .then(function () {
-        $scope.recoveryCode = null;
+        $scope.verifyToken = null;
       })
       .catch($scope.handleServerError($('#email-input')));
   };
