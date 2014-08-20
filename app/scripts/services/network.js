@@ -17,25 +17,20 @@ sc.factory('stNetwork', function($rootScope, $timeout) {
 
     var handleDisconnect = function(e) {
         $timeout(function () {
-            $rootScope.$apply(function () {
-                self.connected = false;
-                $rootScope.connected = false;
-                $rootScope.$broadcast('$netDisconnected');
-            });
+            self.connected = false;
+            $rootScope.connected = false;
+            $rootScope.$broadcast('$netDisconnected');
         });
     }
 
     var handleConnect = function (e) {
         $timeout(function () {
-            $rootScope.$apply(function () {
-                self.connected = true;
-                // TODO: need to figure out why this isn't being set when we connect to the stellard
-                self.remote._reserve_base=50*1000000;
-                self.remote._reserve_inc=10*1000000;
+            // TODO: need to figure out why this isn't being set when we connect to the stellard
+            self.remote._reserve_base=50*1000000;
+            self.remote._reserve_inc=10*1000000;
 
-                $rootScope.connected = true;
-                $rootScope.$broadcast('$netConnected');
-            });
+            $rootScope.connected = true;
+            $rootScope.$broadcast('$netConnected');
         });
     };
 
