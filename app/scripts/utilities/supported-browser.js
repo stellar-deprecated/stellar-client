@@ -13,5 +13,9 @@ function isSupportedBrowser() {
   // fixes the issue (https://github.com/Modernizr/Modernizr/issues/1399).
   if(navigator.userAgent.match('AppleWebKit/534.30')) { return false; }
 
+
+  // Getting tons of sce errors from this 11 year old browser
+  if(navigator.userAgent.match('Opera 7.23')) { return false; }
+
   return true;
 }
