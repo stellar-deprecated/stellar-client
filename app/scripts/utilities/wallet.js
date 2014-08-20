@@ -451,13 +451,19 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
     try {
       return fn();
     } catch(err) {
-      console.log(err)
-      // Safari throws this exception when interacting with localstorage
-      // if the current user has their privacy settings set to reject cookies
-      // and other data.  We swallow it silently.
+      var shouldSwallow = false;
+
       if(SWALLOWED_SECURITY_ERRORS.contains(err.name)) { 
-        return; 
-      } else {
+        shouldSwallow = true;
+      }
+
+      if(err.message === "Access is denied.") {
+        shouldSwallow = true;
+      }
+
+      if(shouldSwallow) {
+        return;
+      }  else {
         throw err;
       }
     }
