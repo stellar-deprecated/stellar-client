@@ -9,29 +9,33 @@
 
 var sc = angular.module('stellarClient');
 
-sc.factory('stNetwork', function($rootScope) {
+sc.factory('stNetwork', function($rootScope, $timeout) {
 
     var self   = {};
     self.remote    = null;
     self.connected = false;
 
     var handleDisconnect = function(e) {
-        $rootScope.$apply(function () {
-            self.connected = false;
-            $rootScope.connected = false;
-            $rootScope.$broadcast('$netDisconnected');
+        $timeout(function () {
+            $rootScope.$apply(function () {
+                self.connected = false;
+                $rootScope.connected = false;
+                $rootScope.$broadcast('$netDisconnected');
+            });
         });
     }
 
     var handleConnect = function (e) {
-        $rootScope.$apply(function () {
-            self.connected = true;
-            // TODO: need to figure out why this isn't being set when we connect to the stellard
-            self.remote._reserve_base=50*1000000;
-            self.remote._reserve_inc=10*1000000;
+        $timeout(function () {
+            $rootScope.$apply(function () {
+                self.connected = true;
+                // TODO: need to figure out why this isn't being set when we connect to the stellard
+                self.remote._reserve_base=50*1000000;
+                self.remote._reserve_inc=10*1000000;
 
-            $rootScope.connected = true;
-            $rootScope.$broadcast('$netConnected');
+                $rootScope.connected = true;
+                $rootScope.$broadcast('$netConnected');
+            });
         });
     };
 
