@@ -18,15 +18,7 @@ sc.controller('ManageCurrenciesCtrl', function($rootScope, $scope, $q, session, 
 
     return rpStellarTxt.get($scope.gatewayDomain)
       .then(function(sections) {
-        if(!sections.currencies || !sections.currencies.length) {
-          $scope.currencies = [];
-          $scope.searchStatus = 'no_currencies';
-          return;
-        }
-
-        $scope.searchStatus = 'found';
-
-        $scope.currencies = sections.currencies.map(function(currency) {
+        $scope.currencies = _.map(sections.currencies, function(currency) {
           var parts = currency.split(/\s+/, 2);
 
           return {
@@ -34,6 +26,8 @@ sc.controller('ManageCurrenciesCtrl', function($rootScope, $scope, $q, session, 
             issuer: parts[1]
           }
         });
+
+        $scope.searchStatus = _.any($scope.currencies) ? 'found' : 'no_currencies';
       }, function(err) {
         $scope.currencies = [];
         $scope.searchStatus = 'not_found';
