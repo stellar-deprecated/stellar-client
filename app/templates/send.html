@@ -15,12 +15,12 @@
     <div class="row form-group">
         <div class="row">
             <div rp-errors="send_destination" class="errors col-sm-offset-3 col-sm-6">
-                <div rp-error-valid="" ng-show="send.recipient != send.recipient_address" class="success tip">
-                    wallet address found: {{send.recipient_address}}<span ng-show="send.dt">?dt={{send.dt}}</span>
+                <div rp-error-valid ng-show="send.recipient != send.recipient_address" class="success tip">
+                    {{'wallet address found:'|translate}} {{send.recipient_address}}<span ng-show="send.dt">?dt={{send.dt}}</span>
                 </div>
-                <div rp-error-on="required" l10n="l10n" class="tip" translate>Please enter a recipient.</div>
-                <div rp-error-on="rpDest" l10n="l10n" class="tip" translate>Recipient should be either a name from your contact list or Stellar/Bitcoin address.</div>
-                <div rp-error-on="federation" l10n="l10n" class="tip" translate>This person isn't on Stellar yet.</div>
+                <div rp-error-on="required" l10n="l10n" class="tip">{{'Please enter a recipient.'|translate}}</div>
+                <div rp-error-on="rpDest" l10n="l10n" class="tip">{{'Recipient should be either a name from your contact list or Stellar/Bitcoin address.'|translate}}</div>
+                <div rp-error-on="federation" l10n="l10n" class="tip">{{'This person isn\'t on Stellar yet.'|translate}}</div>
             </div>
         </div>
         <div class="row">
@@ -38,8 +38,8 @@
             <input id="send_dt" name="send_dt" type="text" ng-model="send.dt" rp-stdt="rp-stdt" rp-autofill="$routeParams.dt" ng-required="send.recipient_info.dest_tag_required" class="form-control"/>
         </div>
         <div rp-errors="send_dt" class="errorGroup">
-            <div rp-error-on="rpStdt" l10n="l10n" class="error" translate>Invalid destination tag</div>
-            <div rp-error-on="required" l10n="l10n" class="error" translate>Destination cannot be blank.</div>
+            <div rp-error-on="rpStdt" l10n="l10n" class="error">{{'Invalid destination tag'|translate}}</div>
+            <div rp-error-on="required" l10n="l10n" class="error">{{'Destination cannot be blank.'|translate}}</div>
         </div>
         <div id="dest-tag-desc" ng-show="send.recipient_info.dest_tag_required" l10n="l10n" class="col-sm-3 tip" translate>
             Recipient requires a destination tag to be specified for the transaction. If you don't know the
@@ -49,15 +49,15 @@
     <div class="form-group">
         <div class="row">
             <div rp-errors="send_amount" class="errors col-sm-offset-3 col-sm-6">
-                <div rp-error-on="required" l10n="l10n" class="tip" translate>Please enter an amount.</div>
-                <div rp-error-on="rpAmount" l10n="l10n" class="tip" translate>Not a valid amount.</div>
-                <div rp-error-on="rpAmountPositive" l10n="l10n" class="tip" translate>Amount must be greater than zero.</div>
-                <div rp-error-on="rpMaxAmount" l10n="l10n" class="tip" translate>
+                <div rp-error-on="required" l10n="l10n" class="tip">{{'Please enter an amount.'|translate}}</div>
+                <div rp-error-on="rpAmount" l10n="l10n" class="tip">{{'Not a valid amount.'|translate}}</div>
+                <div rp-error-on="rpAmountPositive" l10n="l10n" class="tip">{{'Amount must be greater than zero.'|translate}}</div>
+                <div rp-error-on="rpMaxAmount" l10n="l10n" class="tip">
                     This transaction exceeds your balance, you can send
                     a max. of {{account.max_spend | rpamount:{rel_precision: 0} }} STR
                 </div>
                 <div ng-show="send.recipient_info.disallow_xtr && send.currency_code=='STR'" l10n="l10n" class="tip" translate>Recipient does not allow STR payments. Are you sure you want to send STR anyway?</div>
-                <div ng-show="send.trust_limit" l10n="l10n" class="success tip" translate>
+                <div ng-show="send.trust_limit" l10n="l10n" class="success tip">
                     {{send.recipient | rpcontactname}}
                     trusts you for {{send.trust_limit | rpamount}} {{send.trust_limit | rpcurrency}}.
                 </div>
@@ -67,7 +67,7 @@
             <label for="send_amount" l10n="l10n" class="col-sm-3" translate>AMOUNT</label>
                 <div class="col-sm-6 send-amount right-inner-addon">
                     <input id="send_amount" name="send_amount" type="text" ng-model="send.amount" required="required" rp-autofill="$routeParams.amount" rp-autofill-amount="rp-autofill-amount" rp-amount="rp-amount" rp-amount-positive="rp-amount-positive" rp-amount-xtr-limit="rp-amount-xtr-limit" rp-amount-xtr-limit-currency="{{send.currency}}" class="form-control stellar-input"/>
-                    <i translate>STR</i>
+                    <i>STR</i>
                 </div>
                 <div class="col-sm-3 tip" translate>Type in the amount to send.</div>
         </div>
@@ -78,7 +78,7 @@
             <input id="send_st" name="send_st" type="text" ng-model="send.st" rp-stdt="rp-stdt" rp-autofill="$routeParams.st" class="form-control"/>
         </div>
         <div rp-errors="send_st" class="errorGroup">
-            <div rp-error-on="rpStdt" l10n="l10n" class="error" translate>Invalid source tag</div>
+            <div rp-error-on="rpStdt" l10n="l10n" class="error">{{'Invalid source tag'|translate}}</div>
         </div>
     </div>
     <div ng-repeat="field in send.extra_fields" ng-switch="field.type" class="row form-group">
@@ -106,7 +106,7 @@
                     Destination account is unfunded; send at least
                     {{send.xtr_deficiency | rpamount}} STR to fund it.
                 </span>
-                <a href="https://www.stellar.org/glossary/#Reserves" target="_blank" l10n="l10n">More information</a>
+                <a href="https://www.stellar.org/glossary/#Reserves" target="_blank" l10n="l10n" translate>More information</a>
             </p>
             <p ng-show="account.max_spend.to_number() < send.amount * 1000000" l10n="l10n" class="send-form-status">
                 <span translate>You need a minimum balance of 20 Stellars to send.</span> <a href="https://www.stellar.org/glossary/#Reserves" target="_blank" l10n="l10n" translate>More information</a>
@@ -174,7 +174,7 @@
     </p>
 </group>
 <group ng-show="mode=='error'" class="mode-error">
-    <group ng-switch="" on="error_type">
+    <group ng-switch on="error_type">
         <group ng-switch-when="noDest" class="result-error">
             <h2 l10n="l10n" class="tx-status" translate>Destination does not exist</h2>
             <p l10n="l10n" translate>The wallet you&#39;re trying to send to does not exist.</p>
@@ -188,15 +188,14 @@
             <p l10n="l10n" translate>The transaction was rejected by the server due to a client issue.</p>
         </group>
         <group ng-switch-default="ng-switch-default">
-            <p l10n="l10n" class="literal" translate>
-                Sorry, an error occurred while submitting your transaction.
-                Make sure you are connected to the Internet and try again later.
+            <p l10n="l10n" class="literal">
+                {{'Sorry, an error occurred while submitting your transaction. Make sure you are connected to the Internet and try again later.'|translate}}
             </p>
-            <p l10n="l10n" class="literal" translate>Please ensure you don't send your payment more than once.</p>
+            <p l10n="l10n" class="literal">{{'Please ensure you don\'t send your payment more than once.'|translate}}</p>
         </group>
     </group>
     <p>
-        <button ng-click="cancelConfirm()" l10n="l10n" class="btn btn-default" translate>&laquo; Back</button>
+        <button ng-click="cancelConfirm()" l10n="l10n" class="btn btn-default">&laquo; <span translate>Back</span></button>
     </p>
 </group>
 
@@ -229,25 +228,23 @@
     </group>
     <group ng-show="tx_result=='malformed'" class="result-malformed">
         <h2 l10n="l10n" class="tx-status" translate>Transaction malformed!</h2>
-        <p ng-switch="" on="engine_result"><span ng-switch-default="ng-switch-default" l10n="l10n" translate>Your transaction is invalid, reason: {{engine_result}} - {{engine_result_message}}</span></p>
+        <p ng-switch on="engine_result"><span ng-switch-default="ng-switch-default" l10n="l10n">{{'Your transaction is invalid, reason:'|translate}} {{engine_result}} - {{engine_result_message}}</span></p>
     </group>
     <group ng-show="tx_result=='failure'" class="result-malformed">
         <h2 l10n="l10n" class="tx-status" translate>Transaction malformed!</h2>
-        <p ng-switch="" on="engine_result"><span ng-switch-when="tefDST_TAG_NEEDED" l10n="l10n" translate>Destination account requires destination tag to be specified when making payments.</span></p>
+        <p ng-switch on="engine_result"><span ng-switch-when="tefDST_TAG_NEEDED" l10n="l10n">{{'Destination account requires destination tag to be specified when making payments.'|translate}}</span></p>
     </group>
     <group ng-show="tx_result=='local'" class="result-failed">
         <h2 l10n="l10n" class="tx-status" translate>Transaction failed!</h2>
-        <p ng-switch="" on="engine_result"><span ng-switch-when="telINSUF_FEE_P" l10n="l10n" translate>
-          The particular server you sent the transaction to was too busy to forward or process
-           your transaction at the fee you included in it.</span></p>
+        <p ng-switch on="engine_result"><span ng-switch-when="telINSUF_FEE_P" l10n="l10n">{{'The particular server you sent the transaction to was too busy to forward or process your transaction at the fee you included in it.'|translate}}</span></p>
     </group>
     <group ng-show="tx_result=='claim'" class="result-malformed">
         <h2 l10n="l10n" class="tx-status" translate>Transaction failed!</h2>
-        <p ng-switch="" on="engine_result"><span ng-switch-when="tecNO_DST" l10n="l10n" translate>The destination account does not exist.</span><span ng-switch-when="tecNO_DST_INSUF_XRP" l10n="l10n" translate>The destination account does not exist. Too little STR sent to create it.</span><span ng-switch-default="ng-switch-default" l10n="l10n" translate>Error: {{engine_result_message}}</span></p>
+        <p ng-switch on="engine_result"><span ng-switch-when="tecNO_DST" l10n="l10n">{{'The destination account does not exist.'|translate}}</span><span ng-switch-when="tecNO_DST_INSUF_XRP" l10n="l10n">{{'The destination account does not exist. Too little STR sent to create it.'|translate}}</span><span ng-switch-default="ng-switch-default" l10n="l10n">{{'Error'|translate}}: {{engine_result_message}}</span></p>
     </group>
     <group ng-show="tx_result=='failed'" class="result-failed">
         <h2 l10n="l10n" class="tx-status" translate>Transaction failed!</h2>
-        <p ng-switch="" on="engine_result"><span ng-switch-when="terNO_LINE" l10n="l10n" translate>You have no trust line in this currency.</span><span ng-switch-default="ng-switch-default" l10n="l10n" translate>Your transaction failed to clear, reason: {{engine_result_message}}</span></p>
+        <p ng-switch on="engine_result"><span ng-switch-when="terNO_LINE" l10n="l10n">You have no trust line in this currency.</span><span ng-switch-default="ng-switch-default" l10n="l10n">{{'Your transaction failed to clear, reason:'|translate}} {{engine_result_message}}</span></p>
     </group>
 
     <button ng-show="tx_result=='cleared'" class="btn btn-default modalStatus-btn" ng-click="reset()">

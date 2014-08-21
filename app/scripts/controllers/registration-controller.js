@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('RegistrationCtrl', function($rootScope, $scope, $state, $stateParams, $timeout, $http, $q, session, debounce, singletonPromise, Wallet, FlashMessages, invites, gettext) {
+sc.controller('RegistrationCtrl', function($rootScope, $scope, $state, $stateParams, $timeout, $http, $q, session, debounce, singletonPromise, Wallet, FlashMessages, invites, gettextCatalog) {
   // Provide a default value to protect against stale config files.
   Options.MAX_WALLET_ATTEMPTS = Options.MAX_WALLET_ATTEMPTS || 3;
 
@@ -53,11 +53,11 @@ sc.controller('RegistrationCtrl', function($rootScope, $scope, $state, $statePar
         function (response){
           switch(response && response.code) {
             case 'already_taken':
-              $scope.errors.usernameErrors.push(gettext('This username is taken.'));
+              $scope.errors.usernameErrors.push(gettextCatalog.getString('This username is taken.'));
               $scope.status.usernameAvailable = false;
               break;
             default:
-              $scope.errors.usernameErrors.push('An error occurred.');
+              $scope.errors.usernameErrors.push(gettextCatalog.getString('An error occurred.'));
               $scope.status.usernameAvailable = null;
           }
         });
@@ -66,15 +66,17 @@ sc.controller('RegistrationCtrl', function($rootScope, $scope, $state, $statePar
 
   function getUsernameError(username) {
     if (username.length < 3 || username.length > 20) {
-      return "Username must be between 3 and 20 characters";
+      return gettextCatalog.getString("Username must be between {{min}} and {{max}} characters")
+        .replace('{{min}}', 3)
+        .replace('{{max}}', 20);
     }
      if(!username.match(/^[a-zA-Z0-9].*[a-zA-Z0-9]$/))
      {
-         return "Must start and end with a letter or number.";
+         return gettextCatalog.getString("Must start and end with a letter or number.");
      }
     if (!username.match(/^[a-zA-Z0-9]+([._-]+[a-zA-Z0-9]+)*$/)) {
       //return "Must start and end with a letter, and may contain \".\", \"_\", or \"-\"";
-        return "Only letters numbers or ._-";
+        return gettextCatalog.getString("Only letters numbers or ._-");
     }
     return null;
   }
@@ -111,11 +113,11 @@ sc.controller('RegistrationCtrl', function($rootScope, $scope, $state, $statePar
 
     if(!$scope.data.username){
       validInput = false;
-      $scope.errors.usernameErrors.push('The username field is required.');
+      $scope.errors.usernameErrors.push(gettextCatalog.getString('The username field is required.'));
     }
     else if($scope.status.usernameAvailable === false){
       validInput = false;
-      $scope.errors.usernameErrors.push('This username is taken.');
+      $scope.errors.usernameErrors.push(gettextCatalog.getString('This username is taken.'));
     }
 
     // if(!registration.email.value && $scope.noEmailWarning == false) {
@@ -192,13 +194,13 @@ sc.controller('RegistrationCtrl', function($rootScope, $scope, $state, $statePar
 
   function showRegistrationErrors(response) {
     var usernameErrorMessages = {
-      'already_taken': 'The username is taken.',
-      'invalid': 'Username must start and end with a letter, and may contain ".", "_", or "-"'
+      'already_taken': gettextCatalog.getString('The username is taken.'),
+      'invalid': gettextCatalog.getString('Username must start and end with a letter, and may contain ".", "_", or "-"')
     };
 
     var emailErrorMessages = {
-      'already_taken': 'The email is taken.',
-      'invalid': 'The email is invalid.'
+      'already_taken': gettextCatalog.getString('The email is taken.'),
+      'invalid': gettextCatalog.getString('The email is invalid.')
     };
 
     if (response && response.status == "fail") {
@@ -259,8 +261,9 @@ sc.controller('RegistrationCtrl', function($rootScope, $scope, $state, $statePar
     return wallet.sync('create').catch(function(err) {
       if (attempts >= Options.MAX_WALLET_ATTEMPTS) {
         FlashMessages.add({
-          title: 'Registration Error',
-          info: 'There was an error during registration. Please contact us at hello@stellar.org if the problem persists.',
+          title: gettextCatalog.getString('Registration Error'),
+          info: gettextCatalog.getString('There was an error during registration. Please contact us at {{email}} if the problem persists.')
+            .replace('{{email}}', 'hello@stellar.org'),
           type: 'error'
         });
 
@@ -275,8 +278,8 @@ sc.controller('RegistrationCtrl', function($rootScope, $scope, $state, $statePar
 
       if (attempts == 0) {
         FlashMessages.add({
-          title: 'The first attempt to save your wallet failed.',
-          info: 'Retrying...',
+          title: gettextCatalog.getString('The first attempt to save your wallet failed.'),
+          info: gettextCatalog.getString('Retrying...'),
           type: 'error'
         });
       }

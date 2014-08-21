@@ -4,7 +4,7 @@ var Amount = stellar.Amount;
 
 var sc = angular.module('stellarClient');
 
-sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout','session','stNetwork', 'rpTracker', 'contacts', function($rootScope, $scope, $routeParams, $timeout, session, $network, $rpTracker, contacts)
+sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout','session','stNetwork', 'rpTracker', 'contacts', 'gettextCatalog', function($rootScope, $scope, $routeParams, $timeout, session, $network, $rpTracker, contacts, gettextCatalog)
 {
     var timer;
 
@@ -924,7 +924,7 @@ sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout'
                 } else {
                     $scope.changeMode("error");
                     $scope.error_type = "unknown";
-                    $scope.error_message = "An unknown error occurred"
+                    $scope.error_message = gettextCatalog.getString("An unknown error occurred")
                 }
             });
         });
@@ -1051,7 +1051,7 @@ sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout'
             default:
                 $scope.changeMode("stellarerror");
                 //TODO: set an error type and unify our error reporting for the send pane
-                $scope.error_message = "An error occurred: " + res.engine_result_message;
+                $scope.error_message = gettextCatalog.getString("An error occurred:") +" "+ res.engine_result_message;
         }
     };
 

@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('TransactionHistoryCtrl', function($scope, transactionHistory) {
+sc.controller('TransactionHistoryCtrl', function($scope, transactionHistory, gettextCatalog) {
   $scope.typeIcons = {
     'sent': 'icon icon-send',
     'received': 'icon icon-receive'
@@ -56,7 +56,7 @@ sc.controller('TransactionHistoryCtrl', function($scope, transactionHistory) {
     columnDefs: [
       {
         field: 'transaction.type',
-        displayName: 'Type',
+        displayName: gettextCatalog.getString('Type'),
         sortable: false,
         maxWidth: '150',
         cellTemplate: '<i ng-class="typeIcons[row.getProperty(col.field)]"></i> ' +
@@ -65,7 +65,7 @@ sc.controller('TransactionHistoryCtrl', function($scope, transactionHistory) {
       },
       {
         field: 'transaction.amount',
-        displayName: 'Amount',
+        displayName: gettextCatalog.getString('Amount'),
         sortable: false,
         width: '20%',
         cellTemplate: '<span>{{ row.getProperty(col.field).to_human() }} {{row.getProperty(col.field).currency().to_human()}}</span>' +
@@ -74,7 +74,7 @@ sc.controller('TransactionHistoryCtrl', function($scope, transactionHistory) {
       },
       {
         field: 'date',
-        displayName: 'Date',
+        displayName: gettextCatalog.getString('Date'),
         sortable: false,
         width: '20%',
         cellTemplate: '<span am-time-ago="row.getProperty(col.field)"></span>'

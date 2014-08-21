@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('InvitesCtrl', function($scope, $http, $q, $filter, session, invites, singletonPromise) {
+sc.controller('InvitesCtrl', function($scope, $http, $q, $filter, session, invites, singletonPromise, gettextCatalog) {
     var INVITE_LINK = "https://launch.stellar.org/#/register?inviteCode=";
 
     $scope.getInvites = function () {
@@ -30,15 +30,15 @@ sc.controller('InvitesCtrl', function($scope, $http, $q, $filter, session, invit
 
     $scope.inviteStatus = {
         success: {
-            text: "Received stellars!",
+            text: gettextCatalog.getString("Received stellars!"),
             class: "success"
         },
         waiting: {
-            text: "Waiting for Facebook auth",
+            text: gettextCatalog.getString("Waiting for Facebook auth"),
             class: "pending"
         },
         pending: {
-            text: "pending",
+            text: gettextCatalog.getString("pending"),
             class: "pending"
         }
     };
@@ -46,7 +46,7 @@ sc.controller('InvitesCtrl', function($scope, $http, $q, $filter, session, invit
     $scope.inviteActions = [
         {
             type: "copy",
-            text: "copy invite link",
+            text: gettextCatalog.getString("copy invite link"),
             include: function (invite) {
                 // only include this action for invites that haven't been used yet
                 return !invite.inviteeId;
@@ -55,13 +55,13 @@ sc.controller('InvitesCtrl', function($scope, $http, $q, $filter, session, invit
                 return INVITE_LINK + invite.inviteCode;
             },
             copyAction: function (invite) {
-                Util.showTooltip($('#'+invite.inviteId+" #copy-link"), "Copied!",
+                Util.showTooltip($('#'+invite.inviteId+" #copy-link"), gettextCatalog.getString("Copied!"),
                     'info', 'top');
             }
         },
         {
             type: "resend",
-            text: "re-send invite",
+            text: gettextCatalog.getString("re-send invite"),
             include: function (invite) {
                 // only include this action for invites that haven't been used yet
                 return !invite.inviteeId;
@@ -79,7 +79,7 @@ sc.controller('InvitesCtrl', function($scope, $http, $q, $filter, session, invit
         },
         {
             type: "cancel",
-            text: "cancel",
+            text: gettextCatalog.getString("cancel"),
             include: function (invite) {
                 // only include this action for invites that haven't been claimed yet
                 return !invite.claimedAt;
@@ -96,10 +96,10 @@ sc.controller('InvitesCtrl', function($scope, $http, $q, $filter, session, invit
     $scope.attemptSendInvite = singletonPromise(function () {
         // use angular's check value method to determine if it's a proper email
         if (!$scope.inviteEmail && inviteForm.email.value) {
-            $scope.emailError = "Invalid email";
+            $scope.emailError = gettextCatalog.getString("Invalid email");
             return $q.reject();
         } else if (!inviteForm.email.value) {
-            $scope.emailError = "Email address required";
+            $scope.emailError = gettextCatalog.getString("Email address required");
             return $q.reject();
         }
 

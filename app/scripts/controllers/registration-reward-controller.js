@@ -2,12 +2,12 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('RegistrationRewardCtrl', function ($scope, session) {
+sc.controller('RegistrationRewardCtrl', function ($scope, session, gettextCatalog) {
   $scope.reward = {
     rewardType: 0,
-    title: 'Create a new wallet!',
-    subtitle: 'Complete registration',
-    innerTitle: 'Create a new wallet',
+    title: gettextCatalog.getString('Create a new wallet!'),
+    subtitle: gettextCatalog.getString('Complete registration'),
+    innerTitle: gettextCatalog.getString('Create a new wallet'),
     status: 'sent'
   };
 
