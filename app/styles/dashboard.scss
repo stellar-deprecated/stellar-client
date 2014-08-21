@@ -1,5 +1,6 @@
 @import "send.scss";
 @import "receive.scss";
+@import "multi-currency.scss";
 
 .dashboard {
   .row {
@@ -63,7 +64,6 @@
 
       .dash-currency-line {
         margin: 5px 10%;
-        border-bottom: 1px solid $grey-border;
         text-align: left;
 
         &:first-child {
@@ -290,7 +290,7 @@
     }
   }
 
-  .send-receive {
+  .tab-panes {
     max-height: 0;
     overflow: hidden;
     @include transition(max-height 700ms ease-in-out);
