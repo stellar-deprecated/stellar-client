@@ -1,10 +1,10 @@
-<div class="info">
+<div class="info" translate>
     Verify your email address to activate your password recovery feature.<br>
     Your recovery code will be sent to your email.
 </div>
 <div class="verify-email">
     <div class="add-email-item" ng-class="{active: reward.status == 'incomplete'}">
-        <form role="form" name="addEmailForm" ng-controller="AddEmailCtrl" ng-submit="addEmail()" novalidate>
+        <form role="form" name="addEmailForm" ng-controller="AddEmailCtrl" ng-submit="addEmail()" novalidate="">
             <div class="form-group">
                 <div class="errors col-sm-12">
                     <div class="tip">{{ errors.join('\n') }}</div>
@@ -12,17 +12,17 @@
             </div>
             <div class="form-group">
                 <div class="col-sm-12">
-                    <input id="email" name="email" type="email" class="form-control" ng-class="{'input-error': errors.length}" placeholder="Email Address" ng-model="email" ng-change="errors = []">
+                    <input id="email" name="email" type="email" class="form-control" ng-class="{'input-error': errors.length}" placeholder="{{'Email Address'|translate}}" ng-model="email" ng-change="errors = []">
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-xs-3 button-col-left">
-                    <button type="button" class="cancel btn btn-default" ng-click="cancel()">Cancel</button>
+                    <button type="button" class="cancel btn btn-default" ng-click="cancel()" translate>Cancel</button>
                 </div>
                 <div class="col-xs-9 button-col-right">
                     <button type="submit" class="submit btn btn-default" ng-class="{loading: loading}" ng-disabled="loading">
-                        <span ng-if="loading">Loading...</span>
-                        <span ng-if="!loading">Submit</span>
+                        <span ng-if="loading" translate>Loading...</span>
+                        <span ng-if="!loading" translate>Submit</span>
                     </button>
                 </div>
             </div>
@@ -37,17 +37,17 @@
             </div>
             <div class="form-group">
                 <div class="col-sm-12">
-                    <input id="emailActivationCode" type="text" class="form-control" ng-class="{'input-error': errors.length}" placeholder="Recovery Code" ng-model="emailActivationCode" ng-change="errors = []">
+                    <input id="emailActivationCode" type="text" class="form-control" ng-class="{'input-error': errors.length}" placeholder="{{'Recovery Code'|translate}}" ng-model="emailActivationCode" ng-change="errors = []">
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-xs-3 button-col-left">
-                    <button type="button" class="cancel btn btn-default" ng-click="back()">Back</button>
+                    <button type="button" class="cancel btn btn-default" ng-click="back()" translate>Back</button>
                 </div>
                 <div class="col-xs-9 button-col-right">
                     <button type="submit" class="submit btn btn-default" ng-class="{loading: loading}" ng-disabled="loading">
-                        <span ng-if="loading">Loading...</span>
-                        <span ng-if="!loading">Submit</span>
+                        <span ng-if="loading" translate>Loading...</span>
+                        <span ng-if="!loading" translate>Submit</span>
                     </button>
                 </div>
             </div>

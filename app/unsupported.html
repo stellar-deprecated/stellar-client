@@ -42,7 +42,7 @@
         <div class="client-section client-inner-nav container navbar-default">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
-                    <span class="sr-only">Toggle navigation</span>
+                    <span class="sr-only" translate>Toggle navigation</span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
@@ -51,13 +51,13 @@
             </div>
             <div class="collapse navbar-collapse" id="navbar">
                 <ul class="nav navbar-nav navbar-right" ng-hide="session.get('loggedIn')">
-                    <li><a href="#/login" ui-sref="login">LOG IN</a></li>
-                    <li><a href="#/register" ui-sref="register" class="sign-up">SIGN UP</a></li>
+                    <li><a href="#/login" ui-sref="login" translate>LOG IN</a></li>
+                    <li><a href="#/register" ui-sref="register" class="sign-up" translate>SIGN UP</a></li>
                 </ul>
 
                 <ul class="nav navbar-nav navbar-right ng-hide" ng-show="session.get('loggedIn')">
                     <li><a href="#/settings">{{ session.get('username') }}</a></li>
-                    <li><a href="#/logout" ui-sref="logout">LOG OUT</a></li>
+                    <li><a href="#/logout" ui-sref="logout" translate>LOG OUT</a></li>
                 </ul>
             </div>
         </div>
@@ -67,19 +67,19 @@
         <div class="browser_unsupported client-section">
           <div class="container">
             <div class="modalStatus error-modalStatus">
-              <h2 class="modalStatus-title">Oops!</h2>
-              <p class="modalStatus-info">
+              <h2 class="modalStatus-title" translate>Oops!</h2>
+              <p class="modalStatus-info" translate>
                 <strong>We're sorry but it appears that your browser isn't supported by the Stellar client.</strong>
                 We need your browser to support Javascript, Websockets and Typed Arrays in order to correctly
                 function.
               </p>
-              <p class="modalStatus-info">
+              <p class="modalStatus-info" translate>
                   We suggest you install the latest version of either
                   <a href="https://www.google.com/chrome/browser/">Google Chrome</a>
                   or
                   <a href="https://www.mozilla.org/firefox/">Mozilla Firefox</a>
               </p>
-              <p class="modalStatus-info">
+              <p class="modalStatus-info" translate>
                 Sorry for the inconvenience, <br>
                 &mdash; The Stellar Team
               </p>
@@ -93,20 +93,20 @@
             <nav id="footer-navigation" class="clear" role="navigation">
                 <div class="menu-footer-menu-container">
                     <ul id="menu-footer-menu" class="menu">
-                        <li><a href="https://www.stellar.org/about/">About</a></li>
-                        <li><a href="https://www.stellar.org/api/">API</a></li>
-                        <li><a href="https://www.stellar.org/jobs/">Jobs</a></li>
-                        <li><a href="https://www.stellar.org/stats/">Stats</a></li>
-                        <li><a href="https://www.stellar.org/privacy-policy/">Privacy Policy</a></li>
-                        <li><a href="https://www.stellar.org/terms-of-service/">Terms of Service</a></li>
-                        <li><a href="https://stellartalk.org/">Forum</a></li>
+                        <li><a href="https://www.stellar.org/about/" translate>About</a></li>
+                        <li><a href="https://www.stellar.org/api/" translate>API</a></li>
+                        <li><a href="https://www.stellar.org/jobs/" translate>Jobs</a></li>
+                        <li><a href="https://www.stellar.org/stats/" translate>Stats</a></li>
+                        <li><a href="https://www.stellar.org/privacy-policy/" translate>Privacy Policy</a></li>
+                        <li><a href="https://www.stellar.org/terms-of-service/" translate>Terms of Service</a></li>
+                        <li><a href="https://stellartalk.org/" translate>Forum</a></li>
                     </ul>
                 </div>
             </nav>
             <div class="site-info">
                 <p>
                     <i class="icon icon-heart"></i>
-                    <a href="http://stellar.org/">Stellar</a> is a not-for-profit.
+                    <span translate><a href="http://stellar.org/">Stellar</a> is a not-for-profit.</span>
                 </p>
             </div>
         </footer>

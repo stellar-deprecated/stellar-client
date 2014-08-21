@@ -13,8 +13,7 @@ var stellarClient = angular.module('stellarClient', [
   'singletonPromise',
   'ui.router',
   'vr.passwordStrength',
-  'ngClipboard',
-  'gettext'
+  'ngClipboard'
 ]);
 
 stellarClient.config(function($httpProvider, $stateProvider, $urlRouterProvider, RavenProvider, ngClipProvider) {
@@ -80,11 +79,7 @@ stellarClient.config(function($httpProvider, $stateProvider, $urlRouterProvider,
 
 });
 
-stellarClient.run(function($location, $state, ipCookie, gettextCatalog){
-
-  gettextCatalog.setCurrentLanguage('en');
-  gettextCatalog.debug = true;
-
+stellarClient.run(function($location, $state, ipCookie){
   var atRoot    = _.isEmpty($location.path());
   var firstTime = !ipCookie("weve_been_here_before")
   var forceToRegister = atRoot && firstTime;

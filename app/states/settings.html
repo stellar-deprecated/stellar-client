@@ -1,7 +1,7 @@
 <div class="settings" ng-controller="SettingsCtrl">
     <div class="container">
         <div class="client-section">
-            <h1 class="title">Settings<span class="link-dashboard"><a href="/#/dashboard">&#8592; back to dashboard</a></span></h1>
+            <h1 class="title"><span translate>Settings</span><span class="link-dashboard"><a href="/#/dashboard" translate>&#8592; back to dashboard</a></span></h1>
 
         </div>
 
@@ -30,47 +30,47 @@
             <div class="settings-section">
                 <div class="title">
                     <div class="icon-col">
-                        <span class="glyphicon glyphicon-credit-card"/>
+                        <span class="glyphicon glyphicon-credit-card"></span>
                     </div>
-                    <span>Account</span>
+                    <span translate>Account</span>
                 </div>
                 <div class="row">
-                    <div class="settings-label col-md-3 col-xs-6">EMAIL</div>
+                    <div class="settings-label col-md-3 col-xs-6" translate>EMAIL</div>
                     <div class="settings-control col-md-9 col-xs-6">
                         <div class="icon-col">
-                            <span class="icon icon-email"/>
+                            <span class="icon icon-email"></span>
                         </div>
                         <span ng-if="email">{{email}}</span>
-                        <span ng-if="!email">Add your email!</span>
+                        <span ng-if="!email" translate>Add your email!</span>
                         <!-- TODO: show if verified -->
-                        <span class="verified-email-status icon icon-tick" ng-show="email"/>
+                        <span class="verified-email-status icon icon-tick" ng-show="email"></span>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="settings-label col-md-3 col-xs-6">RECOVERY TOKEN</div>
+                    <div class="settings-label col-md-3 col-xs-6" translate>RECOVERY TOKEN</div>
                     <div class="settings-control col-md-9 col-xs-6">
                         <div class="icon-col">
-                            <span class="icon icon-key"/>
+                            <span class="icon icon-key"></span>
                         </div>
-                        <span id="recovertoggle" class="error-block" data-toggle="tooltip" data-placement="right" data-template='<div class="tooltip error-tip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>' st-toggle ctrl="toggle.recover"></span>
+                        <span id="recovertoggle" class="error-block" data-toggle="tooltip" data-placement="right" data-template='<div class="tooltip error-tip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>' st-toggle="" ctrl="toggle.recover"></span>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="settings-label col-md-3 col-xs-6">SEND EMAILS</div>
+                    <div class="settings-label col-md-3 col-xs-6" translate>SEND EMAILS</div>
                     <div class="settings-control col-md-9 col-xs-6">
                         <div class="icon-col">
-                            <span class="icon icon-email"/>
+                            <span class="icon icon-email"></span>
                         </div>
-                        <span id="emailtoggle" class="error-block" data-toggle="tooltip" data-placement="right" data-template='<div class="tooltip error-tip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>' st-toggle ctrl="toggle.email"></span>
+                        <span id="emailtoggle" class="error-block" data-toggle="tooltip" data-placement="right" data-template='<div class="tooltip error-tip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>' st-toggle="" ctrl="toggle.email"></span>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="settings-label col-md-3 col-xs-6">FEDERATION</div>
+                    <div class="settings-label col-md-3 col-xs-6" translate>FEDERATION</div>
                     <div class="settings-control col-md-9 col-xs-6">
                         <div class="icon-col">
-                            <span class="icon icon-user"/>
+                            <span class="icon icon-user"></span>
                         </div>
-                        <span id="federatetoggle" class="error-block" data-toggle="tooltip" data-placement="right" data-template='<div class="tooltip error-tip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>' st-toggle ctrl="toggle.federate"></span>
+                        <span id="federatetoggle" class="error-block" data-toggle="tooltip" data-placement="right" data-template='<div class="tooltip error-tip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>' st-toggle="" ctrl="toggle.federate"></span>
                     </div>
                 </div>
             </div>
@@ -78,13 +78,13 @@
             <div class="settings-section">
                 <div class="title">
                     <div class="icon-col">
-                        <span class="icon icon-lock"/>
+                        <span class="icon icon-lock"></span>
                     </div>
-                    <span>Security</span>
+                    <span translate>Security</span>
                 </div>
 
                 <div class="row" ng-controller="SettingsEmailCtrl">
-                    <div class="settings-label col-md-3 col-xs-6">EMAIL</div>
+                    <div class="settings-label col-md-3 col-xs-6" translate>EMAIL</div>
                     <div class="settings-control col-md-9 col-xs-6">
                         <div class="row">
                             <div class="icon-col col-xs-1">
@@ -92,32 +92,35 @@
                             </div>
                             <!-- User hasn't added email yet -->
                             <div class="col-xs-10" ng-show="getEmailState() == 'none'">
-                                <a href="" ng-click="setEmailState('change')">Add your email</a>
+                                <a href="" ng-click="setEmailState('change')" translate>Add your email</a>
                             </div>
                             <!-- Show current email with verified check mark (if verified) -->
                             <div class="col-xs-10" ng-show="getEmailState() == 'added'">
                                 <div>
                                     <span class="change-email-control" ng-show='!changingEmail'>{{email}}</span>
-                                    <span class="verified-email-status icon icon-tick" ng-show="emailVerified"> Verified</span>
-                                    <a href="" ng-show="!emailVerified" ng-click="setEmailState('verify')">Verify</a>
+                                    <span class="verified-email-status icon icon-tick" ng-show="emailVerified" translate> Verified</span>
+                                    <a href="" ng-show="!emailVerified" ng-click="setEmailState('verify')" translate>Verify</a>
                                 </div>
                                 <div class="secondary-action">
-                                    <a href="" ng-click="setEmailState('change')">Change email</a>
+                                    <a href="" ng-click="setEmailState('change')" translate>Change email</a>
                                 </div>
                             </div>
                             <!-- Input layout (for add/change email) -->
                             <div class="col-xs-10" ng-show="getEmailState() == 'change'">
                                 <div class="row">
                                     <div class="col-md-5 col-xs-12">
-                                        <input id="email-input" data-toggle="tooltip" placeholder="Email" type="text" class="form-control" ng-model="newEmail"></input>
+                                        <input id="email-input" data-toggle="tooltip" placeholder="Email" type="text" class="form-control" ng-model="newEmail"/>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-4 col-xs-12 col-md-push-1">
-                                        <button class="btn btn-default stellar-button settings-confirm-button" ng-click="emailAction()">{{updateEmail.isLoading() ? "Loading..." : "Confirm"}}</button>
+                                        <button class="btn btn-default stellar-button settings-confirm-button" ng-click="emailAction()">
+                                            <span ng-if="updateEmail.isLoading()">Loading...</span>
+                                            <span ng-if="!updateEmail.isLoading()">Confirm</span>
+                                        </button>
                                     </div>
                                     <div class="settings-cancel-button col-md-1 col-xs-1 col-md-pull-4">
-                                        <a href="" ng-click="resetEmailState()">Cancel</a>
+                                        <a href="" ng-click="resetEmailState()" translate>Cancel</a>
                                     </div>
                                 </div>
                             </div>
@@ -125,15 +128,18 @@
                             <div class="col-xs-10" ng-show="getEmailState() == 'verify'">
                                 <div class="row">
                                     <div class="col-md-5 col-xs-12">
-                                        <input id="verify-input" data-toggle="tooltip" placeholder="Code" type="text" class="form-control" ng-model="verifyToken"></input>
+                                        <input id="verify-input" data-toggle="tooltip" placeholder="Code" type="text" class="form-control" ng-model="verifyToken"/>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-4 col-xs-12 col-md-push-1">
-                                        <button class="btn btn-default stellar-button settings-confirm-button" ng-click="emailAction()">{{updateEmail.isLoading() ? "Loading..." : "Confirm"}}</button>
+                                        <button class="btn btn-default stellar-button settings-confirm-button" ng-click="emailAction()">
+                                            <span ng-if="updateEmail.isLoading()">Loading...</span>
+                                            <span ng-if="!updateEmail.isLoading()">Confirm</span>
+                                        </button>
                                     </div>
                                     <div class="settings-cancel-button col-md-1 col-xs-1 col-md-pull-4">
-                                        <a href="" ng-click="resetEmailState()">Cancel</a>
+                                        <a href="" ng-click="resetEmailState()" translate>Cancel</a>
                                     </div>
                                 </div>
                             </div>
@@ -187,11 +193,11 @@
                 -->
 
                 <div class="row">
-                    <div class="settings-label col-md-3 col-xs-6">SECRET KEY</div>
+                    <div class="settings-label col-md-3 col-xs-6" translate>SECRET KEY</div>
                     <div class="settings-control col-md-9 col-xs-6">
                         <div ng-hide="reveal">
                             <div class="icon-col">
-                                <span class="icon icon-key"/>
+                                <span class="icon icon-key"></span>
                             </div>
                             <span>*************</span>
                         </div>
@@ -200,8 +206,8 @@
                         </div>
                         <div class="secondary-action">
                             <span id="reveal-key" ng-click="reveal = !reveal">
-                                <span ng-if="reveal">Hide</span>
-                                <span ng-if="!reveal">Reveal</span>
+                                <span ng-if="reveal" translate>Hide</span>
+                                <span ng-if="!reveal" translate>Reveal</span>
                             </span>
                         </div>
                     </div>

@@ -11,7 +11,7 @@
     "gulp": "^3.6.0",
     "gulp-angular-gettext": "~0.3.1",
     "gulp-angular-gettext-export-html": "~0.0.2",
-    "gulp-angular-gettext-annotate": "~0.0.1",
+    "gulp-angular-gettext-annotate": "~0.0.2",
     "gulp-angular-templatecache": "^1.2.1",
     "gulp-autoprefixer": "^0.0.6",
     "gulp-bower-files": "^0.2.1",

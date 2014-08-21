@@ -1,15 +1,15 @@
 <div class="recovery client-section">
     <div class="container">
-        <h1 class="title">Username Recovery</h1>
+        <h1 class="title" translate>Username Recovery</h1>
 
-        <form name="recoverform" role="form" class="form-horizontal" ng-controller="UsernameRecoveryCtrl" novalidate>
+        <form name="recoverform" role="form" class="form-horizontal" ng-controller="UsernameRecoveryCtrl" novalidate="">
             <div class="form-group">
                 <div class="errors col-sm-offset-3 col-sm-6">
                     <div class="tip">{{ emailError }}</div>
                 </div>
             </div>
             <div class="form-group">
-                <label for="email" class="col-sm-3">EMAIL</label>
+                <label for="email" class="col-sm-3" translate>EMAIL</label>
                 <div class="col-sm-6">
                     <input name="email" id="email" type="email" class="form-control" ng-model="email" ng-change="emailError = null">
                 </div>
@@ -17,8 +17,8 @@
             <div class="form-group">
                 <div class="col-sm-offset-3 col-sm-6">
                     <button type="submit" class="btn btn-default" ng-click="attemptRecovery()" ng-disabled="attemptRecovery.isLoading()">
-                        <span ng-if="attemptRecovery.isLoading()">Recovery...</span>
-                        <span ng-if="!attemptRecovery.isLoading()">Recover username</span>
+                        <span ng-if="attemptRecovery.isLoading()" translate>Recovery...</span>
+                        <span ng-if="!attemptRecovery.isLoading()" translate>Recover username</span>
                     </button>
                 </div>
             </div>

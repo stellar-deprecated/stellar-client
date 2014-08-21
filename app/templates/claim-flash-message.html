@@ -1,6 +1,6 @@
 <div ng-controller="ClaimFlashMessageCtrl">
   <button class="btn btn-default" ng-click="claimRewards()" ng-disabled="claimRewards.isLoading()">
-      <span ng-if="claimRewards.isLoading()">Loading...</span>
-      <span ng-if="!claimRewards.isLoading()">Claim now</span>
+      <span ng-if="claimRewards.isLoading()" translate>Loading...</span>
+      <span ng-if="!claimRewards.isLoading()" translate>Claim now</span>
   </button>
 </div>

@@ -3,7 +3,7 @@
         <span translate>Close</span>
         <i class="icon icon-times-circle-thin"></i>
     </div>
-    <div l10n="l10n" class="literal title">Receive Stellars</div>
+    <div l10n="l10n" class="literal title" translate>Receive Stellars</div>
     <form name="receiveForm" id="receiveForm" role="form" class="row-padding-small mode-form">
         <div class="row form-group">
             <label for="receive_username" class="col-sm-3 username-title" translate>YOUR USERNAME</label>
@@ -19,8 +19,8 @@
         </div>
         <div class="row form-group show-address-row">
             <span class="show-address" ng-click="toggleAddress()">
-                <span ng-if="showAddress">Hide your Stellar Address</span>
-                <span ng-if="!showAddress">Show your Stellar Address</span>
+                <span ng-if="showAddress" translate>Hide your Stellar Address</span>
+                <span ng-if="!showAddress" translate>Show your Stellar Address</span>
             </span>
         </div>
         <div class="row form-group address-row" ng-show="showAddress">
