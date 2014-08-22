@@ -138,10 +138,10 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, s
                     $scope.$apply(function () {
                         // Generate list of accepted currencies
                         $scope.send.currency_choices = _.uniq(_.compact(_.map(data.receive_currencies, function (currency) {
-                            return {value: currency};
+                            return currency;
                         })));
                         // Add STR
-                        $scope.send.currency_choices.unshift({value: "STR"});
+                        $scope.send.currency_choices.unshift("STR");
                     });
                 }
                 return deferred.resolve();
@@ -173,7 +173,7 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, s
             return;
         }
         var currency = $scope.sendFormModel.currency;
-        var formatted = "" + $scope.sendFormModel.amount + " " + $scope.send.currency.value;
+        var formatted = "" + $scope.sendFormModel.amount + " " + $scope.send.currency;
         var amount = $scope.send.amount = Amount.from_human(formatted);
         if (!amount.is_native()) {
             // set issuer to recipient to resolve issuer to their trustlines automatically
