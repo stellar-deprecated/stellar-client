@@ -6,6 +6,22 @@ sc.controller('SendRewardCtrl', function ($rootScope, $scope, $http, stNetwork, 
   $scope.sendStellars = 25;
   $scope.receiveStellars = 25;
 
+  // Suggested recipients
+  $scope.recipients = [
+    {
+      name: 'StellarTalk.org',
+      url: 'http://stellartalk.org/'
+    },
+    {
+      name: 'bravenewsoftware',
+      url: 'http://www.bravenewsoftware.org/'
+    },
+    {
+      name: 'missionbit',
+      url: 'http://www.missionbit.com/'
+    }
+  ];
+
   $scope.reward = {
     rewardType: 3,
     title: gettextCatalog.getString('Send stellars!'),

@@ -84,7 +84,7 @@ sc.controller('TransactionHistoryCtrl', function($scope, transactionHistory, get
         displayName: '',
         sortable: false,
         width: '60',
-        cellTemplate: '<span class="tx-direction">{{ row.getProperty(col.field) === "sent" ? "to" : "from" }}</span>'
+        cellTemplate: '<span class="tx-direction">{{ row.getProperty(col.field) === "sent" ? "'+gettextCatalog.getString('to')+'" : "'+gettextCatalog.getString('from')+'" }}</span>'
       },
       {
         field: 'transaction.counterparty',

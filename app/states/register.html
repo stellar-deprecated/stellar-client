@@ -6,7 +6,7 @@
             <div ng-include="'templates/flash-message-container.html'"></div>
         </div>
 
-        <form role="form" name="registration" class="form-horizontal" ng-controller="RegistrationCtrl" novalidate="">
+        <form role="form" name="registration" class="form-horizontal" ng-controller="RegistrationCtrl" novalidate>
             <div class="form-group">
                 <div class="errors col-sm-offset-3 col-sm-6">
                     <div class="tip">{{ errors.usernameErrors.join('\n') }}</div>
@@ -22,7 +22,7 @@
                 </div>
                 <div class="col-sm-3 info">
                     <i class="username-status status glyphicon" ng-class="usernameClass()"></i>
-                    <span class="tip" translate>Make it memorable.</span>
+                    <span class="tip" translate-comment="Context: Username" translate>Make it memorable.</span>
                 </div>
             </div>
 
@@ -71,7 +71,7 @@
 
             <div class="form-group terms">
                 <div class="col-sm-offset-3 col-sm-6 tip" translate>
-                    By clicking the button, you agree to our <a href="https://www.stellar.org/terms-of-service" target="_blank">Terms</a>.
+                    By clicking the button, you agree to our <a href="{{stellarTermsOfServiceUrl}}" target="_blank">Terms</a>.
                 </div>
             </div>
 

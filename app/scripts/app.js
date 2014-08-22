@@ -95,6 +95,8 @@ stellarClient.run(function($location, $state, ipCookie, gettextCatalog){
 
 stellarClient.run(function($rootScope, $state, ipCookie, session, FlashMessages, invites){
   $rootScope.balance = 'loading...';
+  $rootScope.stellarUrl = 'http://stellar.org/';
+  $rootScope.stellarTermsOfServiceUrl = 'https://www.stellar.org/terms-of-service';
 
   $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){
 

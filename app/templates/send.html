@@ -102,7 +102,7 @@
         <div class="col-sm-6 col-sm-offset-3 send-form-status-container">
             <p ng-show="send.fund_status == 'insufficient-xtr'" class="send-form-status">
                 <span translate>
-                    Destination account is unfunded; send at least {{send.xtr_deficiency | rpamount}} STR to fund it.
+                    Destination account is unfunded; send at least {{xtr_deficiency}} STR to fund it.
                 </span>
                 <a href="https://www.stellar.org/glossary/#Reserves" target="_blank" l10n="l10n" translate>More information</a>
             </p>
@@ -119,7 +119,7 @@
                 <span translate>Please make sure your account has enough funds, and the recipient has enough trust to the currency issuer. If it still doesn't work, try again later.</span>
             </p>
 
-            <p ng-show="send.path_status == 'error-quote'" class="send-form-status"><span translate>Error while retrieving quote for outbound payment.</span><span ng-show="send.quote_error" translate> The outbound bridge reported: "{{send.quote_error | rpheavynormalize}}"</span></p>
+            <p ng-show="send.path_status == 'error-quote'" class="send-form-status"><span translate>Error while retrieving quote for outbound payment.</span><span ng-show="send.quote_error" translate> The outbound bridge reported: "{{quote_error}}"</span></p>
             <p ng-show="send.path_status == 'error'" class="send-form-status" translate>Error while calculating path.</p>
         </div>
     </div>

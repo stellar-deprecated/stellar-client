@@ -321,7 +321,7 @@ gulp.task('pot', function () {
       'app/scripts/**/*.js'
     ])
     .pipe(gettext.extract('template.pot'))
-    .pipe(gulp.dest('po/'));
+    .pipe(gulp.dest('.tmp/po/'));
 });
 
 gulp.task('translations', function () {

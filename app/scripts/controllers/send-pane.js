@@ -4,7 +4,7 @@ var Amount = stellar.Amount;
 
 var sc = angular.module('stellarClient');
 
-sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout','session','stNetwork', 'rpTracker', 'contacts', 'gettextCatalog', function($rootScope, $scope, $routeParams, $timeout, session, $network, $rpTracker, contacts, gettextCatalog)
+sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout', '$filter', 'session','stNetwork', 'rpTracker', 'contacts', 'gettextCatalog', function($rootScope, $scope, $routeParams, $timeout, $filter, session, $network, $rpTracker, contacts, gettextCatalog)
 {
     var timer;
 
@@ -770,6 +770,14 @@ sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout'
     $scope.$watch('account.max_spend', function () {
         $scope.update_amount();
     }, true);
+
+    $scope.$watch('send.quote_error', function (newValue) {
+      $scope.quote_error = $filter('rpheavynormalize')(newValue);
+    });
+
+    $scope.$watch('send.xtr_deficiency', function (newValue) {
+      $scope.xtr_deficiency = $filter('rpamount')(newValue);
+    });
 
     $scope.reset = function () {
         $scope.changeMode("form");

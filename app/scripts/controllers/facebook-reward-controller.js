@@ -3,6 +3,8 @@
 var sc = angular.module('stellarClient');
 
 sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, session, gettextCatalog) {
+  $scope.facebookVerifyHelpUrl = 'https://www.facebook.com/help/398085743567023/';
+
   $scope.reward = {
     rewardType: 1,
     title: gettextCatalog.getString('Receive stellars on us!'),
@@ -43,7 +45,7 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, session
           $scope.reward.error.template = "templates/facebook-verify-error.html";
           $scope.reward.error.panel = gettextCatalog.getString("Almost there! Verify your Facebook account.");
           $scope.reward.error.action = function () {
-            $scope.reward.error = null,
+            $scope.reward.error = null;
             $scope.reward.status = 'incomplete';
           };
           break;

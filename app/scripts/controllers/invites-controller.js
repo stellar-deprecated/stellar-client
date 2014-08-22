@@ -9,13 +9,33 @@ sc.controller('InvitesCtrl', function($scope, $http, $q, $filter, session, invit
         return session.getUser() && session.getUser().getInvites();
     }
 
-    $scope.getUnsentInvites = function () {
+    $scope.$watch(
+      function getUnsentInvites() {
         return session.getUser() && session.getUser().getUnsentInvites();
-    }
+      },
+      function(newValue) {
+        $scope.unsentInvites = newValue;
+        $scope.unsentInvitesLength = 0;
+        if (_.isArray(newValue)) {
+          $scope.unsentInvitesLength = newValue.length;
+        }
+      },
+      true
+    );
 
-    $scope.getSentInvites = function () {
+    $scope.$watch(
+      function getSentInvites() {
         return session.getUser() && session.getUser().getSentInvites();
-    }
+      },
+      function(newValue) {
+        $scope.sentInvites = newValue;
+        $scope.sentInvitesLength = 0;
+        if (_.isArray(newValue)) {
+          $scope.sentInvitesLength = newValue.length;
+        }
+      },
+      true
+    );
 
     // returns a 'status' for the given invite (send, pending, facebookauth)
     $scope.getInviteStatus = function (invite) {

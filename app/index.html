@@ -51,14 +51,14 @@
             </div>
             <div class="collapse navbar-collapse" id="navbar">
                 <ul class="nav navbar-nav navbar-right" ng-hide="session.get('loggedIn')">
-                    <li><a href="#/login" ui-sref="login" class="uppercase" translate>Log In</a></li>
-                    <li><a href="#/register" ui-sref="register" class="sign-up uppercase" translate>Sign Up</a></li>
+                    <li><a href="#/login" ui-sref="login" class="uppercase" translate>Log in</a></li>
+                    <li><a href="#/register" ui-sref="register" class="sign-up uppercase" translate>Sign up</a></li>
                 </ul>
 
                 <ul class="nav navbar-nav navbar-right ng-hide" ng-show="session.get('loggedIn')">
-                    <li><a href="#/invites" ng-show="getInvitesLeft() || getSentInvites()" ng-class="getInvitesClass()"><span translate>invite ({{getInvitesLeft()}})</span></a></li>
+                    <li><a href="#/invites" ng-show="getInvitesLeft() || getSentInvites()" ng-class="getInvitesClass()"><span translate>invite</span> ({{getInvitesLeft()}})</a></li>
                     <li><a href="#/settings"><span class="glyphicon glyphicon-cog"></span>{{ session.get('username') }}</a></li>
-                    <li><a href="#/logout" ui-sref="logout"><span class="glyphicon glyphicon-log-out"></span><span class="uppercase" translate>Log Out</span></a></li>
+                    <li><a href="#/logout" ui-sref="logout"><span class="glyphicon glyphicon-log-out"></span><span class="uppercase" translate>Log out</span></a></li>
                 </ul>
             </div>
         </div>
@@ -88,7 +88,7 @@
             <div class="site-info">
                 <p>
                     <i class="icon icon-heart"></i>
-                    <span translate><a href="http://stellar.org/">Stellar</a> is a not-for-profit.</span>
+                    <span translate><a href="{{stellarUrl}}">Stellar</a> is a not-for-profit.</span>
                 </p>
             </div>
         </footer>

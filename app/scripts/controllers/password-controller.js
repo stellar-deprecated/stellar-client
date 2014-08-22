@@ -78,6 +78,7 @@ sc.controller('PasswordCtrl', function($scope, passwordStrengthComputations, bad
     if(strength < 50) return gettextCatalog.getString('Almost').toUpperCase();
     /// Password strength
     if(strength < 75) return gettextCatalog.getString('Good').toUpperCase();
+    /// Password strength
     return gettextCatalog.getString('Strong').toUpperCase();
   };
 
