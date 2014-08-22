@@ -10,7 +10,7 @@
 
   }
 
-  form > div {
+  form {
     .send-amount {
 
       i {
@@ -20,7 +20,7 @@
         top: 21px;
       }
 
-      input[type="text"] {
+      input[type="number"] {
         font-size: 48px;
         height: auto;
         padding-right: 50px;
