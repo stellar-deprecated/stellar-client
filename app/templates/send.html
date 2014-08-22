@@ -25,7 +25,7 @@
         </div>
         <div class="row">
             <label for="send_destination" l10n="l10n" class="col-sm-3">SEND TO</label>
-            <div class="col-sm-6 send-address right-inner-addon">
+            <div class="col-sm-6 send-address input-icon-wrapper">
                 <input id="send_destination" name="send_destination" type="text" rp-combobox="recipient_query" ng-class="{error: required || rpDest || federation}" ng-model="send.recipient" rp-dest="rp-dest" rp-dest-address="rp-dest-address" rp-dest-contact="rp-dest-contact" rp-dest-bitcoin="rp-dest-bitcoin" rp-dest-email="rp-dest-email" required="required" rp-autofill="$routeParams.to" rp-focus="rp-focus" class="form-control stellar-input"/>
                 <i class="glyphicon glyphicon-globe"></i>
             </div>
@@ -65,7 +65,7 @@
         </div>
         <div class="row">
             <label for="send_amount" l10n="l10n" class="col-sm-3">AMOUNT</label>
-                <div class="col-sm-6 send-amount right-inner-addon">
+                <div class="col-sm-6 send-amount input-icon-wrapper">
                     <input id="send_amount" name="send_amount" type="text" ng-model="send.amount" required="required" rp-autofill="$routeParams.amount" rp-autofill-amount="rp-autofill-amount" rp-amount="rp-amount" rp-amount-positive="rp-amount-positive" rp-amount-xtr-limit="rp-amount-xtr-limit" rp-amount-xtr-limit-currency="{{send.currency}}" class="form-control stellar-input"/>
                     <i>STR</i>
                 </div>
