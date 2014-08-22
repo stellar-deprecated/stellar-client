@@ -1,4 +1,4 @@
-sc.controller('VerifyEmailCtrl', function ($scope, $rootScope, $http, $state, session, Wallet) {
+sc.controller('VerifyEmailCtrl', function ($scope, $rootScope, $http, $state, session, Wallet, gettextCatalog) {
   var wallet = session.get('wallet');
   $scope.email = wallet.mainData.email;
   $scope.loading = false;
@@ -47,7 +47,7 @@ sc.controller('VerifyEmailCtrl', function ($scope, $rootScope, $http, $state, se
               break;
             case 'invalid':
               if (response.data && response.data.field == 'recovery_code') {
-                $scope.errors.push('Invalid recovery code.');
+                $scope.errors.push(gettextCatalog.getString('Invalid recovery code.'));
               }
               break;
           }

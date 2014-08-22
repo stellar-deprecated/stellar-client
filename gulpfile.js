@@ -1,13 +1,15 @@
 'use strict';
 // generated on 2014-04-24 using generator-gulp-webapp 0.0.8
 
-var gulp        = require('gulp');
-var exec        = require('child_process').exec;
-var mergeStream = require('merge-stream');
-var git         = require('git-rev');
-var karma       = require('karma').server;
-var _           = require('lodash');
-var fs          = require('fs');
+var gulp             = require('gulp');
+var exec             = require('child_process').exec;
+var mergeStream      = require('merge-stream');
+var git              = require('git-rev');
+var karma            = require('karma').server;
+var _                = require('lodash');
+var fs               = require('fs');
+var gettext          = require('gulp-angular-gettext');
+var gettext_annotate = require('gulp-angular-gettext-annotate');
 
 // load plugins
 var $ = require('gulp-load-plugins')();
@@ -311,4 +313,35 @@ gulp.task('test', function (done) {
     }, done);
 });
 
+gulp.task('pot', function () {
+  return gulp.src([
+      'app/*.html',
+      'app/states/*.html',
+      'app/templates/*.html',
+      'app/scripts/**/*.js'
+    ])
+    .pipe(gettext.extract('template.pot'))
+    .pipe(gulp.dest('po/'));
+});
 
+gulp.task('translations', function () {
+  return gulp.src('po/pl.po')
+    .pipe(gettext.compile())
+    .pipe(gulp.dest('app/scripts/translations/'));
+});
+
+gulp.task('gettext-annotate', function () {
+  var root = gulp.src(['app/*.html'])
+    .pipe(gettext_annotate())
+    .pipe(gulp.dest('.tmp/annotate'));
+
+  var templates = gulp.src(['app/templates/**/*.html', '!app/templates/news.html'])
+    .pipe(gettext_annotate())
+    .pipe(gulp.dest('.tmp/annotate/templates'));
+
+  var states = gulp.src('app/states/**/*.html')
+    .pipe(gettext_annotate())
+    .pipe(gulp.dest('.tmp/annotate/states'));
+
+  return mergeStream(root, templates, states);
+});

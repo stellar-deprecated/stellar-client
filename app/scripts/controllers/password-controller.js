@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('PasswordCtrl', function($scope, passwordStrengthComputations, badPasswords) {  
+sc.controller('PasswordCtrl', function($scope, passwordStrengthComputations, badPasswords, gettextCatalog) {
   $scope.loading = false;
   $scope.passwordConfirmation = '';
 
@@ -71,9 +71,12 @@ sc.controller('PasswordCtrl', function($scope, passwordStrengthComputations, bad
     if(!$scope.data.password) return '';
 
     var strength = passwordStrengthComputations.getStrength($scope.data.password);
-    if(strength < 25) return 'WEAK';
-    if(strength < 50) return 'ALMOST';
-    if(strength < 75) return 'GOOD';
+    /// Password strength
+    if(strength < 25) return gettextCatalog.getString('WEAK');
+    /// Password strength
+    if(strength < 50) return gettextCatalog.getString('ALMOST');
+    /// Password strength
+    if(strength < 75) return gettextCatalog.getString('GOOD');
     return 'STRONG';
   };
 
@@ -87,15 +90,15 @@ sc.controller('PasswordCtrl', function($scope, passwordStrengthComputations, bad
 
     if(!$scope.data.password){
       validInput = false;
-      $scope.errors.passwordErrors.push('The password field is required.');
+      $scope.errors.passwordErrors.push(gettextCatalog.getString('The password field is required.'));
     }
     else if(!$scope.status.passwordValid){
       validInput = false;
-      $scope.errors.passwordErrors.push('The password is not strong enough.');
+      $scope.errors.passwordErrors.push(gettextCatalog.getString('The password is not strong enough.'));
     }
     else if(!$scope.status.passwordConfirmValid){
       validInput = false;
-      $scope.errors.passwordConfirmErrors.push('The passwords do not match.');
+      $scope.errors.passwordConfirmErrors.push(gettextCatalog.getString('The passwords do not match.'));
     }
 
     return validInput;

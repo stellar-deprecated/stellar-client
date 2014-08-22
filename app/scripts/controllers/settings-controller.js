@@ -2,14 +2,14 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('SettingsCtrl', function($scope, $http, $state, session, singletonPromise) {
+sc.controller('SettingsCtrl', function($scope, $http, $state, session, singletonPromise, gettextCatalog) {
   var wallet = session.get('wallet');
 
   $scope.secretKey = wallet.keychainData.signingKeys.secret;
 
   $scope.handleServerError = function (element) {
     return function (error) {
-      var message = error.status == 'fail' ? error.message : 'Server error';
+      var message = error.status == 'fail' ? error.message : gettextCatalog.getString('Server error');
       Util.showTooltip(element, message, 'error', 'top');
     }
   }
@@ -36,7 +36,7 @@ sc.controller('SettingsCtrl', function($scope, $http, $state, session, singleton
       $scope.toggle.email.on = response.data.email;
     })
     .error(function (response) {
-      $scope.toggle.error = "Server error";
+      $scope.toggle.error = gettextCatalog.getString("Server error");
       $scope.toggle.disableToggles = true;
       // TODO retry
     });
@@ -76,7 +76,7 @@ sc.controller('SettingsCtrl', function($scope, $http, $state, session, singleton
     if ($scope.toggle.disableToggles) {
       if ($scope.toggle.error) {
         // if we're disabling these toggles, let the user know
-        showError(toggle.wrapper, "Server error.");
+        showError(toggle.wrapper, gettextCatalog.getString("Server error."));
       }
       return;
     }
@@ -102,7 +102,7 @@ sc.controller('SettingsCtrl', function($scope, $http, $state, session, singleton
             }
         }
       } else {
-        showError(toggle.wrapper, "Server error.");
+        showError(toggle.wrapper, gettextCatalog.getString("Server error."));
       }
     });
   }

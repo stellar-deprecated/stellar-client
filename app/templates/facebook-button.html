@@ -1,19 +1,19 @@
 <div class="body">
     <div ng-show="!data.hasClaimedInviteCode">
-        <h2>Connect with Facebook to receive stellars.</h2>
-        <p>You will receive a starter amount of stellars to explore. Look for future opportunities to receive additional stellars via learning programs.</p>
+        <h2 translate>Connect with Facebook to receive stellars.</h2>
+        <p translate>You will receive a starter amount of stellars to explore. Look for future opportunities to receive additional stellars via learning programs.</p>
     </div>
     <div ng-show="data.hasClaimedInviteCode">
-        <h2>{{data.inviterUsername}} has invited you to receive <strong>stellars</strong> on us!</h2>
+        <h2 translate>{{data.inviterUsername}} has invited you to receive <strong>stellars</strong> on us!</h2>
     </div>
-    <a href="" ng-show="!describe" ng-click="describe = true">Why Facebook?</a>
-    <p ng-show="describe">We are currently using Facebook as a verification method to avoid spam but hope to add other methods soon. We will not post on your Facebook.</p>
+    <a href="" ng-show="!describe" ng-click="describe = true" translate>Why Facebook?</a>
+    <p ng-show="describe" translate>We are currently using Facebook as a verification method to avoid spam but hope to add other methods soon. We will not post on your Facebook.</p>
 </div>
 <div class="fbconnect">
     <button class="fbbutton" ng-click="facebookLogin()" ng-show="fbinit">
         <div class="fblogo">f</div>
-        <div class="fblabel" ng-hide="loading">Connect with Facebook</div>
-        <div class="fblabel" ng-show="loading">Loading...</div>
+        <div class="fblabel" ng-hide="loading" translate>Connect with Facebook</div>
+        <div class="fblabel" ng-show="loading" translate>Loading...</div>
     </button>
-    <p ng-show="!fbinit">Loading...</p>
+    <p ng-show="!fbinit" translate>Loading...</p>
 </div>

@@ -1,10 +1,10 @@
 <div class="reward-container client-section" ng-controller="RewardPaneCtrl">
     <div class="container">
         <div class="rewards-incomplete ng-hide" ng-show="showRewards">
-            <div class="reward-container-title">Get Started</div>
+            <div class="reward-container-title" translate>Get Started</div>
             <div ng-include="'templates/reward-progress.html'"></div>
             <div class="reward-pane">
-                <div ng-include src="'templates/reward-list.html'"></div>
+                <div ng-include="" src="'templates/reward-list.html'"></div>
                 <div ng-include="'templates/reward-page.html'" ng-controller="RegistrationRewardCtrl"></div>
                 <div ng-include="'templates/reward-page.html'" ng-controller="FacebookRewardCtrl"></div>
                 <div ng-include="'templates/reward-page.html'" ng-controller="EmailRewardCtrl" class="email-reward-page"></div>

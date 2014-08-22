@@ -1,4 +1,4 @@
-sc.controller('AddEmailCtrl', function ($scope, $rootScope, $http, $state, session) {
+sc.controller('AddEmailCtrl', function ($scope, $rootScope, $http, $state, session, gettextCatalog) {
   $scope.loading = false;
   $scope.errors = [];
 
@@ -8,7 +8,7 @@ sc.controller('AddEmailCtrl', function ($scope, $rootScope, $http, $state, sessi
       $scope.errors = [];
 
       if (!$scope.email) {
-        $scope.errors.push("Please enter a valid email.");
+        $scope.errors.push(gettextCatalog.getString("Please enter a valid email."));
         $scope.loading = false;
         return;
       }
@@ -44,13 +44,13 @@ sc.controller('AddEmailCtrl', function ($scope, $rootScope, $http, $state, sessi
               $state.transitionTo('login');
               break;
             case 'already_taken':
-              $scope.errors.push("This email is already taken.");
+              $scope.errors.push(gettextCatalog.getString("This email is already taken."));
               break;
             default:
-              $scope.errors.push("Server error.");
+              $scope.errors.push(gettextCatalog.getString("Server error."));
           }
         } else {
-          $scope.errors.push("Server error.");
+          $scope.errors.push(gettextCatalog.getString("Server error."));
         }
         $scope.loading = false;
       }

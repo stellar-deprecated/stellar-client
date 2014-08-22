@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('LoginCtrl', function($rootScope, $scope, $state, $http, $timeout, $q, session, singletonPromise, Wallet, FlashMessages, invites) {
+sc.controller('LoginCtrl', function($rootScope, $scope, $state, $http, $timeout, $q, session, singletonPromise, Wallet, FlashMessages, invites, gettextCatalog) {
   $scope.username   = null;
   $scope.password   = null;
   $scope.rememberMe = false;
@@ -18,7 +18,7 @@ sc.controller('LoginCtrl', function($rootScope, $scope, $state, $http, $timeout,
   $scope.asyncLogin = singletonPromise(function() {
     $scope.loginError = null;
     if (!$scope.username || !$scope.password) {
-      return $q.reject("Username or password cannot be blank");
+      return $q.reject(gettextCatalog.getString("Username or password cannot be blank"));
     }
     return deriveId().then(performLogin);
   });
@@ -26,15 +26,15 @@ sc.controller('LoginCtrl', function($rootScope, $scope, $state, $http, $timeout,
   if (location.search.match('idle')) {
     FlashMessages.add({
       title: 'You\'ve been logged out',
-      info: 'For your security, you have been logged out because your browser is idle. Please log back in to continue using Stellar.',
+      info: gettextCatalog.getString('For your security, you have been logged out because your browser is idle. Please log back in to continue using Stellar.'),
       type: 'error'
     });
   }
   if ($rootScope.recoveringUsername) {
     $rootScope.recoveringUsername = false;
     FlashMessages.add({
-      title: 'Username emailed',
-      info: 'Your username has been emailed to you; please check your inbox.',
+      title: gettextCatalog.getString('Username emailed'),
+      info: gettextCatalog.getString('Your username has been emailed to you; please check your inbox.'),
       type: 'info'
     });
   }
@@ -70,13 +70,13 @@ sc.controller('LoginCtrl', function($rootScope, $scope, $state, $http, $timeout,
       .error(function(body, status) {
         switch(status) {
           case 404:
-            $scope.loginError = 'Invalid username or password.';
+            $scope.loginError = gettextCatalog.getString('Invalid username or password.');
             break;
           case 0:
-            $scope.loginError = 'Unable to contact the server.';
+            $scope.loginError = gettextCatalog.getString('Unable to contact the server.');
             break;
           default:
-            $scope.loginError = 'An error occurred.';
+            $scope.loginError = gettextCatalog.getString('An error occurred.');
         }
       });
   }
@@ -86,8 +86,8 @@ sc.controller('LoginCtrl', function($rootScope, $scope, $state, $http, $timeout,
       sessionStorage['display_reload_message'] = false;
     } catch (e) {}
     FlashMessages.add({
-      title: 'Logout',
-      info: 'You refreshed the page, which unfortunately means you\'ll have to sign in again. This is necessary because your password (used to access your account) is kept locally in your browser tab and never sent to our servers.',
+      title: gettextCatalog.getString('Logout'),
+      info: gettextCatalog.getString('You refreshed the page, which unfortunately means you\'ll have to sign in again. This is necessary because your password (used to access your account) is kept locally in your browser tab and never sent to our servers.'),
       type: 'error'
     });
   }

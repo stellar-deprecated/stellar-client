@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session, TutorialHelper, singletonPromise, FlashMessages, contacts, invites) {
+sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session, TutorialHelper, singletonPromise, FlashMessages, contacts, invites, gettextCatalog) {
   $scope.showRewards         = false;
   $scope.showRewardsComplete = null;
   $scope.selectedReward      = null;
@@ -88,7 +88,7 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
   }
 
   $scope.rewardQueuedButtonTitle = function() {
-    return _.isEmpty($scope.data.inviteCode) ? "Continue" : "Submit Invite Code";
+    return _.isEmpty($scope.data.inviteCode) ? gettextCatalog.getString("Continue") : gettextCatalog.getString("Submit Invite Code");
   }
 
   $scope.computeRewardProgress = function() {
@@ -129,8 +129,8 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
 
     if($scope.showRewardsComplete && !firstRequest) {
       $rootScope.$broadcast('flashMessage', {
-        title: 'Oh, happy day!',
-        info: 'You unlocked all the rewards.',
+        title: gettextCatalog.getString('Oh, happy day!'),
+        info: gettextCatalog.getString('You unlocked all the rewards.'),
         type: 'success'
       });
     }
@@ -198,7 +198,7 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
     if(readyRewards.length > 0) {
       $rootScope.$broadcast('flashMessage', {
         id: 'claimRewards',
-        title: 'You have stellars waiting to be claimed!',
+        title: gettextCatalog.getString('You have stellars waiting to be claimed!'),
         template: 'templates/claim-flash-message.html',
         type: 'success'
       });
@@ -231,9 +231,9 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
       $scope.rewards[1].status == "sent" ||
       $scope.rewards[1].status == 'ready';
     if (facebookClaimed) {
-      return "Claim your reward now!";
+      return gettextCatalog.getString("Claim your reward now!");
     } else {
-      return "Connect with Facebook to claim your reward!";
+      return gettextCatalog.getString("Connect with Facebook to claim your reward!");
     }
   }
 
@@ -249,7 +249,7 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
   $scope.$on('invite-claimed', function () {
     $scope.updateRewards()
       .then(function () {
-        FlashMessages.add({title: "Invite claimed!", info: getInviteClaimedFlashMessageInfo()});
+        FlashMessages.add({title: gettextCatalog.getString("Invite claimed!"), info: getInviteClaimedFlashMessageInfo()});
       })
       .then(processReadyRewards);
   })

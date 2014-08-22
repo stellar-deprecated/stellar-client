@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('RecoveryCtrl', function($scope, $state, $http, $timeout, session, Wallet) {
+sc.controller('RecoveryCtrl', function($scope, $state, $http, $timeout, session, Wallet, gettextCatalog) {
   $scope.username = null;
   $scope.userRecoveryCode = null;
   $scope.serverRecoveryCode = null;
@@ -15,10 +15,10 @@ sc.controller('RecoveryCtrl', function($scope, $state, $http, $timeout, session,
     }
 
     if (!$scope.serverRecoveryCode) {
-      $scope.recoveryError = "Please enter your recovery code.";
+      $scope.recoveryError = gettextCatalog.getString("Please enter your recovery code.");
     }
     if (!$scope.username) {
-      $scope.usernameError = "Please enter your username.";
+      $scope.usernameError = gettextCatalog.getString("Please enter your username.");
     }
 
     if ($scope.recoverError || $scope.usernameError) {
@@ -48,23 +48,23 @@ sc.controller('RecoveryCtrl', function($scope, $state, $http, $timeout, session,
         if (body.data && body.data.serverRecoveryCode) {
           $scope.serverRecoveryCode = body.data.serverRecoveryCode;
         } else {
-          $scope.recoveryError = 'An error occurred.';
+          $scope.recoveryError = gettextCatalog.getString('An error occurred.');
         }
       })
       .error(function(body, status) {
         switch(status) {
           case 400:
             if (body.code == 'invalid') {
-              $scope.recoveryError = 'Invalid username or recovery code.';
+              $scope.recoveryError = gettextCatalog.getString('Invalid username or recovery code.');
             } else if (body.code == 'disabled') {
-              $scope.recoveryError = 'Recovery has been disabled for this account.';
+              $scope.recoveryError = gettextCatalog.getString('Recovery has been disabled for this account.');
             }
             break;
           case 0:
-            $scope.recoveryError = 'Unable to contact the server.';
+            $scope.recoveryError = gettextCatalog.getString('Unable to contact the server.');
             break;
           default:
-            $scope.recoveryError = 'An error occurred.';
+            $scope.recoveryError = gettextCatalog.getString('An error occurred.');
         }
       });
   }
@@ -88,19 +88,19 @@ sc.controller('RecoveryCtrl', function($scope, $state, $http, $timeout, session,
           session.login(wallet);
           $state.go('change_password');
         } else {
-          $scope.recoveryError = 'An error occurred.';
+          $scope.recoveryError = gettextCatalog.getString('An error occurred.');
         }
       })
       .error(function(body, status) {
         switch(status) {
           case 404:
-            $scope.recoveryError = 'Invalid recoveryId.';
+            $scope.recoveryError = gettextCatalog.getString('Invalid recoveryId.');
             break;
           case 0:
-            $scope.recoveryError = 'Unable to contact the server.';
+            $scope.recoveryError = gettextCatalog.getString('Unable to contact the server.');
             break;
           default:
-            $scope.recoveryError = 'An error occurred.';
+            $scope.recoveryError = gettextCatalog.getString('An error occurred.');
         }
       });
   }

@@ -2,14 +2,14 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('UsernameRecoveryCtrl', function($rootScope, $scope, $http, $state, $q, singletonPromise) {
+sc.controller('UsernameRecoveryCtrl', function($rootScope, $scope, $http, $state, $q, singletonPromise, gettextCatalog) {
 
     $scope.attemptRecovery = singletonPromise(function () {
         if (!$scope.email && recoverform.email.value) {
-            $scope.emailError = "Invalid email";
+            $scope.emailError = gettextCatalog.getString("Invalid email");
             return $q.reject();
         } else if (!recoverform.email.value) {
-            $scope.emailError = "Email address required";
+            $scope.emailError = gettextCatalog.getString("Email address required");
             return $q.reject();
         }
 
@@ -25,9 +25,9 @@ sc.controller('UsernameRecoveryCtrl', function($rootScope, $scope, $http, $state
         })
         .error(function (response) {
             if (response.code == "not_found") {
-                $scope.emailError = "No username with that email";
+                $scope.emailError = gettextCatalog.getString("No username with that email");
             } else {
-                $scope.emailError = "Server error";
+                $scope.emailError = gettextCatalog.getString("Server error");
             }
         })
     });

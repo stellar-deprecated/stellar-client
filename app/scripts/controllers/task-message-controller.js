@@ -1,4 +1,4 @@
-sc.controller('TaskMessageCtrl', function ($rootScope, $scope, $state, $filter, session) {
+sc.controller('TaskMessageCtrl', function ($rootScope, $scope, $state, $filter, session, gettextCatalog) {
     $scope.getInvitesLeft = function () {
         return $filter('unsentInviteFilter')(session.getUser().getInvites());
     };
@@ -6,13 +6,13 @@ sc.controller('TaskMessageCtrl', function ($rootScope, $scope, $state, $filter, 
     $scope.inviteTasks = {
         hasInviteCode: {
             getText: function () {
-                return "Your friend sent you an invite code.";
+                return gettextCatalog.getString("Your friend sent you an invite code.");
             },
             getSubtext: function () {
-                return "Get your bonus stellars now!";
+                return gettextCatalog.getString("Get your bonus stellars now!");
             },
             getButtonText: function () {
-                return "Claim stellars";
+                return gettextCatalog.getString("Claim stellars");
             },
             action: function () {
                 $rootScope.$broadcast('openFacebookReward');
@@ -21,15 +21,17 @@ sc.controller('TaskMessageCtrl', function ($rootScope, $scope, $state, $filter, 
         },
         hasNewInvites: {
             getText: function () {
-                if($scope.newInvites>1)
-                    return "You have received " + $scope.newInvites + " new invites for your friends!";
-                else return "You have received " + $scope.newInvites + " new invite for your friends!";
+                return gettextCatalog.getPlural(
+                  $scope.newInvites,
+                  "You have received {{newInvites}} new invite for your friends!",
+                  "You have received {{newInvites}} new invites for your friends!"
+                ).replace('{{newInvites}}', $scope.newInvites);
             },
             getSubtext: function () {
                 return "";
             },
             getButtonText: function () {
-                return "Send Invites";
+                return gettextCatalog.getString("Send Invites");
             },
             action: function () {
                 $state.transitionTo('invites');

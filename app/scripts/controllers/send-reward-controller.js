@@ -2,12 +2,12 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('SendRewardCtrl', function ($rootScope, $scope, $http, stNetwork, session, TutorialHelper) {
+sc.controller('SendRewardCtrl', function ($rootScope, $scope, $http, stNetwork, session, TutorialHelper, gettextCatalog) {
   $scope.reward = {
     rewardType: 3,
-    title: 'Send stellars!',
-    subtitle: 'Learn to send',
-    innerTitle: 'Learn to send stellars',
+    title: gettextCatalog.getString('Send stellars!'),
+    subtitle: gettextCatalog.getString('Learn to send'),
+    innerTitle: gettextCatalog.getString('Learn to send stellars'),
     status: 'incomplete',
     updateReward: function (status) {
       $scope.reward.status = status;
