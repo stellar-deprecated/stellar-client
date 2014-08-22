@@ -20,11 +20,15 @@
         top: 21px;
       }
 
-      input[type="number"] {
+      input[type="number"],
+      input[type="text"],
+      .dropdown-toggle {
         font-size: 48px;
         height: auto;
-        padding-right: 50px;
-        height: auto;
+      }
+
+      .dropdown-toggle {
+        margin-bottom: 0;
       }
 
       + .tip {

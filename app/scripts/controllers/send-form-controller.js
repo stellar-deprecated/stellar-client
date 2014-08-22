@@ -43,6 +43,10 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, s
         updateCurrency();
     });
 
+    $scope.changeCurrency = function(newCurrency) {
+            $scope.sendFormModel.currency = newCurrency;    
+    };
+
     $scope.getPathText = function (path) {
         var human = path.to_human();
     }
