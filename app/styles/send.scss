@@ -1,4 +1,15 @@
 .send-pane {
+  .header {
+    height: 70px;
+    border-bottom: $grey-border-bottom;
+
+    .send-title {
+      float:left;
+      border-bottom: none;
+    }
+
+  }
+
   form > div {
     .send-amount {
 
