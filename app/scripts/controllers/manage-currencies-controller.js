@@ -45,42 +45,43 @@ sc.controller('ManageCurrenciesCtrl', function($rootScope, $scope, $q, session, 
   };
 
   $scope.addGateway = singletonPromise(function() {
-    // TODO: Remove this when limit is optional.
-    var MAX_AMOUNT = '9223372036854775806';
-
     var trustedCurrencies = [];
+    var failedCurrencies = [];
 
     // Trust each currency.
-    // TODO: Replace with sequential promise utility.
-    return $scope.currencies.reduce(function(promise, currency) {
-      return promise.then(function() {
-        return trustCurrency(currency, MAX_AMOUNT)
-          .then(function() {
-            // Currency trusted successfully.
-            trustedCurrencies.push(currency);
+    var promises = $scope.currencies.map(function(currency) {
+      return trustCurrency(currency)
+        .then(function() {
+          trustedCurrencies.push(currency);
+        })
+        .catch(function() {
+          failedCurrencies.push(currency);
+        });
+    });
+
+    // Save the gateway to the wallet once the currencies have been trusted.
+    return $q.all(promises)
+      .finally(function() {
+        if(_.any(trustedCurrencies)) {
+          $scope.gateways.push({
+            domain: $scope.gatewayDomain,
+            currencies: trustedCurrencies,
+            failedCurrencies: failedCurrencies
           });
-      });
-    }, $q.when())
-      .then(function() {
-        // Save the gateway to the wallet.
-        $scope.gateways.push({
-          domain: $scope.gatewayDomain,
-          currencies: $scope.currencies
-        });
-        session.syncWallet('update');
-      })
-      .catch(function(e) {
-        // If any of the requests fail, remove the trusted currencies and don't save the gateway.
-        trustedCurrencies.forEach(function(currency) {
-          trustCurrency(currency, '0');
-        });
+          session.syncWallet('update');
+        } else {
+          // Unable to add the gateway's currencies.
+        }
       });
   });
 
-  function trustCurrency(currency, limit) {
+  function trustCurrency(currency, value) {
+    // Trust the currency for the max value by default.
+    value = value || '9223372036854775806';
+
     var deferred = $q.defer();
 
-    var limit = _.extend({value: limit}, currency);
+    var limit = _.extend({value: value}, currency);
 
     var tx = stNetwork.remote.transaction();
     tx.trustSet(session.get('address'), limit);
