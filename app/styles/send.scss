@@ -1,14 +1,8 @@
 .send-pane {
-  .header {
-    height: 70px;
-    border-bottom: $grey-border-bottom;
-
-    .send-title {
-      float:left;
-      border-bottom: none;
-    }
-
+  .title{
+    margin-bottom: 25px;
   }
+
 
   form {
 
@@ -146,6 +140,13 @@
     .sending-rocket {
       display: block;
       margin: 50px auto;
+    }
+  }
+
+  .currency-box {
+    height: 140px;
+    button {
+      margin-top: 15px;
     }
   }
 }
