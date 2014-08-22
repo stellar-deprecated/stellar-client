@@ -32,10 +32,10 @@
 
     &:not(.sent) {
       background-color: white;
-      border: 1px solid rgba($stellar-blue, 0);
+      border: 1px solid rgba($brand-primary, 0);
 
       &:first-child {
-        border: 1px solid rgba($stellar-blue, 1);
+        border: 1px solid rgba($brand-primary, 1);
         background: white url(../images/stroopy.gif) no-repeat 40px 10px;
         background-size: 25px;
         i {
@@ -55,7 +55,7 @@
           font-size: 11px;
           
           .step-label {
-            background: $stellar-blue;
+            background: $brand-primary;
             padding: 0 3px 1px;
             border-radius: 3px;
           }
@@ -86,10 +86,10 @@
       }
 
       &:hover {
-        border: 1px solid rgba($stellar-blue, 1);
+        border: 1px solid rgba($brand-primary, 1);
 
         i {
-          color: $stellar-blue;
+          color: $brand-primary;
         }
       }
     }

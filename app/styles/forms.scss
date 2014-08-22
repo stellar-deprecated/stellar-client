@@ -13,10 +13,10 @@ input[type="password"] {
 
   &:focus {
     box-shadow: none;
-    border-color: $stellar-blue;
+    border-color: $brand-primary;
 
     + i {
-      color: $stellar-blue;
+      color: $brand-primary;
     }
   }
 
@@ -55,8 +55,8 @@ button,
   }
 
   &:hover {
-    border-color: $stellar-blue;
-    background-color: $stellar-blue;
+    border-color: $brand-primary;
+    background-color: $brand-primary;
     border-bottom-color: $dark-grey;
     color: white;
     box-shadow: 0 -1px 0 0 rgba(black, 0) inset;
@@ -73,7 +73,7 @@ button,
 
     &:hover {
       color: white;
-      background-color: $stellar-blue;
+      background-color: $brand-primary;
     }
   }
 
