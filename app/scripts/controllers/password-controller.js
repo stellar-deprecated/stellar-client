@@ -5,6 +5,7 @@ var sc = angular.module('stellarClient');
 sc.controller('PasswordCtrl', function($scope, passwordStrengthComputations, badPasswords, gettextCatalog) {
   $scope.loading = false;
   $scope.passwordConfirmation = '';
+  $scope.minChars = 8;
 
   // Remove default password requirements.
   delete passwordStrengthComputations.aspects.minimumLength;
@@ -72,12 +73,12 @@ sc.controller('PasswordCtrl', function($scope, passwordStrengthComputations, bad
 
     var strength = passwordStrengthComputations.getStrength($scope.data.password);
     /// Password strength
-    if(strength < 25) return gettextCatalog.getString('WEAK');
+    if(strength < 25) return gettextCatalog.getString('Weak').toUpperCase();
     /// Password strength
-    if(strength < 50) return gettextCatalog.getString('ALMOST');
+    if(strength < 50) return gettextCatalog.getString('Almost').toUpperCase();
     /// Password strength
-    if(strength < 75) return gettextCatalog.getString('GOOD');
-    return 'STRONG';
+    if(strength < 75) return gettextCatalog.getString('Good').toUpperCase();
+    return gettextCatalog.getString('Strong').toUpperCase();
   };
 
   // Validate the passwords are valid and matching.

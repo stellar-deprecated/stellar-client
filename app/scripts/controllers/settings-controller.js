@@ -9,7 +9,7 @@ sc.controller('SettingsCtrl', function($scope, $http, $state, session, singleton
 
   $scope.handleServerError = function (element) {
     return function (error) {
-      var message = error.status == 'fail' ? error.message : gettextCatalog.getString('Server error');
+      var message = error.status == 'fail' ? error.message : gettextCatalog.getString('Server error.');
       Util.showTooltip(element, message, 'error', 'top');
     }
   }

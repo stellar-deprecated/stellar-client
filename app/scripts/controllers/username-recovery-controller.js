@@ -25,9 +25,9 @@ sc.controller('UsernameRecoveryCtrl', function($rootScope, $scope, $http, $state
         })
         .error(function (response) {
             if (response.code == "not_found") {
-                $scope.emailError = gettextCatalog.getString("No username with that email");
+                $scope.emailError = gettextCatalog.getString("No username with that email.");
             } else {
-                $scope.emailError = gettextCatalog.getString("Server error");
+                $scope.emailError = gettextCatalog.getString("Server error.");
             }
         })
     });

@@ -7,7 +7,7 @@
                 <div class="errors col-sm-12">
                     <div class="tip col-sm-offset-6 col-sm-3">{{ usernameError }}</div>
                 </div>
-                <label for="username" class="col-sm-3" translate>USERNAME</label>
+                <label for="username" class="col-sm-3 uppercase" translate>Username</label>
                 <div class="col-sm-6">
                     <input id="username" type="text" class="form-control" ng-model="username" ng-change="usernameError = null">
                 </div>
@@ -16,7 +16,7 @@
                 <div class="errors col-sm-12">
                     <div class="tip col-sm-offset-6 col-sm-3">{{ recoveryError }}</div>
                 </div>
-                <label for="recovery-code" class="col-sm-3" translate>RECOVERY CODE</label>
+                <label for="recovery-code" class="col-sm-3 uppercase" translate>Recovery Code</label>
                 <div class="col-sm-6">
                     <input id="recovery-code" type="text" class="form-control" ng-model="userRecoveryCode" ng-change="recoveryError = null" autocomplete="off">
                 </div>

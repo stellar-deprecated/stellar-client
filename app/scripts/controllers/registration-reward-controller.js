@@ -7,7 +7,7 @@ sc.controller('RegistrationRewardCtrl', function ($scope, session, gettextCatalo
     rewardType: 0,
     title: gettextCatalog.getString('Create a new wallet!'),
     subtitle: gettextCatalog.getString('Complete registration'),
-    innerTitle: gettextCatalog.getString('Create a new wallet'),
+    innerTitle: gettextCatalog.getString('Create a new wallet!'),
     status: 'sent'
   };
 

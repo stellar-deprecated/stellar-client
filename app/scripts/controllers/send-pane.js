@@ -1051,7 +1051,7 @@ sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout'
             default:
                 $scope.changeMode("stellarerror");
                 //TODO: set an error type and unify our error reporting for the send pane
-                $scope.error_message = gettextCatalog.getString("An error occurred:") +" "+ res.engine_result_message;
+                $scope.error_message = gettextCatalog.getString("An error occurred.") +" "+ res.engine_result_message;
         }
     };
 

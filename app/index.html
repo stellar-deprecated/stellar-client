@@ -51,14 +51,14 @@
             </div>
             <div class="collapse navbar-collapse" id="navbar">
                 <ul class="nav navbar-nav navbar-right" ng-hide="session.get('loggedIn')">
-                    <li><a href="#/login" ui-sref="login" translate>LOG IN</a></li>
-                    <li><a href="#/register" ui-sref="register" class="sign-up" translate>SIGN UP</a></li>
+                    <li><a href="#/login" ui-sref="login" class="uppercase" translate>Log In</a></li>
+                    <li><a href="#/register" ui-sref="register" class="sign-up uppercase" translate>Sign Up</a></li>
                 </ul>
 
                 <ul class="nav navbar-nav navbar-right ng-hide" ng-show="session.get('loggedIn')">
                     <li><a href="#/invites" ng-show="getInvitesLeft() || getSentInvites()" ng-class="getInvitesClass()"><span translate>invite ({{getInvitesLeft()}})</span></a></li>
                     <li><a href="#/settings"><span class="glyphicon glyphicon-cog"></span>{{ session.get('username') }}</a></li>
-                    <li><a href="#/logout" ui-sref="logout"><span class="glyphicon glyphicon-log-out"></span><span translate>LOG OUT</span></a></li>
+                    <li><a href="#/logout" ui-sref="logout"><span class="glyphicon glyphicon-log-out"></span><span class="uppercase" translate>Log Out</span></a></li>
                 </ul>
             </div>
         </div>
@@ -75,13 +75,13 @@
             <nav id="footer-navigation" class="clear" role="navigation">
                 <div class="menu-footer-menu-container">
                     <ul id="menu-footer-menu" class="menu">
-                        <li><a href="https://www.stellar.org/about/" translate>About</a></li>
-                        <li><a href="https://www.stellar.org/api/" translate>API</a></li>
-                        <li><a href="https://www.stellar.org/jobs/" translate>Jobs</a></li>
-                        <li><a href="https://www.stellar.org/stats/" translate>Stats</a></li>
-                        <li><a href="https://www.stellar.org/privacy-policy/" translate>Privacy Policy</a></li>
-                        <li><a href="https://www.stellar.org/terms-of-service/" translate>Terms of Service</a></li>
-                        <li><a href="https://stellartalk.org/" translate>Forum</a></li>
+                        <li><a href="https://www.stellar.org/about/" translate-comment="Footer links" translate>About</a></li>
+                        <li><a href="https://www.stellar.org/api/" translate-comment="Footer links" translate>API</a></li>
+                        <li><a href="https://www.stellar.org/jobs/" translate-comment="Footer links" translate>Jobs</a></li>
+                        <li><a href="https://www.stellar.org/stats/" translate-comment="Footer links" translate>Stats</a></li>
+                        <li><a href="https://www.stellar.org/privacy-policy/" translate-comment="Footer links" translate>Privacy Policy</a></li>
+                        <li><a href="https://www.stellar.org/terms-of-service/" translate-comment="Footer links" translate>Terms of Service</a></li>
+                        <li><a href="https://stellartalk.org/" translate-comment="Footer links" translate>Forum</a></li>
                     </ul>
                 </div>
             </nav>

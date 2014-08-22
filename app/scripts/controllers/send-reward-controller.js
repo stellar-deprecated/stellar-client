@@ -3,6 +3,9 @@
 var sc = angular.module('stellarClient');
 
 sc.controller('SendRewardCtrl', function ($rootScope, $scope, $http, stNetwork, session, TutorialHelper, gettextCatalog) {
+  $scope.sendStellars = 25;
+  $scope.receiveStellars = 25;
+
   $scope.reward = {
     rewardType: 3,
     title: gettextCatalog.getString('Send stellars!'),

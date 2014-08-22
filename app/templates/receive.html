@@ -6,7 +6,7 @@
     <div l10n="l10n" class="literal title" translate>Receive Stellars</div>
     <form name="receiveForm" id="receiveForm" role="form" class="row-padding-small mode-form">
         <div class="row form-group">
-            <label for="receive_username" class="col-sm-3 username-title" translate>YOUR USERNAME</label>
+            <label for="receive_username" class="col-sm-3 username-title uppercase" translate>Your Username</label>
             <div class="col-sm-6 receive-username">
                 <i class="icon icon-user"></i>
                 <span class="username">{{username}}</span>
@@ -24,7 +24,7 @@
             </span>
         </div>
         <div class="row form-group address-row" ng-show="showAddress">
-            <label for="receive_address" class="col-sm-3 address-title" translate>YOUR STELLAR ADDRESS</label>
+            <label for="receive_address" class="col-sm-3 address-title uppercase" translate>Your Stellar Address</label>
             <div class="col-sm-6 receive-address">
                 <i class="glyphicon glyphicon-globe"></i>
                 <span class="address">{{currentAddress()}}</span>
