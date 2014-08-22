@@ -47,6 +47,10 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, s
         var human = path.to_human();
     }
 
+    $scope.$on('reset', function () {
+        $scope.sendFormModel = {};
+    });
+
     /**
     * Resolves a stellar account from the user's input in the send form.
     */

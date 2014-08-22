@@ -28,12 +28,18 @@
             </div>
             <div class="col-sm-3 tip">Type in the amount and currency to send.</div>
         </div>
+        <p>You can send {{send.amount.to_human()}} {{send.amount._currency.to_human()}} using:</p>
         <div class="row form-group">
-            <div class="col-sm-12">
-                <div ng-repeat="path in send.paths">
-                    <a href="" ng-click="sendPropose(path)">{{path.amount_human + ' ' + path.currency_human}}</a>
-                </div>
-            </div>
+            <ul class="currencies-list">
+                <li ng-repeat="path in send.paths" class="currency-box">
+                    <h5>{{ path.amount_human }}</h5>
+                    <p>{{ path.currency_human }}</p>
+                    <div class="account-container">
+                        <p>{{ issuer_human }}</p>
+                    </div>
+                    <button class="btn btn-default submit" ng-click="sendPropose(path)">Send</button>
+                </li>
+            </ul>
         </div>
     </form>
 </div>

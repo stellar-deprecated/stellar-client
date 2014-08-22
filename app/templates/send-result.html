@@ -37,7 +37,7 @@
     <div ng-show="send.result=='stellarerror'" class="modalStatus error-modalStatus">
         <div class="modalStatus-title">Oops</div>
         <div class="modalStatus-info">{{error_message}}</div>
-        <button class="btn btn-default modalStatus-btn" ng-click="tryAgain()">Try again</button>
+        <button class="btn btn-default modalStatus-btn" ng-click="reset()">Try again</button>
     </div>
 
     <div ng-show="send.result=='status'" class="modalStatus">

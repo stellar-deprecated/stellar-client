@@ -47,6 +47,14 @@ sc.controller('SendController', function($rootScope, $scope, stNetwork) {
         $scope.send.paths = [];
     }
 
+    // Reset ALL the things (to make a new payment)
+    $scope.reset = function () {
+        $scope.$broadcast('reset');
+        $scope.resetDestinationDependencies();
+        $scope.resetAmountDependencies();
+        $scope.setState('form');
+    }
+
     // brings the user to the confirmation page
     $scope.sendPropose = function (path) {
         if (path) {
