@@ -18,18 +18,18 @@
 
 .tooltip.info {
   .tooltip-inner {
-      background-color: $stellar-blue;
+      background-color: $brand-primary;
   }
   .top.tooltip-arrow {
-    border-top-color: $stellar-blue !important;
+    border-top-color: $brand-primary !important;
   }
   .right.tooltip-arrow {
-      border-right-color: $stellar-blue !important;
+      border-right-color: $brand-primary !important;
   }
   .left.tooltip-arrow {
-    border-left-color: $stellar-blue !important;
+    border-left-color: $brand-primary !important;
   }
   .bottom.tooltip-arrow {
-      border-bottom-color: $stellar-blue !important;
+      border-bottom-color: $brand-primary !important;
   }
 }
