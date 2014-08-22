@@ -8,12 +8,12 @@
             </div>
             <div class="col-md-4 tip">Stellar name or address.</div>
         </div>
-        <div class="form-group" ng-show="send.showDestinationTag">
-            <label for="destinationTag" class="col-sm-3">DESTINATION TAG</label>
+        <div class="form-group send-destination" ng-show="send.showDestinationTag">
+            <label for="destinationTag" class="col-md-2">DESTINATION TAG</label>
             <div class="col-md-6">
-                <input name="destinationTag" ng-model="send.destination.destinationTag" type="number" class="form-control stellar-input"/>
+                <input name="destinationTag" ng-model="send.destination.destinationTag" type="number" class="form-control"/>
             </div>
-            <div class="col-md-3 tip">
+            <div class="col-md-4 tip">
             Recipient requires a destination tag to be specified for the transaction. If you don't know the
             destination tag, please contact them before doing a transaction.
             </div>
@@ -28,9 +28,9 @@
                 <div class="input-group">
                     <input type="text" class="form-control" ng-model="send.currency">
                     <div class="input-group-btn">
-                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" ng-click="setOverflowVisible()"><span class="caret"></span></button>
                         <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                            <li ng-init="sendFormModel.currency = sendFormModel.currency || send.currency_choices[0]" ng-repeat="value in send.currency_choices" class="input-lg"><a href="#" ng-click="changeCurrency(value)">{{value}}</a></li>
+                            <li ng-init="sendFormModel.currency = sendFormModel.currency || send.currency_choices[0]" ng-repeat="value in send.currency_choices"><a href="#" ng-click="changeCurrency(value)">{{value}}</a></li>
                         </ul>
                     </div>
                 </div>

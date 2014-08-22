@@ -6,6 +6,7 @@ label {
 
 input[type="text"],
 input[type="email"],
+input[type="number"],
 input[type="password"] {
   height: 42px;
   border-radius: 2px;
@@ -172,7 +173,7 @@ button,
     font-weight: $book-weight;
     font-size: 14px;
     color: $info-grey;
-    line-height: 42px;
+    padding-top: 12px;
   }
 
   .info {

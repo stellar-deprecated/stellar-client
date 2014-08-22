@@ -1,10 +1,11 @@
 <div class="send-pane pane"  ng-controller="SendController">
-    <div class="row header">
-        <div class="literal title send-title">Send Stellars</div>
+    <div class="row">
         <div class="pane-close" ng-click="closePane()">
             <span>Close</span>
             <i class="icon icon-times-circle-thin"></i>
         </div>
+        <div class="literal title send-title">Send Stellars</div>
+
     </div>
     <div ng-include="'templates/send-form.html'" ng-show="send.state == 'form'"></div>
     <div ng-include="'templates/send-confirm.html'" ng-show="send.state == 'confirm'"></div>
