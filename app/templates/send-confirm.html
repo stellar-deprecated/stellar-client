@@ -16,8 +16,8 @@
         <group ng-show="send.indirect">
             <p class="literal">You will pay at most</p>
             <p class="sendmax_feedback">
-                <span class="value">{{send.alt.amount | rpamount}}&#32;</span>
-                <span class="currency">{{send.alt.amount | rpcurrency}} &#32;</span>
+                <span class="value">{{send.path.amount | rpamount:{ floor: false } }}&#32;</span>
+                <span class="currency">{{send.path.amount | rpcurrency}} &#32;</span>
                 <span>&plusmn; 1%</span>
             </p>
         </group>

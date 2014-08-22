@@ -64,6 +64,7 @@ sc.controller('SendController', function($rootScope, $scope, stNetwork) {
     $scope.resetAmountDependencies = function () {
         $scope.send.amount = null;
         $scope.send.paths = [];
+        $scope.send.indirect = false;
     }
 
     // Reset ALL the things (to make a new payment)
@@ -77,9 +78,12 @@ sc.controller('SendController', function($rootScope, $scope, stNetwork) {
     // brings the user to the confirmation page
     $scope.sendPropose = function (path) {
         if (path) {
-            $scope.send.path = path.paths;
+            $scope.send.path = path;
         }
-
+        if (path.paths.length) {
+            $scope.send.indirect = true;
+        }
+        console.log(path);
         // close our pathfind subscription
         if ($scope.send.findpath) {
             $scope.send.findpath.close();
@@ -103,8 +107,10 @@ sc.controller('SendController', function($rootScope, $scope, stNetwork) {
         if (destination.destinationTag) {
             tx.destination_tag(destination.destinationTag);
         }
+
         if ($scope.send.path) {
-            tx.paths($scope.send.path);
+            tx.send_max($scope.send.path.send_max);
+            tx.paths($scope.send.path.paths);
         }
 
         tx.on('success', function (res) {
