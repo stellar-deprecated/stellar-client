@@ -1,5 +1,6 @@
 @import "send.scss";
 @import "receive.scss";
+@import "multi-currency.scss";
 
 .dashboard {
   .row {
@@ -14,30 +15,30 @@
     .controls {
       text-align: center;
 
-      &.top-row {
-        display: flex;
-      }
-
       > div {
         padding-left: 0;
         padding-right: 0;
+      }
 
-        &.dash-balance-container {
-          padding-top: 20px;
-        }
+      .single-balance-container {
+        padding-top: 20px;
+      }
 
-        &.dash-info-container {
-          margin-top: 16px;
-        }
+      .multi-balance-container {
+        margin-bottom: 35px;
+      }
 
-        &.dash-receive-container,
-        &.dash-send-container {
-          margin-top: 25px;
-        }
+      .dash-info-container {
+        margin-top: 16px;
+      }
 
-        &.img-container {
-          display: none;
-        }
+      .dash-receive-container,
+      .dash-send-container {
+        margin-top: 25px;
+      }
+
+      .img-container {
+        display: none;
       }
 
       .dash-balance {
@@ -53,9 +54,43 @@
         color: $info-grey;
         font-weight: $book-weight;
         font-size: 17px;
+        line-height: 45px;
+        margin-bottom: 10px;
 
         b {
           font-weight: $heavy-weight;
+        }
+      }
+
+      .dash-currency-line {
+        margin: 5px 10%;
+        text-align: left;
+
+        &:first-child {
+          .currency-balance {
+            font-size: 30px;
+            font-weight: $heavy-weight;
+          }
+          .currency-unit {
+            padding-top: 15px;
+          }
+        }
+
+        &:last-child {
+          border-bottom: 0;
+          padding-bottom: 0;
+        }
+
+        .currency-unit {
+          text-align: left;
+          color: $grey;
+          padding: 0;
+        }
+
+        .currency-balance {
+          text-align: right;
+          font-size: 18px;
+          padding: 0;
         }
       }
 
@@ -91,20 +126,24 @@
 
         > div {
           display: inline;
+        }
 
-          &.dash-receive-container,
-          &.dash-send-container {
-            margin-top: 0;
-          }
+        .dash-receive-container,
+        .dash-send-container {
+          margin-top: 0;
+        }
 
-          &.dash-info-container {
-            line-height: 45px;
-            margin-top: 0;
-          }
+        .dash-info-container {
+          line-height: 45px;
+          margin-top: 0;
+        }
 
-          &.img-container {
-            display: inline-block;
-          }
+        .multi-balance-container {
+          margin-bottom: 0;
+        }
+
+        .img-container {
+          display: inline-block;
         }
       }
 
@@ -251,7 +290,7 @@
     }
   }
 
-  .send-receive {
+  .tab-panes {
     max-height: 0;
     overflow: hidden;
     @include transition(max-height 700ms ease-in-out);
