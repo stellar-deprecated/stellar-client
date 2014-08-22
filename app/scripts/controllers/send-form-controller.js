@@ -31,7 +31,7 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, s
 
     $scope.$watch('sendFormModel.amount', function (newValue) {
         if (!newValue || $scope.sendForm.amount.$invalid) {
-            $scope.send.amount = {};
+            $scope.resetAmountDependencies();
             return;
         }
         $scope.sendFormModelCopy = angular.copy($scope.sendFormModel);
@@ -69,7 +69,6 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, s
         // parse the dt parameter if it has one
         var destinationTag = webutil.getDestTagFromAddress(input);
         if (destinationTag) {
-            $scope.showDestinationTag = false;
             $scope.send.destination.destinationTag = destinationTag;
         }
 
@@ -116,7 +115,7 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, s
             updateCurrency();
         })
         .catch(function (error) {
-            console.log(error);
+            $scope.resetDestinationDependencies();
             switch (error) {
                 case "federation-error":
                     // TODO: set form validity
@@ -201,15 +200,16 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, s
 
     // Updates our find_path subscription with the current destination and amount.
     function updatePaths() {
-        if (_.isEmpty($scope.send.destination) || _.isEmpty($scope.send.amount)) {
+        if (_.isEmpty($scope.send.destination) || !$scope.send.amount) {
             return;
         }
-        if ($scope.send.destination.destinationTag && !$scope.sendFormModel.destinationTag) {
+        if ($scope.send.destination.requireDestinationTag && !$scope.send.destination.destinationTag) {
             return;
         }
         // Start path find
-        var pathfind = stNetwork.remote.path_find($rootScope.account.Account, $scope.send.destination.address, $scope.send.amount);
-        pathfind.on('update', function (result) {
+        var findpath = stNetwork.remote.path_find($rootScope.account.Account, $scope.send.destination.address, $scope.send.amount);
+        $scope.send.findpath = findpath;
+        findpath.on('update', function (result) {
             if (inputHasChanged()) {
                 return;
             }
@@ -217,13 +217,14 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, s
                 processNewPaths(result);
             });
         })
-        pathfind.on('error', function (error) {
+        findpath.on('error', function (error) {
             // TODO: check for network error
         })
     }
 
     // updates the paths the user can use to send
     function processNewPaths(result) {
+        console.log(result);
         $scope.send.paths = _.map(result.alternatives, function (raw, key) {
             var path = {};
             path.amount = Amount.from_json(raw.source_amount);
@@ -262,9 +263,12 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, s
             if (err) {
                 deferred.reject("account-not-found");
             }
-            $scope.send.destination = {};
             $scope.send.destination.address = address;
-            $scope.send.destination.destinationTag = data.account_data.Flags & stellar.Remote.flags.account_root.RequireDestTag;
+            $scope.send.destination.requireDestinationTag = !!(data.account_data.Flags & stellar.Remote.flags.account_root.RequireDestTag);
+            // if we require a dest tag and they haven't set one, show the destination tag box
+            if ($scope.send.destination.requireDestinationTag && !$scope.send.destination.destinationTag) {
+                $scope.send.showDestinationTag = true;
+            }
             $scope.send.destination.balance = data.account_data.Balance;
             deferred.resolve();
         });

@@ -9,7 +9,7 @@
         <div class="dest_feedback">
             <div ng-show="send.federatedName" class="recipient-name">{{send.federatedName}}</div>
             <div class="input-icon-wrapper">
-                <input class="recipient-address" value="{{send.destination.address}}{{send.destination_tag ? '?dt=' + send.destination_tag : ''}}" disabled>
+                <input class="recipient-address" value="{{send.destination.address}}{{send.destination.destinationTag ? '?dt=' + send.destination.destinationTag : ''}}" disabled>
                 <i class="glyphicon glyphicon-globe"></i>
             </div>
         </div>

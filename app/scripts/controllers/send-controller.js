@@ -8,8 +8,8 @@ sc.controller('SendController', function($rootScope, $scope, stNetwork) {
     $scope.send.destination = {};
     // Federation name we're sending to
     $scope.send.federatedName = null;
-    // The amount we're sending.
-    $scope.send.amount = {};
+    // The amount we're sending. An Amount object
+    $scope.send.amount = null;
     // The state the send pane is in - form, confirm, or sending
     $scope.send.state = 'form';
     // The currencies a user can choose from. Constrained based on destination
@@ -18,8 +18,10 @@ sc.controller('SendController', function($rootScope, $scope, stNetwork) {
     $scope.send.currency;
     // The paths a user has available for the current destination and amount.
     $scope.send.paths = [];
-    // He's gonna lead you down the path of righteousness. I'm gonna lead you down the path that ROCKS.
+    // The path the user chooses.
     $scope.send.path = null;
+    // This is our subscription to find path on the stellar network.
+    $scope.send.findpath;
     // True if this is not a direct send (we're going through an offer).
     $scope.send.indirect = false;
     // Holds the state of our sending transaction
@@ -32,7 +34,24 @@ sc.controller('SendController', function($rootScope, $scope, stNetwork) {
         $scope.send.state = state;
     }
 
+    /**
+    * showPaths returns true if all required dependencies are met to send a payment (resolved address,
+    * destination tag requirement met, path found, etc).
+    */
+    $scope.showPaths = function () {
+        var destTagRequirementMet = $scope.send.destination.requireDestinationTag ?
+            !!$scope.send.destination.destinationTag :
+            true;
+        return destTagRequirementMet &&
+            $scope.send.amount &&
+            !_.isEmpty($scope.send.destination) &&
+            $scope.send.currency &&
+            $scope.send.paths.length &&
+            destTagRequirementMet;
+    }
+
     $scope.resetDestinationDependencies = function () {
+        $scope.send.showDestinationTag = false;
         $scope.send.destination = {};
         $scope.send.federatedName = null;
         $scope.send.currency_choices = StellarDefaultCurrencyList;
@@ -43,7 +62,7 @@ sc.controller('SendController', function($rootScope, $scope, stNetwork) {
     }
 
     $scope.resetAmountDependencies = function () {
-        $scope.send.amount = {};
+        $scope.send.amount = null;
         $scope.send.paths = [];
     }
 
@@ -60,6 +79,13 @@ sc.controller('SendController', function($rootScope, $scope, stNetwork) {
         if (path) {
             $scope.send.path = path.paths;
         }
+
+        // close our pathfind subscription
+        if ($scope.send.findpath) {
+            $scope.send.findpath.close();
+            delete $scope.send.findpath;
+        }
+
         $scope.setState('confirm');
     }
 
@@ -141,5 +167,4 @@ sc.controller('SendController', function($rootScope, $scope, stNetwork) {
                 $scope.error_message = "An error occurred: " + res.engine_result_message;
         }
     };
-
 });
