@@ -44,27 +44,52 @@ sc.controller('ManageCurrenciesCtrl', function($rootScope, $scope, $q, session, 
     $scope.resetSearch();
   };
 
-  $scope.addGateway = function() {
+  $scope.addGateway = singletonPromise(function() {
     // TODO: Remove this when limit is optional.
     var MAX_AMOUNT = '9223372036854775806';
 
-    $scope.currencies.forEach(function(currency) {
-      trustCurrency(currency, MAX_AMOUNT);
-    });
+    var trustedCurrencies = [];
 
-    $scope.gateways.push({
-      domain: $scope.gatewayDomain,
-      currencies: $scope.currencies
-    });
-    session.syncWallet('update');
-  };
+    // Trust each currency.
+    // TODO: Replace with sequential promise utility.
+    return $scope.currencies.reduce(function(promise, currency) {
+      return promise.then(function() {
+        return trustCurrency(currency, MAX_AMOUNT)
+          .then(function() {
+            // Currency trusted successfully.
+            trustedCurrencies.push(currency);
+          });
+      });
+    }, $q.when())
+      .then(function() {
+        // Save the gateway to the wallet.
+        $scope.gateways.push({
+          domain: $scope.gatewayDomain,
+          currencies: $scope.currencies
+        });
+        session.syncWallet('update');
+      })
+      .catch(function(e) {
+        // If any of the requests fail, remove the trusted currencies and don't save the gateway.
+        trustedCurrencies.forEach(function(currency) {
+          trustCurrency(currency, '0');
+        });
+      });
+  });
 
   function trustCurrency(currency, limit) {
+    var deferred = $q.defer();
+
     var limit = _.extend({value: limit}, currency);
 
     var tx = stNetwork.remote.transaction();
     tx.trustSet(session.get('address'), limit);
+
+    tx.on('success', deferred.resolve);
+    tx.on('error', deferred.reject);
     tx.submit();
+
+    return deferred.promise;
   };
 
   $scope.removeGateway = function(index) {

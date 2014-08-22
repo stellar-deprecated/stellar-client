@@ -31,7 +31,7 @@
                     <p>{{ currency.issuer | addressToUsername }}</p>
                 </li>
             </ul>
-            <button class="btn btn-default" ng-click="addGateway()">Trust {{ gatewayDomain }}</button>
+            <button class="btn btn-default" ng-click="addGateway()">{{ addGateway.isLoading() ? 'Loading...' : 'Add ' + gatewayDomain }}</button>
         </div>
     </div>
 
