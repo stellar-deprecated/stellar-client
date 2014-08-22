@@ -14,7 +14,7 @@ sc.controller('SendController', function($rootScope, $scope, stNetwork) {
     $scope.send.state = 'form';
     // The currencies a user can choose from. Constrained based on destination
     $scope.send.currency_choices = StellarDefaultCurrencyList;
-    // The currency we're sending in - object {value: currencyCode}
+    // The currency we're sending in
     $scope.send.currency;
     // The paths a user has available for the current destination and amount.
     $scope.send.paths = [];
