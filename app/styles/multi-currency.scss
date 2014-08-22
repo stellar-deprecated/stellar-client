@@ -8,6 +8,18 @@
   background: #fff;
 }
 
+.gateway-form {
+  padding-bottom: 25px;
+
+  p {
+    margin: 5px 0 15px;
+  }
+
+  form {
+    margin-top: 35px;
+  }
+}
+
 .dash-links {
   border-top: 1px solid $grey-border;
   width: 80%;
@@ -55,6 +67,33 @@
     overflow: hidden;
   }
 
+  &.add-currency-box {
+    cursor: pointer;
+    @include transition(border-color 200ms ease-in-out,
+                        color 200ms ease-in-out);
+
+    &:hover {
+      border-color: $stellar-blue;
+      color: $stellar-blue;
+
+      .glyphicon-cog {
+        color: rgba($grey, 1);
+      }
+    }
+
+    .add-currency-link {
+      position: relative;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .glyphicon-cog {
+      top: 3px;
+      color: rgba($grey, 0.5);
+      @include transition(color 200ms ease-in-out);
+    }
+  }
+
   h5 {
     font-size: 24px;
     font-weight: $heavy-weight;
@@ -65,5 +104,17 @@
     margin: 0;
     color: $grey;
     font-weight: $book-weight;
+  }
+}
+
+.gateway-list {
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  li {
+    border-bottom: 1px solid $grey-border;
+    padding: 5px 0 10px;
   }
 }

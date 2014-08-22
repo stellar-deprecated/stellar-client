@@ -298,5 +298,9 @@
     &.open {
       max-height: 700px;
     }
+
+    &:not(.open) {
+      border: none;
+    }
   }
 }
