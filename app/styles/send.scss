@@ -31,6 +31,15 @@
         margin-bottom: 0;
       }
 
+      .dropdown-menu {
+        height: 300px;
+        overflow-y: scroll;
+        li {
+          padding: 0;
+          margin: 0;
+        }
+      }
+
       + .tip {
         line-height: 82px
       }

@@ -51,6 +51,14 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, s
         var human = path.to_human();
     }
 
+    //this is because the currency dropdown gets cut-off because the parent container 
+    //is set to overflow:hidden for the slide animation effect. so we have to
+    //set overflow:visible if they click onto the dropdown menu. 
+
+    $scope.setOverflowVisible = function(){
+            $rootScope.overflowVisible = true;
+    }    
+
     $scope.$on('reset', function () {
         $scope.sendFormModel = {};
     });

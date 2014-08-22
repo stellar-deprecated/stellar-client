@@ -18,6 +18,7 @@ sc.controller('DashboardCtrl', function($rootScope, $scope, $timeout, $state, se
 
     $rootScope.closePane = function(){
       $rootScope.showTab = false;
+      $rootScope.overflowVisible = false;
     };
 
     $rootScope.openSend = function() {
