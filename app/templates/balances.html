@@ -15,9 +15,8 @@
             <li ng-repeat="accountLine in accountLines" ng-if="accountLine.balance != '0'" class="currency-box">
                 <h5>{{ accountLine.balance }}</h5>
                 <p>{{ accountLine.currency }}</p>
-                <div class="account-container">
-                    <p>{{ accountLine.account | addressToUsername }}</p>
-                </div>
+                <p class="currency-issuer">{{ accountLine.account | addressToUsername }}</p>
+
             </li>
             <li class="currency-box add-currency-box" ng-click="openManageCurrencies();">
                 <div class="add-currency-link">

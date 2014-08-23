@@ -62,11 +62,6 @@
   border-radius: 3px;
   height: 100px;
 
-  .account-container {
-    font-size: 10px;
-    overflow: hidden;
-  }
-
   &.add-currency-box {
     cursor: pointer;
     @include transition(border-color 200ms ease-in-out,
@@ -105,6 +100,11 @@
     color: $grey;
     font-weight: $book-weight;
   }
+}
+
+.currency-issuer {
+  font-size: 11px;
+  word-wrap:break-word;
 }
 
 .gateway-list {
