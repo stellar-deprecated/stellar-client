@@ -52,10 +52,8 @@
                 <p ng-show="send.pathStatus == 'pending'" class="send-form-status">Calculating paths</p>
 
                 <p ng-show="send.pathStatus == 'no-path'" class="send-form-status">
-                    Sorry! Cannot send {{send.amount}} {{send.currency}} to
-                    {{send.recipient}}. Please make sure your account has enough funds,
-                    and the recipient has enough trust to the currency issuer. If it still
-                    doesn't work, try again later.
+                    Unable to find a path to send {{send.amount.to_human()}} {{send.amount._currency.to_human()}} to
+                    {{send.federatedName || send.destination.address}}.
                 </p>
                 <p ng-show="send.pathStatus == 'error'" class="send-form-status">Error while calculating path</p>
             </div>

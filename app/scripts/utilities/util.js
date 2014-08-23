@@ -34,7 +34,7 @@ Util.showTooltip = function (element, title, type, placement, delay) {
 
     setTimeout(function() {
       element.tooltip('destroy');
-    }, delay);
+    }, 2000);
 }
 
 /**

@@ -175,7 +175,7 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, s
         // reset any amount dependencies we have
         $scope.resetAmountDependencies();
 
-        if ($scope.sendForm.amount.$invalid) {
+        if (!$scope.sendFormModel.amount || $scope.sendForm.amount.$invalid) {
             return;
         }
         if (!$scope.send.currency) {
@@ -202,20 +202,18 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, s
         if (pathUpdateTimeout) {
             $timeout.cancel(pathUpdateTimeout);
         }
-        $scope.send.pathStatus = "pending";
         pathUpdateTimeout = $timeout(updatePaths, 500);
     }
 
     // Updates our find_path subscription with the current destination and amount.
     function updatePaths() {
         if (_.isEmpty($scope.send.destination) || !$scope.send.amount) {
-            $scope.send.pathStatus = "done";
             return;
         }
         if ($scope.send.destination.requireDestinationTag && !$scope.send.destination.destinationTag) {
-            $scope.send.pathStatus = "done";
             return;
         }
+        $scope.send.pathStatus = "pending";
         // Start path find
         var findpath = stNetwork.remote.path_find($rootScope.account.Account, $scope.send.destination.address, $scope.send.amount);
         $scope.send.findpath = findpath;
@@ -227,7 +225,7 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, s
                 if (result.alternatives) {
                     processNewPaths(result);
                 }
-                $scope.send.pathStatus = "done";
+                $scope.send.pathStatus = !$scope.send.paths.length ? "no-path" : "done";
             });
         })
         findpath.on('error', function (error) {
@@ -317,5 +315,9 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, s
             case "account-not-found":
                 Util.showTooltip($('#recipient'), "Account not found", "error", "top");
         }
+    }
+
+    function showAddressFoundTip(address) {
+        Util.showTooltip($('#recipient'), "wallet address found: " + address, "info", "top");
     }
 });
