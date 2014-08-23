@@ -12,6 +12,8 @@ sc.controller('ManageCurrenciesCtrl', function($rootScope, $scope, $q, session, 
   $scope.gatewayDomain = '';
   $scope.searchStatus = '';
 
+  retryUnfinishedGateways();
+
   $scope.loadCurrencies = singletonPromise(function (){
     $scope.searchStatus = 'loading';
     $scope.gatewayDomain = $scope.gatewaySearch;
@@ -74,6 +76,36 @@ sc.controller('ManageCurrenciesCtrl', function($rootScope, $scope, $q, session, 
         }
       });
   });
+
+  function retryUnfinishedGateways() {
+    $scope.gateways.forEach(function(gateway) {
+      if(!_.any(gateway.failedCurrencies)) return;
+
+      var trustedCurrencies = [];
+      var failedCurrencies = [];
+
+      // Retry trusting each failed currency.
+      var promises = gateway.failedCurrencies.map(function(currency) {
+        return trustCurrency(currency)
+          .then(function() {
+            trustedCurrencies.push(currency);
+          })
+          .catch(function() {
+            failedCurrencies.push(currency);
+          });
+      });
+
+      // Update the wallet with the new currencies.
+      $q.all(promises)
+        .finally(function() {
+          if(_.any(trustedCurrencies)) {
+            gateways.currencies.concat(trustedCurrencies);
+            gateways.failedCurrencies = failedCurrencies;
+            session.syncWallet('update');
+          }
+        });
+    });
+  }
 
   function trustCurrency(currency, value) {
     // Trust the currency for the max value by default.
