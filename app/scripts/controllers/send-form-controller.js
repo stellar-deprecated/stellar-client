@@ -44,20 +44,20 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, s
     });
 
     $scope.changeCurrency = function(newCurrency) {
-            $scope.sendFormModel.currency = newCurrency;    
+            $scope.sendFormModel.currency = newCurrency;
     };
 
     $scope.getPathText = function (path) {
         var human = path.to_human();
     }
 
-    //this is because the currency dropdown gets cut-off because the parent container 
+    //this is because the currency dropdown gets cut-off because the parent container
     //is set to overflow:hidden for the slide animation effect. so we have to
-    //set overflow:visible if they click onto the dropdown menu. 
+    //set overflow:visible if they click onto the dropdown menu.
 
     $scope.setOverflowVisible = function(){
             $rootScope.overflowVisible = true;
-    }    
+    }
 
     $scope.$on('reset', function () {
         $scope.sendFormModel = {};
@@ -126,11 +126,9 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, s
             $scope.resetDestinationDependencies();
             switch (error) {
                 case "federation-error":
-                    // TODO: set form validity
+                    showError("account-not-found");
                 case "account-not-found":
-                    // TODO:
-                default:
-                    // TODO:
+                    showError("account-not-found");
             }
         })
     }
@@ -196,22 +194,26 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, s
         var reserve_base = $rootScope.account.reserve_base;
         if (total.compareTo(reserve_base) < 0) {
             // TODO: destination account doesn't meet reserve, send this much more to fund it
-            var xtr_deficiency = reserve_base.subtract($scope.send.destination.balance);
+            var str_deficiency = reserve_base.subtract($scope.send.destination.balance);
+            $scope.send.fundStatus = "insufficient-str";
             return;
         }
 
         if (pathUpdateTimeout) {
             $timeout.cancel(pathUpdateTimeout);
         }
+        $scope.send.pathStatus = "pending";
         pathUpdateTimeout = $timeout(updatePaths, 500);
     }
 
     // Updates our find_path subscription with the current destination and amount.
     function updatePaths() {
         if (_.isEmpty($scope.send.destination) || !$scope.send.amount) {
+            $scope.send.pathStatus = "done";
             return;
         }
         if ($scope.send.destination.requireDestinationTag && !$scope.send.destination.destinationTag) {
+            $scope.send.pathStatus = "done";
             return;
         }
         // Start path find
@@ -222,11 +224,14 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, s
                 return;
             }
             $scope.$apply(function () {
-                processNewPaths(result);
+                if (result.alternatives) {
+                    processNewPaths(result);
+                }
+                $scope.send.pathStatus = "done";
             });
         })
         findpath.on('error', function (error) {
-            // TODO: check for network error
+            $scope.send.pathStatus = "error";
         })
     }
 
@@ -305,5 +310,12 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, s
             deferred.resolve(("string" === typeof address) && !stellar.UInt160.is_valid(address));
         })
         return deferred.promise;
+    }
+
+    function showError(error) {
+        switch (error) {
+            case "account-not-found":
+                Util.showTooltip($('#recipient'), "Account not found", "error", "top");
+        }
     }
 });

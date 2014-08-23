@@ -13,7 +13,7 @@ Util.validateUsername = function (username) {
 * - type (error, info)
 * - placement (top, left, right, bottom)
 */
-Util.showTooltip = function (element, title, type, placement) {
+Util.showTooltip = function (element, title, type, placement, delay) {
 
   var placementClass = placement;
 
@@ -34,7 +34,7 @@ Util.showTooltip = function (element, title, type, placement) {
 
     setTimeout(function() {
       element.tooltip('destroy');
-    }, 2000);
+    }, delay);
 }
 
 /**

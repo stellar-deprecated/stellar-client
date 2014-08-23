@@ -16,6 +16,8 @@ sc.controller('SendController', function($rootScope, $scope, stNetwork) {
     $scope.send.currency_choices = StellarDefaultCurrencyList;
     // The currency we're sending in
     $scope.send.currency;
+    // Status of the find path we're running
+    $scope.send.pathStatus;
     // The paths a user has available for the current destination and amount.
     $scope.send.paths = [];
     // The path the user chooses.
@@ -80,10 +82,7 @@ sc.controller('SendController', function($rootScope, $scope, stNetwork) {
         if (path) {
             $scope.send.path = path;
         }
-        if (path.paths.length) {
-            $scope.send.indirect = true;
-        }
-        console.log(path);
+
         // close our pathfind subscription
         if ($scope.send.findpath) {
             $scope.send.findpath.close();
@@ -104,6 +103,7 @@ sc.controller('SendController', function($rootScope, $scope, stNetwork) {
 
         var tx = stNetwork.remote.transaction();
         tx.payment($rootScope.account.Account, destination.address, amount.to_json());
+
         if (destination.destinationTag) {
             tx.destination_tag(destination.destinationTag);
         }
@@ -111,6 +111,9 @@ sc.controller('SendController', function($rootScope, $scope, stNetwork) {
         if ($scope.send.path) {
             tx.send_max($scope.send.path.send_max);
             tx.paths($scope.send.path.paths);
+            if ($scope.send.path.paths && $scope.send.path.paths.length) {
+                $scope.send.indirect = true;
+            }
         }
 
         tx.on('success', function (res) {
