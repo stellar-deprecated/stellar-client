@@ -32,7 +32,7 @@
       }
 
       .dropdown-menu {
-        height: 300px;
+        max-height: 300px;
         overflow-y: scroll;
         li {
           padding: 0;
