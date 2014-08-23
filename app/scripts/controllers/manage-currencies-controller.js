@@ -38,7 +38,9 @@ sc.controller('ManageCurrenciesCtrl', function($rootScope, $scope, $q, session, 
 
   $scope.resetSearch = function() {
     $scope.currencies = [];
-    $scope.noResults = false;
+    $scope.gatewaySearch = '';
+    $scope.gatewayDomain = '';
+    $scope.searchStatus = '';
   };
 
   $scope.closePane = function() {
@@ -71,6 +73,7 @@ sc.controller('ManageCurrenciesCtrl', function($rootScope, $scope, $q, session, 
             failedCurrencies: failedCurrencies
           });
           session.syncWallet('update');
+          $scope.resetSearch();
         } else {
           // Unable to add the gateway's currencies.
         }
