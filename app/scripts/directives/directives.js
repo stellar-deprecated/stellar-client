@@ -222,3 +222,21 @@ module.directive('rpErrorValid', [function() {
         }
     };
 }]);
+
+/**
+ * Creates a child scope and immediately calls $destroy on it what implies that
+ * calls to $digest() will no longer propagate to the scope and its children.
+ *
+ * Please note that in case data is `undefined` it will bind `undefined` and
+ * won't watch for changes.
+ */
+module.directive('bindOnce', function() {
+  return {
+    scope: true,
+    link: function($scope) {
+      setTimeout(function() {
+        $scope.$destroy();
+      }, 0);
+    }
+  }
+});
