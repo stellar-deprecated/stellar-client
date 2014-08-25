@@ -2,7 +2,7 @@
     <div class="controls-container client-section">
         <div class="container">
             <div class="row controls">
-                <div class="dash-balance-container col-xs-12 col-sm-6 col-sm-push-3">
+                <div class="dash-balance-container col-sm-6 col-sm-push-3">
                     <div class="single-balance-container" ng-hide="currencies.length">
                         <div ng-show="$root.accountStatus == 'loaded'">
                             <span class="dash-balance" rp-tooltip="{{$root.balance  | rpamount}}  (minimum balance: {{ $root.reserve | rpamount }} STR)" ng-bind-html="$root.balance | rpamount:{rel_precision: 0} | shrinkText:84:6"></span>
