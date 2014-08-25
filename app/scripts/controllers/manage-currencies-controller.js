@@ -81,6 +81,20 @@ sc.controller('ManageCurrenciesCtrl', function($rootScope, $scope, $q, session, 
       });
   });
 
+  $scope.removeGateway = function(domain) {
+    var gateway = $scope.gateways[domain];
+    gateway.currencies.forEach(function(currency) {
+      trustCurrency(currency, '0');
+    });
+
+    delete $scope.gateways[domain];
+    session.syncWallet('update');
+  };
+
+  $scope.currencyNames = function(currencies) {
+    return _(currencies).pluck('currency').join(', ');
+  };
+
   function retryUnfinishedGateways() {
     _($scope.gateways).values().each(function(gateway) {
       if(!_.any(gateway.failedCurrencies)) return;
@@ -129,17 +143,4 @@ sc.controller('ManageCurrenciesCtrl', function($rootScope, $scope, $q, session, 
     return deferred.promise;
   };
 
-  $scope.removeGateway = function(domain) {
-    var gateway = $scope.gateways[domain];
-    gateway.currencies.forEach(function(currency) {
-      trustCurrency(currency, '0');
-    });
-
-    delete $scope.gateways[domain];
-    session.syncWallet('update');
-  };
-
-  $scope.currencyNames = function(currencies) {
-    return _(currencies).pluck('currency').join(', ');
-  };
 });
