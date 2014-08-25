@@ -23,18 +23,17 @@ Util.showTooltip = function (element, title, type, placement, delay) {
       '<div class="tooltip-inner"></div>' +
     '</div>';
 
-    element.tooltip(
-      {
-        trigger: "manual",
-        template: template,
-        placement: placement,
-        title: title
-      })
-      .tooltip('show');
+  element.tooltip('destroy');
 
-    setTimeout(function() {
-      element.tooltip('destroy');
-    }, 2000);
+  element.tooltip(
+    {
+      trigger: "manual",
+      template: template,
+      placement: placement,
+      title: title
+    })
+    .tooltip('show');
+
 }
 
 /**

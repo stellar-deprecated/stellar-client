@@ -16,8 +16,12 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, s
     */
     var updateDestinationTimeout;
     $scope.$watch('sendFormModel.recipient', function (newValue) {
+        // first reset any current dependencies we have on the destination
+        $scope.resetDestinationDependencies();
+        // reset the error tooltip
+        resetError();
+
         if (!newValue) {
-            $scope.resetDestinationDependencies();
             return;
         }
 
@@ -67,9 +71,6 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, s
     * Resolves a stellar account from the user's input in the send form.
     */
     function updateDestination() {
-        // first reset any current dependencies we have on the destination
-        $scope.resetDestinationDependencies();
-
         var input = $scope.sendFormModel.recipient;
 
         // parse the raw address/federation name
@@ -116,6 +117,8 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, s
             if (inputHasChanged()) {
                 return $q.reject("not-current");
             }
+
+            showAddressFound($scope.send.destination.address);
 
             updateCurrencyConstraints();
         })
@@ -310,6 +313,10 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, s
         return deferred.promise;
     }
 
+    function resetError() {
+        $('#recipient').tooltip('destroy');
+    }
+
     function showError(error) {
         switch (error) {
             case "account-not-found":
@@ -317,7 +324,7 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, s
         }
     }
 
-    function showAddressFoundTip(address) {
+    function showAddressFound(address) {
         Util.showTooltip($('#recipient'), "wallet address found: " + address, "info", "top");
     }
 });
