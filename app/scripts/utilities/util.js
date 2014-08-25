@@ -13,7 +13,7 @@ Util.validateUsername = function (username) {
 * - type (error, info)
 * - placement (top, left, right, bottom)
 */
-Util.showTooltip = function (element, title, type, placement, delay) {
+Util.showTooltip = function (element, title, type, placement) {
 
   var placementClass = placement;
 
