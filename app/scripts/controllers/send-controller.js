@@ -11,9 +11,9 @@ sc.controller('SendController', function($rootScope, $scope, stNetwork) {
     // The amount we're sending. An Amount object
     $scope.send.amount = null;
     // The state the send pane is in - form, confirm, or sending
-    $scope.send.state = 'form';
+    $scope.send.state;
     // The currencies a user can choose from. Constrained based on destination
-    $scope.send.currency_choices = StellarDefaultCurrencyList;
+    $scope.send.currencyChoices = StellarDefaultCurrencyList;
     // The currency we're sending in
     $scope.send.currency;
     // Status of the find path we're running
@@ -33,8 +33,41 @@ sc.controller('SendController', function($rootScope, $scope, stNetwork) {
     $scope.send.showDestinationTag = false;
 
     $scope.setState = function (state) {
+        if (!$rootScope.connected) {
+            $scope.send.state = "disconnected";
+            return;
+        }
+
+        if (!$rootScope.account.Balance) {
+            $scope.send.state = "unfunded";
+            return;
+        }
+
         $scope.send.state = state;
     }
+
+    // global notifications
+    $scope.$on('$netConnected', function(){
+        if ($scope.send.state === "disconnected") {
+            $scope.setState("form");
+        }
+    });
+
+    $rootScope.$on('accountLoaded', function() {
+        if ($scope.send.state === "unfunded") {
+            $scope.setState("form");
+        }
+    });
+
+    $scope.$on('$appTxNotification', function(){
+        if ($scope.send.state === "unfunded") {
+            $scope.setState("form");
+        }
+    });
+
+    $scope.$on('resetSendPane', function() {
+        $scope.reset();
+    });
 
     /**
     * showPaths returns true if all required dependencies are met to send a payment (resolved address,
@@ -56,7 +89,7 @@ sc.controller('SendController', function($rootScope, $scope, stNetwork) {
         $scope.send.showDestinationTag = false;
         $scope.send.destination = {};
         $scope.send.federatedName = null;
-        $scope.send.currency_choices = StellarDefaultCurrencyList;
+        $scope.send.currencyChoices = StellarDefaultCurrencyList;
     }
 
     $scope.resetCurrencyDependencies = function () {
@@ -71,10 +104,12 @@ sc.controller('SendController', function($rootScope, $scope, stNetwork) {
 
     // Reset ALL the things (to make a new payment)
     $scope.reset = function () {
-        $scope.$broadcast('reset');
+        $scope.setState('form');
+
         $scope.resetDestinationDependencies();
         $scope.resetAmountDependencies();
-        $scope.setState('form');
+
+        $scope.$broadcast('reset');
     }
 
     // brings the user to the confirmation page
@@ -176,4 +211,6 @@ sc.controller('SendController', function($rootScope, $scope, stNetwork) {
                 $scope.error_message = "An error occurred: " + res.engine_result_message;
         }
     };
+
+    $scope.reset();
 });

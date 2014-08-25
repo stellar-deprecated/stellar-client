@@ -65,6 +65,7 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, s
 
     $scope.$on('reset', function () {
         $scope.sendFormModel = {};
+        $scope.sendFormModel.currency = $scope.send.currencyChoices[0];
     });
 
     /**
@@ -149,11 +150,11 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, s
                 if (data.receive_currencies) {
                     $scope.$apply(function () {
                         // Generate list of accepted currencies
-                        $scope.send.currency_choices = _.uniq(_.compact(_.map(data.receive_currencies, function (currency) {
+                        $scope.send.currencyChoices = _.uniq(_.compact(_.map(data.receive_currencies, function (currency) {
                             return currency;
                         })));
                         // Add STR
-                        $scope.send.currency_choices.unshift("STR");
+                        $scope.send.currencyChoices.unshift("STR");
                     });
                 }
                 return deferred.resolve();
