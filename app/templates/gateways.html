@@ -1,0 +1,16 @@
+<div ng-show="gateways.length">
+    <h3 class="title">Trusted Gateways</h3>
+    <ul>
+        <li ng-repeat="gateway in gateways" class="row">
+            <div class="col-sm-3">
+                {{ gateway.domain }}
+            </div>
+            <div class="col-sm-8">
+                {{ currencyNames(gateway.currencies) }}
+            </div>
+            <div class="col-sm-1">
+                <a href="#" ng-click="removeGateway($index)">remove</a>
+            </div>
+        </li>
+    </ul>
+</div>

@@ -7,6 +7,7 @@
                         <div ng-show="$root.accountStatus == 'loaded'">
                             <span class="dash-balance" rp-tooltip="{{$root.balance  | rpamount}}  (minimum balance: {{ $root.reserve | rpamount }} STR)" ng-bind-html="$root.balance | rpamount:{rel_precision: 0} | shrinkText:84:6"></span>
                             <div class="dash-balance-info">Current Balance <b>Stellars</b></div>
+                            <a class="add-currency-link" ng-click="openManageCurrencies();" href="#">manage currencies</a>
                         </div>
                         <span ng-hide="$root.accountStatus == 'loaded'" class="dash-balance" ng-bind-html="statusMessage() | shrinkText:84:6"></span>
                     </div>
@@ -65,10 +66,14 @@
             </div>
         </div>
     </div>
-    <div class="tab-panes container" ng-class="{open: showTab, visible: overflowVisible}">
-        <div class="send-container client-section" ng-include="'templates/send.html'" ng-show="tab==='send'"></div>
-        <div class="receive-container client-section" ng-include="'templates/receive.html'" ng-show="tab==='receive'"></div>
-        <div class="balances-container client-section" ng-include="'templates/balances.html'" ng-show="tab==='balances'"></div>
+
+    <div class="tab-panes client-section" ng-class="{open: showTab, visible: overflowVisible}">
+        <div class="container">
+            <div class="send-container" ng-include="'templates/send.html'" ng-show="tab==='send'"></div>
+            <div class="receive-container" ng-include="'templates/receive.html'" ng-show="tab==='receive'"></div>
+            <div class="balances-container" ng-include="'templates/balances.html'" ng-show="tab==='balances'"></div>
+            <div class="manage-currencies-container" ng-include="'templates/manage-currencies.html'" ng-show="tab==='manage-currencies'"></div>
+        </div>
     </div>
 
     <div class="invite-messages" id="invite-task-messages" ng-show="task" ng-controller="TaskMessageCtrl">

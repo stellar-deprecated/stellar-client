@@ -38,6 +38,11 @@ sc.controller('DashboardCtrl', function($rootScope, $scope, $timeout, $state, se
         $rootScope.showTab = true;
     };
 
+    $rootScope.openManageCurrencies = function() {
+        $rootScope.tab = 'manage-currencies';
+        $rootScope.showTab = true;
+    };
+
     $scope.statusMessage = function(){
         switch($rootScope.accountStatus){
           case 'connecting': return 'Connecting...';
