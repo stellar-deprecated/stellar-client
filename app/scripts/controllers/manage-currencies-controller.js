@@ -3,9 +3,9 @@
 var sc = angular.module('stellarClient');
 
 sc.controller('ManageCurrenciesCtrl', function($rootScope, $scope, $q, session, rpStellarTxt, singletonPromise, stNetwork) {
-  var mainData = session.get('wallet').mainData;
-  mainData.gateways = mainData.gateways || [];
-  $scope.gateways = mainData.gateways;
+  var mainData      = session.get('wallet').mainData;
+  mainData.gateways = mainData.gateways || {};
+  $scope.gateways   = mainData.gateways;
 
   $scope.currencies = [];
   $scope.gatewaySearch = '';
@@ -46,6 +46,10 @@ sc.controller('ManageCurrenciesCtrl', function($rootScope, $scope, $q, session, 
     $scope.resetSearch();
   };
 
+  $scope.hasGateways = function() {
+    return _.any($scope.gateways);
+  }
+
   $scope.addGateway = singletonPromise(function() {
     var trustedCurrencies = [];
     var failedCurrencies = [];
@@ -65,11 +69,11 @@ sc.controller('ManageCurrenciesCtrl', function($rootScope, $scope, $q, session, 
     return $q.all(promises)
       .finally(function() {
         if(_.any(trustedCurrencies)) {
-          $scope.gateways.push({
+          $scope.gateways[$scope.gatewayDomain] = {
             domain: $scope.gatewayDomain,
             currencies: trustedCurrencies,
             failedCurrencies: failedCurrencies
-          });
+          };
           session.syncWallet('update');
         } else {
           // Unable to add the gateway's currencies.
@@ -78,7 +82,7 @@ sc.controller('ManageCurrenciesCtrl', function($rootScope, $scope, $q, session, 
   });
 
   function retryUnfinishedGateways() {
-    $scope.gateways.forEach(function(gateway) {
+    _($scope.gateways).values().each(function(gateway) {
       if(!_.any(gateway.failedCurrencies)) return;
 
       var trustedCurrencies = [];
@@ -99,8 +103,8 @@ sc.controller('ManageCurrenciesCtrl', function($rootScope, $scope, $q, session, 
       $q.all(promises)
         .finally(function() {
           if(_.any(trustedCurrencies)) {
-            gateways.currencies.concat(trustedCurrencies);
-            gateways.failedCurrencies = failedCurrencies;
+            gateway.currencies       = gateway.currencies.concat(trustedCurrencies);
+            gateway.failedCurrencies = failedCurrencies;
             session.syncWallet('update');
           }
         });
@@ -125,13 +129,13 @@ sc.controller('ManageCurrenciesCtrl', function($rootScope, $scope, $q, session, 
     return deferred.promise;
   };
 
-  $scope.removeGateway = function(index) {
-    var gateway = $scope.gateways[index];
+  $scope.removeGateway = function(domain) {
+    var gateway = $scope.gateways[domain];
     gateway.currencies.forEach(function(currency) {
       trustCurrency(currency, '0');
     });
 
-    $scope.gateways.splice(index, 1);
+    delete $scope.gateways[domain];
     session.syncWallet('update');
   };
 
