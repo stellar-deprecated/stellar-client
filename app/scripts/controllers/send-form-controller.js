@@ -239,7 +239,6 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, s
 
     // updates the paths the user can use to send
     function processNewPaths(result) {
-        console.log(result);
         $scope.send.paths = _.map(result.alternatives, function (raw, key) {
             var path = {};
             path.amount = Amount.from_json(raw.source_amount);
