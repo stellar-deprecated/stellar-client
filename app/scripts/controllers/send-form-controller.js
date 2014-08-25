@@ -247,9 +247,7 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, s
             path.amount_human = path.amount.to_human();
             path.currency_human = path.amount._currency.to_human();
             path.issuer_human = path.amount._issuer.to_json();
-            path.paths = raw.paths_computed
-                        ? raw.paths_computed
-                        : raw.paths_canonical;
+            path.paths = raw.paths_computed || raw.paths_canonical;
             return path;
         })
 

@@ -41,15 +41,15 @@ sc.controller('SendController', function($rootScope, $scope, stNetwork) {
     * destination tag requirement met, path found, etc).
     */
     $scope.showPaths = function () {
-        var destTagRequirementMet = $scope.send.destination.requireDestinationTag ?
-            !!$scope.send.destination.destinationTag :
-            true;
-        return destTagRequirementMet &&
-            $scope.send.amount &&
-            !_.isEmpty($scope.send.destination) &&
-            $scope.send.currency &&
-            $scope.send.paths.length &&
-            destTagRequirementMet;
+        var destTagRequirementMet = !$scope.send.destination.requireDestinationTag ||
+                                    !!$scope.send.destination.destinationTag;
+
+        var sendRequirementMet = $scope.send.amount &&
+                                 $scope.send.currency &&
+                                 $scope.send.paths.length &&
+                                 !_.isEmpty($scope.send.destination);
+
+        return destTagRequirementMet && sendRequirementMet;
     }
 
     $scope.resetDestinationDependencies = function () {
