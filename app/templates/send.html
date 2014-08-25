@@ -5,7 +5,12 @@
             <i class="icon icon-times-circle-thin"></i>
         </div>
         <div class="literal title send-title">Send Stellars</div>
-
+    </div>
+    <div ng-show="send.state == 'disconnected'" class="send-error disconnected">
+        <p class="literal">You have to be online to see this screen</p>
+    </div>
+    <div ng-show="send.state == 'unfunded'" class="send-error unfunded">
+        <p class="literal">You have to be funded before you can send money</p>
     </div>
     <div ng-include="'templates/send-form.html'" ng-show="send.state == 'form'"></div>
     <div ng-include="'templates/send-confirm.html'" ng-show="send.state == 'confirm'"></div>
