@@ -20,12 +20,8 @@
         padding-right: 0;
       }
 
-      .single-balance-container {
-        padding-top: 20px;
-      }
-
       .multi-balance-container {
-        margin-bottom: 35px;
+        margin-bottom: 5px;
       }
 
       .dash-info-container {
@@ -49,8 +45,7 @@
         color: $info-grey;
         font-weight: $book-weight;
         font-size: 17px;
-        line-height: 45px;
-        margin-bottom: 10px;
+        margin: 10px 0 5px;
 
         b {
           font-weight: $heavy-weight;
@@ -87,6 +82,10 @@
           font-size: 18px;
           padding: 0;
         }
+      }
+
+      .manage-currency-link {
+        padding: 0px 25px;
       }
 
       button, .no-button {

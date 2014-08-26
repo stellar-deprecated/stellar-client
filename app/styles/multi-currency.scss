@@ -10,42 +10,69 @@
 
 .gateway-form {
   padding-bottom: 25px;
-
   p {
-    margin: 5px 0 15px;
+    margin: 15px 0;
   }
-
-  form {
-    margin-top: 35px;
+  input[type="text"] {
+    width: 100%;
+  }
+  label{
+    padding-right: 15px;
+  }
+  button {
+    margin-top: 15px;
+  }
+  @media (min-width: $mobile-width) {
+    input[type="text"] {
+      width: 400px;
+    }
+    button {
+      margin-top: 0;
+    }
   }
 }
 
 .dash-links {
   border-top: 1px solid $grey-border;
   width: 80%;
-  margin: 8px 0 0 10%;
-  padding-top: 5px;
+  margin: 8px 0 8px 10%;
+  padding-top: 10px;
 
   a {
     display: block;
-    margin: 5px 0 0 0;
+    margin: 0;
     color: $grey;
     @include transition(color 200ms ease-in-out);
+  }
 
-    &:hover {
-      color: $brand-primary;
-      text-decoration: none;
+  @media (min-width: $phone-width) {
+    margin-bottom: 0;
+  }
+}
+
+.manage-currency-link {
+  color: $grey;
+
+  i {
+    font-size: 0.8em;
+    margin-right: 5px;
+    color: fade_out($grey, 0.5);
+    top: 0;
+  }
+
+  &:hover {
+    color: $brand-primary;
+    text-decoration: none;
+    i {
+      color: fade_out($grey, 0.3);
     }
   }
 
-  .plus {
-    margin-right: 5px;
-  }
 }
 
 .currencies-list {
   padding: 0;
-  margin: 15px 0;
+  margin: 15px 0 0 0;
   overflow: hidden;
   width: 100%;
 }
@@ -81,7 +108,7 @@
       }
     }
 
-    .add-currency-link {
+    .manage-currency-link {
       position: relative;
     }
 
@@ -127,7 +154,7 @@
       margin: 0;
     }
 
-    .add-currency-link {
+    .manage-currency-link {
       top: 50%;
       transform: translateY(-50%);
     }
@@ -153,6 +180,18 @@
 
   li {
     border-bottom: 1px solid $grey-border;
-    padding: 5px 0 10px;
+    padding: 10px 0;
   }
+}
+
+.gateways {
+  h3 {
+    color: $grey;
+    font-size: 16px;
+    text-transform: uppercase;
+  }
+}
+
+.manage-currencies-container {
+  padding-bottom: 15px;
 }

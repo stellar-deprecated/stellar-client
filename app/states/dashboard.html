@@ -7,7 +7,9 @@
                         <div ng-show="$root.accountStatus == 'loaded'">
                             <span class="dash-balance" rp-tooltip="{{$root.balance  | rpamount}}  (minimum balance: {{ $root.reserve | rpamount }} STR)" ng-bind-html="$root.balance | rpamount:{rel_precision: 0} | shrinkText:84:6"></span>
                             <div class="dash-balance-info">Current Balance <b>Stellars</b></div>
-                            <a class="add-currency-link" ng-click="openManageCurrencies();" href="#">manage currencies</a>
+                            <div class="dash-links">
+                                <a class="manage-currency-link" ng-click="openManageCurrencies();" href="#"><i class="glyphicon glyphicon-th-list"></i>manage currencies</a>
+                            </div>
                         </div>
                         <span ng-hide="$root.accountStatus == 'loaded'" class="dash-balance" ng-bind-html="statusMessage() | shrinkText:84:6"></span>
                     </div>
@@ -21,7 +23,7 @@
                             <div class="currency-balance col-xs-6">{{ balances[currency] }}</div>
                         </div>
                         <div class="dash-links">
-                            <a class="add-currency-link" ng-click="openBalances();" href="#">view all balances({{ currencies.length + 1 }})</a>
+                            <a class="manage-currency-link" ng-click="openBalances();" href="#">view all balances ({{ currencies.length + 1 }})</a>
                         </div>
                     </div>
                 </div>
