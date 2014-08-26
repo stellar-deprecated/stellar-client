@@ -297,6 +297,9 @@
 
     &.open {
       max-height: 700px;
+      &.visible {
+        overflow: visible;
+      }
     }
 
     &:not(.open) {
