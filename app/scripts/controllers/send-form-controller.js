@@ -205,6 +205,9 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, s
             $scope.send.str_deficiency = reserve_base.subtract($scope.send.destination.balance);
             $scope.send.fundStatus = "insufficient-str";
             return;
+        } else {
+            $scope.send.fundStatus = "";
+            $scope.send.str_deficiency = 0;
         }
 
         if (pathUpdateTimeout) {
