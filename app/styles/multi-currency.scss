@@ -10,13 +10,25 @@
 
 .gateway-form {
   padding-bottom: 25px;
-
   p {
-    margin: 5px 0 15px;
+    margin: 15px 0 15px;
   }
-
-  form {
-    margin-top: 35px;
+  input[type="text"] {
+    width: 100%;
+  }
+  label{
+    padding-right: 15px;
+  }
+  button {
+    margin-top: 15px;
+  }
+  @media (min-width: $mobile-width) {
+    input[type="text"] {
+      width: 400px;
+    }
+    button {
+      margin-top: 0;
+    }
   }
 }
 
