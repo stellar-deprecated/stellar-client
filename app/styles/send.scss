@@ -23,7 +23,7 @@
       input[type="number"],
       input[type="text"],
       .dropdown-toggle {
-        font-size: 48px;
+        font-size: 24px;
         height: auto;
       }
 
@@ -32,6 +32,7 @@
       }
 
       .dropdown-menu {
+        min-width: 320px;
         max-height: 300px;
         overflow-y: scroll;
         li {
@@ -60,6 +61,20 @@
         padding-top: 5px;
       }
     }
+
+     @media (min-width: $phone-width) {
+        .send-amount {
+          input[type="number"],
+          input[type="text"],
+          .dropdown-toggle {
+            font-size: 48px;
+            height: auto;
+          }
+          .dropdown-menu {
+            min-width: 160px;
+          }
+        }
+     }
   }
 
   .send-error p {
@@ -144,9 +159,8 @@
   }
 
   .currency-box {
-    height: 140px;
-    button {
-      margin-top: 15px;
+    @media (min-width: $phone-width) {
+        height: 140px;
     }
   }
 }

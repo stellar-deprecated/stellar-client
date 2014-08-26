@@ -32,11 +32,6 @@
         margin-top: 16px;
       }
 
-      .dash-receive-container,
-      .dash-send-container {
-        margin-top: 25px;
-      }
-
       .img-container {
         display: none;
       }
@@ -296,7 +291,7 @@
     @include transition(max-height 700ms ease-in-out);
 
     &.open {
-      max-height: 700px;
+      max-height: 1200px;
       &.visible {
         overflow: visible;
       }

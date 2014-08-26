@@ -54,13 +54,18 @@
   display: block;
   float: left;
   border: 1px solid $grey-border;
-  width: 175px;
+  width: 100%;
   margin-right: 15px;
   margin-bottom: 15px;
-  text-align: center;
-  padding: 15px 15px;
+  
+  padding: 8px;
   border-radius: 3px;
-  height: 100px;
+  height: auto;
+
+  button {
+    float: right;
+    
+  }
 
   &.add-currency-box {
     cursor: pointer;
@@ -78,8 +83,6 @@
 
     .add-currency-link {
       position: relative;
-      top: 50%;
-      transform: translateY(-50%);
     }
 
     .glyphicon-cog {
@@ -90,21 +93,56 @@
   }
 
   h5 {
+    float: left;
     font-size: 24px;
     font-weight: $heavy-weight;
-    margin: 0;
+    margin: 0 5px 0 0;
   }
 
   p {
-    margin: 0;
+    float: left;
+    
     color: $grey;
     font-weight: $book-weight;
+    
+  }
+
+  @media (min-width: $phone-width) {
+    width: 175px;
+    height: 100px;
+    text-align: center;
+    padding: 15px;
+
+    button {
+      float: none;
+      margin-top: 15px;
+    }
+
+    h5, p {
+      float: none;
+      margin: 0;
+    }
+
+    p {
+      margin: 0;
+    }
+
+    .add-currency-link {
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
   }
 }
 
 .currency-issuer {
+  margin: 0;
   font-size: 11px;
   word-wrap:break-word;
+  clear: both;
+  @media (min-width: $phone-width) {
+
+  }
 }
 
 .gateway-list {
