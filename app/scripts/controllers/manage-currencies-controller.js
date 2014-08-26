@@ -40,7 +40,9 @@ sc.controller('ManageCurrenciesCtrl', function($rootScope, $scope, $q, session, 
 
   $scope.resetSearch = function() {
     $scope.currencies = [];
-    $scope.noResults = false;
+    $scope.gatewaySearch = '';
+    $scope.gatewayDomain = '';
+    $scope.searchStatus = '';
   };
 
   $scope.closePane = function() {
@@ -60,8 +62,7 @@ sc.controller('ManageCurrenciesCtrl', function($rootScope, $scope, $q, session, 
 
 
     mainData.pendingGateways.push($scope.gatewayDomain);
-
-    return syncPendingGateways();
+    $scope.resetSearch();
   });
 
   $scope.removeGateway = function(domain) {
@@ -121,7 +122,7 @@ sc.controller('ManageCurrenciesCtrl', function($rootScope, $scope, $q, session, 
 
     var promises = currentState.currencies.map(truster);
 
-    $q.all(promises)
+    return $q.all(promises)
       .then(function() {
         mainData.pendingGateways = _.without(mainData.pendingGateways, domain);
 
