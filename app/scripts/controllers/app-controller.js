@@ -63,6 +63,16 @@ sc.controller('AppCtrl', function($scope, $rootScope, stNetwork, session, $state
 
         accountObj = remote.account(keys.address);
 
+        accountObj.on('entry', handleAccountEntry);
+        accountObj.on('entry', setInflation);
+
+        var listenerCleanupFn = function () {
+            accountObj.off("entry", handleAccountEntry);
+            accountObj.off("entry", setInflation);
+        }
+
+        remote.once('disconnected', listenerCleanupFn);
+
         accountObj.entry(function (err, entry) {
             $timeout(function() {
                 if (err) {
@@ -76,8 +86,6 @@ sc.controller('AppCtrl', function($scope, $rootScope, stNetwork, session, $state
                             $rootScope.accountStatus = 'error';
                     }
                 } else {
-                    handleAccountEntry(entry.account_data);
-                    setInflation(entry.account_data);
                     $rootScope.accountStatus = 'loaded';
                 }
 

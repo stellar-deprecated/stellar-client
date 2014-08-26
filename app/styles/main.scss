@@ -15,6 +15,7 @@ $mobile-width: 992px;
 @import "icons.scss";
 @import "animation.scss";
 
+@import "navigation.scss";
 @import "login.scss";
 @import "dashboard.scss";
 @import "registration.scss";
@@ -36,7 +37,7 @@ body {
   height: 100%;
   width: 100%;
   color: $dark-grey;
-  font-family: $clear-sans, sans-serif, "Comic Sans MS", "Comic Sans";
+  font-family: $font-family-sans-serif;
   font-weight: $medium-weight;
 }
 
@@ -52,100 +53,8 @@ body {
   min-height: 100vh;
 }
 
-.right-inner-addon {
-  position: relative;
-}
-.right-inner-addon input {
-  padding-right: 30px;
-}
-.right-inner-addon i {
-  position: absolute;
-  right: 2px;
-  padding: 10px 12px;
-  pointer-events: none;
-  font-size: 17px;
-  color: $info-grey;
-}
-
 .ng-cloak, .ng-hide {
   display: none;
-}
-
-.client-nav {
-  margin-bottom: 0;
-  border: 0;
-  border-top: 3px solid $stellar-blue;
-  border-bottom: 1px solid $grey-border;
-  background-color: $grey-background;
-  border-radius: 0;
-
-  ul {
-    font-weight: $medium-weight;
-    font-size: 15px;
-
-    &.navbar-nav {
-      > li {
-        > a {
-          line-height: 1em;
-          margin: 3px 0 0 0;
-          padding: 10px 24px;
-          @include transition(color 200ms ease-in-out);
-
-          .glyphicon {
-            padding-right: 2px;
-            opacity: 0.5;
-            font-size: 0.8em;
-            @include transition(opacity 200ms ease-in-out);
-          }
-
-          &:hover {
-            color: $stellar-blue;
-            .glyphicon {
-              opacity: 1;
-            }
-          }
-
-          &.nav-has-invites {
-            span {
-              background: $stellar-blue;
-              border: 1px solid darken($stellar-blue, 10);
-              color: #fff;
-              border-radius: 3px;
-              padding: 3px;
-              font-size: 0.9em;
-            }
-            &:hover {
-              span {
-                background: darken($stellar-blue, 5);
-                color: #fff;
-              }
-            }
-
-          }
-        }
-      }
-    }
-
-    .sign-up {
-      border: 1px solid $grey-border;
-    }
-  }
-
-  .client-inner-nav {
-    padding-top: 20px;
-    padding-bottom: 15px;
-    background: none;
-  }
-
-  .navbar-brand {
-    color: #09B5E5;
-    font-weight: $heavy-weight;
-    font-size: 26px;
-
-    &:hover {
-      color: #09B5E5;
-    }
-  }
 }
 
 .client-container {
@@ -161,82 +70,7 @@ body {
   }
 }
 
-.glyphicon {
-  font-size: 12pt;
-  color: $info-grey;
-  @include transition(color 200ms ease-in-out);
 
-  &.glyphicon-remove {
-    color: $error;
-  }
-}
-
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.spin {
-  @include transform-origin(51% 48%);
-  animation-duration: 500ms;
-  animation-iteration-count: infinite;
-  animation-timing-function: linear;
-  animation-name: spin;
-}
-
-.input-icon-wrapper {
-  position: relative;
-
-  .glyphicon,
-  .icon {
-    font-size: 10pt;
-    padding: 14px 12px;
-    position: absolute;
-    right: 0px;
-    top: 0px;
-  }
-
-  input {
-    padding-right: 30px;
-  }
-}
-
-.pane-close {
-  float: right;
-  font-size: 16px;
-  cursor: pointer;
-  font-weight: $book-weight;
-  color: $info-grey;
-  height: 50px;
-  line-height: 50px;
-
-  @include transition(color 200ms ease-in-out);
-
-  i {
-    font-size: 26px;
-    margin-top: 5px;
-    margin-left: 8px;
-  }
-
-  span, i {
-    display: inline-block;
-    vertical-align: middle;
-    line-height: normal;
-  }
-
-  &:hover {
-    color: $error;
-
-    i {
-      color: $error;
-    }
-  }
-}
 
 .wrapper {
   min-height: 100%;

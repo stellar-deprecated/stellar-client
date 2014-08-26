@@ -3,7 +3,7 @@
   width: 100%;
   display: table;
   margin: 10px auto 30px auto;
-  border: 1px solid $stellar-blue;
+  border: 1px solid $brand-primary;
   background-color: white;
   border-radius: 31px;
   height: 34px;
@@ -17,7 +17,7 @@
 
     &.sent {
       background-color: #DBF2F8;
-      color: $stellar-blue;
+      color: $brand-primary;
     }
 
     &:first-child {

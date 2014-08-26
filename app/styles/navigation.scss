@@ -1,0 +1,76 @@
+.client-nav {
+  margin-bottom: 0;
+  border: 0;
+  border-top: 3px solid $brand-primary;
+  border-bottom: 1px solid $grey-border;
+  background-color: $grey-background;
+  border-radius: 0;
+
+  ul {
+    font-weight: $medium-weight;
+    font-size: 15px;
+
+    &.navbar-nav {
+      > li {
+        > a {
+          line-height: 1em;
+          margin: 3px 0 0 0;
+          padding: 10px 24px;
+          @include transition(color 200ms ease-in-out);
+
+          .glyphicon {
+            padding-right: 2px;
+            opacity: 0.5;
+            font-size: 0.8em;
+            @include transition(opacity 200ms ease-in-out);
+          }
+
+          &:hover {
+            color: $brand-primary;
+            .glyphicon {
+              opacity: 1;
+            }
+          }
+
+          &.nav-has-invites {
+            span {
+              background: $brand-primary;
+              border: 1px solid darken($brand-primary, 10);
+              color: #fff;
+              border-radius: 3px;
+              padding: 3px;
+              font-size: 0.9em;
+            }
+            &:hover {
+              span {
+                background: darken($brand-primary, 5);
+                color: #fff;
+              }
+            }
+
+          }
+        }
+      }
+    }
+
+    .sign-up {
+      border: 1px solid $grey-border;
+    }
+  }
+
+  .client-inner-nav {
+    padding-top: 20px;
+    padding-bottom: 15px;
+    background: none;
+  }
+
+  .navbar-brand {
+    color: #09B5E5;
+    font-weight: $heavy-weight;
+    font-size: 26px;
+
+    &:hover {
+      color: #09B5E5;
+    }
+  }
+}

@@ -17,7 +17,9 @@
         margin-right: 15px;
         font-size: 12px;
         font-style: normal;
-        top: 21px;
+        top: 32px;
+        right: 15px;
+        position: absolute;
       }
 
       input[type="number"],
@@ -43,6 +45,12 @@
 
       .tip {
         padding-top: 26px;
+      }
+
+      i {
+        margin-right: 15px;
+        top: 3px;
+        position: absolute;
       }
     }
 
@@ -127,10 +135,10 @@
       background-color: #80D8BF;
       font-size: 25px;
       box-shadow: none;
-      border-bottom-color: $stellar-blue;
+      border-bottom-color: $brand-primary;
 
       &:hover {
-        background-color: $stellar-blue;
+        background-color: $brand-primary;
       }
     }
   }
