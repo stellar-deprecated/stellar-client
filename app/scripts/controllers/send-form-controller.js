@@ -180,6 +180,10 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, s
     var pathUpdateTimeout;
     // Updates the amount we're sending
     function updateAmount() {
+        if (pathUpdateTimeout) {
+            $timeout.cancel(pathUpdateTimeout);
+        }
+
         // reset any amount dependencies we have
         $scope.resetAmountDependencies();
 
@@ -210,9 +214,6 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, s
             $scope.send.str_deficiency = 0;
         }
 
-        if (pathUpdateTimeout) {
-            $timeout.cancel(pathUpdateTimeout);
-        }
         pathUpdateTimeout = $timeout(updatePaths, 500);
     }
 
