@@ -21,14 +21,14 @@
         <div ng-show="searchStatus == 'no_currencies'">No currencies found for {{ gatewayDomain }}</div>
         <div ng-show="searchStatus == 'already_added'">{{ gatewayDomain }} was already added</div>
         <div class="gateway-currencies" ng-show="searchStatus == 'found'">
-            <h5>Search results for {{ gatewayDomain }}:</h5>
+            <h5>Supported currencies for {{ gatewayDomain }}:</h5>
             <ul class="currencies-list">
                 <li ng-repeat="currency in currencies" class="currency-box">
                     <h5>{{ currency.currency }}</h5>
                     <p class="currency-issuer">{{ currency.issuer | addressToUsername }}</p>
                 </li>
             </ul>
-            <button class="btn btn-default" ng-click="addGateway()">{{ addGateway.isLoading() ? 'Loading...' : 'Add ' + gatewayDomain }}</button>
+            <button class="btn btn-default" ng-click="addGateway()">{{ addGateway.isLoading() ? 'Loading...' : 'Trust ' + gatewayDomain }}</button>
         </div>
     </div>
 

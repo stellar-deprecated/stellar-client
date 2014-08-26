@@ -62,11 +62,9 @@ body {
   -ms-flex: 1 0 auto;
   flex: 1 0 auto;
   -webkit-flex: 1 0 auto;
-  > div {
-     .title {
-      font-size: 21px;
-      padding-top: 20px;
-    }
+   .title {
+    font-size: 21px;
+    padding-top: 20px;
   }
 }
 
