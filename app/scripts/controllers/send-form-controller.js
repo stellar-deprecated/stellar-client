@@ -130,7 +130,9 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, s
                 return $q.reject("not-current");
             }
 
-            showAddressFound($scope.send.destination.address);
+            if(input !== address) {
+                showAddressFound($scope.send.destination.address);
+            }
 
             updateCurrencyConstraints();
         })
