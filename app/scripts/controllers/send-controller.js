@@ -13,7 +13,7 @@ sc.controller('SendController', function($rootScope, $scope, stNetwork) {
     // The state the send pane is in - form, confirm, or sending
     $scope.send.state;
     // The currencies a user can choose from. Constrained based on destination
-    $scope.send.currencyChoices = StellarDefaultCurrencyList;
+    $scope.send.currencyChoices = _.pluck(StellarDefaultCurrencyList, 'value');
     // The currency we're sending in
     $scope.send.currency;
     // Status of the find path we're running
@@ -89,7 +89,7 @@ sc.controller('SendController', function($rootScope, $scope, stNetwork) {
         $scope.send.showDestinationTag = false;
         $scope.send.destination = {};
         $scope.send.federatedName = null;
-        $scope.send.currencyChoices = StellarDefaultCurrencyList;
+        $scope.send.currencyChoices = _.pluck(StellarDefaultCurrencyList, 'value');
     }
 
     $scope.resetCurrencyDependencies = function () {
