@@ -278,7 +278,7 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, s
         var account = stNetwork.remote.account(address);
         account.entry(function (err, data) {
             if (inputHasChanged()) {
-                returndeferred.reject("not-current");
+                deferred.reject("not-current");
                 return;
             }
 
