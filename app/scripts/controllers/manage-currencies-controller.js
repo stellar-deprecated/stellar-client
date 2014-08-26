@@ -20,6 +20,12 @@ sc.controller('ManageCurrenciesCtrl', function($rootScope, $scope, $q, session, 
     $scope.searchStatus = 'loading';
     $scope.gatewayDomain = $scope.gatewaySearch;
 
+    var gateway = _.find($scope.gateways, {domain: $scope.gatewayDomain});
+    if(gateway) {
+      $scope.searchStatus = 'already_added';
+      return $q.when();
+    }
+
     return rpStellarTxt.get($scope.gatewayDomain)
       .then(function(sections) {
         $scope.currencies = _.map(sections.currencies, function(currency) {
