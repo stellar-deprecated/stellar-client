@@ -3,7 +3,7 @@
     <ul>
         <li ng-repeat="(domain, gateway) in gateways" class="row">
             <div class="col-sm-3">
-                {{ gateway.domain }}
+                <a href="http://{{ domain }}" target="_blank">{{ domain }}</a>
             </div>
             <div class="col-sm-8">
                 {{ currencyNames(gateway.currencies) }}
