@@ -28,7 +28,7 @@
             <ul class="currencies-list">
                 <li ng-repeat="currency in currencies" class="currency-box">
                     <h5>{{ currency.currency }}</h5>
-                    <p>{{ currency.issuer | addressToUsername }}</p>
+                    <p class="currency-issuer">{{ currency.issuer | addressToUsername }}</p>
                 </li>
             </ul>
             <button class="btn btn-default" ng-click="addGateway()">{{ addGateway.isLoading() ? 'Loading...' : 'Add ' + gatewayDomain }}</button>

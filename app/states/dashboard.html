@@ -66,7 +66,8 @@
             </div>
         </div>
     </div>
-    <div class="tab-panes client-section" ng-class="{open: showTab}">
+
+    <div class="tab-panes client-section" ng-class="{open: showTab, visible: overflowVisible}">
         <div class="container">
             <div class="send-container" ng-include="'templates/send.html'" ng-show="tab==='send'"></div>
             <div class="receive-container" ng-include="'templates/receive.html'" ng-show="tab==='receive'"></div>

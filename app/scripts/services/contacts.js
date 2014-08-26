@@ -87,7 +87,7 @@ sc.service('contacts', function($q, rpFederation, rpReverseFederation) {
           }
         },
         function () {
-          deferred.reject();
+          deferred.reject("federation-error");
         })
       ;
     }
@@ -117,7 +117,7 @@ sc.service('contacts', function($q, rpFederation, rpReverseFederation) {
           }
         },
         function () {
-          deferred.reject();
+          deferred.reject("federation-error");
         })
       ;
     }

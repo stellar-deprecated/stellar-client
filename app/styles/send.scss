@@ -1,5 +1,16 @@
 .send-pane {
-  form > div {
+  .title{
+    margin-bottom: 25px;
+  }
+
+
+  form {
+
+    input.form-control {
+      font-size: 22px;
+      height: auto;
+    }
+
     .send-amount {
 
       i {
@@ -9,38 +20,45 @@
         top: 21px;
       }
 
-      input[type="text"] {
+      input[type="number"],
+      input[type="text"],
+      .dropdown-toggle {
         font-size: 48px;
-        height: auto;
-        padding-right: 50px;
         height: auto;
       }
 
-      + .tip {
-        line-height: 82px
+      .dropdown-toggle {
+        margin-bottom: 0;
+      }
+
+      .dropdown-menu {
+        max-height: 300px;
+        overflow-y: scroll;
+        li {
+          padding: 0;
+          margin: 0;
+        }
+      }
+
+      .tip {
+        padding-top: 26px;
       }
     }
 
     .send-address {
-
+      input[type="text"] {
+        padding-right: 36px;
+      }
       i {
         margin-right: 15px;
         top: 5px;
       }
-
-      input[type="text"] {
-        font-size: 22px;
-        height: auto;
-        padding-right: 36px;
-      }
-
-      + .tip {
-        line-height: 45px
-      }
     }
 
-    .destination-tag {
-      padding: 0;
+    .send-destination {
+      .tip {
+        padding-top: 5px;
+      }
     }
   }
 
@@ -122,6 +140,13 @@
     .sending-rocket {
       display: block;
       margin: 50px auto;
+    }
+  }
+
+  .currency-box {
+    height: 140px;
+    button {
+      margin-top: 15px;
     }
   }
 }

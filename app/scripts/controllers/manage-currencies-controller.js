@@ -3,16 +3,18 @@
 var sc = angular.module('stellarClient');
 
 sc.controller('ManageCurrenciesCtrl', function($rootScope, $scope, $q, session, rpStellarTxt, singletonPromise, stNetwork) {
-  var mainData = session.get('wallet').mainData;
-  mainData.gateways = mainData.gateways || [];
-  $scope.gateways = mainData.gateways;
+  var mainData             = session.get('wallet').mainData;
+  mainData.gateways        = mainData.gateways || {};
+  mainData.pendingGateways = mainData.pendingGateways || [];
+  $scope.gateways          = mainData.gateways;
+
 
   $scope.currencies = [];
   $scope.gatewaySearch = '';
   $scope.gatewayDomain = '';
   $scope.searchStatus = '';
 
-  retryUnfinishedGateways();
+  syncPendingGateways();
 
   $scope.loadCurrencies = singletonPromise(function (){
     $scope.searchStatus = 'loading';
@@ -48,67 +50,34 @@ sc.controller('ManageCurrenciesCtrl', function($rootScope, $scope, $q, session, 
     $scope.resetSearch();
   };
 
-  $scope.addGateway = singletonPromise(function() {
-    var trustedCurrencies = [];
-    var failedCurrencies = [];
+  $scope.hasGateways = function() {
+    return _.any($scope.gateways);
+  }
 
-    // Trust each currency.
-    var promises = $scope.currencies.map(function(currency) {
-      return trustCurrency(currency)
-        .then(function() {
-          trustedCurrencies.push(currency);
-        })
-        .catch(function() {
-          failedCurrencies.push(currency);
-        });
+  $scope.addGateway = singletonPromise(function() {
+    mainData.gateways[$scope.gatewayDomain] = _.cloneDeep({
+      domain: $scope.gatewayDomain,
+      currencies: $scope.currencies
     });
 
-    // Save the gateway to the wallet once the currencies have been trusted.
-    return $q.all(promises)
-      .finally(function() {
-        if(_.any(trustedCurrencies)) {
-          $scope.gateways.push({
-            domain: $scope.gatewayDomain,
-            currencies: trustedCurrencies,
-            failedCurrencies: failedCurrencies
-          });
-          session.syncWallet('update');
-          $scope.resetSearch();
-        } else {
-          // Unable to add the gateway's currencies.
-        }
-      });
+
+    mainData.pendingGateways.push($scope.gatewayDomain);
+    $scope.resetSearch();
   });
 
-  function retryUnfinishedGateways() {
-    $scope.gateways.forEach(function(gateway) {
-      if(!_.any(gateway.failedCurrencies)) return;
+  $scope.removeGateway = function(domain) {
+    var currentState = $scope.gateways[domain];
+    if(!currentState){ return; }
+    currentState.deleted = true;
 
-      var trustedCurrencies = [];
-      var failedCurrencies = [];
+    mainData.pendingGateways.push(domain);
+    syncPendingGateways();
+  };
 
-      // Retry trusting each failed currency.
-      var promises = gateway.failedCurrencies.map(function(currency) {
-        return trustCurrency(currency)
-          .then(function() {
-            trustedCurrencies.push(currency);
-          })
-          .catch(function() {
-            failedCurrencies.push(currency);
-          });
-      });
+  $scope.currencyNames = function(currencies) {
+    return _(currencies).pluck('currency').join(', ');
+  };
 
-      // Update the wallet with the new currencies.
-      $q.all(promises)
-        .finally(function() {
-          if(_.any(trustedCurrencies)) {
-            gateways.currencies.concat(trustedCurrencies);
-            gateways.failedCurrencies = failedCurrencies;
-            session.syncWallet('update');
-          }
-        });
-    });
-  }
 
   function trustCurrency(currency, value) {
     // Trust the currency for the max value by default.
@@ -122,23 +91,48 @@ sc.controller('ManageCurrenciesCtrl', function($rootScope, $scope, $q, session, 
     tx.trustSet(session.get('address'), limit);
 
     tx.on('success', deferred.resolve);
-    tx.on('error', deferred.reject);
+    tx.on('error', function(result) {
+      if(result.engine_result === "tecNO_LINE_REDUNDANT") {
+        deferred.resolve();
+      } else {
+        deferred.reject(result);
+      }
+    });
+
     tx.submit();
 
     return deferred.promise;
-  };
+  }
 
-  $scope.removeGateway = function(index) {
-    var gateway = $scope.gateways[index];
-    gateway.currencies.forEach(function(currency) {
-      trustCurrency(currency, '0');
-    });
+  function syncPendingGateways() {
+    return mainData.pendingGateways.map(syncPendingGateway);
+  }
 
-    $scope.gateways.splice(index, 1);
-    session.syncWallet('update');
-  };
+  function syncPendingGateway(domain) {
+    var currentState = _.cloneDeep(mainData.gateways[domain]);
+    if(!currentState) { 
+      mainData.pendingGateways = _.without(mainData.pendingGateways, domain);
+      return; 
+    }
 
-  $scope.currencyNames = function(currencies) {
-    return _(currencies).pluck('currency').join(', ');
-  };
+    var trustAmount = currentState.deleted ? '0' : '9223372036854775806';
+    var truster     = function(currency) {
+      return trustCurrency(currency, trustAmount);
+    };
+
+    var promises = currentState.currencies.map(truster);
+
+    return $q.all(promises)
+      .then(function() {
+        mainData.pendingGateways = _.without(mainData.pendingGateways, domain);
+
+        if(currentState.deleted) {
+          delete mainData.gateways[domain];
+        }
+      })
+      .finally(function() {
+        return session.syncWallet('update');
+      })
+  }
+
 });
