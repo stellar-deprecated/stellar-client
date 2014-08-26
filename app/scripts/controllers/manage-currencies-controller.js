@@ -62,6 +62,7 @@ sc.controller('ManageCurrenciesCtrl', function($rootScope, $scope, $q, session, 
 
 
     mainData.pendingGateways.push($scope.gatewayDomain);
+    syncPendingGateway($scope.gatewayDomain);
     $scope.resetSearch();
   });
 
@@ -71,7 +72,7 @@ sc.controller('ManageCurrenciesCtrl', function($rootScope, $scope, $q, session, 
     currentState.deleted = true;
 
     mainData.pendingGateways.push(domain);
-    syncPendingGateways();
+    syncPendingGateway(domain);
   };
 
   $scope.currencyNames = function(currencies) {
@@ -105,7 +106,7 @@ sc.controller('ManageCurrenciesCtrl', function($rootScope, $scope, $q, session, 
   }
 
   function syncPendingGateways() {
-    return mainData.pendingGateways.map(syncPendingGateway);
+    return $q.all(mainData.pendingGateways.map(syncPendingGateway));
   }
 
   function syncPendingGateway(domain) {
@@ -132,7 +133,8 @@ sc.controller('ManageCurrenciesCtrl', function($rootScope, $scope, $q, session, 
       })
       .finally(function() {
         return session.syncWallet('update');
-      })
+      });
+      //TODO: add a sentry error reporter to this promise chain (since syncing is a background operation at present)
   }
 
 });
