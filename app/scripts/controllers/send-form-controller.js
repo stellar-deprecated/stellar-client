@@ -113,28 +113,32 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, s
             }
             return resolveStellarAccount(address)
         })
+        .catch(function (error) {
+            $scope.resetDestinationDependencies();
+            switch (error) {
+                case "federation-error":
+                    showError("account-not-found");
+                    return $q.reject(error);
+                case "account-not-found":
+                    // Continue sending to the unfunded account.
+                    break;
+            }
+        })
         .then(function () {
             // check we're still current
             if (inputHasChanged()) {
                 return $q.reject("not-current");
             }
 
-            showAddressFound($scope.send.destination.address);
+            if(input !== address) {
+                showAddressFound($scope.send.destination.address);
+            }
 
             updateCurrencyConstraints();
         })
         .then(function () {
             updateCurrency();
-        })
-        .catch(function (error) {
-            $scope.resetDestinationDependencies();
-            switch (error) {
-                case "federation-error":
-                    showError("account-not-found");
-                case "account-not-found":
-                    showError("account-not-found");
-            }
-        })
+        });
     }
 
     // Updates the available currencies the current $scope.destination can receive
@@ -176,6 +180,10 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, s
     var pathUpdateTimeout;
     // Updates the amount we're sending
     function updateAmount() {
+        if (pathUpdateTimeout) {
+            $timeout.cancel(pathUpdateTimeout);
+        }
+
         // reset any amount dependencies we have
         $scope.resetAmountDependencies();
 
@@ -198,14 +206,14 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, s
         var reserve_base = $rootScope.account.reserve_base;
         if (total.compareTo(reserve_base) < 0) {
             // TODO: destination account doesn't meet reserve, send this much more to fund it
-            var str_deficiency = reserve_base.subtract($scope.send.destination.balance);
+            $scope.send.str_deficiency = reserve_base.subtract($scope.send.destination.balance);
             $scope.send.fundStatus = "insufficient-str";
             return;
+        } else {
+            $scope.send.fundStatus = "";
+            $scope.send.str_deficiency = 0;
         }
 
-        if (pathUpdateTimeout) {
-            $timeout.cancel(pathUpdateTimeout);
-        }
         pathUpdateTimeout = $timeout(updatePaths, 500);
     }
 
@@ -271,17 +279,22 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, s
         account.entry(function (err, data) {
             if (inputHasChanged()) {
                 deferred.reject("not-current");
+                return;
             }
-            if (err) {
-                deferred.reject("account-not-found");
-            }
+
             $scope.send.destination.address = address;
-            $scope.send.destination.requireDestinationTag = !!(data.account_data.Flags & stellar.Remote.flags.account_root.RequireDestTag);
+
+            var accountFlags = Util.tryGet(data, 'account_data.Flags') || 0;
+            $scope.send.destination.requireDestinationTag = !!(accountFlags & stellar.Remote.flags.account_root.RequireDestTag);
+
             // if we require a dest tag and they haven't set one, show the destination tag box
             if ($scope.send.destination.requireDestinationTag && !$scope.send.destination.destinationTag) {
                 $scope.send.showDestinationTag = true;
             }
-            $scope.send.destination.balance = data.account_data.Balance;
+
+            var accountBalance = Util.tryGet(data, 'account_data.Balance') || 0;
+            $scope.send.destination.balance = accountBalance;
+
             deferred.resolve();
         });
 
