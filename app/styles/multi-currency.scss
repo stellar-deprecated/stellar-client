@@ -52,11 +52,14 @@
 
 .manage-currency-link {
   color: $grey;
+
   i {
     font-size: 0.8em;
     margin-right: 5px;
     color: fade_out($grey, 0.5);
+    top: 0;
   }
+
   &:hover {
     color: $brand-primary;
     text-decoration: none;
