@@ -8,7 +8,7 @@
  *
  * Important: STR must be the first entry in this list.
  */
-var StellarDefaultCurrencyList=
+var StellarDefaultCurrencyList =
 [
     {value: 'STR', name: 'STR - Stellars', order: 4},
     {value: 'USD', name: 'USD - US Dollar', order: 3},
@@ -33,3 +33,5 @@ var StellarDefaultCurrencyList=
     {value: 'TWD', name: 'TWD - New Taiwan Dollar', order: 0},
     {value: 'HKD', name: 'HKD - Hong Kong Dollar', order: 0}
 ];
+
+var StellarDefaultCurrencyMap = _.indexBy(StellarDefaultCurrencyList, 'value');
