@@ -381,3 +381,10 @@ module.filter('shrinkText', function($sce){
     else return $sce.trustAsHtml(text);
   }
 });
+
+module.filter('currencyName', function() {
+    return function(currency) {
+        var description = StellarDefaultCurrencyMap[currency] || {};
+        return description.name || currency;
+    }
+})

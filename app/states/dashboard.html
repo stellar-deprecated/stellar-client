@@ -15,11 +15,11 @@
                     </div>
                     <div class="multi-balance-container" ng-show="currencies.length">
                         <div class="dash-currency-line row">
-                            <div class="currency-unit col-xs-6">STR</div>
+                            <div class="currency-unit col-xs-6">{{ 'STR' | currencyName }}</div>
                             <div class="currency-balance col-xs-6">{{ $root.balance | rpamount:{rel_precision: 0} }}</div>
                         </div>
                         <div ng-repeat="currency in topCurrencies" class="dash-currency-line row">
-                            <div class="currency-unit col-xs-6">{{ currency }}</div>
+                            <div class="currency-unit col-xs-6">{{ currency | currencyName }}</div>
                             <div class="currency-balance col-xs-6">{{ balances[currency] }}</div>
                         </div>
                         <div class="dash-links">
