@@ -30,6 +30,9 @@
                 <li ng-repeat="currency in foundGateway.currencies" class="currency-box">
                     <h5>{{ currency.currency }}</h5>
                     <p class="currency-issuer">{{ currency.issuer | addressToUsername }}</p>
+                    <p ng-if="currency.requireAuth" class="require-auth">
+                        <a href="http://{{ gatewayDomain }}" target="_blank">Requires authorization</a>
+                    </p>
                 </li>
             </ul>
             <button class="btn btn-default btn-primary" ng-click="addGateway()">Trust {{foundGateway.domain}}</button>
