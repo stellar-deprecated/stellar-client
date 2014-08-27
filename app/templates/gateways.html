@@ -1,4 +1,4 @@
-<div ng-show="hasGateways()">
+<div class="gateway-list client-section" ng-controller="GatewayListCtrl" ng-show="hasGateways()">
     <h3>Trusted Gateways</h3>
     <ul>
         <li ng-repeat="(domain, gateway) in gateways" class="row">
