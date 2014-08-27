@@ -89,6 +89,9 @@
   border-radius: 3px;
   height: auto;
 
+  color: $grey;
+  font-weight: $book-weight;
+
   button {
     float: right;
     
@@ -124,18 +127,11 @@
     font-size: 24px;
     font-weight: $heavy-weight;
     margin: 0 5px 0 0;
-  }
-
-  p {
-    float: left;
-    
-    color: $grey;
-    font-weight: $book-weight;
-    
+    color: $dark-grey;
   }
 
   @media (min-width: $phone-width) {
-    width: 175px;
+    width: 200px;
     height: 130px;
     text-align: center;
     padding: 15px;
@@ -147,11 +143,6 @@
 
     h5, p {
       float: none;
-      margin: 0;
-    }
-
-    p {
-      margin: 0;
     }
 
     .manage-currency-link {
@@ -162,11 +153,31 @@
   }
 }
 
+.currency {
+  clear: none;
+  margin-bottom: 3px;
+}
+
 p.currency-issuer {
   margin: 0;
-  font-size: 11px;
+  font-size: 10px;
   word-wrap:break-word;
   clear: both;
+  color: fade_out($grey,0.25);
+}
+
+.currency-auth {
+  font-size: 10px;
+  text-transform: uppercase;
+  margin-top: 5px;
+  background-color: $state-warning-bg;
+  color: $state-warning-text;
+  float: left;
+  clear: both;
+  margin-top: 5px;
+  a {
+    color: $state-warning-text;
+  }
 }
 
 .gateway-list {
