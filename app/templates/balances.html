@@ -16,7 +16,7 @@
                 <h5>{{ accountLine.balance }}</h5>
                 <p>{{ accountLine.currency | currencyName }}</p>
                 <p class="currency-issuer">{{ accountLine.account | addressToUsername }}</p>
-
+                <p class="requires-auth" ng-if="accountLineNeedsAuth(accountLine)">Requires authorization</p>
             </li>
             <li class="currency-box add-currency-box" ng-click="openManageCurrencies();">
                 <div class="manage-currency-link">
