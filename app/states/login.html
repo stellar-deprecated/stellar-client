@@ -1,9 +1,7 @@
 <div class="login client-section">
     <div class="container">
 
-        <div ng-show="messages.length" ng-controller="FlashMessageCtrl">
-            <div ng-include="'templates/flash-message-container.html'"></div>
-        </div>
+        <flash-messages></flash-messages>
         <h1 class="title">Log in</h1>
 
         <iframe name="chrome-password-manager-fix" src="about:blank" style="display:none;"></iframe>
