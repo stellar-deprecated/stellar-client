@@ -162,14 +162,11 @@
   }
 }
 
-.currency-issuer {
+p.currency-issuer {
   margin: 0;
   font-size: 11px;
   word-wrap:break-word;
   clear: both;
-  @media (min-width: $phone-width) {
-
-  }
 }
 
 .gateway-list {
@@ -184,14 +181,27 @@
   }
 }
 
-.gateways {
-  h3 {
-    color: $grey;
-    font-size: 16px;
-    text-transform: uppercase;
-  }
-}
 
 .manage-currencies-container {
   padding-bottom: 15px;
+  .subtitle {
+      color: $grey;
+      font-size: 16px;
+      text-transform: uppercase;
+  }
+}
+
+.gateway-search-status {
+  padding: 15px 0;
+  color: fade_out($grey, 0.2);
+  font-weight: $book-weight;
+}
+
+.gateway-currencies {
+  padding-bottom: 15px;
+  .currency-box {
+    @media (min-width: $phone-width) {
+      height: 90px;
+    }
+  }
 }

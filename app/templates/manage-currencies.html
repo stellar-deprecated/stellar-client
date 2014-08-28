@@ -16,12 +16,16 @@
                 </button>
             </div>
         </form>
-        <div ng-show="searchStatus == 'loading'">Loading...</div>
-        <div ng-show="searchStatus == 'not_found'">No results found for {{ gatewayDomain }}</div>
-        <div ng-show="searchStatus == 'no_currencies'">No currencies found for {{ gatewayDomain }}</div>
-        <div ng-show="searchStatus == 'already_added'">{{ gatewayDomain }} was already added</div>
+
+        <div class="gateway-search-status" ng-hide="searchStatus == ''">
+            <div ng-show="searchStatus == 'loading'">Loading...</div>
+            <div ng-show="searchStatus == 'not_found'">No results found for {{ gatewayDomain }}</div>
+            <div ng-show="searchStatus == 'no_currencies'">No currencies found for {{ gatewayDomain }}</div>
+            <div ng-show="searchStatus == 'already_added'">{{ gatewayDomain }} was already added</div>
+        </div>
+        
         <div class="gateway-currencies" ng-show="searchStatus == 'found'">
-            <h5>Supported currencies for {{ gatewayDomain }}:</h5>
+            <h3 class="subtitle">Supported currencies for {{ gatewayDomain }}:</h3>
             <ul class="currencies-list">
                 <li ng-repeat="currency in currencies" class="currency-box">
                     <h5>{{ currency.currency }}</h5>
