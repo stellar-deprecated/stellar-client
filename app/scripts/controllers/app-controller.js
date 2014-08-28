@@ -7,7 +7,7 @@ var sc = angular.module('stellarClient');
     waits for:
      walletAddressLoaded
  */
-sc.controller('AppCtrl', function($scope, $rootScope, stNetwork, session, $state, $element, $timeout, FlashMessages) {
+sc.controller('AppCtrl', function($scope, $rootScope, stNetwork, session, $state, $element, $timeout, FlashMessages, ActionLink) {
     $scope.$on('userLoaded', function () {
         $scope.getSentInvites = function () {
             return session.getUser() && session.getUser().getSentInvites().length;
@@ -89,6 +89,8 @@ sc.controller('AppCtrl', function($scope, $rootScope, stNetwork, session, $state
                     $rootScope.accountStatus = 'loaded';
                 }
 
+                // Process any pending actions now that the account is loaded.
+                ActionLink.process();
             });
         });
     };

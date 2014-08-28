@@ -79,6 +79,10 @@ stellarClient.config(function($httpProvider, $stateProvider, $urlRouterProvider,
 
 });
 
+stellarClient.run(function(ActionLink) {
+  ActionLink.recognize();
+});
+
 stellarClient.run(function($location, $state, ipCookie){
   var atRoot    = _.isEmpty($location.path());
   var firstTime = !ipCookie("weve_been_here_before")
