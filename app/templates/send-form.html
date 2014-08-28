@@ -64,6 +64,7 @@
                 <li ng-repeat="path in send.paths" class="currency-box">
                     <h5>{{ path.amount_human }}</h5>
                     <p>{{ path.currency_human }}</p>
+                    <p class="rate" ng-show="path.currency_human != send.currency">{{ path.rate.to_human() }} {{ path.currency_human }} / 1 {{ send.currency }}</p>
                     <div class="account-container">
                         <p>{{ issuer_human }}</p>
                     </div>
