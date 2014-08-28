@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.service('ActionLink', function($rootScope) {
+sc.service('ActionLink', function($rootScope, $location) {
   var actionParams;
 
   /**
@@ -11,18 +11,8 @@ sc.service('ActionLink', function($rootScope) {
    * stored until they are ready to be processed.
    */
   function recognize() {
-    // Remove the "?"" prefix.
-    var searchString = location.search.slice(1);
-
-    // Split the search into 'key=value" pairs.
-    var pairs = searchString.split('&');
-
-    // Aggregate the key value pairs into the params object.
-    var params = {};
-    pairs.forEach(function(pair) {
-      var parts = pair.split('=');
-      params[parts[0]] = parts[1];
-    });
+    // Get an object containing the URL's parsed search parameters.
+    var params = $location.search();
 
     // Keep the parameters if they contain an action.
     if (_.has(params, 'action')) {
