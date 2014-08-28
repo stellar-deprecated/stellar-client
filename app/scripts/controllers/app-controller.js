@@ -84,6 +84,7 @@ sc.controller('AppCtrl', function($scope, $rootScope, stNetwork, session, $state
                             break;
                         default:
                             $rootScope.accountStatus = 'error';
+                            return;
                     }
                 } else {
                     $rootScope.accountStatus = 'loaded';
