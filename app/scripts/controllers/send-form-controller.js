@@ -262,17 +262,6 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, s
             path.amount = Amount.from_json(raw.source_amount);
             path.rate = path.amount.ratio_human($scope.send.amount);
             path.send_max = path.amount.product_human(Amount.from_json('1.01'));
-            // set the to human options for this path
-            var human_opts = {};
-            if (path.currency_human == "BTC" || path.currency_human == "LTC" || path.currency_human == "STR") {
-                human_opts.precision = 6;
-            } else {
-                human_opts.precision = 2;
-            }
-            human_opts.skip_empty_fraction = true;
-            human_opts.max_sig_digits = 6;
-            path.human_opts = human_opts;
-            path.amount_human = path.amount.to_human(human_opts);
             path.currency_human = path.amount._currency.to_human();
             path.issuer_human = path.amount._issuer.to_json();
             path.paths = raw.paths_computed || raw.paths_canonical;

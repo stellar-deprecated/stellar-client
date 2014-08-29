@@ -58,13 +58,13 @@
                 <p ng-show="send.pathStatus == 'error'" class="send-form-status">Error while calculating path</p>
             </div>
         </div>
-        <p ng-show="showPaths()">You can send {{send.amount.to_human(path.human_opts)}} {{send.amount._currency.to_human()}} using:</p>
+        <p ng-show="showPaths()">You can send {{send.amount | amountToHuman }} {{send.amount._currency.to_human()}} using:</p>
         <div class="row" ng-show="showPaths()">
             <ul class="currencies-list">
                 <li ng-repeat="path in send.paths" class="currency-box">
-                    <h5>{{ path.amount_human }}</h5>
+                    <h5>{{ path.amount | amountToHuman }}</h5>
                     <p>{{ path.currency_human }}</p>
-                    <p class="rate" ng-show="path.currency_human != send.currency">{{ path.rate.to_human(path.human_opts) }} {{ path.currency_human }} / 1 {{ send.currency }}</p>
+                    <p class="rate" ng-show="path.currency_human != send.currency">{{ path.rate | amountToHuman }} {{ path.currency_human }} / 1 {{ send.currency }}</p>
                     <div class="account-container">
                         <p>{{ issuer_human }}</p>
                     </div>
