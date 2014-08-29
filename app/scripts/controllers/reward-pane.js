@@ -19,7 +19,7 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
 
   $scope.showRewards = function() {
     var wallet = session.get('wallet');
-    var showRewardsSetting = !_.has(wallet.mainData, 'showRewards') || wallet.mainData.showRewards;
+    var showRewardsSetting = wallet.get('mainData', 'showRewards', true);
 
     return !$scope.rewardsComplete && showRewardsSetting;
   }

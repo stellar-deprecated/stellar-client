@@ -69,14 +69,14 @@ sc.controller('SettingsCtrl', function($scope, $http, $state, session, singleton
     rewards: {
       NAME: "rewards",
       click: toggleRewards,
-      on: !_.has(wallet.mainData, 'showRewards') || wallet.mainData.showRewards,
+      on: wallet.get('mainData', 'showRewards', true),
       wrapper: angular.element('#rewardstoggle')
     }
   }
 
   function toggleRewards(showRewardsToggle) {
     showRewardsToggle.on = !showRewardsToggle.on;
-    wallet.mainData.showRewards = showRewardsToggle.on;
+    wallet.set('mainData', 'showRewards', showRewardsToggle.on);
     session.syncWallet('update');
   }
 
