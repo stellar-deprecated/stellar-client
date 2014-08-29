@@ -40,6 +40,11 @@ sc.service('Gateways', function($q, session, stNetwork, rpStellarTxt) {
     });
   };
 
+  Gateways.forceRemove = function(gateway) {
+     delete walletGateways()[gateway.domain];
+     return session.syncWallet('update');
+  };
+
   Gateways.syncTrustlines = function() {
     //TODO: obey domain restriction arguments    
     
