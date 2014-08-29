@@ -35,7 +35,7 @@ sc.controller('TransactionHistoryCtrl', function($scope, transactionHistory) {
 
   $scope.pagingOptions = {
     pageSizes: [10, 25, 50, 100],
-    pageSize: Options.transactions_per_page,
+    pageSize: Options.TRANSACTIONS_PER_PAGE,
     currentPage: 1
   };
 

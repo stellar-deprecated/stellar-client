@@ -742,31 +742,6 @@ sc.controller('SendPaneCtrl', ['$rootScope','$scope', '$routeParams', '$timeout'
         }
     };
 
-/* TODO: add contacts later
-    $scope.$watch('userBlob.data.contacts', function (contacts) {
-        $scope.recipient_query = webutil.queryFromOptions(contacts);
-    }, true);
-    */
-/* TODO: watch lines later
-    $scope.$watch('lines', function (lines) {
-        var currencies = _.uniq(_.map(_.keys(lines), function (line) {
-            return line.slice(-3);
-        }));
-
-        // XXX Not the fastest way of doing it...
-        currencies = _.map(currencies, function (currency) {
-            _.each($scope.currencies_all, function (entry) {
-                if (currency === entry.value) {
-                    currency = entry.name;
-                    return false;
-                }
-            });
-            return currency;
-        });
-        $scope.source_currency_query = webutil.queryFromArray(currencies);
-    }, true);
-    */
-
     $scope.$watch('account.max_spend', function () {
         $scope.update_amount();
     }, true);

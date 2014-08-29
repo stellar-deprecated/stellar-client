@@ -11,12 +11,12 @@
     "latedef": true,
     "newcap": true,
     "noarg": true,
-    "quotmark": "single",
+    "quotmark": "both",
     "undef": true,
-    "unused": true,
-    "strict": true,
+    "unused": "vars",
+    "strict": false,
     "trailing": true,
     "smarttabs": true,
     "jquery": true,
-    "predef": ["angular"]
+    "predef": ["angular", "_", "sjcl", "Options", "Util", "stellar"]
 }

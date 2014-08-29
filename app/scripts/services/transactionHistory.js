@@ -48,15 +48,15 @@ sc.service('transactionHistory', function($rootScope, $q, stNetwork, session, co
 
   function getPage(pageNumber) {
     // Always keep one extra page of transactions.
-    var transactionsNeeded = (pageNumber + 1) * Options.transactions_per_page;
+    var transactionsNeeded = (pageNumber + 1) * Options.TRANSACTIONS_PER_PAGE;
 
     if (!allTransactionsLoaded && history.length < transactionsNeeded) {
       return requestTransactions().then(function() {
         return getPage(pageNumber);
       });
     } else {
-      var startIndex = (pageNumber - 1) * Options.transactions_per_page;
-      var endIndex = pageNumber * Options.transactions_per_page;
+      var startIndex = (pageNumber - 1) * Options.TRANSACTIONS_PER_PAGE;
+      var endIndex = pageNumber * Options.TRANSACTIONS_PER_PAGE;
 
       if (history.length <= startIndex) {
         return $q.reject();
@@ -69,7 +69,7 @@ sc.service('transactionHistory', function($rootScope, $q, stNetwork, session, co
 
   function lastPage() {
     if (allTransactionsLoaded) {
-      return Math.ceil(history.length / Options.transactions_per_page);
+      return Math.ceil(history.length / Options.TRANSACTIONS_PER_PAGE);
     } else {
       return Infinity;
     }
@@ -86,7 +86,7 @@ sc.service('transactionHistory', function($rootScope, $q, stNetwork, session, co
       'ledger_index_min': -1,
       'ledger_index_max': -1,
       'descending': true,
-      'limit': Options.transactions_per_page,
+      'limit': Options.TRANSACTIONS_PER_PAGE,
       'offset': currentOffset
     });
 
