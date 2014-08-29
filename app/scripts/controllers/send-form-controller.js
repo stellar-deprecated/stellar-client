@@ -9,6 +9,16 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, s
     // we hold a copy to check for changes after asynchronous calls
     $scope.sendFormModelCopy = {};
 
+    // Populate the send form with parameters from the send action.
+    $rootScope.$on('action-send', function(event, params){
+        $rootScope.openSend();
+
+        $scope.sendFormModel.recipient = params.dest;
+        $scope.send.destination.destinationTag = params.dt;
+        $scope.sendFormModel.amount = Number(params.amount);
+        $scope.sendFormModel.currency = params.currency || 'STR';
+    });
+
     /**
     * We set up watches on each input in the send form to
     * 1) update our models in real time

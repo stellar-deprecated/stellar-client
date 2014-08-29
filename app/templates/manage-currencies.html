@@ -4,9 +4,10 @@
         <i class="icon icon-times-circle-thin"></i>
     </div>
 
-    <div class="gateway-form">
+    <div class="gateway-form" ng-controller="AddGatewayCtrl">
         <div class="title">Manage currencies</div>
         <p>You have to add a gateway to add currencies. Find out <a href="https://github.com/stellar/docs/blob/master/docs/Adding-Multiple-Currencies.md" target="_blank">more</a>.
+
         <form class="form-inline">
             <div class="form-group">
                 <label>Add gateway</label>
@@ -16,28 +17,26 @@
                 </button>
             </div>
         </form>
-
         <div class="gateway-search-status" ng-hide="searchStatus == ''">
             <div ng-show="searchStatus == 'loading'">Loading...</div>
-            <div ng-show="searchStatus == 'not_found'">No results found for {{ gatewayDomain }}</div>
-            <div ng-show="searchStatus == 'no_currencies'">No currencies found for {{ gatewayDomain }}</div>
-            <div ng-show="searchStatus == 'already_added'">{{ gatewayDomain }} was already added</div>
+            <div ng-show="searchStatus == 'not_found'">No results found for {{ gatewaySearch }}</div>
+            <div ng-show="searchStatus == 'no_currencies'">No currencies found for {{ gatewaySearch }}</div>
+            <div ng-show="searchStatus == 'already_added'">{{ gatewaySearch }} was already added</div>
         </div>
-        
+
         <div class="gateway-currencies" ng-show="searchStatus == 'found'">
-            <h3 class="subtitle">Supported currencies for {{ gatewayDomain }}:</h3>
+            <h3 class="title">Supported currencies for {{ foundGateway.domain }}:</h3>
             <ul class="currencies-list">
-                <li ng-repeat="currency in currencies" class="currency-box">
+                <li ng-repeat="currency in foundGateway.currencies" class="currency-box">
                     <h5>{{ currency.currency }}</h5>
                     <p class="currency-issuer">{{ currency.issuer | addressToUsername }}</p>
                 </li>
             </ul>
-            <button class="btn btn-default btn-primary" ng-click="addGateway()">{{ addGateway.isLoading() ? 'Loading...' : 'Trust ' + gatewayDomain }}</button>
+            <button class="btn btn-default btn-primary" ng-click="addGateway()">Trust {{foundGateway.domain}}</button>
         </div>
     </div>
 
     <div class="gateways row">
-        <div class="gateway-list client-section" ng-include="'templates/gateways.html'">
-        </div>
+        <ng-include src="'templates/gateways.html'" />
     </div>
 </div>

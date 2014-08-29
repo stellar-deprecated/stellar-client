@@ -182,6 +182,7 @@ p.currency-issuer {
 }
 
 
+
 .manage-currencies-container {
   padding-bottom: 15px;
   .subtitle {
@@ -189,6 +190,9 @@ p.currency-issuer {
       font-size: 16px;
       text-transform: uppercase;
   }
+}
+.gateway-list-actions {
+  text-align: right;
 }
 
 .gateway-search-status {
