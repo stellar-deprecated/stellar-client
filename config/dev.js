@@ -24,6 +24,7 @@ var Options = {
     // intended for developers, be careful about using this in a real setting.
     PERSISTENT_SESSION : true,
     IDLE_LOGOUT_TIMEOUT : 60 * 60 * 1000, //an hour
+    COOKIE_SECURE: false,
 
 
     REPORT_ERRORS : false,
