@@ -140,7 +140,6 @@ sc.service('transactionHistory', function($rootScope, $q, stNetwork, session, co
   function processTransaction(tx, meta, isNew) {
     var processedTxn = JsonRewriter.processTxn(tx, meta, session.get('address'));
 
-
     if (processedTxn) {
       var transaction = processedTxn.transaction;
 

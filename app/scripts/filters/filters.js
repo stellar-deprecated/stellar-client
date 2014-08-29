@@ -9,18 +9,16 @@ var Base = stellar.Base;
 * Pretty print an Amount object with the correct number of decimal places based on currency.
 */
 module.filter('amountToHuman', function () {
-    var CRYPTO_CURRENCIES = _(["BTC", "LTC", "STR"]);
 
     return function (input) {
         if (!input) {
             return "";
         }
         var opts = {};
-        if (CRYPTO_CURRENCIES.contains(input._currency.to_human())) {
-            opts.precision = 6;
-        } else {
-            opts.precision = 2;
-        }
+        var currency = _.find(StellarDefaultCurrencyList, function (element) {
+            return element.value === input._currency.to_human();
+        });
+        opts.precision = currency ? currency.max_decimal_places : 2;
         opts.skip_empty_fraction = true;
         opts.max_sig_digits = 6;
         return input.to_human(opts);
