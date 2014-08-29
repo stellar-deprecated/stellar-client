@@ -1,7 +1,6 @@
 var sc = angular.module('stellarClient');
 
 sc.service('Gateways', function($q, session, stNetwork, rpStellarTxt) {
-  SYNCABLE_STATUSES = _(["adding", "removing"]);
 
   /** @namespace */
   var Gateways = {};
