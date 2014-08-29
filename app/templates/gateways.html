@@ -3,7 +3,7 @@
     <ul>
         <li ng-repeat="gateway in gateways" class="row" ng-controller="GatewayListItemCtrl">
             <div class="col-sm-3">
-                <a href="http://{{ domain }}" target="_blank">{{ gateway.domain }}</a>
+                <a href="http://{{ gateway.domain }}" target="_blank">{{ gateway.domain }}</a>
             </div>
             <div class="col-sm-5">
                 {{ currencyNames() }}
