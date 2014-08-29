@@ -77,6 +77,11 @@ sc.controller('DashboardCtrl', function($rootScope, $scope, $timeout, $state, se
         $scope.showTransaction = false;
     };
 
+    // Account lines only need authorization when authorized is defined and set to false.
+    $scope.accountLineNeedsAuth = function(accountLine) {
+        return _.has(accountLine, 'authorized') && accountLine.authorized;
+    }
+
     function fetchCurrencies() {
         var remote = stNetwork.remote;
         var accountLinesRequest = remote.request_account_lines({
