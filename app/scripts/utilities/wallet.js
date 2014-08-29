@@ -82,8 +82,8 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
     } catch(err) {
       // The recovery key was invalid. Try using the broken deriveKey function.
       var brokenRecoveryKey = Wallet.deriveKeyBroken(recoveryId, userRecoveryCode, serverRecoveryCode);
-      var rawRecoveryKey = sjcl.codec.hex.toBits(recoveryKey);
-      recoveryData = Wallet.decryptData(encryptedWallet.recoveryData, rawRecoveryKey);
+      var rawBrokenRecoveryKey = sjcl.codec.hex.toBits(brokenRecoveryKey);
+      recoveryData = Wallet.decryptData(encryptedWallet.recoveryData, rawBrokenRecoveryKey);
       // TODO: Encrypt the recovery data with the new key and update it.
     }
 
@@ -473,7 +473,7 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
    */
   Wallet.decryptData = function(encryptedData, key) {
     var rawCipherText, rawIV, cipherName, mode;
-    
+
     try {
       // Parse the base64 encoded JSON object.
       var resultObject = JSON.parse(atob(encryptedData));
