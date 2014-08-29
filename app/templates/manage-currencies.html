@@ -36,6 +36,20 @@
         </div>
     </div>
 
+    <div class="alert alert-success alert-dismissable" ng-show="addedGatewayDomain">
+        <button type="button" class="close" ng-click="hideAddAlert()">
+            <i class="icon icon-close" aria-hidden="true" />
+        </button>
+        Successfully added {{addedGatewayDomain}}
+    </div>
+
+    <div class="alert alert-success alert-dismissable" ng-show="removedGatewayDomain">
+        <button type="button" class="close" ng-click="hideRemoveAlert()" >
+            <i class="icon icon-close" aria-hidden="true" />
+        </button>
+        Successfully removed {{removedGatewayDomain}}
+    </div>
+
     <div class="gateways row">
         <ng-include src="'templates/gateways.html'" />
     </div>
