@@ -63,7 +63,7 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, s
 
     $scope.getPathText = function (path) {
         var human = path.to_human();
-    }
+    };
 
     //this is because the currency dropdown gets cut-off because the parent container
     //is set to overflow:hidden for the slide animation effect. so we have to
@@ -71,7 +71,7 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, s
 
     $scope.setOverflowVisible = function(){
             $rootScope.overflowVisible = true;
-    }
+    };
 
     $scope.$on('reset', function () {
         $scope.sendFormModel = {};
@@ -96,7 +96,7 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, s
         .then(function (federated) {
             // check we're still current
             if (inputHasChanged()) {
-                return $q.reject("not-current");;
+                return $q.reject("not-current");
             }
             if (federated) {
                 return contacts.fetchContactByEmail(address)
@@ -111,7 +111,7 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, s
         .then(function (result) {
             // check we're still current
             if (inputHasChanged()) {
-                return $q.reject("not-current");;
+                return $q.reject("not-current");
             }
             if (typeof result === "string") {
                 address = result;
@@ -121,7 +121,7 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, s
                 // TODO: error, could not successfully find address
                 return $q.reject("federation-error");
             }
-            return resolveStellarAccount(address)
+            return resolveStellarAccount(address);
         })
         .catch(function (error) {
             $scope.resetDestinationDependencies();
@@ -249,10 +249,10 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, s
                 }
                 $scope.send.pathStatus = !$scope.send.paths.length ? "no-path" : "done";
             });
-        })
+        });
         findpath.on('error', function (error) {
             $scope.send.pathStatus = "error";
-        })
+        });
     }
 
     // updates the paths the user can use to send
