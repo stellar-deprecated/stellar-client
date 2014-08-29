@@ -81,6 +81,13 @@
           .dropdown-menu {
             min-width: 160px;
           }
+          input[type="text"]{
+            font-size: 32px;
+            padding: 18px 15px 17px;
+          }
+          .input-group {
+            margin-left: -20px;
+          }
         }
      }
   }
@@ -168,12 +175,19 @@
 
   .currency-box {
     @media (min-width: $phone-width) {
-        height: 140px;
+        height: 150px;
+        position: relative;
+        button {
+          position: absolute;
+          bottom: 15px;
+          left: 10%;
+          width: 80%;
+        }
     }
 
     .rate {
       font-size: 12px;
-      font-weight: 900;
+      color: fade_out($grey, 0.2);
     }
   }
 }

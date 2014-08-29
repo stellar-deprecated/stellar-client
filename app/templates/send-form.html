@@ -20,7 +20,7 @@
         </div>
         <div class="form-group send-amount">
             <label for="amount" class="col-md-2">AMOUNT</label>
-            <div class="col-md-4">
+            <div class="col-md-4 send-amount-input">
                 <input name="amount" type="number" min="0" class="form-control" ng-model="sendFormModel.amount"/>
             </div>
             <div class="col-md-2">
@@ -68,7 +68,7 @@
                     <div class="account-container">
                         <p>{{ issuer_human }}</p>
                     </div>
-                    <button class="btn btn-default submit" ng-click="sendPropose(path)">Send</button>
+                    <button class="btn btn-default btn-primary submit" ng-click="sendPropose(path)">Send</button>
                 </li>
             </ul>
         </div>
