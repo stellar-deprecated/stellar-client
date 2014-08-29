@@ -44,26 +44,6 @@ webutil.getDestTagFromAddress = function (addr) {
     return void 0;
 };
 
-
-webutil.findIssuer= function(lines, currency)
-{
-    var maxIssuer=null;
-    var maxLimit=0;
-
-    for (var n in lines) {
-        if (lines.hasOwnProperty(n)) {
-            if (lines[n].currency === currency) {
-                var limit = +lines[n].limit.to_text();
-                if (limit > maxLimit) {
-                    maxLimit = limit;
-                    maxIssuer = lines[n].account;
-                }
-            }
-        }
-    }
-    return maxIssuer;
-};
-
 webutil.getContact = function (contacts,value)
 {
     for (var i=0;i<contacts.length;i++) {
