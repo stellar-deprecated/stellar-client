@@ -12,6 +12,9 @@ sc.controller('GatewayListItemCtrl', function($scope, Gateways) {
     Gateways.add($scope.gateway);
   };
 
+  $scope.cancelAdd = function() {
+    Gateways.forceRemove($scope.gateway);
+  };
 
   $scope.currencyNames = function() {
     return _($scope.gateway.currencies).pluck('currency').join(', ');

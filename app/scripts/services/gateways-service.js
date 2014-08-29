@@ -5,7 +5,6 @@ sc.service('Gateways', function($q, session, stNetwork, rpStellarTxt) {
   /** @namespace */
   var Gateways = {};
 
-
   Gateways.search = function(domain) {
     return rpStellarTxt.get(domain)
       .then(function(sections) {
@@ -29,15 +28,28 @@ sc.service('Gateways', function($q, session, stNetwork, rpStellarTxt) {
     walletGateways()[gateway.domain]        = _.cloneDeep(gateway);
     walletGateways()[gateway.domain].status = "adding";
     return Gateways.syncTrustlines(gateway.domain).then(function() {
-      return gateway;
+      if(gateway.status === "added") {
+        return gateway;
+      } else {
+        return $q.reject(new Error("Failed to add " + gateway.domain));
+      }
     });
   };
 
   Gateways.remove = function(gateway) {
     gateway.status = "removing";
     return Gateways.syncTrustlines(gateway.domain).then(function() {
-      return gateway;
+      if(!_.has(walletGateways(), gateway.domain)) {
+        return gateway;
+      } else {
+        return $q.reject(new Error("Failed to remove " + gateway.domain));
+      }
     });
+  };
+
+  Gateways.forceRemove = function(gateway) {
+     delete walletGateways()[gateway.domain];
+     return session.syncWallet('update');
   };
 
   Gateways.syncTrustlines = function() {
