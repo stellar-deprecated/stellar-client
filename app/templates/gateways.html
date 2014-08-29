@@ -1,15 +1,25 @@
-<div ng-show="hasGateways()">
+<div class="gateway-list client-section" ng-controller="GatewayListCtrl" ng-show="hasGateways()">
     <h3>Trusted Gateways</h3>
     <ul>
-        <li ng-repeat="(domain, gateway) in gateways" class="row">
+        <li ng-repeat="gateway in gateways" class="row" ng-controller="GatewayListItemCtrl">
             <div class="col-sm-3">
-                <a href="http://{{ domain }}" target="_blank">{{ domain }}</a>
+                <a href="http://{{ gateway.domain }}" target="_blank">{{ gateway.domain }}</a>
             </div>
-            <div class="col-sm-8">
-                {{ currencyNames(gateway.currencies) }}
+            <div class="col-sm-5">
+                {{ currencyNames() }}
             </div>
-            <div class="col-sm-1">
-                <a href="#" ng-click="removeGateway(domain)">remove</a>
+            <div class="col-sm-4 gateway-list-actions" ng-switch="gateway.status">
+                <span ng-switch-when="adding"           class="text-info">Establishing trustlines...</span>
+                <span ng-switch-when="removing"         class="text-info">Removing trustlines...</span>
+                <span ng-switch-when="removal_failed">
+                    <span class="text-danger">Error!</span> 
+                    <a href="#" ng-click="remove()">retry</a>
+                </span>
+                <span ng-switch-when="add_failed">
+                    <span class="text-danger">Error!</span> 
+                    <a href="#" ng-click="retryAdd()">retry</a>
+                </span>
+                <a    ng-switch-default                 href="#" ng-click="remove()">remove</a>
             </div>
         </li>
     </ul>

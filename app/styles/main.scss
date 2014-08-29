@@ -2,6 +2,7 @@ $icon-font-path: "../bower_components/bootstrap-sass-official/vendor/assets/font
 
 $tooltip-max-width: 400px;
 
+@import "color-palette.scss";
 // bower:scss
 @import "../bower_components/bootstrap-sass-official/vendor/assets/stylesheets/bootstrap.scss";
 // endbower
@@ -9,7 +10,6 @@ $tooltip-max-width: 400px;
 $phone-width: 768px;
 $mobile-width: 992px;
 
-@import "color-palette.scss";
 @import "fonts.scss";
 @import "forms.scss";
 @import "icons.scss";
