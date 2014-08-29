@@ -92,20 +92,27 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, s
             $scope.send.destination.destinationTag = destinationTag;
         }
 
-        isFederatedAddress(address)
-        .then(function (federated) {
+        $q.when(isValidAddress(address))
+        .then(function (isAddress) {
             // check we're still current
             if (inputHasChanged()) {
                 return $q.reject("not-current");
             }
-            if (federated) {
+
+            if (isAddress) {
+                contacts.fetchContactByAddress(address)
+                    .then(function(result) {
+                        $scope.send.federatedName = result.destination;
+                        showUserFound(result.destination);
+                    });
+
+                return address;
+            } else {
                 return contacts.fetchContactByEmail(address)
                     .then(function (result) {
                         $scope.send.federatedName = address;
                         return result;
                     });
-            } else {
-                return address;
             }
         })
         .then(function (result) {
@@ -325,13 +332,9 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, s
         return !angular.equals($scope.sendFormModel, $scope.sendFormModelCopy);
     }
 
-    // Returns true if the given address is a federated name, false otherwise
-    function isFederatedAddress(address) {
-        var deferred = $q.defer();
-        $timeout(function () {
-            deferred.resolve(("string" === typeof address) && !stellar.UInt160.is_valid(address));
-        })
-        return deferred.promise;
+    // Returns true if the given address is a valid stellar address
+    function isValidAddress(address) {
+        return stellar.UInt160.is_valid(address);
     }
 
     function resetError() {
@@ -347,5 +350,9 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, s
 
     function showAddressFound(address) {
         Util.showTooltip($('#recipient'), "wallet address found: " + address, "info", "top");
+    }
+
+    function showUserFound(username) {
+        Util.showTooltip($('#recipient'), "user found: " + username, "info", "top");
     }
 });
