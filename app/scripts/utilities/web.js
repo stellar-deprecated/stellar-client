@@ -1,91 +1,49 @@
 var webutil={};
 
 // returns the raw address after removing any parameters
-webutil.stripRippleAddress = function (addr)
-{
-    if(typeof(addr)=='string')
-    {
-        var index=addr.indexOf("?");
-        if(index>=0)
-        {
+webutil.stripRippleAddress = function (addr) {
+    if (typeof addr === 'string') {
+        var index = addr.indexOf("?");
+        if (index >= 0) {
             return(addr.slice(0,index));
         }
     }
-    return(addr);
-}
+    return addr;
+};
+
 //returns the destination tag of an address if there is one
-webutil.getDestTagFromAddress = function (addr)
-{
-    var index=addr.indexOf("?");
-    if(index>=0)
-    {
-        addr=addr.slice(index,addr.length);
-        index=addr.indexOf("dt=");
-        if(index>=0)
-        {
-            addr=addr.slice(index+3,addr.length);
-            index=addr.indexOf("&");
-            if(index>0) return( addr.slice(0,index) );
-            else return(addr);
+webutil.getDestTagFromAddress = function (addr) {
+    var index = addr.indexOf("?");
+    if (index >= 0) {
+        addr      = addr.slice(index,addr.length);
+        index     = addr.indexOf("dt=");
+
+        if(index >= 0) {
+            addr  = addr.slice(index+3,addr.length);
+            index = addr.indexOf("&");
+
+            if(index > 0) {
+                return addr.slice(0,index);
+            } else {
+                return addr;
+            }
         }
-        index=addr.indexOf("d=");
-        if(index>=0)
-        {
-            addr=addr.slice(index+2,addr.length);
-            index=addr.indexOf("&");
-            if(index>0) return( addr.slice(0,index) );
-            else return(addr);
+
+        index = addr.indexOf("d=");
+        if(index >= 0) {
+            addr  = addr.slice(index + 2,addr.length);
+            index = addr.indexOf("&");
+
+            if(index > 0) {
+                return addr.slice(0,index);
+            } else {
+                return addr;
+            }
         }
     }
-    return(undefined);
-}
-
-webutil.removeClassPrefix = function (el, group)
-{
-    var $el = $(el);
-    var classes = $el.attr("class");
-
-    if (!classes || !classes.length) return;
-
-    classes = classes.split(" ").map(function(item) {
-        return item.indexOf(group) === 0 ? "" : item;
-    });
-    $el.attr("class", classes.join(" "));
+    return void 0;
 };
 
-/**
- * Error handler for jQuery.ajax requests.
- *
- * @example
- *   $.get('http://acme.com/')
- *    .success(...)
- *    .error(webutil.getAjaxErrorHandler(callback, "Acme GET"));
- */
-webutil.getAjaxErrorHandler = function (callback, context)
-{
-    return function (request, type, errorThrown)
-    {
-        switch (type) {
-            case 'timeout':
-                message = "The request timed out.";
-                break;
-            case 'notmodified':
-                message = "The request was not modified but was not retrieved from the cache.";
-                break;
-            case 'parsererror':
-                message = "XML/Json format is bad.";
-                break;
-            default:
-                message = "HTTP Error (" + request.status + " " + request.statusText + ").";
-        }
-        callback(new Error(message));
-    };
-};
-
-webutil.scrollToTop = function ()
-{
-    $("html, body").animate({ scrollTop: 0 }, "fast");
-};
 
 webutil.findIssuer= function(lines, currency)
 {
@@ -104,96 +62,15 @@ webutil.findIssuer= function(lines, currency)
         }
     }
     return maxIssuer;
-}
+};
 
 webutil.getContact = function (contacts,value)
 {
     for (var i=0;i<contacts.length;i++) {
-        if (contacts[i].name == value || contacts[i].address == value) {
+        if (contacts[i].name === value || contacts[i].address === value) {
             return contacts[i];
         }
     }
 
     return false;
-};
-
-/**
- * Return the address of a contact.
- *
- * Pass in an address or a contact name and get an address back.
- */
-webutil.resolveContact = function (contacts, value)
-{
-    for (var i = 0, l = contacts.length; i < l; i++) {
-        if (contacts[i].name === value) {
-            return contacts[i].address;
-        }
-    }
-
-    if (stellar.UInt160.is_valid(value)) {
-        return stellar.UInt160.json_rewrite(value);
-    }
-
-    return '';
-};
-
-/**
- * Given an address, return the contact name.
- *
- * If a contact is not found with the given address, simply return the address
- * again.
- */
-webutil.unresolveContact = function (contacts, value)
-{
-    try {
-        for (var i = 0, l = contacts.length; i < l; i++) {
-            if (contacts[i].address === value) {
-                return contacts[i].name;
-            }
-        }
-    } catch (e) {}
-
-    return value;
-};
-
-
-/**
- * Creates a combobox query function out of a select options array.
- *
- * @param options {array} An array of select options like {name: '', value: ''}.
- */
-webutil.queryFromOptions = function (options)
-{
-    var opts = options.map(function (entry) {
-        return entry.name;
-    });
-    return exports.queryFromArray(opts);
-};
-
-/**
- * Creates a combobox query function out of a plain array of strings.
- *
- * @param options {array} An array of options, e.g. ['First choice', '2nd']
- */
-webutil.queryFromArray = function (options)
-{
-    return function (match, re) {
-        if (re instanceof RegExp) {
-            return options.filter(function (name) {
-                return "string" === typeof name
-                    ? name.match(re)
-                    : false;
-            });
-        } else return options;
-    };
-};
-
-/**
- * Escapes a string for use as a literal inside of a regular expression.
- *
- * From: http://stackoverflow.com/questions/3446170
- */
-webutil.escapeRegExp = function (str)
-{
-    return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
 };
