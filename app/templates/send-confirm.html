@@ -13,6 +13,9 @@
                 <i class="glyphicon glyphicon-globe"></i>
             </div>
         </div>
+        <p class="literal info">using</p>
+        <p class="literal info" ng-show="path.amount.is_native() || !send.indirect">{{ send.path.amount_human }} {{ send.path.currency_human }}</p>
+        <p class="literal info" ng-show="!path.amount.is_native() && send.indirect">{{ send.path.amount_human }} {{ send.path.currency_human }} ({{ send.path.rate.to_human() }} {{ send.path.currency_human }} / {{ send.currency }})</p>
         <div ng-show="send.indirect">
             <p class="literal">You will pay at most</p>
             <p class="sendmax_feedback">
