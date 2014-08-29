@@ -11,23 +11,23 @@ sc.controller('SendController', function($rootScope, $scope, stNetwork) {
     // The amount we're sending. An Amount object
     $scope.send.amount = null;
     // The state the send pane is in - form, confirm, or sending
-    $scope.send.state;
+    $scope.send.state = null;
     // The currencies a user can choose from. Constrained based on destination
     $scope.send.currencyChoices = _.pluck(StellarDefaultCurrencyList, 'value');
     // The currency we're sending in
-    $scope.send.currency;
+    $scope.send.currency = null;
     // Status of the find path we're running
-    $scope.send.pathStatus;
+    $scope.send.pathStatus = null;
     // The paths a user has available for the current destination and amount.
     $scope.send.paths = [];
     // The path the user chooses.
     $scope.send.path = null;
     // This is our subscription to find path on the stellar network.
-    $scope.send.findpath;
+    $scope.send.findpath = null;
     // True if this is not a direct send (we're going through an offer).
     $scope.send.indirect = false;
     // Holds the state of our sending transaction
-    $scope.send.result
+    $scope.send.result = null;
 
     // true if we should show the destination tag box, false otherwise
     $scope.send.showDestinationTag = false;
@@ -44,7 +44,7 @@ sc.controller('SendController', function($rootScope, $scope, stNetwork) {
         }
 
         $scope.send.state = state;
-    }
+    };
 
     // global notifications
     $scope.$on('$netConnected', function(){
@@ -83,24 +83,24 @@ sc.controller('SendController', function($rootScope, $scope, stNetwork) {
                                  !_.isEmpty($scope.send.destination);
 
         return destTagRequirementMet && sendRequirementMet;
-    }
+    };
 
     $scope.resetDestinationDependencies = function () {
         $scope.send.showDestinationTag = false;
         $scope.send.destination = {};
         $scope.send.federatedName = null;
         $scope.send.currencyChoices = _.pluck(StellarDefaultCurrencyList, 'value');
-    }
+    };
 
     $scope.resetCurrencyDependencies = function () {
         $scope.send.currency = {};
-    }
+    };
 
     $scope.resetAmountDependencies = function () {
         $scope.send.amount = null;
         $scope.send.paths = [];
         $scope.send.indirect = false;
-    }
+    };
 
     // Reset ALL the things (to make a new payment)
     $scope.reset = function () {
@@ -110,7 +110,7 @@ sc.controller('SendController', function($rootScope, $scope, stNetwork) {
         $scope.resetAmountDependencies();
 
         $scope.$broadcast('reset');
-    }
+    };
 
     // brings the user to the confirmation page
     $scope.sendPropose = function (path) {
@@ -127,7 +127,7 @@ sc.controller('SendController', function($rootScope, $scope, stNetwork) {
         $scope.send.indirect = isPathIndirect(path);
 
         $scope.setState('confirm');
-    }
+    };
 
     /*
     * An indirect path is a path that uses an offer or ripple to fill the transaction.
@@ -145,7 +145,7 @@ sc.controller('SendController', function($rootScope, $scope, stNetwork) {
     // bring the user back to the send form
     $scope.cancelConfirm = function () {
         $scope.setState('form');
-    }
+    };
 
     $scope.sendConfirm = function () {
         var destination = $scope.send.destination;
@@ -164,7 +164,7 @@ sc.controller('SendController', function($rootScope, $scope, stNetwork) {
         }
 
         tx.on('success', function (res) {
-            $scope.onTransactionSuccess(res)
+            $scope.onTransactionSuccess(res);
         });
         tx.on('error', function (res) {
             $scope.onTransactionError(res);
@@ -174,7 +174,7 @@ sc.controller('SendController', function($rootScope, $scope, stNetwork) {
 
         $scope.setState('sending');
         $scope.send.result = "sending";
-    }
+    };
 
     $scope.onTransactionSuccess = function (res) {
         $scope.$apply(function () {
@@ -189,11 +189,11 @@ sc.controller('SendController', function($rootScope, $scope, stNetwork) {
             } else if (res.error === 'remoteError') {
                 $scope.send.result = "error";
                 $scope.error_type = res.remote.error;
-                $scope.error_message = "TODO"
+                $scope.error_message = "TODO";
             } else {
                 $scope.send.result = "error";
                 $scope.error_type = "unknown";
-                $scope.error_message = "An unknown error occurred"
+                $scope.error_message = "An unknown error occurred";
             }
         });
     };

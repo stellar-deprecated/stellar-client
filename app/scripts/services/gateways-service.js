@@ -15,13 +15,13 @@ sc.service('Gateways', function($q, session, stNetwork, rpStellarTxt) {
             return {
               currency: parts[0],
               issuer: parts[1]
-            }
+            };
           });
 
           return {
             domain: domain,
             currencies: currencies
-          }
+          };
       });
   };
 
@@ -114,7 +114,7 @@ sc.service('Gateways', function($q, session, stNetwork, rpStellarTxt) {
     tx.submit();
 
     return deferred.promise;
-  };
+  }
 
   return Gateways;
 });

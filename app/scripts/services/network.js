@@ -21,7 +21,7 @@ sc.factory('stNetwork', function($rootScope, $timeout) {
             $rootScope.connected = false;
             $rootScope.$broadcast('$netDisconnected');
         });
-    }
+    };
 
     var handleConnect = function (e) {
         $timeout(function () {

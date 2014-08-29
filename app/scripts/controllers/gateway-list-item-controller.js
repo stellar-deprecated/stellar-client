@@ -4,7 +4,7 @@ sc.controller('GatewayListItemCtrl', function($scope, Gateways) {
 
   $scope.remove = function() {    
     Gateways.remove($scope.gateway).then(function(gateway) {
-      $scope.showRemoveAlert(gateway.domain)
+      $scope.showRemoveAlert(gateway.domain);
     });
   };
 
