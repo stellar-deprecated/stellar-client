@@ -2,7 +2,7 @@
     <div>
         <p class="literal info">You are sending</p>
         <p class="amount_feedback">
-            <span class="value">{{send.amount | rpamount:{ floor: false } }}&#32;</span>
+            <span class="value">{{send.amount.to_human(send.path.human_opts) }}&#32;</span>
             <span class="currency">{{send.amount | rpcurrency}}</span>
         </p>
         <p class="literal info">to</p>
