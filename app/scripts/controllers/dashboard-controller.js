@@ -12,6 +12,7 @@ sc.controller('DashboardCtrl', function($rootScope, $scope, $timeout, $state, se
     $scope.tutorials = TutorialHelper;
 
     $scope.accountLines = [];
+    $scope.nonZeroAccountLines = [];
     $scope.balances = {};
     $scope.currencies = [];
     $scope.topCurrencies = [];
@@ -95,13 +96,15 @@ sc.controller('DashboardCtrl', function($rootScope, $scope, $timeout, $state, se
         $scope.accountLines = accountLines;
         $scope.balances = {};
 
-        accountLines.forEach(function(accountLine) {
-            var balance = Number(accountLine.balance);
+        // Filter out account lines with zero balances.
+        $scope.nonZeroAccountLines = accountLines.filter(function(accountLine) {
+            return accountLine.balance != '0';
+        });
 
-            if (balance != 0) {
-                var currency = accountLine.currency;
-                $scope.balances[currency] = ($scope.balances[currency] || 0) + balance;
-            }
+        $scope.nonZeroAccountLines.forEach(function(accountLine) {
+            var balance = Number(accountLine.balance);
+            var currency = accountLine.currency;
+            $scope.balances[currency] = ($scope.balances[currency] || 0) + balance;
 
             contacts.fetchContactByAddress(accountLine.account);
         });

@@ -12,7 +12,7 @@
                 <h5>{{ balance | rpamount:{rel_precision: 0} }}</h5>
                 <p>{{ 'STR' | currencyName }}</p>
             </li>
-            <li ng-repeat="accountLine in accountLines" ng-if="accountLine.balance != '0'" class="currency-box">
+            <li ng-repeat="accountLine in nonZeroAccountLines" class="currency-box">
                 <h5>{{ accountLine.balance }}</h5>
                 <p>{{ accountLine.currency | currencyName }}</p>
                 <p class="currency-issuer">{{ accountLine.account | addressToUsername }}</p>
