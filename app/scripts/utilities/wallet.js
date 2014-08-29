@@ -111,7 +111,7 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
       }
 
       return new Wallet(parsed);
-    }
+    };
 
     var loadFromLocal = function() {
       var encryptedWallet            = localStorage.wallet;
@@ -125,7 +125,7 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
       var decryptedWallet    = Wallet.decryptData(encryptedWallet, sjcl.codec.hex.toBits(decryptedWalletKey));
 
       return new Wallet(decryptedWallet);
-    }
+    };
 
     return catchAndSwallowSecurityErrors(function() {
       return loadFromSession() || loadFromLocal();
@@ -193,7 +193,7 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
     var data = this.createRecoveryData(recoveryId, recoveryKey);
 
     return $http.post(Options.WALLET_SERVER + '/wallets/create_recovery_data', data);
-  }
+  };
 
   /**
    * Encrypts the wallet's id and key into the recoveryData and sets its the recoveryId.
@@ -211,7 +211,7 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
       recoveryId: recoveryId,
       recoveryData: recoveryData,
       recoveryDataHash: sjcl.codec.hex.fromBits(sjcl.hash.sha1.hash(recoveryData))
-    }
+    };
   };
 
   /**
@@ -270,7 +270,7 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
     catchAndSwallowSecurityErrors(function() {
       ipCookie("localWalletKey", ipCookie("localWalletKey"), {expires:Options.IDLE_LOGOUT_TIMEOUT/1000, expirationUnit:'seconds'});
     });
-  }
+  };
 
   /**
    * Configure the data cryptography setting.
@@ -472,19 +472,21 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
    * @param {Array.<bits>} key The key used to decrypt the blob.
    */
   Wallet.decryptData = function(encryptedData, key) {
+    var rawCipherText, rawIV, cipherName, mode;
+    
     try {
       // Parse the base64 encoded JSON object.
       var resultObject = JSON.parse(atob(encryptedData));
 
       // Extract the cipher text from the encrypted data.
-      var rawCipherText = sjcl.codec.base64.toBits(resultObject.cipherText);
+      rawCipherText = sjcl.codec.base64.toBits(resultObject.cipherText);
 
       // Extract the cipher text from the encrypted data.
-      var rawIV = sjcl.codec.base64.toBits(resultObject.IV);
+      rawIV = sjcl.codec.base64.toBits(resultObject.IV);
 
       // Extract the cipher name from the encrypted data.
-      var cipherName = resultObject.cipherName;
-      var mode = resultObject.mode;
+      cipherName = resultObject.cipherName;
+      mode = resultObject.mode;
     } catch(e) {
       // The encoded data does not represent valid base64 values.
       throw('Data corrupt!');
