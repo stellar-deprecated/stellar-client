@@ -141,6 +141,51 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
     });
   };
 
+  /**
+   * Abstracts access to the wallet's data sources.
+   * Throws an error if the data source is not defined.
+   *
+   * @param {string} dataSource The name of the dataSource to resolve.
+   *
+   * @return {object} The data source.
+   */
+  Wallet.prototype._getDataSource = function(dataSource) {
+    if(!_.has(this, dataSource)) {
+      throw 'Invalid data source. No property ' + dataSource + ' found.';
+    } else {
+      return this[dataSource];
+    }
+  };
+
+  /**
+   * Gets a property from one of the wallet's data sources.
+   *
+   * @param {string} dataSource The name of the dataSource to use.
+   * @param {string} propertyName The name of the property to get.
+   * @param {*} [defaultValue] The value to return if the property is not defined.
+   *
+   * @return {*} The property or default value.
+   */
+  Wallet.prototype.get = function(dataSource, propertyName, defaultValue) {
+    var data = this._getDataSource(dataSource);
+    return _.has(data, propertyName) ? data[propertyName] : defaultValue;
+  };
+
+  /**
+   * Sets a property on one of the wallet's data sources.
+   *
+   * @param {string} dataSource The name of the dataSource to use.
+   * @param {string} propertyName The name of the property to get.
+   * @param {*} value The value to set.
+   *
+   * @return {Wallet} This wallet.
+   */
+  Wallet.prototype.set = function(dataSource, propertyName, value) {
+    var data = this._getDataSource(dataSource);
+    data[propertyName] = value;
+    return this;
+  };
+
   Wallet.prototype.storeRecoveryData = function (userRecoveryCode, serverRecoveryCode) {
     var recoveryId = Wallet.deriveId(userRecoveryCode, serverRecoveryCode);
     var recoveryKey = Wallet.deriveKey(recoveryId, userRecoveryCode, serverRecoveryCode);
