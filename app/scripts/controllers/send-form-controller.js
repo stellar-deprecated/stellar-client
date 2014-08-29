@@ -262,10 +262,10 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, s
             path.amount = Amount.from_json(raw.source_amount);
             path.rate = path.amount.ratio_human($scope.send.amount);
             path.send_max = path.amount.product_human(Amount.from_json('1.01'));
-            path.amount_human = path.amount.to_human();
             path.currency_human = path.amount._currency.to_human();
             path.issuer_human = path.amount._issuer.to_json();
             path.paths = raw.paths_computed || raw.paths_canonical;
+
             return path;
         })
 

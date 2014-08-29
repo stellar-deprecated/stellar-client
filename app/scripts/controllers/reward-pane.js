@@ -3,7 +3,7 @@
 var sc = angular.module('stellarClient');
 
 sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session, TutorialHelper, singletonPromise, FlashMessages, contacts, invites) {
-  $scope.showRewards         = false;
+  $scope.rewardsComplete     = false;
   $scope.showRewardsComplete = null;
   $scope.selectedReward      = null;
   $scope.giveawayAmount      = 0;
@@ -16,6 +16,13 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
     $scope.data.hasClaimedInviteCode = session.getUser().hasClaimedInviteCode();
     $scope.data.inviterUsername = session.getUser().getInviterUsername();
   });
+
+  $scope.showRewards = function() {
+    var wallet = session.get('wallet');
+    var showRewardsSetting = wallet.get('mainData', 'showRewards', true);
+
+    return !$scope.rewardsComplete && showRewardsSetting;
+  }
 
   var firstRequest = true;
 
@@ -123,9 +130,9 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
     var completedRewards = $scope.rewards.filter(function (reward) {
       return reward.status == 'sent';
     });
-    $scope.showRewards = (completedRewards.length !== $scope.rewards.length);
+    $scope.rewardsComplete = (completedRewards.length == $scope.rewards.length);
 
-    $scope.showRewardsComplete = (completedRewards.length == $scope.rewards.length);
+    $scope.showRewardsComplete = $scope.rewardsComplete;
 
     if($scope.showRewardsComplete && !firstRequest) {
       $rootScope.$broadcast('flashMessage', {

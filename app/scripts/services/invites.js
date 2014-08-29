@@ -9,7 +9,7 @@ sc.service('invites', function($http, session) {
         _.extend(params, {
             username:    session.get('username'),
             updateToken: session.get('wallet').keychainData.updateToken
-        })
+        });
 
         return $http.post(Options.API_SERVER + "/invites/" + path, params);
     }
@@ -31,29 +31,29 @@ sc.service('invites', function($http, session) {
             return inviteAction('claim', {inviteCode: inviteCode});
         }
 
-    }
+    };
 });
 
 sc.filter('unsentInvitesFilter', function () {
     return function (invites) {
         return _.filter(invites, function (invite) {
             return !invite.emailedTo;
-        })
-    }
+        });
+    };
 });
 
 sc.filter('sentInvitesFilter', function () {
     return function (invites) {
         return _.filter(invites, function (invite) {
             return invite.emailedTo;
-        })
-    }
+        });
+    };
 });
 
 sc.filter('unseenInvitesFilter', function () {
     return function (invites) {
         return _.filter(invites, function (invite) {
             return !invite.acked;
-        })
-    }
-})
+        });
+    };
+});
