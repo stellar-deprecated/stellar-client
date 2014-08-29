@@ -18,10 +18,16 @@ sc.service('Gateways', function($q, session, stNetwork, rpStellarTxt) {
             };
           });
 
-          return {
-            domain: domain,
-            currencies: currencies
-          };
+          // Check if each currency's issuer require authorization.
+          var promises = _.map(currencies, checkIssuerAuth);
+
+          return $q.all(promises)
+            .then(function(currencies) {
+              return {
+                domain: domain,
+                currencies: currencies
+              };
+            });
       });
   };
 
@@ -112,6 +118,25 @@ sc.service('Gateways', function($q, session, stNetwork, rpStellarTxt) {
     });
 
     tx.submit();
+
+    return deferred.promise;
+  }
+
+  /**
+   * Sets the currency's requireAuth property to true if the issuer requires authorization.
+   * Returns a promise that always resolves with the provided currency object.
+   */
+  function checkIssuerAuth(currency) {
+    var deferred = $q.defer();
+
+    var opts = {account: currency.issuer};
+    var accountLinesRequest = stNetwork.remote.request_account_info(opts, function(err, result) {
+      if (result) {
+        currency.requireAuth = !!(result.account_data.Flags & stellar.Transaction.flags.AccountSet.RequireAuth);
+      }
+
+      deferred.resolve(currency);
+    });
 
     return deferred.promise;
   }
