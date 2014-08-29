@@ -1,0 +1,75 @@
+<div ng-controller="SendFormController">
+    <form name="sendForm" role="form" class="form-horizontal">
+        <div class="form-group send-address">
+            <label for="recipient" class="col-md-2">SEND TO</label>
+            <div class="col-md-6 input-icon-wrapper">
+                <input id="recipient" name="recipient" type="text" class="form-control" ng-model="sendFormModel.recipient"/>
+                <i class="glyphicon glyphicon-globe"></i>
+            </div>
+            <div class="col-md-4 tip">Stellar name or address.</div>
+        </div>
+        <div class="form-group send-destination" ng-show="send.showDestinationTag">
+            <label for="destinationTag" class="col-md-2">DESTINATION TAG</label>
+            <div class="col-md-6">
+                <input name="destinationTag" ng-model="send.destination.destinationTag" type="number" class="form-control"/>
+            </div>
+            <div class="col-md-4 tip">
+            Recipient requires a destination tag to be specified for the transaction. If you don't know the
+            destination tag, please contact them before doing a transaction.
+            </div>
+        </div>
+        <div class="form-group send-amount">
+            <label for="amount" class="col-md-2">AMOUNT</label>
+            <div class="col-md-4">
+                <input name="amount" type="number" min="0" class="form-control" ng-model="sendFormModel.amount"/>
+            </div>
+            <div class="col-md-2">
+
+                <div class="input-group">
+                    <input type="text" class="form-control" ng-model="sendFormModel.currency">
+                    <div class="input-group-btn">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" ng-click="setOverflowVisible()"><span class="caret"></span></button>
+                        <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                            <li ng-init="sendFormModel.currency = sendFormModel.currency || send.currencyChoices[0]" ng-repeat="value in send.currencyChoices"><a href="#" ng-click="changeCurrency(value)">{{value}}</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 tip">Type in the amount and currency to send.</div>
+        </div>
+        <div class="row">
+            <div class="col-md-offset-3 col-md-4 send-form-status-container">
+                <p ng-show="send.fundStatus == 'insufficient-str'" class="send-form-status">
+                    Destination account is unfunded; send at least
+                    {{send.str_deficiency | rpamount}} STR to fund it.
+                    <a href="https://www.stellar.org/glossary/#Reserves" target="_blank" >More information</a>
+                </p>
+                <p ng-show="account.max_spend.to_number() < send.amount * 1000000" class="send-form-status">
+                    You need a minimum balance of 20 Stellars to send. <a href="https://www.stellar.org/glossary/#Reserves" target="_blank" >More information</a>
+                </p>
+                <p ng-show="send.pathStatus == 'checking'" class="send-form-status">Checking</p>
+                <p ng-show="send.pathStatus == 'fed-check'" class="send-form-status">Analyzing address</p>
+                <p ng-show="send.pathStatus == 'pending'" class="send-form-status">Calculating paths</p>
+
+                <p ng-show="send.pathStatus == 'no-path'" class="send-form-status">
+                    Unable to find a path to send {{send.amount.to_human()}} {{send.amount._currency.to_human()}} to
+                    {{send.federatedName || send.destination.address}}.
+                </p>
+                <p ng-show="send.pathStatus == 'error'" class="send-form-status">Error while calculating path</p>
+            </div>
+        </div>
+        <p ng-show="showPaths()">You can send {{send.amount.to_human()}} {{send.amount._currency.to_human()}} using:</p>
+        <div class="row" ng-show="showPaths()">
+            <ul class="currencies-list">
+                <li ng-repeat="path in send.paths" class="currency-box">
+                    <h5>{{ path.amount_human }}</h5>
+                    <p>{{ path.currency_human }}</p>
+                    <div class="account-container">
+                        <p>{{ issuer_human }}</p>
+                    </div>
+                    <button class="btn btn-default submit" ng-click="sendPropose(path)">Send</button>
+                </li>
+            </ul>
+        </div>
+    </form>
+</div>

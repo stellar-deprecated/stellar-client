@@ -1,0 +1,43 @@
+<div class="pane" ng-controller="ManageCurrenciesCtrl">
+    <div class="pane-close" ng-click="closePane()">
+        <span>Close</span>
+        <i class="icon icon-times-circle-thin"></i>
+    </div>
+
+    <div class="gateway-form">
+        <div class="title">Manage currencies</div>
+        <p>You have to add a gateway to add currencies. Find out <a href="#">more</a>.
+        <form class="form-horizontal">
+            <div class="form-group">
+                <label class="col-sm-2">Add gateway</label>
+                <div class="col-sm-5 form-group">
+                    <input class="form-control" type="text" ng-model="gatewaySearch"/>
+                </div>
+                <div class="col-sm-5 form-group">
+                    <button type="submit" class="btn btn-default col-sm-4 col-sm-offset-1" ng-click="loadCurrencies()">
+                        {{ loadCurrencies.isLoading() ? 'Loading...' : 'Show supported currencies' }}
+                    </button>
+                </div>
+            </div>
+        </form>
+        <div ng-show="searchStatus == 'loading'">Loading...</div>
+        <div ng-show="searchStatus == 'not_found'">No results found for {{ gatewayDomain }}</div>
+        <div ng-show="searchStatus == 'no_currencies'">No currencies found for {{ gatewayDomain }}</div>
+        <div ng-show="searchStatus == 'already_added'">{{ gatewayDomain }} was already added</div>
+        <div class="gateway-currencies" ng-show="searchStatus == 'found'">
+            <h5>Search results for {{ gatewayDomain }}:</h5>
+            <ul class="currencies-list">
+                <li ng-repeat="currency in currencies" class="currency-box">
+                    <h5>{{ currency.currency }}</h5>
+                    <p class="currency-issuer">{{ currency.issuer | addressToUsername }}</p>
+                </li>
+            </ul>
+            <button class="btn btn-default" ng-click="addGateway()">{{ addGateway.isLoading() ? 'Loading...' : 'Add ' + gatewayDomain }}</button>
+        </div>
+    </div>
+
+    <div class="gateways row">
+        <div class="gateway-list client-section" ng-include="'templates/gateways.html'">
+        </div>
+    </div>
+</div>

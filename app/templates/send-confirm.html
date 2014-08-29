@@ -1,0 +1,33 @@
+<div class="mode-confirm">
+    <div>
+        <p class="literal info">You are sending</p>
+        <p class="amount_feedback">
+            <span class="value">{{send.amount | rpamount:{ floor: false } }}&#32;</span>
+            <span class="currency">{{send.amount | rpcurrency}}</span>
+        </p>
+        <p class="literal info">to</p>
+        <div class="dest_feedback">
+            <div ng-show="send.federatedName" class="recipient-name">{{send.federatedName}}</div>
+            <div class="input-icon-wrapper">
+                <input class="recipient-address" value="{{send.destination.address}}{{send.destination.destinationTag ? '?dt=' + send.destination.destinationTag : ''}}" disabled>
+                <i class="glyphicon glyphicon-globe"></i>
+            </div>
+        </div>
+        <group ng-show="send.indirect">
+            <p class="literal">You will pay at most</p>
+            <p class="sendmax_feedback">
+                <span class="value">{{send.path.amount | rpamount:{ floor: false } }}&#32;</span>
+                <span class="currency">{{send.path.amount | rpcurrency}} &#32;</span>
+                <span>&plusmn; 1%</span>
+            </p>
+        </group>
+        <div class="call-to-action">
+            <div class="row row-padding-small">
+                <div class="">
+                    <button type="submit" ng-click="sendConfirm()" ng-disabled="confirm_wait" class="btn btn-default">Confirm transaction</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<button ng-click="cancelConfirm()"  class="btn btn-block btn-default change-button">Change</button>

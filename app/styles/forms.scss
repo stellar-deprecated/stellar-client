@@ -6,6 +6,7 @@ label {
 
 input[type="text"],
 input[type="email"],
+input[type="number"],
 input[type="password"] {
   height: 42px;
   border-radius: 2px;
@@ -31,6 +32,12 @@ input[type="password"] {
       }
     }
   }
+}
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
 }
 
 button, 
@@ -166,7 +173,7 @@ button,
     font-weight: $book-weight;
     font-size: 14px;
     color: $info-grey;
-    line-height: 42px;
+    padding-top: 12px;
   }
 
   .info {

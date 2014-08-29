@@ -1,4 +1,4 @@
-<div class="flash-message-container container">
+<div class="flash-message-container container" ng-show="messages.length">
     <div ng-repeat="message in messages" class="flash-message" ng-class="message.type">
         <i class="icon icon-close" ng-click="dismissMessage($index)"></i>
         <div class="flash-body">
