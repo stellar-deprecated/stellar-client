@@ -8,7 +8,10 @@ sc.service('session', function($rootScope, $http, $timeout, stNetwork, Wallet, c
   var Session = function() {};
 
   Session.prototype.get = function(name){ return cache[name]; };
-  Session.prototype.put = function(name, value){ return cache[name] =  value; };
+  Session.prototype.put = function(name, value){ 
+    cache[name] = value;
+    return value; 
+  };
 
 
   /**
@@ -72,11 +75,11 @@ sc.service('session', function($rootScope, $http, $timeout, stNetwork, Wallet, c
       })
       .then(function () {
         $rootScope.$broadcast('userLoaded');
-      })
+      });
 
     // check for the most up to date fairy address
     checkFairyAddress.bind(this)();
-    $rootScope.account = {}
+    $rootScope.account = {};
     $rootScope.$broadcast('walletAddressLoaded', {account: signingKeys.address, secret: signingKeys.secret});
     stNetwork.init();
 
@@ -108,11 +111,11 @@ sc.service('session', function($rootScope, $http, $timeout, stNetwork, Wallet, c
           wallet.saveLocal();
         }
       }.bind(this));
-  }
+  };
 
   Session.prototype.loginFromStorage = function($scope) {
     try {
-       var wallet = Wallet.loadLocal()
+       var wallet = Wallet.loadLocal();
 
       if (wallet) {
         this.login(wallet);
@@ -148,13 +151,13 @@ sc.service('session', function($rootScope, $http, $timeout, stNetwork, Wallet, c
 
   Session.prototype.getUser = function () {
     return this.get('userPrivateInfo');
-  }
+  };
 
   function checkFairyAddress() {
     $http.get(Options.API_SERVER + "/fairy")
     .success(function (response) {
-      var federation_record = response.data.federation_json;
-      contacts.addContact(federation_record);
+      var federationRecord = response.data.federation_json;
+      contacts.addContact(federationRecord);
     });
   }
 
