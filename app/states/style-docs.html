@@ -18,7 +18,8 @@
 &#x3C;alert type=&#x22;info&#x22;&#x3E;Info&#x3C;/alert&#x3E;
 &#x3C;alert type=&#x22;warning&#x22;&#x3E;Warning&#x3C;/alert&#x3E;
 &#x3C;alert type=&#x22;danger&#x22;&#x3E;Danger&#x3C;/alert&#x3E;
-&#x3C;alert type=&#x22;info&#x22; dismissible=&#x22;true&#x22;&#x3E;Dismissible&#x3C;/alert&#x3E;</code></pre></div>
+&#x3C;alert type=&#x22;info&#x22; dismissible=&#x22;true&#x22;&#x3E;Dismissible&#x3C;/alert&#x3E;
+&#x3C;alert type=&#x22;success&#x22; dismissible=&#x22;true&#x22; dismiss-click=&#x22;dismissCallback()&#x22;&#x3E;Dismissible with ngClick on the dissmiss button&#x3C;/alert&#x3E;</code></pre></div>
 
             <h4>Output</h4>
             <alert type="success">Success</alert>
@@ -26,6 +27,7 @@
             <alert type="warning">Warning</alert>
             <alert type="danger">Danger</alert>
             <alert type="info" dismissible="true">Dismissible</alert>
+            <alert type="success" dismissible="true" dismiss-click="dismissCallback()">Dismissible with ngClick callback on the dismiss button</alert>
 
     </div>
 </div>

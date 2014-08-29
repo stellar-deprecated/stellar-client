@@ -4,7 +4,8 @@ module.directive('alert', function() {
     transclude: true,
     scope: {
       type: '@',
-      dismissible: '@'
+      dismissible: '@',
+      dismissClick: '&'
     },
     templateUrl: 'templates/alert.html'
   }
