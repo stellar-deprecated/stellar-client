@@ -13,7 +13,7 @@
     "noarg": true,
     "quotmark": "both",
     "undef": true,
-    "unused": true,
+    "unused": "vars",
     "strict": false,
     "trailing": true,
     "smarttabs": true,
