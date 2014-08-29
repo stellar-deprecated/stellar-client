@@ -13,14 +13,17 @@
                 <i class="glyphicon glyphicon-globe"></i>
             </div>
         </div>
-        <group ng-show="send.indirect">
+        <p class="literal info">using</p>
+        <p class="literal info" ng-show="path.amount.is_native() || !send.indirect">{{ send.path.amount_human }} {{ send.path.currency_human }}</p>
+        <p class="literal info" ng-show="!path.amount.is_native() && send.indirect">{{ send.path.amount_human }} {{ send.path.currency_human }} ({{ send.path.rate.to_human() }} {{ send.path.currency_human }} / {{ send.currency }})</p>
+        <div ng-show="send.indirect">
             <p class="literal">You will pay at most</p>
             <p class="sendmax_feedback">
                 <span class="value">{{send.path.amount | rpamount:{ floor: false } }}&#32;</span>
                 <span class="currency">{{send.path.amount | rpcurrency}} &#32;</span>
                 <span>&plusmn; 1%</span>
             </p>
-        </group>
+        </div>
         <div class="call-to-action">
             <div class="row row-padding-small">
                 <div class="">

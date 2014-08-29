@@ -124,7 +124,22 @@ sc.controller('SendController', function($rootScope, $scope, stNetwork) {
             delete $scope.send.findpath;
         }
 
+        $scope.send.indirect = isPathIndirect(path);
+
         $scope.setState('confirm');
+    }
+
+    /*
+    * An indirect path is a path that uses an offer or ripple to fill the transaction.
+    * An example of an INDIRECT path is a payment transaction from sender STR -> STR/USD offer -> receive USD
+    * An example of a DIRECT path is a payment transaction from sender StellarGateway USD -> receive StellarGateway USD.
+    * We check if the given path's path array is longer than 1 (if there's no path array or if it's of length one, it's a direct path).
+    */
+    function isPathIndirect(path) {
+        if (path.paths && path.paths.length && path.paths[0].length > 1) {
+            return true;
+        }
+        return false;
     }
 
     // bring the user back to the send form
@@ -146,9 +161,6 @@ sc.controller('SendController', function($rootScope, $scope, stNetwork) {
         if ($scope.send.path) {
             tx.send_max($scope.send.path.send_max);
             tx.paths($scope.send.path.paths);
-            if ($scope.send.path.paths && $scope.send.path.paths.length) {
-                $scope.send.indirect = true;
-            }
         }
 
         tx.on('success', function (res) {
