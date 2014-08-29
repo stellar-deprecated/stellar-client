@@ -11,4 +11,20 @@ sc.controller('ManageCurrenciesCtrl', function($rootScope, $scope, session) {
   $scope.closePane = function() {
     $rootScope.showTab = false;
   };
+
+  $scope.showAddAlert = function(domain) {
+    $scope.addedGatewayDomain = domain;
+  };
+
+  $scope.hideAddAlert = function() {
+    $scope.addedGatewayDomain = null;
+  };
+
+  $scope.showRemoveAlert = function(domain) {
+    $scope.removedGatewayDomain = domain;
+  };
+
+  $scope.hideRemoveAlert = function() {
+    $scope.removedGatewayDomain = null;
+  };
 });

@@ -35,7 +35,10 @@ sc.controller('AddGatewayCtrl', function($scope, $q, session, singletonPromise, 
     // maybe we trigger an error here? it shouldn't ever occurr
     if(!$scope.foundGateway){ return; }
 
-    Gateways.add($scope.foundGateway);
+    Gateways.add($scope.foundGateway).then(function(gateway) {
+      $scope.showAddAlert(gateway.domain);
+    });
+    
     $scope.resetSearch();
   };
 

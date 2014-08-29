@@ -28,12 +28,16 @@ sc.service('Gateways', function($q, session, stNetwork, rpStellarTxt) {
   Gateways.add = function(gateway) {
     walletGateways()[gateway.domain]        = _.cloneDeep(gateway);
     walletGateways()[gateway.domain].status = "adding";
-    Gateways.syncTrustlines(gateway.domain);
+    return Gateways.syncTrustlines(gateway.domain).then(function() {
+      return gateway;
+    });
   };
 
   Gateways.remove = function(gateway) {
     gateway.status = "removing";
-    Gateways.syncTrustlines(gateway.domain);
+    return Gateways.syncTrustlines(gateway.domain).then(function() {
+      return gateway;
+    });
   };
 
   Gateways.syncTrustlines = function() {
