@@ -86,9 +86,7 @@
             </div>
         </div>
     </div>
-    <div class="client-section" id="dashboard-flash-messages" ng-show="messages.length" ng-controller="FlashMessageCtrl">
-        <div ng-include="'templates/flash-message-container.html'"></div>
-    </div>
+    <flash-messages class="client-section" id="dashboard-flash-messages"></flash-messages>
     <div ng-include="'templates/reward-container.html'"></div>
     <div ng-include="'templates/transaction-history.html'"></div>
 </div>
