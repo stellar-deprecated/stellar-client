@@ -257,7 +257,7 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
     var encryptedWalletKey = Wallet.encryptData(this.key, loginWalletKey);
 
     catchAndSwallowSecurityErrors(function() {
-      ipCookie("localWalletKey", loginWalletKey, {expires:Options.IDLE_LOGOUT_TIMEOUT/1000, expirationUnit:'seconds'});
+      ipCookie("localWalletKey", loginWalletKey, {expires:Options.IDLE_LOGOUT_TIMEOUT/1000, expirationUnit:'seconds', secure: Options.COOKIE_SECURE});
       localStorage.encryptedWalletKey = encryptedWalletKey;
       localStorage.wallet             = Wallet.encryptData(self, sjcl.codec.hex.toBits(self.key));
       sessionStorage.wallet           = JSON.stringify(self);
@@ -268,7 +268,7 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
   Wallet.prototype.bumpLocalTimeout = function() {
     //TODO: push the cookie timeout foreward
     catchAndSwallowSecurityErrors(function() {
-      ipCookie("localWalletKey", ipCookie("localWalletKey"), {expires:Options.IDLE_LOGOUT_TIMEOUT/1000, expirationUnit:'seconds'});
+      ipCookie("localWalletKey", ipCookie("localWalletKey"), {expires:Options.IDLE_LOGOUT_TIMEOUT/1000, expirationUnit:'seconds', secure: Options.COOKIE_SECURE});
     });
   };
 
