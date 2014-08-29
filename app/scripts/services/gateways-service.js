@@ -39,7 +39,11 @@ sc.service('Gateways', function($q, session, stNetwork, rpStellarTxt) {
   Gateways.remove = function(gateway) {
     gateway.status = "removing";
     return Gateways.syncTrustlines(gateway.domain).then(function() {
-      return gateway;
+      if(!_.has(walletGateways(), gateway.domain)) {
+        return gateway;
+      } else {
+        return $q.reject(new Error("Failed to remove " + gateway.domain));
+      }
     });
   };
 
