@@ -15,9 +15,7 @@ module.filter('amountToHuman', function () {
             return "";
         }
         var opts = {};
-        var currency = _.find(StellarDefaultCurrencyList, function (element) {
-            return element.value === input._currency.to_human();
-        });
+        var currency = StellarDefaultCurrencyMap[input._currency.to_human()];
         opts.precision = currency ? currency.max_decimal_places : 2;
         opts.skip_empty_fraction = true;
         opts.max_sig_digits = 6;
