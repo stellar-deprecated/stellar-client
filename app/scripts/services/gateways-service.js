@@ -96,6 +96,7 @@ sc.service('Gateways', function($q, session, stNetwork, rpStellarTxt) {
 
     var tx = stNetwork.remote.transaction();
     tx.trustSet(session.get('address'), limit);
+    tx.setFlags('NoRipple');
 
     tx.on('success', deferred.resolve);
     tx.on('error', function(result) {
