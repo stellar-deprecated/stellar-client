@@ -146,7 +146,15 @@ sc.service('transactionHistory', function($rootScope, $q, stNetwork, session, co
 
       if (processedTxn.tx_type === "Payment" && processedTxn.tx_result === "tesSUCCESS" && transaction) {
         contacts.fetchContactByAddress(transaction.counterparty);
+
         if (transaction.amount) {
+          if (tx.Amount.issuer === tx.Destination && tx.Paths) {
+            // When the issuer is set to the counterparty the transaction allows using any trusted issuer.
+            // Find the issuer that was used in the last currency in the path.
+            var lastPath = _.last(tx.Paths[0]);
+            transaction.amount.issuer().parse_json(lastPath.issuer);
+          }
+
           var issuer = transaction.amount.issuer().to_json();
           if (issuer) {
             contacts.fetchContactByAddress(issuer);
