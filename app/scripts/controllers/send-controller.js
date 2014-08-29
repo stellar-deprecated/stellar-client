@@ -124,6 +124,12 @@ sc.controller('SendController', function($rootScope, $scope, stNetwork) {
             delete $scope.send.findpath;
         }
 
+        if (path.paths && path.paths.length && path.paths[0].length > 1) {
+            $scope.send.indirect = true;
+        } else {
+            $scope.send.indirect = false;
+        }
+
         $scope.setState('confirm');
     }
 
@@ -146,9 +152,6 @@ sc.controller('SendController', function($rootScope, $scope, stNetwork) {
         if ($scope.send.path) {
             tx.send_max($scope.send.path.send_max);
             tx.paths($scope.send.path.paths);
-            if ($scope.send.path.paths && $scope.send.path.paths.length) {
-                $scope.send.indirect = true;
-            }
         }
 
         tx.on('success', function (res) {
