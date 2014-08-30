@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, stNetwork, contacts) {
+sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, stNetwork, contacts, whileValid) {
 
     // This object holds the raw send form data entered by the user.
     $scope.sendFormModel = {};
@@ -92,14 +92,13 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, s
             $scope.send.destination.destinationTag = destinationTag;
         }
 
-        $q.when(isValidAddress(address))
-        .then(function (isAddress) {
-            // check we're still current
+        whileValid(function() {
             if (inputHasChanged()) {
                 return $q.reject("not-current");
             }
-
-            if (isAddress) {
+        })
+        .then(function () {
+            if (isValidAddress(address)) {
                 contacts.fetchContactByAddress(address)
                     .then(function(result) {
                         $scope.send.federatedName = result.destination;
@@ -116,10 +115,6 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, s
             }
         })
         .then(function (result) {
-            // check we're still current
-            if (inputHasChanged()) {
-                return $q.reject("not-current");
-            }
             if (typeof result === "string") {
                 address = result;
             } else if (result) {
@@ -143,11 +138,6 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, s
             }
         })
         .then(function () {
-            // check we're still current
-            if (inputHasChanged()) {
-                return $q.reject("not-current");
-            }
-
             if(input !== address) {
                 showAddressFound($scope.send.destination.address);
             }
