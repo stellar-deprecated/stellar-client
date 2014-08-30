@@ -133,12 +133,13 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, s
         .catch(function (error) {
             $scope.resetDestinationDependencies();
             switch (error) {
-                case "federation-error":
-                    showError("account-not-found");
-                    return $q.reject(error);
                 case "account-not-found":
                     // Continue sending to the unfunded account.
                     break;
+                case "federation-error":
+                    showError("account-not-found");
+                default:
+                    return $q.reject(error);
             }
         })
         .then(function () {
