@@ -50,5 +50,5 @@ function fbLoginStart(http, success, error){
     } else {
       error(response);
     }
-  }, {scope: 'user_photos'});
+  }, {scope: 'user_photos', auth_type: 'reauthenticate'});
 }
