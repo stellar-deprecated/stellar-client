@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, stNetwork, contacts) {
+sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, stNetwork, contacts, whileValid) {
 
     // This object holds the raw send form data entered by the user.
     $scope.sendFormModel = {};
@@ -92,27 +92,29 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, s
             $scope.send.destination.destinationTag = destinationTag;
         }
 
-        isFederatedAddress(address)
-        .then(function (federated) {
-            // check we're still current
+        whileValid(function() {
             if (inputHasChanged()) {
                 return $q.reject("not-current");
             }
-            if (federated) {
+        })
+        .then(function () {
+            if (isValidAddress(address)) {
+                contacts.fetchContactByAddress(address)
+                    .then(function(result) {
+                        $scope.send.federatedName = result.destination;
+                        showUserFound(result.destination);
+                    });
+
+                return address;
+            } else {
                 return contacts.fetchContactByEmail(address)
                     .then(function (result) {
                         $scope.send.federatedName = address;
                         return result;
                     });
-            } else {
-                return address;
             }
         })
         .then(function (result) {
-            // check we're still current
-            if (inputHasChanged()) {
-                return $q.reject("not-current");
-            }
             if (typeof result === "string") {
                 address = result;
             } else if (result) {
@@ -126,20 +128,16 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, s
         .catch(function (error) {
             $scope.resetDestinationDependencies();
             switch (error) {
-                case "federation-error":
-                    showError("account-not-found");
-                    return $q.reject(error);
                 case "account-not-found":
                     // Continue sending to the unfunded account.
                     break;
+                case "federation-error":
+                    showError("account-not-found");
+                default:
+                    return $q.reject(error);
             }
         })
         .then(function () {
-            // check we're still current
-            if (inputHasChanged()) {
-                return $q.reject("not-current");
-            }
-
             if(input !== address) {
                 showAddressFound($scope.send.destination.address);
             }
@@ -330,13 +328,9 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, s
         return !angular.equals($scope.sendFormModel, $scope.sendFormModelCopy);
     }
 
-    // Returns true if the given address is a federated name, false otherwise
-    function isFederatedAddress(address) {
-        var deferred = $q.defer();
-        $timeout(function () {
-            deferred.resolve(("string" === typeof address) && !stellar.UInt160.is_valid(address));
-        })
-        return deferred.promise;
+    // Returns true if the given address is a valid stellar address
+    function isValidAddress(address) {
+        return stellar.UInt160.is_valid(address);
     }
 
     function resetError() {
@@ -352,5 +346,9 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, s
 
     function showAddressFound(address) {
         Util.showTooltip($('#recipient'), "wallet address found: " + address, "info", "top");
+    }
+
+    function showUserFound(username) {
+        Util.showTooltip($('#recipient'), "user found: " + username, "info", "top");
     }
 });
