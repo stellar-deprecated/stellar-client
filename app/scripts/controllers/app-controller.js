@@ -98,7 +98,6 @@ sc.controller('AppCtrl', function($scope, $rootScope, StellarNetwork, session, $
     };
 
     function handleAccountEntry(data) {
-        var remote = StellarNetwork.remote;
         $rootScope.account = data;
 
         // As per json wire format convention, real ledger entries are CamelCase,
