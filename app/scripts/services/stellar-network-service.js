@@ -5,7 +5,7 @@ var sc = angular.module('stellarClient');
  The StellarNetwork service is used to communicate with the Stellar network.
 
  @namespace  StellarNetwork */
-sc.factory('StellarNetwork', function($rootScope, $timeout) {
+sc.factory('StellarNetwork', function($rootScope, $timeout, $q) {
 
     var self   = {};
     self.remote    = null;
@@ -40,6 +40,29 @@ sc.factory('StellarNetwork', function($rootScope, $timeout) {
     self.shutdown = function () {
         self.remote.disconnect();
         // self.remote = null;
+    };
+
+    self.request = function (method, params) {
+        //TODO: throw a better error
+        if (!self.remote) { throw new Error("Network is not initialized"); }
+        var req = new stellar.Request(self.remote, method);
+
+        // fold the params into the message object
+        _.extend(req.message, params);
+
+        var deferred = $q.defer();
+
+        req.on('success', function(response) {
+            deferred.resolve(response);
+        });
+
+        req.on('error', function (response) {
+            return deferred.reject(response);
+        });
+
+        req.request();
+
+        return deferred.promise;
     };
 
     return self;

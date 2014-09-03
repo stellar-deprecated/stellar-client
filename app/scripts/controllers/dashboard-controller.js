@@ -80,22 +80,14 @@ sc.controller('DashboardCtrl', function($rootScope, $scope, $timeout, $state, se
     // Account lines only need authorization when authorized is defined and set to false.
     $scope.accountLineNeedsAuth = function(accountLine) {
         return _.has(accountLine, 'authorized') && accountLine.authorized;
-    }
+    };
 
     function fetchCurrencies() {
-        var remote = StellarNetwork.remote;
-        var accountLinesRequest = remote.request_account_lines({
-            'account': session.get('address')
-        });
-
-        accountLinesRequest.on('success', function(result) {
-            $scope.$apply(function() {
+        StellarNetwork.request('account_lines', { 'account': session.get('address') })
+            .then(function(result) {
                 processAccountLines(result.lines);
             });
-        });
-
-        accountLinesRequest.request();
-    };
+    }
 
     function processAccountLines(accountLines) {
         $scope.accountLines = accountLines;
