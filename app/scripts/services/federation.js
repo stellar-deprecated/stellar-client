@@ -8,14 +8,14 @@
  * we have a network-internal nickname system.
  */
 
-var module = angular.module('stellarClient');
+var sc = angular.module('stellarClient');
 
-module.factory('rpFederation', ['$q', '$rootScope', '$http', 'rpStellarTxt',
+sc.factory('rpFederation', ['$q', '$rootScope', '$http', 'rpStellarTxt',
         function ($q, $scope, $http, $txt) {
     var txts = {};
 
-    function check_email(email) {
-        if (email.indexOf('@') == -1) {
+    function checkEmail(email) {
+        if (email.indexOf('@') === -1) {
             email = email + '@' + Options.DEFAULT_FEDERATION_DOMAIN;
         }
 
@@ -101,6 +101,6 @@ module.factory('rpFederation', ['$q', '$rootScope', '$http', 'rpStellarTxt',
     }
 
     return {
-        check_email: check_email
+        checkEmail: checkEmail
     };
 }]);

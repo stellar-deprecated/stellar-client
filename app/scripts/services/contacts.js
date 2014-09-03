@@ -108,7 +108,7 @@ sc.service('contacts', function($q, rpFederation, rpReverseFederation) {
     if (contact && contact.dateCached < Date.now() - Options.MAX_CONTACT_AGE) {
       deferred.resolve(contact);
     } else {
-      rpFederation.check_email(email)
+      rpFederation.checkEmail(email)
         .then(function (result) {
           if (result) {
             // Add the reverse federation info to the user's wallet.
