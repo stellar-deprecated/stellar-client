@@ -42,6 +42,10 @@ body {
   font-weight: $medium-weight;
 }
 
+a {
+    cursor: pointer;
+}
+
 .app-wrapper{
   display: -webkit-box;
   display: -ms-flexbox;
