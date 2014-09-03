@@ -257,7 +257,7 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, s
 
     // updates the paths the user can use to send
     function processNewPaths(result) {
-        $scope.send.paths = _.map(result.alternatives, function (raw, key) {
+        var newPaths = _.map(result.alternatives, function (raw, key) {
             var path = {};
             path.amount = Amount.from_json(raw.source_amount);
             path.rate = path.amount.ratio_human($scope.send.amount);
@@ -277,7 +277,12 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, s
 
         if ($scope.send.amount.is_native() && !overspend) {
             var path = createNativePath($scope.send.amount);
-            $scope.send.paths.unshift(path);
+            newPaths.unshift(path);
+        }
+
+        // Only update the paths if it has changed
+        if (!angular.equals(newPaths, $scope.send.paths)) {
+            $scope.send.paths = newPaths;
         }
     }
 
