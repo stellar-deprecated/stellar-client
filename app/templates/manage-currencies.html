@@ -39,19 +39,8 @@
         </div>
     </div>
 
-    <div class="alert alert-success alert-dismissable" ng-show="addedGatewayDomain">
-        <button type="button" class="close" ng-click="hideAddAlert()">
-            <i class="icon icon-close" aria-hidden="true" />
-        </button>
-        Successfully added {{addedGatewayDomain}}
-    </div>
-
-    <div class="alert alert-success alert-dismissable" ng-show="removedGatewayDomain">
-        <button type="button" class="close" ng-click="hideRemoveAlert()" >
-            <i class="icon icon-close" aria-hidden="true" />
-        </button>
-        Successfully removed {{removedGatewayDomain}}
-    </div>
+    <alert type="success" dismissible="true" ng-show="addedGatewayDomain" dismiss-click="hideAddAlert()">Successfully added {{addedGatewayDomain}}</alert>
+    <alert type="success" dismissible="true" ng-show="removedGatewayDomain" dismiss-click="hideRemoveAlert()">Successfully removed {{removedGatewayDomain}}</alert>
 
     <div class="gateways row">
         <ng-include src="'templates/gateways.html'" />

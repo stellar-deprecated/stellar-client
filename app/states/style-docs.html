@@ -5,12 +5,13 @@
 
         <h2>Directives</h2>
         <h3>Alerts</h3>
-            <p>The alerts directive creates an alert. It generates the same markup as <a href="http://getbootstrap.com/components/#alerts">bootstrap alerts</a>.</p>
+            <p>The alerts directive creates an alert. It generates almost the same markup as <a href="http://getbootstrap.com/components/#alerts">bootstrap alerts</a>.</p>
 
             <p>Options:</p>
             <ul>
-                <li>type (required): success, info, warning, danger
-                <li>dismissible (optional | defaults to false): true, false
+                <li>type (string, required): success, info, warning, danger</li>
+                <li>dismissible (string, optional | defaults to false): true, false</li>
+                <li>dismiss-click (expression, optional): Overrides the default functionality of removing the DOM when the dismiss button is clicked. The default removes the whole directive from DOM.</li>
             </ul>
 
             <h4>HTML source (AngularJS directive)</h4>
@@ -18,7 +19,8 @@
 &#x3C;alert type=&#x22;info&#x22;&#x3E;Info&#x3C;/alert&#x3E;
 &#x3C;alert type=&#x22;warning&#x22;&#x3E;Warning&#x3C;/alert&#x3E;
 &#x3C;alert type=&#x22;danger&#x22;&#x3E;Danger&#x3C;/alert&#x3E;
-&#x3C;alert type=&#x22;info&#x22; dismissible=&#x22;true&#x22;&#x3E;Dismissible&#x3C;/alert&#x3E;</code></pre></div>
+&#x3C;alert type=&#x22;info&#x22; dismissible=&#x22;true&#x22;&#x3E;Dismissible&#x3C;/alert&#x3E;
+&#x3C;alert type=&#x22;success&#x22; dismiss-click=&#x22;customFunctionality()&#x22;&#x3E;Dismissible with ngClick callback on the dismiss button&#x3C;/alert&#x3E;</code></pre></div>
 
             <h4>Output</h4>
             <alert type="success">Success</alert>
@@ -26,6 +28,7 @@
             <alert type="warning">Warning</alert>
             <alert type="danger">Danger</alert>
             <alert type="info" dismissible="true">Dismissible</alert>
+            <alert type="success" dismiss-click="customFunctionality()">Dismissible with ngClick callback on the dismiss button</alert>
 
     </div>
 </div>
