@@ -3,17 +3,15 @@
 var sc = angular.module('stellarClient');
 
 sc.controller('SettingsInflationDestCtrl', function($scope, $q, session, singletonPromise, contacts, stNetwork) {
-  $scope.inflationDest = $scope.account.InflationDest;
-  $scope.newInflationDest = '';
-  $scope.changing = false;
-
-  $scope.$on('settings-refresh', $scope.reset);
-
   $scope.reset = function () {
     $scope.inflationDest = $scope.account.InflationDest;
     $scope.newInflationDest = '';
     $scope.changing = false;
   };
+
+  $scope.reset();
+
+  $scope.$on('settings-refresh', $scope.reset);
 
   $scope.change = function () {
     $scope.changing = true;
