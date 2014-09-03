@@ -71,6 +71,12 @@ sc.controller('SettingsCtrl', function($scope, $http, $state, session, singleton
       click: toggleRewards,
       on: wallet.get('mainData', 'showRewards', true),
       wrapper: angular.element('#rewardstoggle')
+    },
+    trading: {
+      NAME: "trading",
+      click: toggleTrading,
+      on: wallet.get('mainData', 'showTrading', false),
+      wrapper: angular.element('#tradingtoggle')
     }
   }
 
@@ -85,6 +91,10 @@ sc.controller('SettingsCtrl', function($scope, $http, $state, session, singleton
 
   function toggleRewards(showRewardsToggle) {
     return toggleWalletSetting(showRewardsToggle, 'showRewards');
+  }
+
+  function toggleTrading(showTradingToggle) {
+    return toggleWalletSetting(showTradingToggle, 'showTrading');
   }
 
   var toggleRequestData = {
