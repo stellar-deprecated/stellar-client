@@ -23,7 +23,15 @@ sc.controller('SettingsInflationDestCtrl', function($scope, $q, session, singlet
 
   $scope.update = singletonPromise(function() {
     return getAddress($scope.newInflationDest)
-      .then(setInflationDest)
+      .then(function(address) {
+        var tx = $scope.setInflationDest(address);
+        var deferred = $q.defer();
+
+        tx.on('success', deferred.resolve);
+        tx.on('error', deferred.reject);
+
+        return deferred.promise;
+      })
       .then(function () {
         $scope.reset();
       })
@@ -48,20 +56,5 @@ sc.controller('SettingsInflationDestCtrl', function($scope, $q, session, singlet
           });
         });
     }
-  }
-
-  function setInflationDest(address) {
-    var deferred = $q.defer();
-
-    var tx = stNetwork.remote.transaction();
-    tx.accountSet(session.get('address'));
-    tx.inflationDest(address);
-
-    tx.on('success', deferred.resolve);
-    tx.on('error', deferred.reject);
-
-    tx.submit();
-
-    return deferred.promise;
   }
 });

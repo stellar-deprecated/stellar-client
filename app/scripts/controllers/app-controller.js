@@ -133,12 +133,18 @@ sc.controller('AppCtrl', function($scope, $rootScope, stNetwork, session, $state
 
         if (!account.InflationDest && account.InflationDest !== Options.INFLATION_DEST &&
             Math.floor(account.Balance/1000000) === Math.floor((account.Balance-20)/1000000)) {
-          var tx = stNetwork.remote.transaction();
-          tx = tx.accountSet(account.Account);
-          tx.inflationDest(Options.INFLATION_DEST);
-
-          tx.submit();
+            $scope.setInflationDest(Options.INFLATION_DEST);
         }
     }
+
+    $scope.setInflationDest = function(address) {
+        var tx = stNetwork.remote.transaction();
+        tx.accountSet($scope.account.Account);
+        tx.inflationDest(address);
+
+        tx.submit();
+
+        return tx;
+    };
 
 });
