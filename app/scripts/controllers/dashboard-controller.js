@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('DashboardCtrl', function($rootScope, $scope, $timeout, $state, session, TutorialHelper, stNetwork, contacts) {
+sc.controller('DashboardCtrl', function($rootScope, $scope, $timeout, $state, session, TutorialHelper, StellarNetwork, contacts) {
     $rootScope.tab = 'none';
     $rootScope.showTab = false;
 
@@ -83,7 +83,7 @@ sc.controller('DashboardCtrl', function($rootScope, $scope, $timeout, $state, se
     }
 
     function fetchCurrencies() {
-        var remote = stNetwork.remote;
+        var remote = StellarNetwork.remote;
         var accountLinesRequest = remote.request_account_lines({
             'account': session.get('address')
         });

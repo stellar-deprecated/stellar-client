@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('SendController', function($rootScope, $scope, stNetwork) {
+sc.controller('SendController', function($rootScope, $scope, StellarNetwork) {
     $scope.send = {};
     // The stellar account we're sending to.
     $scope.send.destination = {};
@@ -151,7 +151,7 @@ sc.controller('SendController', function($rootScope, $scope, stNetwork) {
         var destination = $scope.send.destination;
         var amount = $scope.send.amount;
 
-        var tx = stNetwork.remote.transaction();
+        var tx = StellarNetwork.remote.transaction();
         tx.payment($rootScope.account.Account, destination.address, amount.to_json());
 
         if (destination.destinationTag) {

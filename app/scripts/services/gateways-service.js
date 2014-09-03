@@ -1,6 +1,6 @@
 var sc = angular.module('stellarClient');
 
-sc.service('Gateways', function($q, session, stNetwork, rpStellarTxt) {
+sc.service('Gateways', function($q, session, StellarNetwork, rpStellarTxt) {
 
   /** @namespace */
   var Gateways = {};
@@ -116,7 +116,7 @@ sc.service('Gateways', function($q, session, stNetwork, rpStellarTxt) {
     var deferred = $q.defer();
     var limit    = _.extend({value: value}, currency);
 
-    var tx = stNetwork.remote.transaction();
+    var tx = StellarNetwork.remote.transaction();
     tx.trustSet(session.get('address'), limit);
     tx.setFlags('NoRipple');
 
@@ -142,7 +142,7 @@ sc.service('Gateways', function($q, session, stNetwork, rpStellarTxt) {
     var deferred = $q.defer();
 
     var opts = {account: currency.issuer};
-    var accountLinesRequest = stNetwork.remote.request_account_info(opts, function(err, result) {
+    var accountLinesRequest = StellarNetwork.remote.request_account_info(opts, function(err, result) {
       if (result) {
         currency.requireAuth = !!(result.account_data.Flags & stellar.Transaction.flags.AccountSet.RequireAuth);
       }

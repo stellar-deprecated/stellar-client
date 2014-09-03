@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, stNetwork, contacts, whileValid) {
+sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, StellarNetwork, contacts, whileValid) {
 
     // This object holds the raw send form data entered by the user.
     $scope.sendFormModel = {};
@@ -157,7 +157,7 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, s
         var deferred = $q.defer();
 
         // Check allowed currencies for this address
-        stNetwork.remote.request_account_currencies($scope.send.destination.address)
+        StellarNetwork.remote.request_account_currencies($scope.send.destination.address)
             .on('success', function (data) {
                 if (data.receive_currencies) {
                     $scope.$apply(function () {
@@ -235,7 +235,7 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, s
         }
         $scope.send.pathStatus = "pending";
         // Start path find
-        var findpath = stNetwork.remote.path_find($rootScope.account.Account, $scope.send.destination.address, $scope.send.amount);
+        var findpath = StellarNetwork.remote.path_find($rootScope.account.Account, $scope.send.destination.address, $scope.send.amount);
         $scope.send.findpath = findpath;
         findpath.on('update', function (result) {
             if (inputHasChanged()) {
@@ -288,7 +288,7 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, s
     function resolveStellarAccount(address) {
         var deferred = $q.defer();
 
-        var account = stNetwork.remote.account(address);
+        var account = StellarNetwork.remote.account(address);
         account.entry(function (err, data) {
             if (inputHasChanged()) {
                 deferred.reject("not-current");

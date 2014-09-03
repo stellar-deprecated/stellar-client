@@ -7,7 +7,7 @@ var sc = angular.module('stellarClient');
     waits for:
      walletAddressLoaded
  */
-sc.controller('AppCtrl', function($scope, $rootScope, stNetwork, session, $state, $element, $timeout, FlashMessages, ActionLink, Gateways) {
+sc.controller('AppCtrl', function($scope, $rootScope, StellarNetwork, session, $state, $element, $timeout, FlashMessages, ActionLink, Gateways) {
     $scope.$on('userLoaded', function () {
         $scope.getSentInvites = function () {
             return session.getUser() && session.getUser().getSentInvites().length;
@@ -34,7 +34,7 @@ sc.controller('AppCtrl', function($scope, $rootScope, stNetwork, session, $state
 
     $scope.$on('$netConnected', handleAccountLoad);
     $scope.$on('walletAddressLoaded', function() {
-        if (stNetwork.connected) {
+        if (StellarNetwork.connected) {
             handleAccountLoad();
         }
     });
@@ -51,7 +51,7 @@ sc.controller('AppCtrl', function($scope, $rootScope, stNetwork, session, $state
     }
 
     function handleAccountLoad() {
-        var remote = stNetwork.remote;
+        var remote = StellarNetwork.remote;
         var keys = session.get('signingKeys');
         if(!keys) {
             return;
@@ -98,7 +98,7 @@ sc.controller('AppCtrl', function($scope, $rootScope, stNetwork, session, $state
     };
 
     function handleAccountEntry(data) {
-        var remote = stNetwork.remote;
+        var remote = StellarNetwork.remote;
         $rootScope.account = data;
 
         // As per json wire format convention, real ledger entries are CamelCase,
@@ -135,7 +135,7 @@ sc.controller('AppCtrl', function($scope, $rootScope, stNetwork, session, $state
          */
         if (!account.InflationDest && account.InflationDest !== Options.INFLATION_DEST &&
             Math.floor(account.Balance/1000000) === Math.floor((account.Balance-20)/1000000)) {
-          var tx = stNetwork.remote.transaction();
+          var tx = StellarNetwork.remote.transaction();
           tx = tx.accountSet(account.Account);
           tx.inflationDest(Options.INFLATION_DEST);
 
