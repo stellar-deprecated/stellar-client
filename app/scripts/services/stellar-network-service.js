@@ -1,14 +1,10 @@
-
-/**
- * NETWORK
- *
- * The network service is used to communicate with the Ripple network.
- *
- * It encapsulates a ripple.Remote instance.
- */
-
 var sc = angular.module('stellarClient');
 
+/**
+ 
+ The StellarNetwork service is used to communicate with the Stellar network.
+
+ @namespace  StellarNetwork */
 sc.factory('StellarNetwork', function($rootScope, $timeout) {
 
     var self   = {};
