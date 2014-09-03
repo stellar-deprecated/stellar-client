@@ -32,7 +32,7 @@ sc.controller('AppCtrl', function($scope, $rootScope, StellarNetwork, session, $
         return session.get('loggedIn') ? '#/' : 'http://www.stellar.org';
     }
 
-    $scope.$on('$netConnected', handleAccountLoad);
+    $scope.$on('stellar-network:connected', handleAccountLoad);
     $scope.$on('walletAddressLoaded', function() {
         if (StellarNetwork.connected) {
             handleAccountLoad();

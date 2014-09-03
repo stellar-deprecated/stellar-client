@@ -15,7 +15,7 @@ sc.factory('StellarNetwork', function($rootScope, $timeout) {
         $timeout(function () {
             self.connected = false;
             $rootScope.connected = false;
-            $rootScope.$broadcast('$netDisconnected');
+            $rootScope.$broadcast('stellar-network:disconnected');
         });
     };
 
@@ -26,7 +26,7 @@ sc.factory('StellarNetwork', function($rootScope, $timeout) {
             self.remote._reserve_inc=10*1000000;
 
             $rootScope.connected = true;
-            $rootScope.$broadcast('$netConnected');
+            $rootScope.$broadcast('stellar-network:connected');
         });
     };
 

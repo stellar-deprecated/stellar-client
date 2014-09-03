@@ -38,7 +38,7 @@ sc.service('transactionHistory', function($rootScope, $q, StellarNetwork, sessio
     if ($rootScope.connected) {
         initHistory();
     } else {
-      $rootScope.$on('$netConnected', function() {
+      $rootScope.$on('stellar-network:connected', function() {
         initHistory();
       });
     }

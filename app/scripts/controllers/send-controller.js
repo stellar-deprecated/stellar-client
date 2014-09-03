@@ -47,7 +47,7 @@ sc.controller('SendController', function($rootScope, $scope, StellarNetwork) {
     };
 
     // global notifications
-    $scope.$on('$netConnected', function(){
+    $scope.$on('stellar-network:connected', function(){
         if ($scope.send.state === "disconnected") {
             $scope.setState("form");
         }
