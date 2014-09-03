@@ -10,8 +10,8 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, s
     $scope.sendFormModelCopy = {};
 
     // Populate the send form with parameters from the send action.
-    $rootScope.$on('action-send', function(event, params){
-        $rootScope.openSend();
+    $scope.$on('action-send', function(event, params){
+        $scope.openSend();
 
         $scope.sendFormModel.recipient = params.dest;
         $scope.send.destination.destinationTag = params.dt;

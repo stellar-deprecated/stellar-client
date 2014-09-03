@@ -4,6 +4,14 @@ sc.controller('AddGatewayCtrl', function($scope, $q, session, singletonPromise, 
   // INHERITED FROM ManageCurrenciesCtrl
   // $scope.gateways
 
+  // Populate the add gateway form with parameters from the add-gateway action.
+  $scope.$on('action-add-gateway', function(event, params){
+    $scope.openManageCurrencies();
+
+    $scope.gatewaySearch = params.domain;
+    $scope.loadCurrencies();
+  });
+
   $scope.resetSearch = function() {
     $scope.gatewaySearch = '';
     $scope.searchStatus  = '';
