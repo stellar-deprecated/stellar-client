@@ -8,14 +8,14 @@ module.directive('alert', function() {
       dismissClick: '&'
     },
     compile: function(element, attrs) {
-    	if (typeof attrs.dismissClick !== 'undefined') {
-    		attrs.dismissible = 'true';
-    	} else {
-    		// Create a default dismiss handler
-    		attrs.dismissClick = function() {
-		  		element.remove();
-		  	}
-    	}
+      if (typeof attrs.dismissClick !== 'undefined') {
+        attrs.dismissible = 'true';
+      } else {
+        // Create a default dismiss handler
+        attrs.dismissClick = function() {
+          element.remove();
+        }
+      }
     },
     templateUrl: 'templates/alert.html'
   }
