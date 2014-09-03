@@ -5,7 +5,8 @@ var sc = angular.module('stellarClient');
 sc.controller('TransactionHistoryCtrl', function($scope, transactionHistory) {
   $scope.typeIcons = {
     'sent': 'icon icon-send',
-    'received': 'icon icon-receive'
+    'received': 'icon icon-receive',
+    'exchange': 'icon icon-exchange'
   };
 
   $scope.$on("transactionHistory.historyUpdated", updateTransactionPage);
