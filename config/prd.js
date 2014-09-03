@@ -23,6 +23,7 @@ var Options = {
 
     PERSISTENT_SESSION : false,
     IDLE_LOGOUT_TIMEOUT : 30 * 60 * 1000, //15 minutes
+    COOKIE_SECURE: true,
 
     REPORT_ERRORS : true,
     SENTRY_DSN : "https://5c08986e949742d2bb29e1ffac78e50a@app.getsentry.com/26645",

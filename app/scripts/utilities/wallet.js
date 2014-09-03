@@ -257,7 +257,7 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
     var encryptedWalletKey = Wallet.encryptData(this.key, loginWalletKey);
 
     catchAndSwallowSecurityErrors(function() {
-      ipCookie("localWalletKey", loginWalletKey, {expires:Options.IDLE_LOGOUT_TIMEOUT/1000, expirationUnit:'seconds'});
+      ipCookie("localWalletKey", loginWalletKey, {expires:Options.IDLE_LOGOUT_TIMEOUT/1000, expirationUnit:'seconds', secure: Options.COOKIE_SECURE});
       localStorage.encryptedWalletKey = encryptedWalletKey;
       localStorage.wallet             = Wallet.encryptData(self, sjcl.codec.hex.toBits(self.key));
       sessionStorage.wallet           = JSON.stringify(self);
@@ -268,7 +268,7 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
   Wallet.prototype.bumpLocalTimeout = function() {
     //TODO: push the cookie timeout foreward
     catchAndSwallowSecurityErrors(function() {
-      ipCookie("localWalletKey", ipCookie("localWalletKey"), {expires:Options.IDLE_LOGOUT_TIMEOUT/1000, expirationUnit:'seconds'});
+      ipCookie("localWalletKey", ipCookie("localWalletKey"), {expires:Options.IDLE_LOGOUT_TIMEOUT/1000, expirationUnit:'seconds', secure: Options.COOKIE_SECURE});
     });
   };
 
@@ -405,8 +405,25 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
     }
 
     return deferred.promise
+      .then(function(wallet) {
+        return fixMissingUsername(wallet, username);
+      })
       .then(enforceCorrectAddress);
   };
+
+  /**
+   * A small number of wallets had their mainData truncated, and when it was rebuilt
+   * the username was missing, because it was only added during registration.
+   * Update mainData with the username used at login if it is missing.
+   * https://github.com/stellar/stellar-client/issues/594
+   */
+  function fixMissingUsername(wallet, username) {
+    if(!wallet.mainData.username) {
+      wallet.mainData.username = username;
+    }
+
+    return $q.when(wallet);
+  }
 
   /**
    * A small number of wallets got into a state where the stored address did

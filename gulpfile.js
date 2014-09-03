@@ -8,17 +8,18 @@ var git         = require('git-rev');
 var karma       = require('karma').server;
 var _           = require('lodash');
 var fs          = require('fs');
+var runSequence = require('run-sequence');
 
 // load plugins
 var $ = require('gulp-load-plugins')();
 
 
 //composite tasks
-gulp.task('default', ['clean'], function () {
-    gulp.start('build');
-});
+gulp.task('default', ['build']);
 gulp.task('develop', ['watch']);
-gulp.task('build',   ['html', 'images', 'fonts']);
+gulp.task('build', function(done) {
+  runSequence('clean', ['html', 'images', 'fonts'], done);
+});
 gulp.task('dist',    ['build']);
 gulp.task('scripts', ['scripts:lint', 'scripts:templateCache', 'scripts:unminified']);
 
@@ -85,7 +86,7 @@ gulp.task('html', ['config', 'styles', 'scripts', 'flash'], function (done) {
         var jsFilter = $.filter('**/*.js');
         var cssFilter = $.filter('**/*.css');
 
-        gulp.src('app/**/*.html')
+        gulp.src(['app/**/*.html', '!app/bower_components/**/*.html'])
             .pipe($.useref.assets({
                 searchPath: ['.tmp', 'app']
             }))
