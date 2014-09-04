@@ -50,13 +50,18 @@
                 <a class="navbar-brand" ng-href="{{getLogoLink()}}">STELLAR</a>
             </div>
             <div class="collapse navbar-collapse" id="navbar">
-                <ul class="nav navbar-nav navbar-right" ng-hide="session.get('loggedIn')">
+                <ul class="nav navbar-nav navbar-right" ng-if="!session.get('loggedIn')">
                     <li><a href="#/login" ui-sref="login">LOG IN</a></li>
                     <li><a href="#/register" ui-sref="register" class="sign-up">SIGN UP</a></li>
                 </ul>
 
-                <ul class="nav navbar-nav navbar-right ng-hide" ng-show="session.get('loggedIn')">
-                    <li><a href="#/invites" ng-show="getInvitesLeft() || getSentInvites()" ng-class="getInvitesClass()"><span>invite ({{getInvitesLeft()}})</span></a></li>
+                <ul class="nav navbar-nav navbar-right" ng-if="session.get('loggedIn')">
+                    <li ng-show="getInvitesLeft() || getSentInvites()">
+                        <a href="#/invites" ng-class="getInvitesClass()">
+                            <span>invite ({{ getInvitesLeft() }})</span>
+                        </a>
+                    </li>
+                    <li ng-show="showTradingLink()"><a href="#/trading">trade</a></li>
                     <li><a href="#/settings"><span class="glyphicon glyphicon-cog"></span>{{ session.get('username') }}</a></li>
                     <li><a href="#/logout" ui-sref="logout"><span class="glyphicon glyphicon-log-out"></span>LOG OUT</a></li>
                 </ul>
