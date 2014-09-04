@@ -95,9 +95,7 @@ stellarClient.run(function($location, $state, ipCookie){
     }
 });
 
-stellarClient.run(function($rootScope, $state, ipCookie, session, FlashMessages, invites){
-  $rootScope.balance = 'loading...';
-
+stellarClient.run(function($rootScope, $state, $timeout, ipCookie, session, FlashMessages){
   $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){
 
     switch(toState.name){
@@ -105,21 +103,17 @@ stellarClient.run(function($rootScope, $state, ipCookie, session, FlashMessages,
       case 'login':
         // If the user has persistent login enabled, try to login from local storage.
         if(session.isPersistent() && !session.get('loggedIn')) {
+          var wallet = session.getWalletFromStorage();
 
-          session.loginFromStorage($rootScope);
-
-          if(session.get('loggedIn')){
-            if(toParams.inviteCode) {
-              invites.claim(toParams.inviteCode)
-              .success(function (response) {
-                $rootScope.$broadcast('invite-claimed');
-              });
-            }
-            $state.transitionTo('dashboard');
-
+          if(wallet) {
             // Prevent the original destination state from loading.
             event.preventDefault();
-            return;
+
+            // HACK: Timout logging in from local storage to allow all the controllers to load.
+            $timeout(function() {
+              session.login(wallet);
+              $state.transitionTo('dashboard');
+            }, 0);
           }
         }
         break;
