@@ -33,6 +33,7 @@ sc.controller('AppCtrl', function($scope, $rootScope, StellarNetwork, session, $
     }
 
     $scope.$on('stellar-network:connected', handleAccountLoad);
+
     $scope.$on('walletAddressLoaded', function() {
         if (StellarNetwork.connected) {
             handleAccountLoad();
