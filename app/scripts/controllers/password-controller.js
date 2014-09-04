@@ -20,9 +20,9 @@ sc.controller('PasswordCtrl', function($scope, passwordStrengthComputations, bad
     weight: 100,
     strength: function(password){
       var minLength = 8;
-      if(password.length < minLength/2) return 25;
-      if(password.length < minLength) return 50;
-      if(password.length < 2*minLength) return 75;
+      if(password.length < minLength/2) { return 25; }
+      if(password.length < minLength)   { return 50; }
+      if(password.length < 2*minLength) { return 75; }
       return 100;
     }
   };
@@ -30,16 +30,16 @@ sc.controller('PasswordCtrl', function($scope, passwordStrengthComputations, bad
   passwordStrengthComputations.aspects.sameAsUsername = {
     weight: 1,
     strength: function(password) {
-      return $scope.data.username === password ? -1000 : 0
+      return $scope.data.username === password ? -1000 : 0;
     }
-  }
+  };
 
   passwordStrengthComputations.aspects.dictionary = {
     weight: 1,
     strength: function(password) {
-      return badPasswords.contains(password) ? -1000 : 0
+      return badPasswords.contains(password) ? -1000 : 0;
     }
-  }
+  };
 
   $scope.checkPassword = function(){
     $scope.errors.passwordErrors = [];
@@ -50,30 +50,31 @@ sc.controller('PasswordCtrl', function($scope, passwordStrengthComputations, bad
   $scope.checkConfirmPassword = function(){
     $scope.status.passwordConfirmValid = ($scope.data.password === $scope.data.passwordConfirmation);
 
-    if($scope.status.passwordConfirmValid) $scope.errors.passwordConfirmErrors = [];
+    if($scope.status.passwordConfirmValid) {
+      $scope.errors.passwordConfirmErrors = [];
+    }
   };
 
   $scope.passwordClass = function(){
-    if($scope.status.passwordValid) return 'glyphicon-ok';
-    else return 'glyphicon-none';
+    return $scope.status.passwordValid ? 'glyphicon-ok' : 'glyphicon-none';
   };
 
   $scope.confirmPasswordClass = function(){
-    if($scope.status.passwordConfirmValid) return 'glyphicon-ok';
-    else {
+    if($scope.status.passwordConfirmValid) {
+      return 'glyphicon-ok';
+    } else {
       var passwordPrefix = $scope.data.password.slice(0, $scope.data.passwordConfirmation.length);
-      if ($scope.data.passwordConfirmation != passwordPrefix) return 'glyphicon-remove';
-      else return 'glyphicon-none';
+      return $scope.data.passwordConfirmation !== passwordPrefix ? 'glyphicon-remove' : 'glyphicon-none';
     }
   };
 
   $scope.passwordStrength = function(){
-    if(!$scope.data.password) return '';
+    if(!$scope.data.password) { return ''; }
 
     var strength = passwordStrengthComputations.getStrength($scope.data.password);
-    if(strength < 25) return 'WEAK';
-    if(strength < 50) return 'ALMOST';
-    if(strength < 75) return 'GOOD';
+    if(strength < 25) { return 'WEAK'; }
+    if(strength < 50) { return 'ALMOST'; }
+    if(strength < 75) { return 'GOOD'; }
     return 'STRONG';
   };
 
