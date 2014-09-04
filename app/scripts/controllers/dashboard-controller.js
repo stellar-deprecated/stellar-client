@@ -11,6 +11,11 @@ sc.controller('DashboardCtrl', function($rootScope, $scope, $timeout, $state, se
     $scope.username = session.get('username');
     $scope.tutorials = TutorialHelper;
 
+    $scope.typeIcons = {
+        'sent':     'icon icon-send',
+        'received': 'icon icon-receive'
+    };
+
     $rootScope.closePane = function(){
       $rootScope.showTab = false;
     };
@@ -39,7 +44,7 @@ sc.controller('DashboardCtrl', function($rootScope, $scope, $timeout, $state, se
 
     // Show a notification when new transactions are received.
     $scope.$on('$appTxNotification', function(event, tx){
-        if (tx.type == 'received') {
+        if (tx.type == 'received' || tx.type == 'sent') {
             $scope.showTransaction = true;
             $scope.newTransaction = tx;
 
