@@ -90,9 +90,8 @@ gulp.task('scripts:docs', function() {
     .pipe($.jsdoc.generator('./api-docs', {
         path: 'ink-docstrap',
         systemName: "Stellar Client",
-        theme: 'flatly',
-        linenums: true,
-        collapseSymbols: true
+        theme: 'flatly', //TODO: make a stellar theme to match our visual style
+        linenums: true
     }));
 });
 
@@ -192,7 +191,9 @@ gulp.task('connect', function () {
         .use(require('connect-livereload')({ port: 35729 }))
         .use(connect.static('app'))
         .use(connect.static('.tmp'))
-        .use(connect.directory('app'));
+        .use(connect.directory('app'))
+        .use('/api-docs', connect.static('api-docs'))
+        .use('/api-docs', connect.directory('api-docs'));
 
     require('http').createServer(app)
         .listen(8000)
@@ -230,6 +231,7 @@ gulp.task('watch', ['ensure_config', 'connect', 'serve'], function () {
 
     gulp.watch([
         'app/*.html',
+        'api-docs/*.html',
         '.tmp/styles/**/*.css',
         'app/scripts/**/*.js',
         '.tmp/scripts/**/*.js',
