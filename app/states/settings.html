@@ -70,6 +70,52 @@
                         <span id="federatetoggle" class="error-block" data-toggle="tooltip" data-placement="right" data-template='<div class="tooltip error-tip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>' st-toggle ctrl="toggle.rewards"></span>
                     </div>
                 </div>
+                <div class="row" ng-controller="SettingsInflationDestCtrl">
+                    <div class="settings-label col-md-3 col-xs-6">INFLATION DESTINATION</div>
+                    <div class="settings-control col-md-9 col-xs-6">
+                        <div class="row">
+                            <div class="icon-col col-xs-1">
+                                <span class="icon icon-heart"/>
+                            </div>
+                            <div ng-hide="canPayFee()" class="col-xs-10">
+                                Your account must be funded before setting the inflation destination.
+                            </div>
+                            <div ng-show="canPayFee()">
+                                <div ng-hide="changing">
+                                    <!-- User hasn't added an inflaition dest yet -->
+                                    <div class="col-xs-10" ng-hide="inflationDest">
+                                        <a href="" ng-click="change()">Add an inflation destination</a>
+                                    </div>
+                                    <!-- Show current inflation dest -->
+                                    <div class="col-xs-10" ng-show="inflationDest">
+                                        <div>
+                                            <span class="change-inflation-dest-control">{{ inflationDest | addressToUsername }}</span>
+                                        </div>
+                                        <div class="secondary-action">
+                                            <a href="" ng-click="change()">Change inflation destination</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Input layout (for add/change inflation dest) -->
+                                <div class="col-xs-10" ng-show="changing">
+                                    <div class="row">
+                                        <div class="col-md-5 col-xs-12">
+                                            <input id="inflation-dest-input" data-toggle="tooltip" placeholder="Inflation Destination" type="text" class="form-control" ng-model="newInflationDest"></input>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4 col-xs-12 col-md-push-1">
+                                            <button class="btn btn-default stellar-button settings-confirm-button" ng-click="update()">{{ update.isLoading() ? "Loading..." : "Set" }}</button>
+                                        </div>
+                                        <div class="settings-cancel-button col-md-1 col-xs-1 col-md-pull-4">
+                                            <a href="" ng-click="reset()">Cancel</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="settings-section">

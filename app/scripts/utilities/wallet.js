@@ -5,6 +5,15 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
     'QuotaExceededError'
   ]);
 
+  /**
+   * The Wallet class provides functionality for interacting with the stellar-wallet
+   * service.  It provides the means to create and sync an encrypted wallet blob
+   * with the service, as well as the logic to encrypt and decrypt the data
+   * returned by the service.
+   * 
+   * @namespace Wallet
+   * @class
+   */
   var Wallet = function(options){
     this.id = options.id;
     this.key = options.key;
@@ -33,6 +42,8 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
    * @param {string} key
    *
    * @returns {Wallet}
+   * @memberOf Wallet
+   * @static
    */
   Wallet.decrypt = function(encryptedWallet, id, key){
     var rawKey = sjcl.codec.hex.toBits(key);
@@ -71,6 +82,8 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
    * @param {string} serverRecoveryCode
    *
    * @returns {Wallet}
+   * @memberOf Wallet
+   * @static
    */
   Wallet.recover = function(encryptedWallet, recoveryId, userRecoveryCode, serverRecoveryCode){
     var recoveryKey, recoveryData;
@@ -148,6 +161,8 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
    * @param {string} dataSource The name of the dataSource to resolve.
    *
    * @return {object} The data source.
+   * @memberOf Wallet
+   * @private
    */
   Wallet.prototype._getDataSource = function(dataSource) {
     if(!_.has(this, dataSource)) {
@@ -165,6 +180,7 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
    * @param {*} [defaultValue] The value to return if the property is not defined.
    *
    * @return {*} The property or default value.
+   * @memberOf Wallet
    */
   Wallet.prototype.get = function(dataSource, propertyName, defaultValue) {
     var data = this._getDataSource(dataSource);
@@ -179,6 +195,7 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
    * @param {*} value The value to set.
    *
    * @return {Wallet} This wallet.
+   * @memberOf Wallet
    */
   Wallet.prototype.set = function(dataSource, propertyName, value) {
     var data = this._getDataSource(dataSource);
@@ -200,6 +217,7 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
    *
    * @param {string} recoveryId
    * @param {string} recoveryKey
+   * @memberOf Wallet
    */
   Wallet.prototype.createRecoveryData = function(recoveryId, recoveryKey){
     var rawRecoveryKey = sjcl.codec.hex.toBits(recoveryKey);
@@ -218,6 +236,7 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
    * Encrypts the wallet data into a generic object.
    *
    * @returns {object}
+   * @memberOf Wallet
    */
   Wallet.prototype.encrypt = function(){
     var rawKey = sjcl.codec.hex.toBits(this.key);
@@ -241,6 +260,7 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
    * @param {string} action Server expects 'create' or 'update'.
    *
    * returns {Promise}
+   * @memberOf Wallet
    */
   Wallet.prototype.sync = function(action) {
     var url = Options.WALLET_SERVER + '/wallets/' + action;
@@ -308,8 +328,8 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
    *     key: {string}
    *   }
    * }
+   * @memberOf Wallet
    */
-
   Wallet.deriveId = function(username, password){
     var credentials = username.toLowerCase() + password;
     var salt = sjcl.codec.utf8String.toBits(credentials);
@@ -345,6 +365,8 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
   /**
    * This is the old version of deriveKey that is broken, because it concatenates
    * a string with an array for the salt parameter.
+   * 
+   * @memberOf Wallet
    */
   Wallet.deriveKeyBroken = function(id, username, password){
     var credentials = username.toLowerCase() + password;
@@ -371,6 +393,8 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
    * @param {string} password
    *
    * @return {Promise}
+   * @memberOf Wallet
+   * @static
    */
   Wallet.open = function(encryptedWallet, id, username, password){
     var deferred = $q.defer();
@@ -453,6 +477,8 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
    * @param {Array.<bits>} key The key used to encrypt the data.
    *
    * @return {string} The encrypted data encoded as base64.
+   * @memberOf Wallet
+   * @static
    */
   Wallet.encryptData = function(data, key) {
     // Encode data into a JSON byte array.
@@ -487,6 +513,8 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
    *
    * @param {string} encryptedData The encrypted data encoded as base64.
    * @param {Array.<bits>} key The key used to decrypt the blob.
+   * @memberOf Wallet
+   * @static
    */
   Wallet.decryptData = function(encryptedData, key) {
     var rawCipherText, rawIV, cipherName, mode;

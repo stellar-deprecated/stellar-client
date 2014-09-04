@@ -10,3 +10,4 @@ stellar-client.sublime-workspace
 /app/scripts/config.js
 .DS_Store
 *.rdb
+api-docs/
