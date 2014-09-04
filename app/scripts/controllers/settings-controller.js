@@ -71,13 +71,30 @@ sc.controller('SettingsCtrl', function($scope, $http, $state, session, singleton
       click: toggleRewards,
       on: wallet.get('mainData', 'showRewards', true),
       wrapper: angular.element('#rewardstoggle')
+    },
+    trading: {
+      NAME: "trading",
+      click: toggleTrading,
+      on: wallet.get('mainData', 'showTrading', false),
+      wrapper: angular.element('#tradingtoggle')
     }
   }
 
+  function toggleWalletSetting(toggle, settingName) {
+    toggle.on = !toggle.on;
+    wallet.set('mainData', settingName, toggle.on);
+    return session.syncWallet('update')
+      .catch(function() {
+        showError(toggle.wrapper, 'Unable to save setting.');
+      });
+  }
+
   function toggleRewards(showRewardsToggle) {
-    showRewardsToggle.on = !showRewardsToggle.on;
-    wallet.set('mainData', 'showRewards', showRewardsToggle.on);
-    session.syncWallet('update');
+    return toggleWalletSetting(showRewardsToggle, 'showRewards');
+  }
+
+  function toggleTrading(showTradingToggle) {
+    return toggleWalletSetting(showTradingToggle, 'showTrading');
   }
 
   var toggleRequestData = {
