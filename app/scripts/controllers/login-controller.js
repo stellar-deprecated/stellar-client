@@ -69,21 +69,23 @@ sc.controller('LoginCtrl', function($rootScope, $scope, $state, $http, $timeout,
       })
       .error(function(body, status) {
         switch(status) {
-          case 404:
-            $scope.loginError = 'Invalid username or password.';
-            break;
-          case 0:
-            $scope.loginError = 'Unable to contact the server.';
-            break;
-          default:
-            $scope.loginError = 'An error occurred.';
+        case 404:
+          $scope.loginError = 'Invalid username or password.';
+          break;
+
+        case 0:
+          $scope.loginError = 'Unable to contact the server.';
+          break;
+
+        default:
+          $scope.loginError = 'An error occurred.';
         }
       });
   }
 
-  if (sessionStorage['display_reload_message'] === "display") {
+  if (sessionStorage.displayReloadMessage === "display") {
     try {
-      sessionStorage['display_reload_message'] = false;
+      sessionStorage.displayReloadMessage = false;
     } catch (e) {}
     FlashMessages.add({
       title: 'Logout',

@@ -1,5 +1,5 @@
 'use strict';
-var STELLAR_CLIENT_REVISION = '_GIT_REVISION_GOES_HERE_';
+window.STELLAR_CLIENT_REVISION = '_GIT_REVISION_GOES_HERE_';
 
 var stellarClient = angular.module('stellarClient', [
   'angularMoment',
@@ -86,43 +86,43 @@ stellarClient.config(function($httpProvider, $stateProvider, $urlRouterProvider,
 
 stellarClient.run(function($location, $state, ipCookie){
   var atRoot    = _.isEmpty($location.path());
-  var firstTime = !ipCookie("weve_been_here_before")
+  var firstTime = !ipCookie("weve_been_here_before");
   var forceToRegister = atRoot && firstTime;
 
-    if(forceToRegister) {
-      $state.transitionTo('register');
-      ipCookie("weve_been_here_before", "true", {expires: new Date('01 Jan 2030 00:00:00 GMT')})
-    }
+  if(forceToRegister) {
+    $state.transitionTo('register');
+    ipCookie("weve_been_here_before", "true", {expires: new Date('01 Jan 2030 00:00:00 GMT')});
+  }
 });
 
 stellarClient.run(function($rootScope, $state, $timeout, ipCookie, session, FlashMessages){
   $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){
 
-    switch(toState.name){
-      case 'register':
-      case 'login':
-        // If the user has persistent login enabled, try to login from local storage.
-        if(session.isPersistent() && !session.get('loggedIn')) {
-          var wallet = session.getWalletFromStorage();
+    switch(toState.name) {
+    case 'register':
+    case 'login':
+      // If the user has persistent login enabled, try to login from local storage.
+      if(session.isPersistent() && !session.get('loggedIn')) {
+        var wallet = session.getWalletFromStorage();
 
-          if(wallet) {
-            // Prevent the original destination state from loading.
-            event.preventDefault();
+        if(wallet) {
+          // Prevent the original destination state from loading.
+          event.preventDefault();
 
-            // HACK: Timout logging in from local storage to allow all the controllers to load.
-            $timeout(function() {
-              session.login(wallet);
-              $state.transitionTo('dashboard');
-            }, 0);
-          }
+          // HACK: Timout logging in from local storage to allow all the controllers to load.
+          $timeout(function() {
+            session.login(wallet);
+            $state.transitionTo('dashboard');
+          }, 0);
         }
-        break;
+      }
+      break;
 
-      case 'logout':
-        if(session.get('loggedIn')) {
-          session.logout();
-        }
-        break;
+    case 'logout':
+      if(session.get('loggedIn')) {
+        session.logout();
+      }
+      break;
     }
 
     // If the user is navigating to a state that requires authentication
