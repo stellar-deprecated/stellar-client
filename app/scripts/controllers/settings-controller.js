@@ -82,7 +82,7 @@ sc.controller('SettingsCtrl', function($scope, $http, $state, session, singleton
 
   function toggleWalletSetting(toggle, settingName) {
     toggle.on = !toggle.on;
-    wallet.set('mainData', settingName, !toggle.on);
+    wallet.set('mainData', settingName, toggle.on);
     return session.syncWallet('update')
       .catch(function() {
         showError(toggle.wrapper, 'Unable to save setting.');
