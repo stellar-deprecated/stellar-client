@@ -1,3 +1,5 @@
+/* exported SigningKeys */
+
 /**
  * Generates a random stellar wallet or recovers a stellar wallet from its seed.
  *
@@ -18,5 +20,5 @@ var SigningKeys = function(seed){
   return {
     secret: seed.to_json(),
     address: address.to_json()
-  }
+  };
 };
