@@ -18,10 +18,10 @@ var $ = require('gulp-load-plugins')();
 gulp.task('default', ['build']);
 gulp.task('develop', ['watch']);
 gulp.task('build', function(done) {
-  runSequence('clean', ['html', 'images', 'fonts'], done);
+  runSequence('clean', ['html', 'images', 'fonts', 'docs'], done);
 });
 gulp.task('dist',    ['build']);
-gulp.task('scripts', ['scripts:lint', 'scripts:templateCache', 'scripts:unminified']);
+gulp.task('scripts', ['scripts:lint', 'scripts:templateCache', 'scripts:unminified', 'scripts:docs']);
 
 
 //component tasks
@@ -48,7 +48,7 @@ gulp.task('scripts:lint', function () {
 gulp.task('scripts:unminified', ['scripts:templateCache'], function () {
     return gulp.src('app/**/*.html')
         .pipe($.plumber({errorHandler: function(err) {
-          $.util.log($.util.colors.red(err))  
+          $.util.log($.util.colors.red(err));  
         }}))
         .pipe($.useref.assets({
             searchPath: ['.tmp', 'app'],
@@ -57,7 +57,7 @@ gulp.task('scripts:unminified', ['scripts:templateCache'], function () {
         .pipe($.useref.restore())
         .pipe($.filter('**/*.js'))
         .pipe($.ngAnnotate())
-        .pipe(gulp.dest('dist'))
+        .pipe(gulp.dest('dist'));
 });
 
 gulp.task('scripts:templateCache', function() {
@@ -77,7 +77,23 @@ gulp.task('scripts:templateCache', function() {
         }))
         .pipe(gulp.dest('.tmp'));
 
-    return mergeStream(templates, states)
+    return mergeStream(templates, states);
+});
+
+gulp.task('scripts:docs', function() {
+   return gulp.src(["./app/scripts/**/*.js", '!./app/scripts/libraries/**/*.js'])
+    .pipe($.jsdoc.parser({
+        plugins: [ "plugins/markdown" ],
+
+    }))
+    .pipe(gulp.dest('./api-docs'))
+    .pipe($.jsdoc.generator('./api-docs', {
+        path: 'ink-docstrap',
+        systemName: "Stellar Client",
+        theme: 'flatly',
+        linenums: true,
+        collapseSymbols: true
+    }));
 });
 
 gulp.task('html', ['config', 'styles', 'scripts', 'flash'], function (done) {
@@ -166,7 +182,7 @@ _(['dev', 'stg', 'prd']).each(function(env) {
 });
 
 gulp.task('clean', function () {
-    return gulp.src(['.tmp', 'dist'], { read: false }).pipe($.clean());
+    return gulp.src(['.tmp', 'dist', 'api-docs'], { read: false }).pipe($.clean());
 });
 
 
