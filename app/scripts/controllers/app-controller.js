@@ -64,11 +64,9 @@ sc.controller('AppCtrl', function($scope, $rootScope, stNetwork, session, $state
         accountObj = remote.account(keys.address);
 
         accountObj.on('entry', handleAccountEntry);
-        accountObj.on('entry', setInflation);
 
         var listenerCleanupFn = function () {
             accountObj.off("entry", handleAccountEntry);
-            accountObj.off("entry", setInflation);
         }
 
         remote.once('disconnected', listenerCleanupFn);
@@ -114,9 +112,11 @@ sc.controller('AppCtrl', function($scope, $rootScope, stNetwork, session, $state
         $rootScope.reserve=$rootScope.account.reserve;
         $rootScope.account.max_spend = bal.subtract($rootScope.account.reserve);
         $rootScope.$broadcast("accountLoaded", $rootScope.account);
+
+        setInflation();
     }
 
-    function setInflation(account) {
+    function setInflation() {
         /*
          So the fact that we now round down a users balance has this sort of bad side effect. Basically a user will get their first reward and have 5000 stellars
          after a few seconds it will suddenly change to 4999 stellars
@@ -129,14 +129,22 @@ sc.controller('AppCtrl', function($scope, $rootScope, stNetwork, session, $state
 
          any amount would be bad and also if they never use the giveaway. if instead their friend sends them 1000 STR or something
          */
+        var account = $scope.account;
+
         if (!account.InflationDest && account.InflationDest !== Options.INFLATION_DEST &&
             Math.floor(account.Balance/1000000) === Math.floor((account.Balance-20)/1000000)) {
-          var tx = stNetwork.remote.transaction();
-          tx = tx.accountSet(account.Account);
-          tx.inflationDest(Options.INFLATION_DEST);
-
-          tx.submit();
+            $scope.setInflationDest(Options.INFLATION_DEST);
         }
     }
+
+    $scope.setInflationDest = function(address) {
+        var tx = stNetwork.remote.transaction();
+        tx.accountSet($scope.account.Account);
+        tx.inflationDest(address);
+
+        tx.submit();
+
+        return tx;
+    };
 
 });
