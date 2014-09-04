@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('SendRewardCtrl', function ($rootScope, $scope, $http, stNetwork, session, TutorialHelper) {
+sc.controller('SendRewardCtrl', function ($rootScope, $scope, $http, StellarNetwork, session, TutorialHelper) {
   $scope.reward = {
     rewardType: 3,
     title: 'Send stellars!',
@@ -55,7 +55,7 @@ sc.controller('SendRewardCtrl', function ($rootScope, $scope, $http, stNetwork, 
   function checkSentTransactions() {
     var sendRewardRequested = false;
 
-    var remote = stNetwork.remote;
+    var remote = StellarNetwork.remote;
     var account = session.get('address');
     var params = {
       'account': account,

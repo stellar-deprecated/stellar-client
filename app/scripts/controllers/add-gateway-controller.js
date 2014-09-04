@@ -1,6 +1,6 @@
 var sc = angular.module('stellarClient');
 
-sc.controller('AddGatewayCtrl', function($scope, $q, session, singletonPromise, stNetwork, Gateways) {
+sc.controller('AddGatewayCtrl', function($scope, $q, session, singletonPromise, StellarNetwork, Gateways) {
   // INHERITED FROM ManageCurrenciesCtrl
   // $scope.gateways
 
