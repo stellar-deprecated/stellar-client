@@ -26,12 +26,12 @@ angular.module('singletonPromise', []).factory('singletonPromise', function ($q)
       try {
         return $q.when(fun()).finally(function() {
           loading = false;
-        })
+        });
       } catch (err) {
         loading = false;
         throw err;
       }
-    }
+    };
 
     /**
      * Returns whether the wrapped operation is in progress
@@ -41,9 +41,9 @@ angular.module('singletonPromise', []).factory('singletonPromise', function ($q)
      */
     result.isLoading = function() {
       return loading;
-    }
+    };
 
     return result;
-  }
-})
+  };
+});
 
