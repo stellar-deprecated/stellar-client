@@ -21,6 +21,7 @@ var paths = {
 //composite tasks
 gulp.task('default', ['build']);
 gulp.task('develop', ['watch']);
+gulp.task('develop-docs', ['watch-docs']);
 gulp.task('build', function(done) {
   runSequence('clean', ['html', 'images', 'fonts'], done);
 });
@@ -235,7 +236,6 @@ gulp.task('watch', ['ensure_config', 'connect', 'serve'], function () {
 
     gulp.watch([
         'app/*.html',
-        'api-docs/*.html',
         '.tmp/styles/**/*.css',
         'app/scripts/**/*.js',
         '.tmp/scripts/**/*.js',
@@ -251,6 +251,18 @@ gulp.task('watch', ['ensure_config', 'connect', 'serve'], function () {
     gulp.watch('app/templates/**/*', ['scripts:templateCache']);
     gulp.watch('app/states/**/*', ['scripts:templateCache']);
     gulp.watch('bower.json', ['wiredep']);
+});
+
+gulp.task('watch-docs', ['ensure_config', 'connect', 'serve'], function () {
+    var server = $.livereload();
+
+    // watch for changes
+
+    gulp.watch(['api-docs/*.html']).on('change', function (file) {
+        server.changed(file.path);
+    });
+
+    gulp.watch('app/scripts/**/*.js', ['scripts']);
 });
 
 gulp.task("stellar-lib", function(cb) {
