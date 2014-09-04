@@ -13,6 +13,10 @@ var runSequence = require('run-sequence');
 // load plugins
 var $ = require('gulp-load-plugins')();
 
+var paths = {
+    js:   ["./app/scripts/**/*.js", '!./app/scripts/libraries/**/*.js'],
+    html: ['app/**/*.html', '!app/bower_components/**/*.html']
+};
 
 //composite tasks
 gulp.task('default', ['build']);
@@ -39,14 +43,14 @@ gulp.task('styles', ['iconfont'], function () {
 
 
 gulp.task('scripts:lint', function () {
-    return gulp.src('app/scripts/**/*.js')
+    return gulp.src(paths.js)
         .pipe($.jshint())
         .pipe($.jshint.reporter($.jshintStylish))
         .pipe($.size());
 });
 
 gulp.task('scripts:unminified', ['scripts:templateCache'], function () {
-    return gulp.src('app/**/*.html')
+    return gulp.src(paths.html)
         .pipe($.plumber({errorHandler: function(err) {
           $.util.log($.util.colors.red(err));  
         }}))
@@ -81,7 +85,7 @@ gulp.task('scripts:templateCache', function() {
 });
 
 gulp.task('scripts:docs', function() {
-   return gulp.src(["./app/scripts/**/*.js", '!./app/scripts/libraries/**/*.js'])
+   return gulp.src(paths.js)
     .pipe($.jsdoc.parser({
         plugins: [ "plugins/markdown" ],
 
@@ -101,7 +105,7 @@ gulp.task('html', ['config', 'styles', 'scripts', 'flash'], function (done) {
         var jsFilter = $.filter('**/*.js');
         var cssFilter = $.filter('**/*.css');
 
-        gulp.src(['app/**/*.html', '!app/bower_components/**/*.html'])
+        gulp.src(paths.html)
             .pipe($.useref.assets({
                 searchPath: ['.tmp', 'app']
             }))
@@ -159,18 +163,18 @@ gulp.task('fonts', ['iconfont'], function () {
 });
 
 gulp.task('config', function() {
-    var env = process.env.NODE_ENV || 'dev'
+    var env = process.env.NODE_ENV || 'dev';
     gulp.src('config/' + env + ".js")
         .pipe($.rename(function (path) {
             path.basename = "config";
         }))
-        .pipe(gulp.dest('app/scripts'))
+        .pipe(gulp.dest('app/scripts'));
 });
 
 gulp.task('ensure_config', function() {
     if(!fs.existsSync("app/scripts/config.js")) {
         return gulp.start('config-stg');
-    };
+    }
 });
 
 _(['dev', 'stg', 'prd']).each(function(env) {
@@ -254,8 +258,8 @@ gulp.task("stellar-lib", function(cb) {
         "cd ../stellar-lib",
         "./node_modules/.bin/grunt webpack",
         "cp build/stellar-0.7.35.js ../stellar-client/app/scripts/libraries/stellar-0.7.35.js"
-    ]
-    console.log(steps.join(" && "))
+    ];
+    console.log(steps.join(" && "));
     exec(steps.join(" && "), function (err, stdout, stderr) {
         console.log(stdout);
         console.log(stderr);
@@ -291,11 +295,11 @@ gulp.task('connect-dist', ['dist'], function() {
         .on('listening', function () {
             console.log('Started connect web server on http://localhost:8001');
         });
-})
+});
 
 gulp.task('serve-dist', ['connect-dist'], function() {
     require('opn')('http://localhost:8001');
-})
+});
 
 gulp.task('serve-dist-without-build', [], function() {
     var connect = require('connect');
@@ -309,7 +313,7 @@ gulp.task('serve-dist-without-build', [], function() {
             console.log('Started connect web server on http://localhost:8001');
             require('opn')('http://localhost:8001');
         });
-})
+});
 
 
 gulp.task('test', function (done) {
