@@ -184,8 +184,18 @@
       }
 
       .tx-type {
-        background-color: $success;
-        border: 1px solid $success;
+        border-top-left-radius: 4px;
+        border-bottom-left-radius: 4px;
+
+        &.received {
+          background-color: $success;
+          border: 1px solid $success;
+        }
+
+        &.sent {
+          background-color: $error;
+          border: 1px solid $error;
+        }
 
         i {
           font-size: 28px;
