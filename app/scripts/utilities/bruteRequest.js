@@ -5,7 +5,7 @@ bruteRequest.factory('bruteRequestInterceptor', function ($q, $timeout, $injecto
 
   var bruteRecoverer = {
     responseError: function (response) {
-      if (response.status == '429') {
+      if (response.status === '429') {
         var error = response.data.error;
         // inject http to avoid angular circular dependency error
         var http = $injector.get('$http');
@@ -22,7 +22,7 @@ bruteRequest.factory('bruteRequestInterceptor', function ($q, $timeout, $injecto
       }
       return $q.reject(response);
     }
-  }
+  };
 
   return bruteRecoverer;
 });
