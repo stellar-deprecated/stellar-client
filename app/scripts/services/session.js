@@ -113,13 +113,9 @@ sc.service('session', function($rootScope, $http, $timeout, StellarNetwork, Wall
       }.bind(this));
   };
 
-  Session.prototype.loginFromStorage = function($scope) {
+  Session.prototype.getWalletFromStorage = function($scope) {
     try {
-       var wallet = Wallet.loadLocal();
-
-      if (wallet) {
-        this.login(wallet);
-      }
+       return Wallet.loadLocal();
     } catch(e) {
       Wallet.purgeLocal();
       throw e;
