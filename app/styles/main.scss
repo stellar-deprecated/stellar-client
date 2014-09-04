@@ -80,6 +80,15 @@ body {
 }
 
 .client-section {
+  h1.title {
+    position: relative;
+
+    .link-dashboard {
+      position: absolute;
+      right: 0;
+      font-size: 14px;
+    }
+  }
 
   &:not(:last-child){
     border-bottom: $grey-border-bottom;
