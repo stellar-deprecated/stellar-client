@@ -18,7 +18,7 @@ var $ = require('gulp-load-plugins')();
 gulp.task('default', ['build']);
 gulp.task('develop', ['watch']);
 gulp.task('build', function(done) {
-  runSequence('clean', ['html', 'images', 'fonts', 'docs'], done);
+  runSequence('clean', ['html', 'images', 'fonts'], done);
 });
 gulp.task('dist',    ['build']);
 gulp.task('scripts', ['scripts:lint', 'scripts:templateCache', 'scripts:unminified', 'scripts:docs']);
