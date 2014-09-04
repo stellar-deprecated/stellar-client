@@ -7,26 +7,26 @@ sc.controller('InvitesCtrl', function($scope, $http, $q, $filter, session, invit
 
     $scope.getInvites = function () {
         return session.getUser() && session.getUser().getInvites();
-    }
+    };
 
     $scope.getUnsentInvites = function () {
         return session.getUser() && session.getUser().getUnsentInvites();
-    }
+    };
 
     $scope.getSentInvites = function () {
         return session.getUser() && session.getUser().getSentInvites();
-    }
+    };
 
     // returns a 'status' for the given invite (send, pending, facebookauth)
     $scope.getInviteStatus = function (invite) {
         if (invite.claimedAt) {
-            return $scope.inviteStatus['success'];
+            return $scope.inviteStatus.success;
         } else if (invite.inviteeId) {
-            return $scope.inviteStatus['waiting'];
+            return $scope.inviteStatus.waiting;
         } else {
-            return $scope.inviteStatus['pending'];
+            return $scope.inviteStatus.pending;
         }
-    }
+    };
 
     $scope.inviteStatus = {
         success: {
@@ -74,7 +74,7 @@ sc.controller('InvitesCtrl', function($scope, $http, $q, $filter, session, invit
                 .error(function (error) {
                     Util.showTooltip($('#'+invite.inviteId+" .invite-actions"), error.message,
                         'error', 'top');
-                })
+                });
             }
         },
         {
@@ -91,7 +91,7 @@ sc.controller('InvitesCtrl', function($scope, $http, $q, $filter, session, invit
                 });
             }
         }
-    ]
+    ];
 
     $scope.attemptSendInvite = singletonPromise(function () {
         // use angular's check value method to determine if it's a proper email
@@ -115,7 +115,7 @@ sc.controller('InvitesCtrl', function($scope, $http, $q, $filter, session, invit
                 $('#inviteForm').each(function(){
                     this.reset();
                 });
-            })
+            });
     });
 
     invites.ack()
@@ -135,5 +135,5 @@ sc.filter('includeInviteActionFilter', function () {
             }
         });
         return filtered;
-    }
+    };
 });

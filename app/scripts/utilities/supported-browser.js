@@ -1,5 +1,6 @@
-var ROBOTS = /GoogleBot|Bingbot|YandexBot|Baiduspider/i
+var ROBOTS = /GoogleBot|Bingbot|YandexBot|Baiduspider/i;
 
+/* exported isSupportedBrowser */
 function isSupportedBrowser() {
   // whitelist robots so they can scrape the login page
   if(ROBOTS.test(navigator.userAgent))                { return true; }

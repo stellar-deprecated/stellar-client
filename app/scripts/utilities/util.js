@@ -1,11 +1,11 @@
-var Util = {};
+window.Util = {};
 
 Util.validateUsername = function (username) {
 	if (username.length < 3 || username.length > 20) {
 		return false;
 	}
 	return !!username.match(/^[a-zA-Z0-9]+([._-]+[a-zA-Z0-9]+)*$/);
-}
+};
 
 /**
 * Shows a tooltip above the given element.
@@ -14,8 +14,6 @@ Util.validateUsername = function (username) {
 * - placement (top, left, right, bottom)
 */
 Util.showTooltip = function (element, title, type, placement) {
-
-  var placementClass = placement;
 
   var template =
     '<div class="tooltip ' + type + '" role="tooltip">' +
@@ -33,8 +31,7 @@ Util.showTooltip = function (element, title, type, placement) {
       title: title
     })
     .tooltip('show');
-
-}
+};
 
 /**
  * Seed the sjcl random function with Math.random() in the case where we are
@@ -49,7 +46,7 @@ Util.showTooltip = function (element, title, type, placement) {
 Util.ensureEntropy = function() {
   var isEnough = function() {
     return sjcl.random.isReady() !== sjcl.random._NOT_READY;
-  }
+  };
 
   if(isEnough()){
     return;

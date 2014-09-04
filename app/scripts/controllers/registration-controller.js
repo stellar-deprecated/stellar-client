@@ -86,18 +86,19 @@ sc.controller('RegistrationCtrl', function($rootScope, $scope, $state, $statePar
     $scope.errors.usernameErrors = [];
     $scope.status.usernameAvailable = null;
 
-    if($scope.data.username !== '') checkUsername();
+    if($scope.data.username !== '') {
+      checkUsername();
+    }
   };
 
   // The following functions calculate the classes to be applied to the form.
 
   $scope.usernameClass = function(){
     if($scope.status.usernameAvailable === null){
-      if($scope.data.username !== '') return 'glyphicon-refresh spin';
-      else return 'glyphicon-none';
+      return $scope.data.username !== '' ? 'glyphicon-refresh spin' : 'glyphicon-none';
+    } else {
+      return $scope.status.usernameAvailable ? 'glyphicon-ok' : 'glyphicon-remove';
     }
-
-    else return $scope.status.usernameAvailable ? 'glyphicon-ok' : 'glyphicon-remove';
   };
 
   // Validate the input before submitting the registration form.
@@ -201,21 +202,22 @@ sc.controller('RegistrationCtrl', function($rootScope, $scope, $state, $statePar
       'invalid': 'The email is invalid.'
     };
 
-    if (response && response.status == "fail") {
+    if (response && response.status === "fail") {
+      var field;
       switch (response.code) {
         case 'already_taken':
-          var field = response.data && response.data.field;
-          if (field == 'username') {
+          field = response.data && response.data.field;
+          if (field === 'username') {
             $scope.errors.usernameErrors.push(usernameErrorMessages['already_taken']);
-          } else if (field == 'email') {
+          } else if (field === 'email') {
             $scope.errors.emailErrors.push(emailErrorMessages['already_taken']);
           }
           break;
         case 'invalid':
-          var field = response.data && response.data.field;
-          if (field == 'username') {
+          field = response.data && response.data.field;
+          if (field === 'username') {
             $scope.errors.usernameErrors.push(usernameErrorMessages['invalid']);
-          } else if (field == 'email') {
+          } else if (field === 'email') {
             $scope.errors.emailErrors.push(emailErrorMessages['invalid']);
           }
           break;
@@ -273,7 +275,7 @@ sc.controller('RegistrationCtrl', function($rootScope, $scope, $state, $statePar
         return $q.reject();
       }
 
-      if (attempts == 0) {
+      if (attempts === 0) {
         FlashMessages.add({
           title: 'The first attempt to save your wallet failed.',
           info: 'Retrying...',

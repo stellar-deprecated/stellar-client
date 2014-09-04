@@ -12,6 +12,4 @@ sc.controller('RegistrationRewardCtrl', function ($scope, session) {
   };
 
   $scope.rewards[$scope.reward.rewardType] = $scope.reward;
-
-  var action = $scope.reward.action;
 });
