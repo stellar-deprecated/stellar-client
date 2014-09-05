@@ -1,6 +1,11 @@
-<div class="info">
-    Verify your email address to activate your password recovery feature.<br>
-    Your recovery code will be sent to your email.
+<div class="info" ng-show="reward.status == 'incomplete'">
+    Activate password recovery by verifying your email.<br />
+    We will email you a code that you must enter here to complete the activation.
+</div>
+<div class="info" ng-show="reward.status == 'unverified'">
+    Enter the code that was sent to your email to verify your email.<br />
+    This will also activate your password recovery feature.<br />
+    Warning! You will not be able to recover your password if you do not activate this feature.
 </div>
 <div class="verify-email">
     <div class="add-email-item" ng-class="{active: reward.status == 'incomplete'}">
@@ -20,7 +25,7 @@
                     <button type="button" class="cancel btn btn-default" ng-click="cancel()">Cancel</button>
                 </div>
                 <div class="col-xs-9 button-col-right">
-                    <button type="submit" class="submit btn btn-default" ng-class="{loading: loading}" ng-disabled="loading">{{loading ? 'Loading...' : 'Submit' }}</button>
+                    <button type="submit" class="submit btn btn-default" ng-class="{loading: loading}" ng-disabled="loading">{{loading ? 'Loading...' : 'Step 1: Send code to email' }}</button>
                 </div>
             </div>
         </form>
@@ -42,7 +47,7 @@
                     <button type="button" class="cancel btn btn-default" ng-click="back()">Back</button>
                 </div>
                 <div class="col-xs-9 button-col-right">
-                    <button type="submit" class="submit btn btn-default" ng-class="{loading: loading}" ng-disabled="loading">{{loading ? 'Loading...' : 'Submit' }}</button>
+                    <button type="submit" class="submit btn btn-default" ng-class="{loading: loading}" ng-disabled="loading">{{loading ? 'Loading...' : 'Step 2: Activate password recovery' }}</button>
                 </div>
             </div>
         </form>
