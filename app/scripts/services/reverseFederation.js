@@ -1,11 +1,12 @@
 /**
- * REVERSE FEDERATION
  *
  * The reverse federation service looks up and caches reverse federation queries.
  *
  * These files are used to do DNS-based verifications autonomously on the
  * client-side. Quite neat when you think about it and a decent solution until
  * we have a network-internal nickname system.
+ *
+ * @namespace rpReverseFederation
  */
 
 var module = angular.module('stellarClient');

@@ -1,11 +1,12 @@
 /**
- * FEDERATION
  *
  * The federation service looks up and caches federation queries.
  *
  * These files are used to do DNS-based verifications autonomously on the
  * client-side. Quite neat when you think about it and a decent solution until
  * we have a network-internal nickname system.
+ *
+ * @namespace rpFederation
  */
 
 var sc = angular.module('stellarClient');

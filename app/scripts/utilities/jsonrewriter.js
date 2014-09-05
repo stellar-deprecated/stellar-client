@@ -7,6 +7,9 @@
  * trading with some STR pairs added.
  *
  * [1] http://en.wikipedia.org/wiki/Currency_pair#The_Majors
+ *
+ * @memberOf Data
+ * @constant
  */
 var pairs = [
     {name: 'BTC/STR', order: 1},
@@ -72,6 +75,8 @@ var isRippling = function(effects){
 
 /**
  * Simple static class for processing server-side JSON.
+ *
+ * @namespace
  */
 JsonRewriter = {
   /**
