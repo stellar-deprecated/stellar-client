@@ -1,0 +1,32 @@
+{
+    "tags": {
+        "allowUnknownTags": true
+    },
+    "source": {
+        "include": ["app/scripts", "README.md"],
+        "exclude": ["app/scripts/libraries"]
+    },
+    "plugins": [
+        "plugins/markdown" 
+    ],
+    "templates": {
+        "cleverLinks": true,
+        "systemName":  "Stellar Client",
+        "theme":       "flatly",
+        "linenums":    true,
+        "navType":     "vertical",
+        "theme":       "cosmo"
+    },
+    "opts": {
+        "template":    "./node_modules/ink-docstrap/template",
+        "encoding":    "utf8",
+        "destination": "./api-docs/",
+        "recurse":     true,
+        "private":     true,
+        "lenient":     false
+    },
+    "markdown": {
+        "parser":   "gfm",
+        "hardwrap": true
+    }
+}
