@@ -17,7 +17,7 @@ var Options = {
 
     APP_ID: '1514787142083867',
     DOMAIN_NAME: 'stg.stellar.org',
-    DEFAULT_FEDERATION_DOMAIN: 'stellar-stg.stellar.org',
+    DEFAULT_FEDERATION_DOMAIN: 'stg.stellar.org',
     API_SERVER: 'https://api-stg.stellar.org',
     WALLET_SERVER: 'https://wallet-stg.stellar.org',
 
