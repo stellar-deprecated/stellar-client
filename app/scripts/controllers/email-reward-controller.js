@@ -8,7 +8,6 @@ sc.controller('EmailRewardCtrl', function ($scope, $rootScope, session) {
     status: 'incomplete',
     innerTitle: 'Set up password recovery',
     getCopy: function(type) {
-      console.log($scope.reward.status, type);
       switch ($scope.reward.status) {
         case 'unverified':
           // User put in email but hasn't put in recovery code
@@ -40,7 +39,6 @@ sc.controller('EmailRewardCtrl', function ($scope, $rootScope, session) {
       $scope.reward.status = status;
     }
   }
-
   // add this reward to the parent scope's reward array
   $scope.rewards[$scope.reward.rewardType] = $scope.reward;
 
