@@ -14,11 +14,23 @@
         </div>
 
         <div class="content awaiting-payout" ng-class="{active: reward.status == 'needs_fbauth'}">
-            <div class="body">
-                Oh, happy day!
-            </div>
-            <div class="info">
-                Almost there - log in with Facebook to get your stellars.
+            <div ng-switch="reward.rewardType">
+                <div ng-switch-when="2">
+                    <div class="body">
+                        Password recovery activated
+                    </div>
+                    <div class="info">
+                        Please store your recovery code in a safe place as you will need it to recover your account if you forget your password.
+                    </div>
+                </div>
+                <div ng-switch-default>
+                    <div class="body">
+                        Oh, happy day!
+                    </div>
+                    <div class="info">
+                        Almost there - log in with Facebook to get your stellars.
+                    </div>
+                </div>
             </div>
             <button class="btn btn-default" ng-click="toggleReward(1)">Continue</button>
         </div>
