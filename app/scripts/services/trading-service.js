@@ -1,6 +1,6 @@
 var sc = angular.module('stellarClient');
 
-sc.factory('Trading', function($rootScope, $q, session, StellarNetwork, TransactionCurator) {
+sc.factory('Trading', function($rootScope, $q, session, StellarNetwork, TransactionCurator, OrderBook, TradingOps) {
   var orderbooks = [];
 
   /**
@@ -27,6 +27,8 @@ sc.factory('Trading', function($rootScope, $q, session, StellarNetwork, Transact
    *   partially filled.
    * - `trading:my-offers:partially-filled`:  An order from the current account was partially filled by someone else's transaction
    * - `trading:my-offers:filled`: An order from the current account was filled by someone else's transaction
+   * - `trading:order-books:updated`: Emitted when an orderbook is updated
+   * 
    *
    * @namespace Trading 
    */
@@ -43,100 +45,31 @@ sc.factory('Trading', function($rootScope, $q, session, StellarNetwork, Transact
   };
 
   Trading.createOffer = function(takerPays, takerGets) {
-    var tx = StellarNetwork.remote.transaction();
-    tx.offerCreate({
-      "account":    session.get("address"),
-      "taker_pays": StellarNetwork.amount.encode(takerPays),
-      "taker_gets": StellarNetwork.amount.encode(takerGets),
-    });
-
-    return StellarNetwork.sendTransaction(tx).then(function (tx) {
-      console.log(tx);
-      return {
-        result: TransactionCurator.offerStateFromOfferCreate(tx),
-        offer: TransactionCurator.offerFromOfferCreate(tx)
-      };
-    });
+    return TradingOps.createOffer(takerPays, takerGets);
   };
 
   Trading.myOffers = function() {
-    var account = session.get("address");
-
-    return StellarNetwork.request("account_offers", {
-      account: account
-    }).then(function(response) {
-        var normalizedOffers = response.offers.map(function (nativeOffer) {
-          return {
-            account:   account,
-            sequence:  nativeOffer.seq,
-            takerPays: StellarNetwork.amount.decode(nativeOffer.taker_pays),
-            takerGets: StellarNetwork.amount.decode(nativeOffer.taker_gets),
-          };
-        });
-
-        return normalizedOffers;
-    });
+    return TradingOps.myOffers();
   };
 
 
   Trading.cancelOffer = function(sequence) {
-    var tx = StellarNetwork.remote.transaction();
-
-    tx.offerCancel({
-      "account":  session.get("address"),
-      "sequence": sequence,
-    });
-
-    return StellarNetwork.sendTransaction(tx);
+    return TradingOps.cancelOffer(sequence);
   };
 
-  var OrderBook = function(baseCurrency, counterCurrency) {
-    this.baseCurrency    = _.cloneDeep(baseCurrency);
-    this.counterCurrency = _.cloneDeep(counterCurrency);
+  /** @namespace Trading.offer */
+  Trading.offer = {};
+
+  Trading.offer.getPrice = function(baseAmount, counterAmount) {
+    return new BigNumber(counterAmount.value).div(baseAmount.value).toString();
   };
-
-  OrderBook.prototype.buy = function (amountToBuy, amountToPay) {
-    var takerPays = _.extend({value:amountToBuy}, this.counterCurrency);
-    var takerGets = _.extend({value:amountToPay}, this.baseCurrency);
-
-    return Trading.createOffer(takerPays, takerGets);
-  };
-
-
-  OrderBook.prototype.sell = function (amountToSell, amountToReceive) {
-    var takerPays = _.extend({value:amountToSell}, this.baseCurrency);
-    var takerGets = _.extend({value:amountToReceive}, this.counterCurrency);
-
-    return Trading.createOffer(takerPays, takerGets);
-  };
-
-  OrderBook.prototype.destroy = function() {
-    this.unsubscribe();
-  };
-
-  OrderBook.prototype.subscribe = function() {
-    return StellarNetwork.request("subscribe", this._subscribeParams());
-  };
-
-  OrderBook.prototype.unsubscribe = function() {
-    return StellarNetwork.request("unsubscribe", this._subscribeParams());
-  };
-
-  OrderBook.prototype._subscribeParams = function() {
-    return {
-      "books": [{
-        "taker_pays": this.takerPays,
-        "taker_gets": this.takerGets,
-        "snapshot":   true,
-        "both":       true
-      }]
-    };
-  };
-
 
   function updateOrderBooks(e, tx) {
     //TODO
-
+    // for each order book that has been initialized
+    // find any offers that apply to it
+    // replace the offer in the offers of the order book
+    // broadcast the updated order book
 
   }
 

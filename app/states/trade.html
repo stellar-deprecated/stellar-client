@@ -35,11 +35,11 @@
         <div class="order-book row">
             <div class="col-xs-6">
                 <h3>Bids</h3>                
-                <ul><li ng-repeat="offer in currentOffers.bids">{{offer | json}}</li></ul>
+                <ul><li ng-repeat="priceLevel in currentOrderBook.getPriceLevels('bids')">{{priceLevel | json}}</li></ul>
             </div>
             <div class="col-xs-6">
                 <h3>Asks</h3>                
-                <ul><li ng-repeat="offer in currentOffers.bids">{{offer | json}}</li></ul>
+                <ul><li ng-repeat="priceLevel in currentOrderBook.getPriceLevels('asks')">{{priceLevel | json}}</li></ul>
             </div>
         </div>
     </div>
