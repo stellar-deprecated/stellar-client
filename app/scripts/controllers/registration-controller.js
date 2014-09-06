@@ -2,7 +2,9 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('RegistrationCtrl', function($rootScope, $scope, $state, $stateParams, $timeout, $http, $q, session, debounce, singletonPromise, Wallet, FlashMessages, invites) {
+sc.controller('RegistrationCtrl', function($rootScope, $scope, $state, $stateParams, $timeout, $http, $q,
+                                           session, debounce, singletonPromise, Wallet, FlashMessages,
+                                           invites,vcRecaptchaService) {
   // Provide a default value to protect against stale config files.
   Options.MAX_WALLET_ATTEMPTS = Options.MAX_WALLET_ATTEMPTS || 3;
 
@@ -26,8 +28,11 @@ sc.controller('RegistrationCtrl', function($rootScope, $scope, $state, $statePar
     usernameErrors:        [],
     emailErrors:           [],
     passwordErrors:        [],
-    passwordConfirmErrors: []
+    passwordConfirmErrors: [],
+    captchaErrors:         []
   };
+
+
 
   $scope.validators = [];
   $scope.noEmailWarning = false;
@@ -180,10 +185,15 @@ sc.controller('RegistrationCtrl', function($rootScope, $scope, $state, $statePar
   });
 
   function submitRegistration(signingKeys) {
+
+
+          // In case of a failed validation you need to reload the captcha because each challenge can be checked just once
+
     var data = {
       username: $scope.data.username,
       // email: $scope.data.email,
-      address: signingKeys.address
+      address: signingKeys.address,
+      recap: vcRecaptchaService.data()
     };
 
     // Submit the registration data to the server.
@@ -201,6 +211,8 @@ sc.controller('RegistrationCtrl', function($rootScope, $scope, $state, $statePar
       'already_taken': 'The email is taken.',
       'invalid': 'The email is invalid.'
     };
+
+      vcRecaptchaService.reload();
 
     if (response && response.status === "fail") {
       var field;
@@ -221,6 +233,9 @@ sc.controller('RegistrationCtrl', function($rootScope, $scope, $state, $statePar
             $scope.errors.emailErrors.push(emailErrorMessages['invalid']);
           }
           break;
+          case 'captcha':
+              $scope.errors.captcha.push("Captcha incorrect. Do you wonder if you are a robot?");
+              break;
         default:
           // TODO: generic error
       }
