@@ -1,3 +1,7 @@
+/**
+ * @constant
+ * @memberOf Data
+ */
 var iso4217 = {
     // Ripple Credits
     "STR":[0, 0],
@@ -171,4 +175,4 @@ var iso4217 = {
     "YER":[886, 2],
     "ZMK":[894, 2],
     "ZWL":[932, 2]
-}
+};

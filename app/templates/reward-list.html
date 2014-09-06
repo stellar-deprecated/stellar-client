@@ -5,8 +5,8 @@
             <span class="reward-step" ng-show="reward.rewardType == 1">
             	<span class="step-label">Next Step</span>
             </span>
-            <span class="reward-title">{{ reward.error.panel || reward.title }}</span>
-            <span class="subtitle" ng-show="reward.subtitle || reward.getSubtitle()">{{reward.subtitle || reward.getSubtitle()}}</span>
+            <span class="reward-title">{{ reward.error.panel || reward.title || reward.getCopy('title')}}</span>
+            <span class="subtitle">{{reward.subtitle || reward.getSubtitle() || reward.getCopy('subtitle')}}</span>
         </div>
     </li>
 </ul>

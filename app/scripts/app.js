@@ -1,6 +1,7 @@
 'use strict';
 var STELLAR_CLIENT_REVISION = '_GIT_REVISION_GOES_HERE_';
 
+
 var stellarClient = angular.module('stellarClient', [
   'angularMoment',
   'bruteRequest',
@@ -13,7 +14,8 @@ var stellarClient = angular.module('stellarClient', [
   'singletonPromise',
   'ui.router',
   'vr.passwordStrength',
-  'ngClipboard'
+  'ngClipboard',
+  'vcRecaptcha'
 ]);
 
 stellarClient.config(function($httpProvider, $stateProvider, $urlRouterProvider, RavenProvider, ngClipProvider) {

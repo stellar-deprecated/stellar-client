@@ -7,6 +7,9 @@
  *   (A better source is welcome. Note: The US dollar was moved to the top.)
  *
  * Important: STR must be the first entry in this list.
+ *
+ * @constant
+ * @memberOf Data
  */
 var StellarDefaultCurrencyList =
 [
