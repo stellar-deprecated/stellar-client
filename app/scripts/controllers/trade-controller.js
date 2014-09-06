@@ -17,10 +17,10 @@ sc.controller('TradeCtrl', function($scope, Trading) {
     {currency:"JED", issuer: "gKAEHiF5LELZ5eytP4EVZVqqdbuCuHvq9C"},
   ];
 
-  $scope.takerPays = $scope.currencies[2];
-  $scope.takerGets = $scope.currencies[1];
-  $scope.$watch('takerPays', switchOrderBookIfNeeded);
-  $scope.$watch('takerGets', switchOrderBookIfNeeded);
+  $scope.baseCurrency    = $scope.currencies[2];
+  $scope.counterCurrency = $scope.currencies[1];
+  $scope.$watch('baseCurrency', switchOrderBookIfNeeded);
+  $scope.$watch('counterCurrency', switchOrderBookIfNeeded);
 
   $scope.currentOrderBook = null;
   $scope.currentOffers    = null;
@@ -44,17 +44,17 @@ sc.controller('TradeCtrl', function($scope, Trading) {
 
 
   $scope.validOrderBook = function() {
-    if (_.isEmpty($scope.takerPays)) { return false; } 
-    if (_.isEmpty($scope.takerGets)) { return false; } 
+    if (_.isEmpty($scope.baseCurrency)) { return false; } 
+    if (_.isEmpty($scope.counterCurrency)) { return false; } 
 
-    if ($scope.takerPays === $scope.takerGets) { return false; }
+    if ($scope.baseCurrency === $scope.counterCurrency) { return false; }
 
     return true;
   };
 
   $scope.createOffer = function(e) {
     $scope.currentOrderBook
-      .createOffer($scope.takerPaysAmount, $scope.takerGetsAmount)
+      .sell($scope.baseCurrencyAmount, $scope.counterCurrencyAmount)
       .catch(function (e) {
         //TODO: actually show an error
         console.log(e);
@@ -88,7 +88,7 @@ sc.controller('TradeCtrl', function($scope, Trading) {
     }
 
     //TODO: canonicali
-    $scope.currentOrderBook = Trading.getOrderBook($scope.takerPays, $scope.takerGets);
+    $scope.currentOrderBook = Trading.getOrderBook($scope.baseCurrency, $scope.counterCurrency);
 
     $scope.currentOrderBook.subscribe();
   }

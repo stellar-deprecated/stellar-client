@@ -80,22 +80,6 @@ sc.service('TransactionCurator', function(StellarNetwork) {
     return offers.value();
   };
 
-  /**
-   * Retrieves the array of offer objects that were modified (but not completely filled)
-   * by the provided raw transaction
-   * 
-   * @param  {object} tx      - the raw transaction object from stellard
-   * @return {Array.<Structs.Offer>}        - an array of Offers from the specified account
-   * @memberOf TransactionCurator
-   * @function
-   */
-  this.getOffersModifiedByTx = function (tx) {
-    return _(getTxMeta(tx).AffectedNodes)
-      .pluck('ModifiedNode')
-      .select({"LedgerEntryType": "Offer"})
-      .value();
-  };
-
 
   /**
    * Throws an error if the transaction is not of the expected type.
@@ -139,11 +123,6 @@ sc.service('TransactionCurator', function(StellarNetwork) {
    */
   function getTxMeta(tx) {
     return tx.meta || tx.metadata || {};
-  }
-
-
-  function canonicalizeCurrencyPair(offer) {
-    //TODO
   }
 
   function getOfferFromAffectedNode(offerMeta) {

@@ -36,10 +36,27 @@ sc.factory('Trading', function($rootScope, $q, session, StellarNetwork, Transact
   $rootScope.$on('stellar-network:transaction', updateMyOffers);
 
 
-  Trading.getOrderBook = function(takerPays, takerGets) {
+  Trading.getOrderBook = function(baseCurrency, counterCurrency) {
     //TODO: the order book actually represents both "order books" for a given currency pair, we should canonicalize the currency so only one orderbook instance exists for a given pair 
     //TODO: don't allow more than one orderbook to exist for a given currency pair
-    return new OrderBook(takerPays, takerGets);
+    return new OrderBook(baseCurrency, counterCurrency);
+  };
+
+  Trading.createOffer = function(takerPays, takerGets) {
+    var tx = StellarNetwork.remote.transaction();
+    tx.offerCreate({
+      "account":    session.get("address"),
+      "taker_pays": StellarNetwork.amount.encode(takerPays),
+      "taker_gets": StellarNetwork.amount.encode(takerGets),
+    });
+
+    return StellarNetwork.sendTransaction(tx).then(function (tx) {
+      console.log(tx);
+      return {
+        result: TransactionCurator.offerStateFromOfferCreate(tx),
+        offer: TransactionCurator.offerFromOfferCreate(tx)
+      };
+    });
   };
 
   Trading.myOffers = function() {
@@ -73,49 +90,24 @@ sc.factory('Trading', function($rootScope, $q, session, StellarNetwork, Transact
     return StellarNetwork.sendTransaction(tx);
   };
 
-  var OrderBook = function(takerPays, takerGets) {
-    this.takerPays = _.cloneDeep(takerPays);
-    this.takerGets = _.cloneDeep(takerGets);
+  var OrderBook = function(baseCurrency, counterCurrency) {
+    this.baseCurrency    = _.cloneDeep(baseCurrency);
+    this.counterCurrency = _.cloneDeep(counterCurrency);
   };
-
-
-  OrderBook.prototype.getOffers = function() {
-    return StellarNetwork.request("book_offers", {
-      "taker_pays": this.takerPays,
-      "taker_gets": this.takerGets,
-    }).then(function(response) {
-      return response.offers;
-    });
-  };
-
-  OrderBook.prototype.createOffer = function(takerPaysAmount, takerGetsAmount) {
-    var tx = StellarNetwork.remote.transaction();
-
-    var takerPays = _.extend({value:takerPaysAmount}, this.takerPays);
-    var takerGets = _.extend({value:takerGetsAmount}, this.takerGets);
-
-    tx.offerCreate({
-      "account":    session.get("address"),
-      "taker_pays": StellarNetwork.amount.encode(takerPays),
-      "taker_gets": StellarNetwork.amount.encode(takerGets),
-    });
-
-    return StellarNetwork.sendTransaction(tx).then(function (tx) {
-      console.log(tx);
-      return {
-        result: TransactionCurator.offerStateFromOfferCreate(tx),
-        offer: TransactionCurator.offerFromOfferCreate(tx)
-      };
-    });
-  };
-
 
   OrderBook.prototype.buy = function (amountToBuy, amountToPay) {
-    //TODO
+    var takerPays = _.extend({value:amountToBuy}, this.counterCurrency);
+    var takerGets = _.extend({value:amountToPay}, this.baseCurrency);
+
+    return Trading.createOffer(takerPays, takerGets);
   };
 
+
   OrderBook.prototype.sell = function (amountToSell, amountToReceive) {
-    //TODO
+    var takerPays = _.extend({value:amountToSell}, this.baseCurrency);
+    var takerGets = _.extend({value:amountToReceive}, this.counterCurrency);
+
+    return Trading.createOffer(takerPays, takerGets);
   };
 
   OrderBook.prototype.destroy = function() {
@@ -144,6 +136,8 @@ sc.factory('Trading', function($rootScope, $q, session, StellarNetwork, Transact
 
   function updateOrderBooks(e, tx) {
     //TODO
+
+
   }
 
   /**

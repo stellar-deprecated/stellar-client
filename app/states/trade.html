@@ -5,17 +5,17 @@
         <form role="form" ng-submit="createOffer()">
             <div class="form-group">
                 <label>SELL:</label>
-                <input class="form-control" type="text" placeholder="Enter amount to buy" ng-model="takerGetsAmount">
-                <select class="form-control" ng-model="takerGets" ng-options="amount.currency for amount in currencies">
-                    <option value="">-- choose buyer gets --</option>
+                <input class="form-control" type="text" ng-model="baseCurrencyAmount">
+                <select class="form-control" ng-model="baseCurrency" ng-options="amount.currency for amount in currencies">
+                    <option value="">-- choose base currency --</option>
                 </select>
             </div>
 
             <div class="form-group">
                 <label>FOR:</label>
-                <input class="form-control" type="text" placeholder="Enter amount to buy" ng-model="takerPaysAmount">
-                <select class="form-control" ng-model="takerPays" ng-options="amount.currency for amount in currencies">
-                    <option value="">-- choose buyer pays --</option>
+                <input class="form-control" type="text" ng-model="counterCurrencyAmount">
+                <select class="form-control" ng-model="counterCurrency" ng-options="amount.currency for amount in currencies">
+                    <option value="">-- choose counter currency --</option>
                 </select>
             </div>
 
@@ -32,12 +32,15 @@
             </ul>
         </div>
 
-
-        <div class="order-book">
-            <h2>Order Book</h2>
-            <ul>
-                <li ng-repeat="offer in currentOffers">{{offer | json}}</li>
-            </ul>
+        <div class="order-book row">
+            <div class="col-xs-6">
+                <h3>Bids</h3>                
+                <ul><li ng-repeat="offer in currentOffers.bids">{{offer | json}}</li></ul>
+            </div>
+            <div class="col-xs-6">
+                <h3>Asks</h3>                
+                <ul><li ng-repeat="offer in currentOffers.bids">{{offer | json}}</li></ul>
+            </div>
         </div>
     </div>
 </div>
