@@ -186,6 +186,7 @@ sc.controller('RegistrationCtrl', function($rootScope, $scope, $state, $statePar
 
   function submitRegistration(signingKeys) {
 
+      $scope.errors.captchaErrors=[];
 
           // In case of a failed validation you need to reload the captcha because each challenge can be checked just once
 
@@ -234,7 +235,7 @@ sc.controller('RegistrationCtrl', function($rootScope, $scope, $state, $statePar
           }
           break;
           case 'captcha':
-              $scope.errors.captcha.push("Captcha incorrect. Do you wonder if you are a robot?");
+              $scope.errors.captchaErrors.push("Captcha incorrect. Do you wonder if you are a robot?");
               break;
         default:
           // TODO: generic error
