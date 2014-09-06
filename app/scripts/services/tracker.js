@@ -1,5 +1,7 @@
 /**
  * Event tracker (analytics)
+ *
+ * @namespace rpTracker
  */
 
 var module = angular.module('stellarClient');

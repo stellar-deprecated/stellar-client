@@ -85,20 +85,7 @@ gulp.task('scripts:templateCache', function() {
     return mergeStream(templates, states);
 });
 
-gulp.task('scripts:docs', function() {
-   return gulp.src(paths.js)
-    .pipe($.jsdoc.parser({
-        plugins: [ "plugins/markdown" ],
-
-    }))
-    .pipe(gulp.dest('./api-docs'))
-    .pipe($.jsdoc.generator('./api-docs', {
-        path: 'ink-docstrap',
-        systemName: "Stellar Client",
-        theme: 'flatly', //TODO: make a stellar theme to match our visual style
-        linenums: true
-    }));
-});
+gulp.task('scripts:docs', $.shell.task(['./node_modules/.bin/jsdoc -c ./jsdoc.conf.json']));
 
 gulp.task('html', ['config', 'styles', 'scripts', 'flash'], function (done) {
     git.long(function (revision) {

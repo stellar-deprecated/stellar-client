@@ -1,3 +1,7 @@
+/**
+ * @namespace Directives
+ */
+
 //var module = angular.module('directives', ['popup']);
 var module = angular.module('stellarClient');
 
@@ -56,6 +60,7 @@ module.directive('rpIf', [function() {
     };
 }]);
 
+var RP_ERRORS = 'rp-errors';
 /**
  * Group of validation errors for a form field.
  *
@@ -65,8 +70,10 @@ module.directive('rpIf', [function() {
  *     <div rp-error-on=required>This field is required.</div>
  *     <div rp-error-valid>{{recipient}} is a valid destination.</div>
  *   </div>
+ *
+ * @memberOf Directives
+ * @function rpErrors
  */
-var RP_ERRORS = 'rp-errors';
 module.directive('rpErrors', [function() {
     return {
         restrict: 'EA',

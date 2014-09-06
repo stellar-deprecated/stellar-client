@@ -1,8 +1,3 @@
-/**
- * VALIDATORS
- *
- * Form validation directives go into this file.
- */
 var module = angular.module('stellarClient');
 
 //var webutil = require('../util/web'),

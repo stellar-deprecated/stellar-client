@@ -1,0 +1,8 @@
+/**
+ * Global "data" objects are documented here.
+ *
+ * Eventually these globals will become encapsulated and injected, but for now
+ * this is what we have.
+ * 
+ * @namespace Data
+ */
