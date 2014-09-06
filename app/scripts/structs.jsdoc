@@ -1,0 +1,35 @@
+/**
+ * In this application we have a number of standardized objects that we 
+ * categorize as "Structs"; that is, objects that have a common shape and
+ * constituent parts, but do not bundle logic nor are full fledged javascript
+ * "classes".
+ *
+ * We document those here
+ *
+ * @namespace Structs
+ */
+
+
+
+/**
+ * @typedef {object} Offer
+ * @property {string}              account   - the address whom created this offer.
+ * @property {number}              sequence  - the sequence number of the offer.
+ * @property {Structs.Amount} takerPays -
+ * @property {Structs.Amount} takerGets -
+ */
+
+/**
+ * @typedef {object} Amount
+ * @property {string} currency - the currency code of the amount.
+ * @property {string} value    - the string of digits representing the value.  
+ *                               Note, STR is expressed in stellars, not the native stroops
+ * @property {string} [issuer] - the issuer of the currency, if not STR
+ * @memberOf Structs
+ */
+
+
+/**
+ * @typedef {object} AffectedNode
+ * 
+ */

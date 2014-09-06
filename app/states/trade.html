@@ -1,0 +1,43 @@
+<div class="client-section" ng-controller="TradeCtrl">
+    <div class="container">
+        <h1 class="title">Trading</h1>
+
+        <form role="form" ng-submit="createOffer()">
+            <div class="form-group">
+                <label>SELL:</label>
+                <input class="form-control" type="text" placeholder="Enter amount to buy" ng-model="takerGetsAmount">
+                <select class="form-control" ng-model="takerGets" ng-options="amount.currency for amount in currencies">
+                    <option value="">-- choose buyer gets --</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>FOR:</label>
+                <input class="form-control" type="text" placeholder="Enter amount to buy" ng-model="takerPaysAmount">
+                <select class="form-control" ng-model="takerPays" ng-options="amount.currency for amount in currencies">
+                    <option value="">-- choose buyer pays --</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-default">Submit</button>
+        </form>
+
+        <div class="my-offers" ng-show="myOffers">
+            <h2>My Offers</h2>
+            <ul>
+                <li ng-repeat="offer in myOffers" ng-controller="MyOffersListItemCtrl">
+                    <span>{{offer.takerPays.value}} {{offer.takerPays.currency}} for {{offer.takerGets.value}} {{offer.takerGets.currency}} ({{offer.sequence}})</span>
+                    <a ng-click="remove()">cancel offer</a>
+                </li>
+            </ul>
+        </div>
+
+
+        <div class="order-book">
+            <h2>Order Book</h2>
+            <ul>
+                <li ng-repeat="offer in currentOffers">{{offer | json}}</li>
+            </ul>
+        </div>
+    </div>
+</div>
