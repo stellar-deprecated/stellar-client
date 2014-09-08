@@ -113,7 +113,7 @@ stellarClient.run(function($location, $state, ipCookie){
 stellarClient.run(function($rootScope, $state, $timeout, ipCookie, session, FlashMessages){
   $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){
 
-    if(toState.name == 'logout' && session.get('loggedIn')) {
+    if(toState.name === 'logout' && session.get('loggedIn')) {
       event.preventDefault();
       session.logout();
 
