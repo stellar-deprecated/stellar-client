@@ -113,49 +113,48 @@ stellarClient.run(function($location, $state, ipCookie){
 stellarClient.run(function($rootScope, $state, $timeout, ipCookie, session, FlashMessages){
   $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){
 
-    switch(toState.name){
-      case 'register':
-      case 'login':
-        // If the user has persistent login enabled, try to login from local storage.
-        if(session.isPersistent() && !session.get('loggedIn')) {
-          var wallet = session.getWalletFromStorage();
-
-          if(wallet) {
-            // Prevent the original destination state from loading.
-            event.preventDefault();
-
-            // HACK: Timout logging in from local storage to allow all the controllers to load.
-            $timeout(function() {
-              session.login(wallet);
-              $state.transitionTo('dashboard');
-            }, 0);
-          }
-        }
-        break;
-
-      case 'logout':
-        if(session.get('loggedIn')) {
-          session.logout();
-        }
-        break;
-    }
-
-    // If the user is navigating to a state that requires authentication
-    // send them to the login page if they are not logged in.
-    if(toState.authenticate === true && !session.get('loggedIn')){
-      $state.transitionTo('login');
-
-      // Prevent the original destination state from loading.
+    if(toState.name === 'logout' && session.get('loggedIn')) {
       event.preventDefault();
+      session.logout();
+
+      return;
     }
 
     // If the user is navigating to a state that requires no authentication
     // send them to the dashboard if they are logged in.
-    if(toState.authenticate === false && session.get('loggedIn')){
+    if(!toState.authenticate && session.get('loggedIn')) {
+      event.preventDefault();
       $state.transitionTo('dashboard');
 
-      // Prevent the original destination state from loading.
-      event.preventDefault();
+      return;
+    }
+
+    // If the user is navigating to a state that requires authentication
+    // try to log them in from storage. If that fails send them to the login page.
+    if(!toState.authenticate || !session.get('loggedIn')) {
+      var wallet;
+
+      if(session.isPersistent() && !session.get('loggedIn')) {
+        wallet = session.getWalletFromStorage();
+      }
+
+      if(wallet) {
+        // Login with the local wallet and continue to the requested state.
+        event.preventDefault();
+
+        // HACK: The controllers in ng-included templates have not initialized yet.
+        //       Apply a $timeout so they have time to listen for login events.
+        $timeout(function() {
+          session.login(wallet);
+          $state.transitionTo(toState);
+        }, 0);
+      } else if(toState.authenticate) {
+        // Redirect authenticated routes to login if we are unable to login from local.
+        event.preventDefault();
+        $state.transitionTo('login');
+      }
+
+      return;
     }
 
     FlashMessages.dismissAll();
