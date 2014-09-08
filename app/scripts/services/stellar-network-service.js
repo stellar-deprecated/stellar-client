@@ -58,13 +58,9 @@ sc.factory('StellarNetwork', function($rootScope, $timeout, $q) {
 
         var deferred = $q.defer();
 
-        req.on('success', function(response) {
-            deferred.resolve(response);
-        });
+        req.on('success', deferred.resolve);
+        req.on('error', deferred.reject);
 
-        req.on('error', function (response) {
-            return deferred.reject(response);
-        });
 
         req.request();
         return deferred.promise;
