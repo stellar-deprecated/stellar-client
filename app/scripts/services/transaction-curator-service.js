@@ -44,7 +44,8 @@ sc.service('TransactionCurator', function(StellarNetwork) {
     ensureTxType(tx, 'OfferCreate');
 
     var offerFromTx   = this.offerFromOfferCreate(tx);
-    var offerFromMeta = _(this.getOffersAffectedByTx(tx, 'CreatedNode')).find(_.pick(offerFromTx, 'account', 'sequence'));
+    var offerId       = _.pick(offerFromTx, 'account', 'sequence');
+    var offerFromMeta = _(this.getOffersAffectedByTx(tx, 'CreatedNode')).find(offerId);
 
     if (!offerFromMeta) {
       // if no Offer node was created in the ledger, 
