@@ -1,7 +1,7 @@
 var sc = angular.module('stellarClient');
 
 //TODO:  the transaction history doesn't not show entries for when your offers are filled, 
-// meaning your balance can change without an appropriate 
+// meaning your balance can change without an appropriate entry being added into the transaction history
 
 sc.controller('TradeCtrl', function($scope, Trading) {
      
