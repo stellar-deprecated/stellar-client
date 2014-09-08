@@ -7,33 +7,28 @@ sc.controller('EmailRewardCtrl', function ($scope, $rootScope, session) {
     rewardType: 2,
     status: 'incomplete',
     innerTitle: 'Set up password recovery',
-    getCopy: function(type) {
+    getCopy: function() {
       switch ($scope.reward.status) {
         case 'unverified':
           // User put in email but hasn't put in recovery code
-          var copy = {
+          return {
             title: 'Set up password recovery!',
             subtitle: 'Enter your recovery code to complete'
           };
-          break;
         case 'needs_fbauth':
         case 'sending':
         case 'sent':
           // User needs to fb auth before they can get their stellars (when they're done, still show this message)
-          var copy = {
+          return {
             title: 'Password recovery activated',
             subtitle: 'Log in with Facebook to receive stellars'
-          }
-          break;
+          };
         default:
-          var copy = {
+          return {
             title: 'Set up password recovery!',
             subtitle: 'Verify your email'
-          }
-          break;
+          };
       }
-
-      return copy[type];
     },
     updateReward: function (status) {
       $scope.reward.status = status;
