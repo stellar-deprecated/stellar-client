@@ -14,6 +14,7 @@ sc.controller('PasswordCtrl', function($scope, passwordStrengthComputations, bad
   delete passwordStrengthComputations.aspects.duplicates;
   delete passwordStrengthComputations.aspects.consecutive;
   delete passwordStrengthComputations.aspects.dictionary;
+  delete passwordStrengthComputations.aspects.symbols;
 
   // Enforce 8 character minimum.
   passwordStrengthComputations.aspects.minLength = {
