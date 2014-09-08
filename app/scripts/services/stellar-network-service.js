@@ -89,6 +89,7 @@ sc.factory('StellarNetwork', function($rootScope, $timeout, $q) {
 
     /** @namespace  StellarNetwork.amount */
     self.amount = {};
+
     /**
      * Normalizes a stellard native amount (which could be either a raw number
      * for STR or a currency/value/issuer object for other currencies) into our
@@ -111,7 +112,7 @@ sc.factory('StellarNetwork', function($rootScope, $timeout, $q) {
             value: new BigNumber(nativeAmount).div(1000000).toString()
           };
         case "object":
-          return nativeAmount;
+          return _.cloneDeep(nativeAmount);
         default:
           throw new Error("invalid amount type " + amountType + ": expected a string, number, or object");
       }
@@ -131,7 +132,7 @@ sc.factory('StellarNetwork', function($rootScope, $timeout, $q) {
       if(normalizedAmount.currency === "STR") {
         return new BigNumber(normalizedAmount.value).times(1000000).toString();
       } else {
-        return normalizedAmount;
+        return _.cloneDeep(normalizedAmount);
       }
     };
 
