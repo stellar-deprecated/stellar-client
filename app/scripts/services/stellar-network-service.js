@@ -6,7 +6,6 @@ var sc = angular.module('stellarClient');
 
  @namespace  StellarNetwork */
 sc.factory('StellarNetwork', function($rootScope, $timeout, $q) {
-
     var self   = {};
     self.remote    = null;
     self.connected = false;
@@ -30,11 +29,18 @@ sc.factory('StellarNetwork', function($rootScope, $timeout, $q) {
         });
     };
 
+    var handleTransaction = function(tx) {
+      $timeout(function () {
+        $rootScope.$broadcast('stellar-network:transaction', tx);
+      });
+    };
+
     self.init = function () {
         self.remote = new stellar.Remote(Options.server, true);
         self.remote.connect();
         self.remote.on('connected', handleConnect);
         self.remote.on('disconnected', handleDisconnect);
+        self.remote.on('transaction', handleTransaction);
     };
 
     self.shutdown = function () {
@@ -52,17 +58,78 @@ sc.factory('StellarNetwork', function($rootScope, $timeout, $q) {
 
         var deferred = $q.defer();
 
-        req.on('success', function(response) {
+        req.on('success', deferred.resolve);
+        req.on('error', deferred.reject);
+
+
+        req.request();
+        return deferred.promise;
+    };
+
+    self.sendTransaction = function(tx) {
+        var deferred = $q.defer();
+
+        tx.on('success', function(response) {
             deferred.resolve(response);
         });
 
-        req.on('error', function (response) {
+        tx.on('error', function (response) {
             return deferred.reject(response);
         });
 
-        req.request();
+        tx.submit();
 
         return deferred.promise;
+    };
+
+
+    /** @namespace  StellarNetwork.amount */
+    self.amount = {};
+
+    /**
+     * Normalizes a stellard native amount (which could be either a raw number
+     * for STR or a currency/value/issuer object for other currencies) into our
+     * normalized {@link Structs.Amount} form.
+     *
+     * @param {string|number|object} nativeAmount the amount as reported from json
+     *                                            originating from stellard
+     * @return {Structs.Amount} the normalized amount
+     * @memberOf StellarNetwork.amount
+     * @function decode
+     */
+    self.amount.decode = function(nativeAmount) {
+      var amountType = typeof nativeAmount;
+  
+      switch(amountType) {
+        case "string":
+        case "number":
+          return {
+            currency: "STR",
+            value: new BigNumber(nativeAmount).div(1000000).toString()
+          };
+        case "object":
+          return _.cloneDeep(nativeAmount);
+        default:
+          throw new Error("invalid amount type " + amountType + ": expected a string, number, or object");
+      }
+    };
+
+
+    /**
+     * Given a {@link Structs.Amount}, convert it back to a form that can be used
+     * in communication with stellard
+     * 
+     * @param  {Structs.Amount} normalizedAmount
+     * @return {string|object}                  
+     * @memberOf StellarNetwork.amount
+     * @function encode
+     */
+    self.amount.encode = function(normalizedAmount) {
+      if(normalizedAmount.currency === "STR") {
+        return new BigNumber(normalizedAmount.value).times(1000000).toString();
+      } else {
+        return _.cloneDeep(normalizedAmount);
+      }
     };
 
     return self;

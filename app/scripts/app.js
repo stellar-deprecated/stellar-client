@@ -84,6 +84,11 @@ stellarClient.config(function($httpProvider, $stateProvider, $urlRouterProvider,
       templateUrl: 'states/trading.html',
       authenticate: true
     })
+    .state('trade', {
+      url:         '/trade',
+      templateUrl: 'states/trade.html',
+      authenticate: true
+    })
   ;
 
   $urlRouterProvider.otherwise('/dashboard');

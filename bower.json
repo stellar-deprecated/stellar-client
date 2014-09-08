@@ -19,7 +19,8 @@
     "ng-grid": "deckar01/ng-grid",
     "angular-cookie": "~4.0.2",
     "ng-clip": "*",
-    "zeroclipboard": "*"
+    "zeroclipboard": "*",
+    "bignumber.js": "~1.4.1"
   },
   "devDependencies": {},
   "resolutions": {
