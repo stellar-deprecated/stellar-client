@@ -1,7 +1,6 @@
 label {
   font-weight: $heavy-weight;
   font-size: 15px;
-  line-height: 42px;
   text-transform: uppercase;
 }
 
@@ -218,4 +217,10 @@ input[type=number]::-webkit-outer-spin-button {
 fieldset[disabled] .form-control {
   cursor: text;
   background-color: white;
+}
+
+select.form-control {
+  height: 42px;
+  border-radius: 2px;
+  color: $dark-grey;
 }
