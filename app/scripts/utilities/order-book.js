@@ -33,7 +33,14 @@ angular.module('stellarClient').factory('OrderBook', function($q, TradingOps, St
     var self = this;
     return StellarNetwork.request("subscribe", this._subscribeParams()).then(function (results) {
       // this should set the 
-      self.currentOffers = _.pick(results, 'bids', 'asks');
+      
+      var bids = results.bids.map(StellarNetwork.offer.decode);
+      var asks = results.asks.map(StellarNetwork.offer.decode);
+
+      self.currentOffers = {
+        bids: bids,
+        asks: asks
+      };
     });
   };
 

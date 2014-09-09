@@ -132,5 +132,64 @@ sc.factory('StellarNetwork', function($rootScope, $timeout, $q) {
       }
     };
 
+
+    /** @namespace  StellarNetwork.currency */
+    self.currency = {};
+    /**
+     * Normalizes a stellard native currency (which could be either STR or 
+     * currency/issuer object for other currencies) into our normalized 
+     * {@link Structs.Currency} form.
+     *
+     * @param {string|object} nativeCurrency 
+     * @return {Structs.Currency} the normalized currency
+     * @memberOf StellarNetwork.currency
+     * @function decode
+     */
+    self.currency.decode = function(nativeCurrency) {
+      var currencyType = typeof nativeCurrency;
+  
+      switch(amountType) {
+        case "string":
+          return { currency: "STR" };
+        case "object":
+          return nativeAmount;
+        default:
+          throw new Error("invalid currency type " + currencyType + ": expected a string, or object");
+      }
+    };
+
+
+    /**
+     * Given a {@link Structs.Currency}, convert it back to a form that can be used
+     * in communication with stellard
+     * 
+     * @param  {Structs.Currency} normalizedCurrency
+     * @return {string|object}                  
+     * @memberOf StellarNetwork.currency
+     * @function encode
+     */
+    self.currency.encode = function(normalizedCurrency) {
+      if(normalizedCurrency.currency === "STR") {
+        return normalizedCurrency.currency;
+      } else {
+        return normalizedCurrency;
+      }
+    };
+
+    /** @namespace  StellarNetwork.offer */
+    self.offer = {};
+
+    
+    self.offer.decode = function(nativeOffer) {
+      var result       = {};
+      result.account   = nativeOffer.Account;
+      result.sequence  = nativeOffer.Sequence;
+      result.takerPays = self.amount.decode(nativeOffer.TakerPays);
+      result.takerGets = self.amount.decode(nativeOffer.TakerGets);
+
+      return result;
+    };
+
+
     return self;
 });
