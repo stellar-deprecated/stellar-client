@@ -1,8 +1,6 @@
 var sc = angular.module('stellarClient');
 
 sc.factory('Trading', function($rootScope, $q, session, StellarNetwork, TransactionCurator, OrderBook, TradingOps) {
-  var orderbooks = [];
-
   /**
    *
    * The main service that interacts with the trading features of the stellar network.
@@ -34,14 +32,13 @@ sc.factory('Trading', function($rootScope, $q, session, StellarNetwork, Transact
    */
   var Trading = {};
 
-  $rootScope.$on('stellar-network:transaction', updateOrderBooks);
   $rootScope.$on('stellar-network:transaction', updateMyOffers);
 
 
   Trading.getOrderBook = function(baseCurrency, counterCurrency) {
     //TODO: the order book actually represents both "order books" for a given currency pair, we should canonicalize the currency so only one orderbook instance exists for a given pair 
     //TODO: don't allow more than one orderbook to exist for a given currency pair
-    return new OrderBook(baseCurrency, counterCurrency);
+    return OrderBook.get(baseCurrency, counterCurrency);
   };
 
   Trading.createOffer = function(takerPays, takerGets) {
@@ -63,15 +60,6 @@ sc.factory('Trading', function($rootScope, $q, session, StellarNetwork, Transact
   Trading.offer.getPrice = function(baseAmount, counterAmount) {
     return new BigNumber(counterAmount.value).div(baseAmount.value).toString();
   };
-
-  function updateOrderBooks(e, tx) {
-    //TODO
-    // for each order book that has been initialized
-    // find any offers that apply to it
-    // replace the offer in the offers of the order book
-    // broadcast the updated order book
-
-  }
 
   /**
    * 

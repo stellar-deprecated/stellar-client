@@ -90,28 +90,19 @@ sc.controller('TradeCtrl', function($scope, session, Trading, CurrencyPairs) {
   };
 
   $scope.addFavorite = function() {
-    CurrencyPairs.markFavorite({
-      baseCurrency:    $scope.baseCurrency,
-      counterCurrency: $scope.counterCurrency,
-    });
+    CurrencyPairs.markFavorite(currentCurrencyPair());
 
     session.syncWallet("update");
   };
 
   $scope.removeFavorite = function() {
-    CurrencyPairs.unmarkFavorite({
-      baseCurrency:    $scope.baseCurrency,
-      counterCurrency: $scope.counterCurrency,
-    });
+    CurrencyPairs.unmarkFavorite(currentCurrencyPair());
 
     session.syncWallet("update");
   };
 
   $scope.isFavorite = function() {
-    return CurrencyPairs.isFavorite({
-      baseCurrency:    $scope.baseCurrency,
-      counterCurrency: $scope.counterCurrency,
-    });
+    return CurrencyPairs.isFavorite(currentCurrencyPair());
   };
 
 
@@ -130,9 +121,16 @@ sc.controller('TradeCtrl', function($scope, session, Trading, CurrencyPairs) {
     }
 
     //TODO: canonicali
-    $scope.currentOrderBook = Trading.getOrderBook($scope.baseCurrency, $scope.counterCurrency);
+    $scope.currentOrderBook = Trading.getOrderBook(currentCurrencyPair());
 
     $scope.currentOrderBook.subscribe();
+  }
+
+  function currentCurrencyPair() {
+    return {
+      baseCurrency:    $scope.baseCurrency, 
+      counterCurrency: $scope.counterCurrency
+    };
   }
 
   $scope.refreshMyOffers();

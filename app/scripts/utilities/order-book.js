@@ -1,4 +1,20 @@
-angular.module('stellarClient').factory('OrderBook', function($q, TradingOps, StellarNetwork, CurrencyPairs) {
+angular.module('stellarClient').factory('OrderBook', function($q, $rootScope, TradingOps, StellarNetwork, CurrencyPairs, TransactionCurator) {
+
+  var orderbooks = {};
+
+  $rootScope.$on('stellar-network:transaction', updateOrderBooks);
+
+  var getOrderBook = function(currencyPair) {
+    var bookKey = CurrencyPairs.getKey(currencyPair);
+    var result = orderbooks[bookKey];
+
+    if(!result) {
+      result = new OrderBook(currencyPair.baseCurrency, currencyPair.counterCurrency);
+      orderbooks[bookKey] = result;
+    }
+
+    return result;
+  };
 
   var OrderBook = function(baseCurrency, counterCurrency) {
     this.baseCurrency    = _.cloneDeep(baseCurrency);
@@ -48,6 +64,22 @@ angular.module('stellarClient').factory('OrderBook', function($q, TradingOps, St
     return StellarNetwork.request("unsubscribe", this._subscribeParams());
   };
 
+
+  /**
+   * Incorporate any Offers affected by the provided transaction, that also
+   * apply to this OrderBook, into this order book.
+   *
+   * This method is the means through which we update order books in a live
+   * manner.  Rather than having OrderBooks manage their own communication with
+   * stellard (since subscriptions are owned on the Remote) t
+   * 
+   * @param  {[type]} tx [description]
+   * @return {[type]}    [description]
+   */
+  OrderBook.prototype.injestOffers = function(offers) {
+    console.log("injesting", this, offers);
+  };
+
   OrderBook.prototype.getPriceLevels = function(offerType) {
     var offers = this.currentOffers[offerType];
 
@@ -73,7 +105,26 @@ angular.module('stellarClient').factory('OrderBook', function($q, TradingOps, St
     return TradingOps.createOffer(takerPays, takerGets);
   };
 
-  return OrderBook;
+
+  function updateOrderBooks(e, tx) {
+    console.log("updating orderbooks", tx);
+    var offers = TransactionCurator.getOffersAffectedByTx(tx);
+
+    //TODO
+    // for each order book that has been initialized
+    // find any offers that apply to it
+    // replace the offer in the offers of the order book
+    // broadcast the updated order book
+
+    _(orderbooks).each(function (orderbook, key) {
+      orderbook.injestOffers(offers);
+    });
+  }
+
+
+  return {
+    get: getOrderBook
+  };
 });
 
 

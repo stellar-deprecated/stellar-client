@@ -129,6 +129,22 @@ sc.service('CurrencyPairs', function($q, session) {
     }
   };
 
+  this.getKey = function(currencyPair) {
+    function getKeyPart(currency) {
+      var result = currency.currency;
+      if(currency.issuer) {
+        result += "/" + currency.issuer;
+      }
+
+      return result;
+    }
+
+    var basePart    = getKeyPart(currencyPair.baseCurrency);
+    var counterPart = getKeyPart(currencyPair.counterCurrency);
+
+    return basePart + ":" + counterPart;
+  };
+
   function priorityKey(currency1, currency2) {
     return currency1.currency +  ":" + currency2.currency;
   }
