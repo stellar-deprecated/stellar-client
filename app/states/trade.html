@@ -4,7 +4,15 @@
 
         <form role="form" ng-submit="createOffer()">
             <div class="form-group">
-                <label>SELL:</label>
+                <label class="radio-inline">
+                  <input type="radio" ng-model="tradeOperation" value="buy"> Buy
+                </label>
+                <label class="radio-inline">
+                  <input type="radio"ng-model="tradeOperation" value="sell"> Sell
+                </label>
+            </div>
+
+            <div class="form-group">
                 <input class="form-control" type="text" ng-model="baseCurrencyAmount">
                 <select class="form-control" ng-model="baseCurrency" ng-options="amount.currency for amount in currencies">
                     <option value="">-- choose base currency --</option>

@@ -9,14 +9,16 @@
  * @namespace Structs
  */
 
-
+/**
+ * @typedef {object} Currency
+ * @property {string} currency - the currency code.
+ * @property {string} [issuer] - the issuer of the currency, if not STR 
+ */
 
 /**
- * @typedef {object} Offer
- * @property {string}              account   - the address whom created this offer.
- * @property {number}              sequence  - the sequence number of the offer.
- * @property {Structs.Amount} takerPays -
- * @property {Structs.Amount} takerGets -
+ * @typedef {object} CurrencyPair
+ * @property {Currency} baseCurrency
+ * @property {Currency} counterCurrency
  */
 
 /**
@@ -25,11 +27,21 @@
  * @property {string} value    - the string of digits representing the value.  
  *                               Note, STR is expressed in stellars, not the native stroops
  * @property {string} [issuer] - the issuer of the currency, if not STR
- * @memberOf Structs
  */
 
 
 /**
- * @typedef {object} AffectedNode
- * 
+ * @typedef {object} Offer
+ * @memberOf Trading
+ * @property {string}              account   - the address whom created this offer.
+ * @property {number}              sequence  - the sequence number of the offer.
+ * @property {Structs.Amount} takerPays -
+ * @property {Structs.Amount} takerGets -
+ */
+
+/**
+ * @typedef {object} PriceLevel
+ * @memberOf Trading
+ * @property {string} price
+ * @property {string} amount the quantity available at the specified price
  */

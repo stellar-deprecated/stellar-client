@@ -25,19 +25,14 @@ sc.controller('TradeCtrl', function($scope, Trading) {
   $scope.currentOrderBook = null;
   $scope.currentOffers    = null;
   $scope.myOffers         = null;
-
-  $scope.$on("trading:my-offers:canceled", function(e, cancellation) {
-    console.log(cancellation);
-  });
+  $scope.tradeOperation   = 'buy';
 
   $scope.$on("trading:my-offers:partially-filled", function(e, offer) {
-    console.log("partially-filled", _.pick(offer, 'account', 'sequence'))
     var index = _.findIndex($scope.myOffers, _.pick(offer, 'account', 'sequence'));
     $scope.myOffers[index] = offer;
   });
 
   $scope.$on("trading:my-offers:filled", function(e, offer) {
-    console.log("filled", _.pick(offer, 'account', 'sequence'))
     var index = _.findIndex($scope.myOffers, _.pick(offer, 'account', 'sequence'));
     $scope.myOffers.splice(index, 1);
   });
@@ -53,11 +48,26 @@ sc.controller('TradeCtrl', function($scope, Trading) {
   };
 
   $scope.createOffer = function(e) {
-    $scope.currentOrderBook
-      .sell($scope.baseCurrencyAmount, $scope.counterCurrencyAmount)
+    var offerPromise;
+
+    switch($scope.tradeOperation) {
+    case "buy":
+      offerPromise = $scope.currentOrderBook.buy($scope.baseCurrencyAmount, $scope.counterCurrencyAmount);
+      break;
+    case "sell":
+      offerPromise = $scope.currentOrderBook.sell($scope.baseCurrencyAmount, $scope.counterCurrencyAmount);
+      break;
+    default:
+      throw new Error("invalid trade operation: " + $scope.tradeOperation + ", expected buy or sell");
+    }
+
+    offerPromise
       .catch(function (e) {
         //TODO: actually show an error
         console.log(e);
+      })
+      .then(function (result) {
+        // show a message!
       })
       .finally(function () {
         $scope.refreshMyOffers();
