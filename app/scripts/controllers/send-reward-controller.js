@@ -5,28 +5,24 @@ var sc = angular.module('stellarClient');
 sc.controller('SendRewardCtrl', function ($rootScope, $scope, $http, stNetwork, session, TutorialHelper) {
   $scope.reward = {
     rewardType: 3,
-    innerTitle: 'Learn to send stellars',
     status: 'incomplete',
-    getCopy: function(type) {
+    innerTitle: 'Learn to send stellars',
+    getCopy: function() {
       switch ($scope.reward.status) {
         case 'needs_fbauth':
         case 'sending':
         case 'sent':
           // User needs to fb auth before they can get their stellars (when they're done, still show this message)
-          var copy = {
+          return {
             title: 'Sent!',
             subtitle: 'Log in with Facebook to receive stellars'
-          }
-          break;
+          };
         default:
-          var copy = {
+          return {
             title: 'Send stellars!',
             subtitle: 'Learn to send'
-          }
-          break;
+          };
       }
-
-      return copy[type];
     },
     updateReward: function (status) {
       $scope.reward.status = status;

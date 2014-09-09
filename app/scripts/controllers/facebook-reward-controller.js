@@ -5,38 +5,46 @@ var sc = angular.module('stellarClient');
 sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, session) {
   $scope.reward = {
     rewardType: 1,
-    title: 'Receive stellars on us!',
-    getSubtitle: function () {
-      if (!$scope.data) {
-        return;
-      }
-      if ($scope.data.inviteCode && !$scope.data.hasClaimedInviteCode) {
-        return "Enter your invite code now to receive stellars!";
-      } else if ($scope.data.inviteCode && $scope.data.hasClaimedInviteCode) {
-        return "Thanks to " + $scope.data.inviterUsername + " you will receive stellars once you connect to Facebook.";
-      } else {
-        return 'Log in with Facebook'
+    status: 'incomplete',
+    innerTitle: 'Receive stellars',
+    getCopy: function() {
+      switch ($scope.rewards.status) {
+        case 'sent':
+          return {
+            title: 'You connected your Facebook!',
+            subtitle: getInviteSubtitle()
+          };
+        case 'reward_error':
+        case 'reward_queued':
+          return {
+            title: "You connected your Facebook!",
+            subtitle: "You are on the waiting list! You will get your stellars soon."
+          };
+        case 'sending':
+          return {
+            title: "You connected your Facebook!",
+            subtitle: "...you should be receiving your reward shortly!"
+          };
+        case 'ineligible':
+          return {
+            title: "Your Facebook account is not eligible.",
+            subtitle: "Please check back for other ways to participate soon."
+          };
+        case 'fake':
+          // TODO: their account is fake
+        case 'incomplete':
+          /* falls through */
+        default:
+          return {
+            title: 'Receive stellars on us!',
+            subtitle: getInviteSubtitle()
+          };
       }
     },
-    innerTitle: 'Receive stellars',
-    status: 'incomplete',
     error: null,
     updateReward: function (status) {
       $scope.reward.status = status;
       switch (status) {
-        case 'sent':
-          $scope.reward.title = 'You connected your Facebook!';
-          $scope.reward.subtitle = null;
-          break;
-        case 'reward_error':
-        case 'reward_queued':
-          $scope.reward.title = "You connected your Facebook!";
-          $scope.reward.subtitle = "You are on the waiting list! You will get your stellars soon.";
-          break;
-        case 'sending':
-          $scope.reward.title = "You connected your Facebook!";
-          $scope.reward.subtitle = "...you should be receiving your reward shortly!";
-          break;
         case 'unverified':
           $scope.reward.error = {};
           $scope.reward.error.template = "templates/facebook-verify-error.html";
@@ -48,8 +56,6 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, session
           break;
         case 'ineligible':
           $scope.reward.error = {};
-          $scope.reward.title = "Your Facebook account is not eligible.";
-          $scope.reward.subtitle = "Please check back for other ways to participate soon.";
           $scope.reward.error.info = "Our spam detection checks say your Facebook account isn't eligible. If you are a legitimate user, we apologize and are improving our detection algorithms. And we will release new ways to grab stellars soon, so please check back.";
           $scope.reward.error.panel = "Sorry, your Facebook account isn't eligible."
           $scope.reward.error.action = null;
@@ -71,8 +77,19 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, session
   };
   // add this reward to the parent scope's reward array
   $scope.rewards[$scope.reward.rewardType] = $scope.reward;
-
   $scope.reward.template = 'templates/facebook-button.html';
+
+  var getInviteSubtitle = function() {
+    if ($scope.data) {
+      if ($scope.data.inviteCode && !$scope.data.hasClaimedInviteCode) {
+        return "Enter your invite code now to receive stellars!";
+      } else if ($scope.data.inviteCode && $scope.data.hasClaimedInviteCode) {
+        return "Thanks to " + $scope.data.inviterUsername + " you will receive stellars once you connect to Facebook.";
+      }
+    }
+
+    return 'Log in with Facebook';
+  };
 
   $scope.facebookLogin = function () {
     $scope.loading = true;
