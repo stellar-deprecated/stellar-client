@@ -1,4 +1,4 @@
-angular.module('stellarClient').factory('OrderBook', function($q, TradingOps, StellarNetwork) {
+angular.module('stellarClient').factory('OrderBook', function($q, TradingOps, StellarNetwork, CurrencyPairs) {
 
   var OrderBook = function(baseCurrency, counterCurrency) {
     this.baseCurrency    = _.cloneDeep(baseCurrency);
@@ -6,11 +6,15 @@ angular.module('stellarClient').factory('OrderBook', function($q, TradingOps, St
     this.currentOffers   = {};
   };
 
+  OrderBook.prototype.getCurrencyPair = function() {
+    return _.pick(this, 'baseCurrency', 'counterCurrency');
+  };
+
   OrderBook.prototype.buy = function (amountToBuy, amountToPay) {
     var takerPays = _.extend({value:amountToBuy}, this.baseCurrency);
     var takerGets = _.extend({value:amountToPay}, this.counterCurrency);
 
-    return TradingOps.createOffer(takerPays, takerGets);
+    return this._createOffer(takerPays, takerGets);
   };
 
 
@@ -18,7 +22,7 @@ angular.module('stellarClient').factory('OrderBook', function($q, TradingOps, St
     var takerGets = _.extend({value:amountToSell}, this.baseCurrency);
     var takerPays = _.extend({value:amountToReceive}, this.counterCurrency);
 
-    return TradingOps.createOffer(takerPays, takerGets);
+    return this._createOffer(takerPays, takerGets);
   };
 
   OrderBook.prototype.destroy = function() {
@@ -55,6 +59,11 @@ angular.module('stellarClient').factory('OrderBook', function($q, TradingOps, St
         "both":       true
       }]
     };
+  };
+
+  OrderBook.prototype._createOffer = function(takerPays, takerGets) {
+    CurrencyPairs.recordPriority(this.getCurrencyPair());
+    return TradingOps.createOffer(takerPays, takerGets);
   };
 
   return OrderBook;

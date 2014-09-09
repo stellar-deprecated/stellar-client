@@ -3,7 +3,7 @@ var sc = angular.module('stellarClient');
 //TODO:  the transaction history doesn't not show entries for when your offers are filled, 
 // meaning your balance can change without an appropriate entry being added into the transaction history
 
-sc.controller('TradeCtrl', function($scope, Trading) {
+sc.controller('TradeCtrl', function($scope, session, Trading, CurrencyPairs) {
      
   //TODO: we need to dynamically populate a list that is useful to the user
   //TODO: allow a user to manually specify the currency pair to use (see mocks)
@@ -17,6 +17,8 @@ sc.controller('TradeCtrl', function($scope, Trading) {
     {currency:"JED", issuer: "gKAEHiF5LELZ5eytP4EVZVqqdbuCuHvq9C"},
   ];
 
+  $scope.favorites = CurrencyPairs.getFavorites();
+
   $scope.baseCurrency    = $scope.currencies[2];
   $scope.counterCurrency = $scope.currencies[1];
   $scope.$watch('baseCurrency', switchOrderBookIfNeeded);
@@ -25,19 +27,14 @@ sc.controller('TradeCtrl', function($scope, Trading) {
   $scope.currentOrderBook = null;
   $scope.currentOffers    = null;
   $scope.myOffers         = null;
-
-  $scope.$on("trading:my-offers:canceled", function(e, cancellation) {
-    console.log(cancellation);
-  });
+  $scope.tradeOperation   = 'buy';
 
   $scope.$on("trading:my-offers:partially-filled", function(e, offer) {
-    console.log("partially-filled", _.pick(offer, 'account', 'sequence'))
     var index = _.findIndex($scope.myOffers, _.pick(offer, 'account', 'sequence'));
     $scope.myOffers[index] = offer;
   });
 
   $scope.$on("trading:my-offers:filled", function(e, offer) {
-    console.log("filled", _.pick(offer, 'account', 'sequence'))
     var index = _.findIndex($scope.myOffers, _.pick(offer, 'account', 'sequence'));
     $scope.myOffers.splice(index, 1);
   });
@@ -53,11 +50,26 @@ sc.controller('TradeCtrl', function($scope, Trading) {
   };
 
   $scope.createOffer = function(e) {
-    $scope.currentOrderBook
-      .sell($scope.baseCurrencyAmount, $scope.counterCurrencyAmount)
+    var offerPromise;
+
+    switch($scope.tradeOperation) {
+    case "buy":
+      offerPromise = $scope.currentOrderBook.buy($scope.baseCurrencyAmount, $scope.counterCurrencyAmount);
+      break;
+    case "sell":
+      offerPromise = $scope.currentOrderBook.sell($scope.baseCurrencyAmount, $scope.counterCurrencyAmount);
+      break;
+    default:
+      throw new Error("invalid trade operation: " + $scope.tradeOperation + ", expected buy or sell");
+    }
+
+    offerPromise
       .catch(function (e) {
         //TODO: actually show an error
         console.log(e);
+      })
+      .then(function (result) {
+        // show a message!
       })
       .finally(function () {
         $scope.refreshMyOffers();
@@ -69,6 +81,36 @@ sc.controller('TradeCtrl', function($scope, Trading) {
   $scope.refreshMyOffers = function() {
     Trading.myOffers().then(function (offers) {
       $scope.myOffers = _.isEmpty(offers) ? null : offers;
+    });
+  };
+
+  $scope.currencyPairDisplay = function(favorite) {
+    //TODO
+    return favorite.baseCurrency.currency + ":" + favorite.counterCurrency.currency;
+  };
+
+  $scope.addFavorite = function() {
+    CurrencyPairs.markFavorite({
+      baseCurrency:    $scope.baseCurrency,
+      counterCurrency: $scope.counterCurrency,
+    });
+
+    session.syncWallet("update");
+  };
+
+  $scope.removeFavorite = function() {
+    CurrencyPairs.unmarkFavorite({
+      baseCurrency:    $scope.baseCurrency,
+      counterCurrency: $scope.counterCurrency,
+    });
+
+    session.syncWallet("update");
+  };
+
+  $scope.isFavorite = function() {
+    return CurrencyPairs.isFavorite({
+      baseCurrency:    $scope.baseCurrency,
+      counterCurrency: $scope.counterCurrency,
     });
   };
 
