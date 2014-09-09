@@ -22,7 +22,7 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
     var showRewardsSetting = wallet.get('mainData', 'showRewards', true);
 
     return !$scope.rewardsComplete && showRewardsSetting;
-  }
+  };
 
   var firstRequest = true;
 
@@ -60,7 +60,7 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
   $scope.sortedRewards = $scope.rewards.slice();
 
   $scope.toggleReward = function (index) {
-    if ($scope.rewards[index].status == 'sent') {
+    if ($scope.rewards[index].status === 'sent') {
       return;
     }
 
@@ -87,16 +87,16 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
           $scope.updateRewards();
         })
         .error(function (response) {
-          if (response.status == "fail") {
+          if (response.status === "fail") {
             Util.showError($('.invite-fb-form [data-toggle=tooltip'), response.message);
           }
-        })
+        });
     }
-  }
+  };
 
   $scope.rewardQueuedButtonTitle = function() {
     return _.isEmpty($scope.data.inviteCode) ? "Continue" : "Submit Invite Code";
-  }
+  };
 
   $scope.computeRewardProgress = function() {
     var order = {
@@ -128,9 +128,9 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
       return order[b] - order[a];
     });
     var completedRewards = $scope.rewards.filter(function (reward) {
-      return reward.status == 'sent';
+      return reward.status === 'sent';
     });
-    $scope.rewardsComplete = (completedRewards.length == $scope.rewards.length);
+    $scope.rewardsComplete = (completedRewards.length === $scope.rewards.length);
 
     $scope.showRewardsComplete = $scope.rewardsComplete;
 
@@ -183,7 +183,7 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
 
     turnOffFairyTxListener = $scope.$on('$appTxNotification', function (event, tx) {
       var fairyContact = contacts.getContactByEmail('StellarFoundation@stellar.org');
-      if (fairyContact && tx.counterparty == fairyContact.destination_address) {
+      if (fairyContact && tx.counterparty === fairyContact.destination_address) {
         $scope.updateRewards();
       }
     });
@@ -223,20 +223,20 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
     return $http.post(Options.API_SERVER + '/user/claimRewards', data)
       .then(function() {
         $scope.rewards.forEach(function(reward) {
-          if(reward.status == 'ready') {
+          if(reward.status === 'ready') {
             reward.updateReward('sending');
           }
         });
 
-        FlashMessages.dismissById('claimRewards')
+        FlashMessages.dismissById('claimRewards');
       });
   });
 
   function getInviteClaimedFlashMessageInfo() {
     var facebookClaimed =
-      $scope.rewards[1].status == "sending" ||
-      $scope.rewards[1].status == "sent" ||
-      $scope.rewards[1].status == 'ready';
+      $scope.rewards[1].status === "sending" ||
+      $scope.rewards[1].status === "sent" ||
+      $scope.rewards[1].status === 'ready';
     if (facebookClaimed) {
       return "Claim your reward now!";
     } else {
@@ -251,7 +251,7 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
 
   $scope.$on('openFacebookReward', function () {
     $scope.selectedReward = 1;
-  })
+  });
 
   $scope.$on('invite-claimed', function () {
     $scope.updateRewards()
@@ -259,7 +259,7 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
         FlashMessages.add({title: "Invite claimed!", info: getInviteClaimedFlashMessageInfo()});
       })
       .then(processReadyRewards);
-  })
+  });
 
   $scope.updateRewards()
     .then(setupFairyTxListener)

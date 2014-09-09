@@ -33,7 +33,7 @@ sc.controller('EmailRewardCtrl', function ($scope, $rootScope, session) {
     updateReward: function (status) {
       $scope.reward.status = status;
     }
-  }
+  };
   // add this reward to the parent scope's reward array
   $scope.rewards[$scope.reward.rewardType] = $scope.reward;
 

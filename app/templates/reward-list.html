@@ -3,7 +3,7 @@
         <div class="reward-body" ng-click="toggleReward(reward.rewardType)">
             <i ng-class="rewardStatusIcons[reward.status]"></i>
             <span class="reward-step" ng-show="reward.rewardType == 1 && reward.status != 'sent'">
-            	<span class="step-label">Next Step</span>
+                <span class="step-label">Next Step</span>
             </span>
             <span class="reward-title">{{reward.error.panel || reward.getCopy().title}}</span>
             <span class="subtitle">{{reward.getCopy().subtitle}}</span>
