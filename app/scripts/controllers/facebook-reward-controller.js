@@ -50,26 +50,27 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, session
           $scope.reward.error.template = "templates/facebook-verify-error.html";
           $scope.reward.error.panel = "Almost there! Verify your Facebook account.";
           $scope.reward.error.action = function () {
-            $scope.reward.error = null,
+            $scope.reward.error = null;
             $scope.reward.status = 'incomplete';
           };
           break;
         case 'ineligible':
           $scope.reward.error = {};
           $scope.reward.error.info = "Our spam detection checks say your Facebook account isn't eligible. If you are a legitimate user, we apologize and are improving our detection algorithms. And we will release new ways to grab stellars soon, so please check back.";
-          $scope.reward.error.panel = "Sorry, your Facebook account isn't eligible."
+          $scope.reward.error.panel = "Sorry, your Facebook account isn't eligible.";
           $scope.reward.error.action = null;
           break;
         case 'already_taken':
           $scope.reward.error = {};
           $scope.reward.error.info = "This Facebook account is already in use.";
           $scope.reward.error.action = function () {
-            $scope.reward.error = null,
+            $scope.reward.error = null;
             $scope.reward.status = 'incomplete';
           };
           break;
         case 'fake':
           // TODO: their account is fake
+          /* falls through */
         default:
           break;
       }
@@ -131,7 +132,7 @@ function claim(data) {
 
   function facebookLoginError(response) {
     $scope.loading = false;
-    if (response && response.status == 'fail') {
+    if (response && response.status === 'fail') {
       switch (response.code) {
         case 'already_taken':
           $scope.reward.updateReward('already_taken');
@@ -147,10 +148,11 @@ function claim(data) {
           break;
         case 'reward_already_queued':
         case 'reward_limit_reached':
+          /* falls through */
         default:
         // TODO: generic error
       }
-    } else if (response && response.status == 'error') {
+    } else if (response && response.status === 'error') {
       // TODO: generic error
     } else {
       $scope.reward.status = 'incomplete';

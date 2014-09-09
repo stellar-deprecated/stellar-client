@@ -26,11 +26,11 @@ sc.controller('SendRewardCtrl', function ($rootScope, $scope, $http, stNetwork, 
     },
     updateReward: function (status) {
       $scope.reward.status = status;
-      if (status == 'sent') {
-      	removeSentTxListener();
+      if (status === 'sent') {
+        removeSentTxListener();
       }
     }
-  }
+  };
   // add this reward to the parent scope's reward array
   $scope.rewards[$scope.reward.rewardType] = $scope.reward;
 
@@ -47,12 +47,12 @@ sc.controller('SendRewardCtrl', function ($rootScope, $scope, $http, stNetwork, 
   function validateTransaction(tx){
     // TODO: Make this a variable and use it in the template.
     var minAmount = 25 * 1000000;
-    return tx && tx.type == "sent" && tx.amount.to_number() >= minAmount;
+    return tx && tx.type === "sent" && tx.amount.to_number() >= minAmount;
   }
 
   var turnOffTxListener;
   function setupSentTxListener() {
-  	turnOffTxListener = $scope.$on('$appTxNotification', function (event, tx) {
+    turnOffTxListener = $scope.$on('$appTxNotification', function (event, tx) {
       if (validateTransaction(tx)) {
         requestSentStellarsReward();
       }
@@ -118,7 +118,7 @@ sc.controller('SendRewardCtrl', function ($rootScope, $scope, $http, stNetwork, 
   }
 
   var turnOffListener = $scope.$on("onRewardsUpdated", function () {
-    if ($scope.reward.status == 'incomplete') {
+    if ($scope.reward.status === 'incomplete') {
       checkSentTransactions();
       turnOffListener();
     }
