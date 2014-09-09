@@ -2,6 +2,17 @@
     <div class="container">
         <h1 class="title">Trading</h1>
 
+        <form role="form">
+            <div class="form-group">
+                <select class="form-control" ng-model="chosenFavorite" ng-options="currencyPairDisplay(fav) for fav in favorites">
+                    <option value="">-- choose a favorite --</option>
+                </select>
+            </div>
+        </form>
+
+        <a ng-click="addFavorite()" ng-show="!isFavorite()">Add selections below as favorite</a>
+        <a ng-click="removeFavorite()" ng-show="isFavorite()">Remove selections below as favorite</a>
+
         <form role="form" ng-submit="createOffer()">
             <div class="form-group">
                 <label class="radio-inline">

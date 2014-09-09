@@ -24,6 +24,10 @@ sc.service('CurrencyPairs', function($q, session) {
     });
   };
 
+  this.getFavorites = function() {
+    return _.cloneDeep(getFavorites());
+  };
+
   this.recordPriority = function(currencyPair) {
     // we record the provided currency pair under two keys, one for each direction
     // this adds to the size of the wallet but greatly simplifies lookup
