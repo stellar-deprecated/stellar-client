@@ -7,16 +7,16 @@ angular.module('stellarClient').factory('OrderBook', function($q, TradingOps, St
   };
 
   OrderBook.prototype.buy = function (amountToBuy, amountToPay) {
-    var takerPays = _.extend({value:amountToBuy}, this.counterCurrency);
-    var takerGets = _.extend({value:amountToPay}, this.baseCurrency);
+    var takerPays = _.extend({value:amountToBuy}, this.baseCurrency);
+    var takerGets = _.extend({value:amountToPay}, this.counterCurrency);
 
     return TradingOps.createOffer(takerPays, takerGets);
   };
 
 
   OrderBook.prototype.sell = function (amountToSell, amountToReceive) {
-    var takerPays = _.extend({value:amountToSell}, this.baseCurrency);
-    var takerGets = _.extend({value:amountToReceive}, this.counterCurrency);
+    var takerGets = _.extend({value:amountToSell}, this.baseCurrency);
+    var takerPays = _.extend({value:amountToReceive}, this.counterCurrency);
 
     return TradingOps.createOffer(takerPays, takerGets);
   };
