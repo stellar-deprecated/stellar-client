@@ -6,15 +6,15 @@ sc.controller('InvitesCtrl', function($scope, $http, $q, $filter, session, invit
     var INVITE_LINK = "https://launch.stellar.org/#/register?inviteCode=";
 
     $scope.getInvites = function () {
-        return session.getUser() && session.getUser().getInvites();
+        return session.getUser().getInvites();
     };
 
     $scope.getUnsentInvites = function () {
-        return session.getUser() && session.getUser().getUnsentInvites();
+        return session.getUser().getUnsentInvites();
     };
 
     $scope.getSentInvites = function () {
-        return session.getUser() && session.getUser().getSentInvites();
+        return session.getUser().getSentInvites();
     };
 
     // returns a 'status' for the given invite (send, pending, facebookauth)
@@ -120,9 +120,7 @@ sc.controller('InvitesCtrl', function($scope, $http, $q, $filter, session, invit
 
     invites.ack()
         .then(function () {
-            if (session.getUser()) {
-                session.getUser().refresh();
-            }
+            session.getUser().refresh();
         });
 });
 
