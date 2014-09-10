@@ -263,6 +263,8 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, S
             path.currency_human = path.amount._currency.to_human();
             path.issuer_human = path.amount._issuer.to_json();
             path.paths = raw.paths_computed || raw.paths_canonical;
+
+            // An identifier so that angular can track the elements using ng-repeat's track by
             path.issuer_currency = path.issuer_human + ',' + path.currency_human;
 
             return path;
