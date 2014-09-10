@@ -10,31 +10,31 @@ sc.controller('TradingCtrl', function($scope, session, singletonPromise, Trading
   $scope.tradeOperation = 'buy';
   $scope.currentOrderBook = null;
 
-  $scope.baseAmount = {
-    value: 0,
+  $scope.baseAmount = 0;
+  $scope.unitPrice = 0;
+  $scope.counterAmount = 0;
+
+  $scope.baseCurrency = {
     currency: $scope.currencyNames[0],
     issuer: null
   };
 
-  $scope.unitPrice = {
-    value: 0,
+  $scope.counterCurrency = {
     currency: $scope.currencyNames[1],
     issuer: null
   };
 
-  $scope.payableAmount = {
-    value: 0,
-    currency: null,
-    issuer: null
-  };
+  $scope.$watch('baseCurrency', setCurrentOrderBook, true);
+  $scope.$watch('counterCurrency', setCurrentOrderBook, true);
 
-  $scope.$watch('baseAmount', updateForm, true);
-  $scope.$watch('unitPrice', updateForm, true);
+  $scope.$watch('baseAmount', calculateCounterAmount);
+  $scope.$watch('unitPrice', calculateCounterAmount);
 
-  $scope.getIssuers = function(model) {
-    var currencies = _.filter($scope.currencies, {currency: model.currency});
+  $scope.getIssuers = function(currency) {
+    var currencies = _.filter($scope.currencies, {currency: currency.currency});
     var issuers = _.pluck(currencies, 'issuer');
-    model.issuer = issuers[0];
+
+    currency.issuer = issuers[0];
     return issuers;
   };
 
@@ -43,10 +43,10 @@ sc.controller('TradingCtrl', function($scope, session, singletonPromise, Trading
   };
 
   $scope.validOrderBook = function() {
-    if (_.isEmpty($scope.baseAmount)) { return false; }
-    if (_.isEmpty($scope.unitPrice)) { return false; }
+    if (_.isEmpty($scope.baseCurrency)) { return false; }
+    if (_.isEmpty($scope.counterCurrency)) { return false; }
 
-    if ($scope.baseAmount === $scope.unitPrice) { return false; }
+    if ($scope.baseCurrency === $scope.counterCurrency) { return false; }
 
     return true;
   };
@@ -55,9 +55,9 @@ sc.controller('TradingCtrl', function($scope, session, singletonPromise, Trading
     var offerPromise;
 
     if ($scope.tradeOperation === 'buy') {
-      offerPromise = $scope.currentOrderBook.buy($scope.baseAmount.value, $scope.payableAmount.value);
+      offerPromise = $scope.currentOrderBook.buy($scope.baseAmount, $scope.counterAmount);
     } else {
-      offerPromise = $scope.currentOrderBook.sell($scope.baseAmount.value, $scope.payableAmount.value);
+      offerPromise = $scope.currentOrderBook.sell($scope.baseAmount, $scope.counterAmount);
     }
     
     return offerPromise
@@ -66,31 +66,24 @@ sc.controller('TradingCtrl', function($scope, session, singletonPromise, Trading
       });
   });
 
-  function updateForm() {
-    $scope.payableAmount.value = ($scope.baseAmount.value * $scope.unitPrice.value).toString();
-    $scope.payableAmount.currency = $scope.unitPrice.currency;
-    $scope.payableAmount.issuer = $scope.unitPrice.issuer;
-
-    setCurrentOrderBook();
+  function calculateCounterAmount() {
+    $scope.counterAmount = ($scope.baseAmount * $scope.unitPrice).toString();
   }
 
   function setCurrentOrderBook() {
     if (!$scope.validOrderBook()) { return; }
 
-    var baseAmount = _.omit($scope.baseAmount, 'value');
-    var payableAmount = _.omit($scope.payableAmount, 'value');
-
     // Only update the order book if it has changed.
     if ($scope.currentOrderBook) {
-      var baseAmountUnchanged = _.isEqual($scope.currentOrderBook.baseAmount, baseAmount);
-      var counterAmountUnchanged = _.isEqual($scope.currentOrderBook.counterAmount, payableAmount);
+      var baseCurrencyUnchanged = _.isEqual($scope.currentOrderBook.baseCurrency, $scope.baseCurrency);
+      var counterCurrencyUnchanged = _.isEqual($scope.currentOrderBook.counterCurrency, $scope.payableCurrency);
 
-      if (baseAmountUnchanged && counterAmountUnchanged) { return; }
+      if (baseCurrencyUnchanged && counterCurrencyUnchanged) { return; }
 
       $scope.currentOrderBook.destroy();
     }
 
-    $scope.currentOrderBook = Trading.getOrderBook(baseAmount, payableAmount);
+    $scope.currentOrderBook = Trading.getOrderBook($scope.baseCurrency, $scope.counterCurrency);
     $scope.currentOrderBook.subscribe();
   }
 });
