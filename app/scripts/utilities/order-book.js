@@ -89,6 +89,31 @@ angular.module('stellarClient').factory('OrderBook', function($q, $rootScope, Tr
     return offers;
   };
 
+  /**
+   * Returns a string value that represents how the provided offer applies
+   * to this orderbook, either as a bid, or an ask, or as none (in the case
+   * that the currencies are not equal to the currencyPair for this)
+   * 
+   * @param  {Offer} offer
+   * @return {string}       "ask", "bid" or "none"
+   */
+  OrderBook.prototype.getOfferRole = function(offer) {
+    var bidPair = {
+      baseCurrency:    _.pick(offer.takerPays, 'currency', 'issuer'),
+      counterCurrency: _.pick(offer.takerGets, 'currency', 'issuer'),
+    };
+
+    var askPair = CurrencyPairs.invert(bidPair);
+
+    if (_.isEqual(bidPair, this.getCurrencyPair())) {
+      return 'bid';
+    } else if (_.isEqual(askPair, this.getCurrencyPair())) {
+      return 'ask';
+    } else {
+      return 'none';
+    }
+  };
+
   OrderBook.prototype._subscribeParams = function() {
     return {
       "books": [{

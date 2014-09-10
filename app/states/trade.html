@@ -45,7 +45,16 @@
             <h2>My Offers</h2>
             <ul>
                 <li ng-repeat="offer in myOffers" ng-controller="MyOffersListItemCtrl">
-                    <span>{{offer.takerPays.value}} {{offer.takerPays.currency}} for {{offer.takerGets.value}} {{offer.takerGets.currency}} ({{offer.sequence}})</span>
+                    <span>
+                        {{offer.operation}} 
+                        {{offer.baseAmount.value}}{{offer.baseAmount.currency}} 
+                        for 
+                        {{offer.counterAmount.value}}{{offer.counterAmount.currency}} 
+                        at
+                        {{offer.price.value}}{{offer.price.currency}}
+                        per
+                        {{offer.baseAmount.currency}}
+                        ({{offer.sequence}})</span>
                     <a ng-click="remove()">cancel offer</a>
                 </li>
             </ul>

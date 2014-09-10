@@ -31,7 +31,7 @@ sc.controller('TradeCtrl', function($scope, session, Trading, CurrencyPairs) {
 
   $scope.$on("trading:my-offers:partially-filled", function(e, offer) {
     var index = _.findIndex($scope.myOffers, _.pick(offer, 'account', 'sequence'));
-    $scope.myOffers[index] = offer;
+    $scope.myOffers[index] = Trading.offer.toFriendlyOffer(offer);
   });
 
   $scope.$on("trading:my-offers:filled", function(e, offer) {
@@ -80,7 +80,7 @@ sc.controller('TradeCtrl', function($scope, session, Trading, CurrencyPairs) {
 
   $scope.refreshMyOffers = function() {
     Trading.myOffers().then(function (offers) {
-      $scope.myOffers = _.isEmpty(offers) ? null : offers;
+      $scope.myOffers = _.isEmpty(offers) ? null : offers.map(Trading.offer.toFriendlyOffer);
     });
   };
 
