@@ -35,10 +35,10 @@ sc.factory('Trading', function($rootScope, $q, session, StellarNetwork, Transact
   $rootScope.$on('stellar-network:transaction', updateMyOffers);
 
 
-  Trading.getOrderBook = function(baseCurrency, counterCurrency) {
+  Trading.getOrderBook = function(currencyPair) {
     //TODO: the order book actually represents both "order books" for a given currency pair, we should canonicalize the currency so only one orderbook instance exists for a given pair 
     //TODO: don't allow more than one orderbook to exist for a given currency pair
-    return OrderBook.get(baseCurrency, counterCurrency);
+    return OrderBook.get(currencyPair);
   };
 
   Trading.createOffer = function(takerPays, takerGets) {

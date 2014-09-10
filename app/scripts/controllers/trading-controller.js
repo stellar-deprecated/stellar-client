@@ -83,7 +83,7 @@ sc.controller('TradingCtrl', function($scope, session, singletonPromise, Trading
       $scope.currentOrderBook.destroy();
     }
 
-    $scope.currentOrderBook = Trading.getOrderBook($scope.baseCurrency, $scope.counterCurrency);
+    $scope.currentOrderBook = Trading.getOrderBook(_.pick($scope, 'baseCurrency', 'counterCurrency'));
     $scope.currentOrderBook.subscribe();
   }
 });
