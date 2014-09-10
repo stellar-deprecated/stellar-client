@@ -53,15 +53,21 @@ angular.module('stellarClient').factory('UserPrivateInfo', function($http, $q, $
     };
 
     UserPrivateInfo.prototype.getUnsentInvites = function () {
-        return $filter('unsentInvitesFilter')(this.invites);
+        return _.filter(this.invites, function (invite) {
+            return !invite.emailedTo;
+        });
     };
 
     UserPrivateInfo.prototype.getSentInvites = function () {
-        return $filter('sentInvitesFilter')(this.invites);
+        return _.filter(this.invites, function (invite) {
+            return invite.emailedTo;
+        });
     };
 
     UserPrivateInfo.prototype.getNewInvites = function () {
-        return $filter('unseenInvitesFilter')(this.invites);
+        return _.filter(this.invites, function (invite) {
+            return !invite.acked;
+        });
     };
 
     UserPrivateInfo.prototype.getInviteCode = function () {

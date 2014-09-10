@@ -33,27 +33,3 @@ sc.service('invites', function($http, session) {
 
     };
 });
-
-sc.filter('unsentInvitesFilter', function () {
-    return function (invites) {
-        return _.filter(invites, function (invite) {
-            return !invite.emailedTo;
-        });
-    };
-});
-
-sc.filter('sentInvitesFilter', function () {
-    return function (invites) {
-        return _.filter(invites, function (invite) {
-            return invite.emailedTo;
-        });
-    };
-});
-
-sc.filter('unseenInvitesFilter', function () {
-    return function (invites) {
-        return _.filter(invites, function (invite) {
-            return !invite.acked;
-        });
-    };
-});
