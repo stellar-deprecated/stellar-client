@@ -5,36 +5,32 @@ var sc = angular.module('stellarClient');
 sc.controller('SendRewardCtrl', function ($rootScope, $scope, $http, StellarNetwork, session, TutorialHelper) {
   $scope.reward = {
     rewardType: 3,
-    innerTitle: 'Learn to send stellars',
     status: 'incomplete',
-    getCopy: function(type) {
+    innerTitle: 'Learn to send stellars',
+    getCopy: function() {
       switch ($scope.reward.status) {
         case 'needs_fbauth':
         case 'sending':
         case 'sent':
           // User needs to fb auth before they can get their stellars (when they're done, still show this message)
-          var copy = {
+          return {
             title: 'Sent!',
             subtitle: 'Log in with Facebook to receive stellars'
-          }
-          break;
+          };
         default:
-          var copy = {
+          return {
             title: 'Send stellars!',
             subtitle: 'Learn to send'
-          }
-          break;
+          };
       }
-
-      return copy[type];
     },
     updateReward: function (status) {
       $scope.reward.status = status;
-      if (status == 'sent') {
-      	removeSentTxListener();
+      if (status === 'sent') {
+        removeSentTxListener();
       }
     }
-  }
+  };
   // add this reward to the parent scope's reward array
   $scope.rewards[$scope.reward.rewardType] = $scope.reward;
 
@@ -51,12 +47,12 @@ sc.controller('SendRewardCtrl', function ($rootScope, $scope, $http, StellarNetw
   function validateTransaction(tx){
     // TODO: Make this a variable and use it in the template.
     var minAmount = 25 * 1000000;
-    return tx && tx.type == "sent" && tx.amount.to_number() >= minAmount;
+    return tx && tx.type === "sent" && tx.amount.to_number() >= minAmount;
   }
 
   var turnOffTxListener;
   function setupSentTxListener() {
-  	turnOffTxListener = $scope.$on('$appTxNotification', function (event, tx) {
+    turnOffTxListener = $scope.$on('$appTxNotification', function (event, tx) {
       if (validateTransaction(tx)) {
         requestSentStellarsReward();
       }
@@ -122,7 +118,7 @@ sc.controller('SendRewardCtrl', function ($rootScope, $scope, $http, StellarNetw
   }
 
   var turnOffListener = $scope.$on("onRewardsUpdated", function () {
-    if ($scope.reward.status == 'incomplete') {
+    if ($scope.reward.status === 'incomplete') {
       checkSentTransactions();
       turnOffListener();
     }
