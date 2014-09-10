@@ -61,7 +61,7 @@
         <p ng-show="showPaths()">You can send {{send.amount | amountToHuman }} {{send.amount._currency.to_human()}} using:</p>
         <div class="row" ng-show="showPaths()">
             <ul class="currencies-list">
-                <li ng-repeat="path in send.paths" class="currency-box">
+                <li ng-repeat="path in send.paths track by path.issuer_currency" class="currency-box">
                     <h5>{{ path.amount | amountToHuman }}</h5>
                     <p>{{ path.currency_human }}</p>
                     <p class="rate" ng-show="path.currency_human != send.currency">{{ path.rate | amountToHuman }} {{ path.currency_human }} / 1 {{ send.currency }}</p>
