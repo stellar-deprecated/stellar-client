@@ -85,7 +85,7 @@ gulp.task('scripts:templateCache', function() {
     return mergeStream(templates, states);
 });
 
-gulp.task('scripts:docs', $.shell.task(['./node_modules/.bin/jsdoc -c ./jsdoc.conf.json']));
+gulp.task('scripts:docs', $.shell.task(['./node_modules/.bin/jsdoc -c ./jsdoc.conf.json'], {ignoreErrors:true}));
 
 gulp.task('html', ['config', 'styles', 'scripts', 'flash'], function (done) {
     git.long(function (revision) {
