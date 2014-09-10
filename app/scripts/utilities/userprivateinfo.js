@@ -60,6 +60,10 @@ angular.module('stellarClient').factory('UserPrivateInfo', function($http, $q, $
         return $filter('sentInvitesFilter')(this.invites);
     };
 
+    UserPrivateInfo.prototype.getNewInvites = function () {
+        return $filter('unseenInvitesFilter')(this.invites);
+    };
+
     UserPrivateInfo.prototype.getInviteCode = function () {
         return this.inviteCode;
     };
@@ -72,10 +76,6 @@ angular.module('stellarClient').factory('UserPrivateInfo', function($http, $q, $
         return this.claimedInviteCode;
     };
 
-    UserPrivateInfo.prototype.getNewInvites = function () {
-        var invites = this.invites;
-        return $filter('unseenInvitesFilter')(invites);
-    };
 
     UserPrivateInfo.prototype.getEmailAddress = function () {
         return this.email && this.email.address;
