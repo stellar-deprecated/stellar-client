@@ -122,11 +122,31 @@ sc.service('CurrencyPairs', function($q, session) {
     if(priority === currencyPair.baseCurrency.currency) { 
       return currencyPair; 
     } else {
-      return {
-        baseCurrency:    currencyPair.counterCurrency,
-        counterCurrency: currencyPair.baseCurrency
-      };
+      return this.invert(currencyPair);
     }
+  };
+
+  this.invert = function(currencyPair) {
+    return {
+      baseCurrency:    currencyPair.counterCurrency,
+      counterCurrency: currencyPair.baseCurrency
+    };
+  };
+
+  this.getKey = function(currencyPair) {
+    function getKeyPart(currency) {
+      var result = currency.currency;
+      if(currency.issuer) {
+        result += "/" + currency.issuer;
+      }
+
+      return result;
+    }
+
+    var basePart    = getKeyPart(currencyPair.baseCurrency);
+    var counterPart = getKeyPart(currencyPair.counterCurrency);
+
+    return basePart + ":" + counterPart;
   };
 
   function priorityKey(currency1, currency2) {

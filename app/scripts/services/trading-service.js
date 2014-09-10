@@ -1,8 +1,6 @@
 var sc = angular.module('stellarClient');
 
-sc.factory('Trading', function($rootScope, $q, session, StellarNetwork, TransactionCurator, OrderBook, TradingOps) {
-  var orderbooks = [];
-
+sc.factory('Trading', function($rootScope, $q, session, StellarNetwork, TransactionCurator, OrderBook, TradingOps, CurrencyPairs) {
   /**
    *
    * The main service that interacts with the trading features of the stellar network.
@@ -34,14 +32,13 @@ sc.factory('Trading', function($rootScope, $q, session, StellarNetwork, Transact
    */
   var Trading = {};
 
-  $rootScope.$on('stellar-network:transaction', updateOrderBooks);
   $rootScope.$on('stellar-network:transaction', updateMyOffers);
 
 
-  Trading.getOrderBook = function(baseCurrency, counterCurrency) {
+  Trading.getOrderBook = function(currencyPair) {
     //TODO: the order book actually represents both "order books" for a given currency pair, we should canonicalize the currency so only one orderbook instance exists for a given pair 
     //TODO: don't allow more than one orderbook to exist for a given currency pair
-    return new OrderBook(baseCurrency, counterCurrency);
+    return OrderBook.get(currencyPair);
   };
 
   Trading.createOffer = function(takerPays, takerGets) {
@@ -60,18 +57,57 @@ sc.factory('Trading', function($rootScope, $q, session, StellarNetwork, Transact
   /** @namespace Trading.offer */
   Trading.offer = {};
 
-  Trading.offer.getPrice = function(baseAmount, counterAmount) {
-    return new BigNumber(counterAmount.value).div(baseAmount.value).toString();
+  Trading.offer.toFriendlyOffer = function(offer) {
+    
+    var takerPaysCurrency = _.pick(offer.takerPays, 'currency', 'issuer');
+    var takerGetsCurrency = _.pick(offer.takerGets, 'currency', 'issuer');
+
+    var currencyPair = CurrencyPairs.normalize({
+      baseCurrency:    takerPaysCurrency,
+      counterCurrency: takerGetsCurrency,
+    });
+
+    var orderBook = OrderBook.get(currencyPair);
+    var operation;
+
+    switch(orderBook.getOfferRole(offer)) {
+    case "bid":
+      operation = "buy";
+      break;
+    case "ask":
+      operation = "sell";
+      break;
+    default:
+      // NOTE: we should never get here since we loaded the order book
+      // from the currencyPair of the offer, meaning the offer should always
+      // be a member of the order book.  For some reason, it is not.
+      throw new Error("Cannot create a FriendlyOffer: source offer is not a member of this orderBook");
+    }
+
+    var baseAmount, counterAmount;
+
+    if(_.isEqual(takerPaysCurrency, currencyPair.baseCurrency)) {
+      baseAmount    = offer.takerPays;
+      counterAmount = offer.takerGets;
+    } else {
+      baseAmount    = offer.takerGets;
+      counterAmount = offer.takerPays;
+    }
+
+    var rawPrice = new BigNumber(counterAmount.value).div(baseAmount.value).toString();
+    var price    = _.extend({value:rawPrice}, currencyPair.counterCurrency);
+
+    return {
+      account:       offer.account,
+      sequence:      offer.sequence,
+      currencyPair:  currencyPair,
+      operation:     operation,
+      baseAmount:    baseAmount,
+      counterAmount: counterAmount,
+      price:         price
+    };
+
   };
-
-  function updateOrderBooks(e, tx) {
-    //TODO
-    // for each order book that has been initialized
-    // find any offers that apply to it
-    // replace the offer in the offers of the order book
-    // broadcast the updated order book
-
-  }
 
   /**
    * 

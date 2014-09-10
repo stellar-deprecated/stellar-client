@@ -39,6 +39,25 @@
  * @property {Structs.Amount} takerGets -
  */
 
+
+/**
+ * A FriendlyOffer represents a form of the offer that is compatible with how we
+ * display offers to users. That is, where an Offer simple has takerPays and takerGets,
+ * a FriendlyOffer uses tradeOperation (buy/sell), a currencyPair, an baseAmount,
+ * and pricePerUnit.  It also contains some denormalized value for ease of use.
+ * 
+ * @typedef {object} FriendlyOffer
+ * @memberOf Trading
+ * @property {string}         account       - the address whom created this offer.
+ * @property {number}         sequence      - the sequence number of the offer.
+ * @property {string}         operation     - "buy", or "sell"
+ * @property {CurrencyPair}   currencyPair  - the currency pair the offer was made on, 
+ *                                          as determined by the current users prioritization
+ * @property {Structs.Amount} baseAmount    - the amount the offer is for, in the base currency
+ * @property {Structs.Amount} counterAmount - the amount the offer is for, in the base currency
+ * @property {Structs.Amount} price         - an amount, priced in the counter currency, per unit of the base currency
+ */
+
 /**
  * @typedef {object} PriceLevel
  * @memberOf Trading

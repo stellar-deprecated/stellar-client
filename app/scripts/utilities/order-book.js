@@ -1,4 +1,20 @@
-angular.module('stellarClient').factory('OrderBook', function($q, TradingOps, StellarNetwork, CurrencyPairs) {
+angular.module('stellarClient').factory('OrderBook', function($q, $rootScope, TradingOps, StellarNetwork, CurrencyPairs, TransactionCurator) {
+
+  var orderbooks = {};
+
+  $rootScope.$on('stellar-network:transaction', updateOrderBooks);
+
+  var getOrderBook = function(currencyPair) {
+    var bookKey = CurrencyPairs.getKey(currencyPair);
+    var result = orderbooks[bookKey];
+
+    if(!result) {
+      result = new OrderBook(currencyPair.baseCurrency, currencyPair.counterCurrency);
+      orderbooks[bookKey] = result;
+    }
+
+    return result;
+  };
 
   var OrderBook = function(baseCurrency, counterCurrency) {
     this.baseCurrency    = _.cloneDeep(baseCurrency);
@@ -33,12 +49,35 @@ angular.module('stellarClient').factory('OrderBook', function($q, TradingOps, St
     var self = this;
     return StellarNetwork.request("subscribe", this._subscribeParams()).then(function (results) {
       // this should set the 
-      self.currentOffers = _.pick(results, 'bids', 'asks');
+      
+      var bids = results.bids.map(StellarNetwork.offer.decode);
+      var asks = results.asks.map(StellarNetwork.offer.decode);
+
+      self.currentOffers = {
+        bids: bids,
+        asks: asks
+      };
     });
   };
 
   OrderBook.prototype.unsubscribe = function() {
     return StellarNetwork.request("unsubscribe", this._subscribeParams());
+  };
+
+
+  /**
+   * Incorporate any Offers affected by the provided transaction, that also
+   * apply to this OrderBook, into this order book.
+   *
+   * This method is the means through which we update order books in a live
+   * manner.  Rather than having OrderBooks manage their own communication with
+   * stellard (since subscriptions are owned on the Remote) t
+   * 
+   * @param  {[type]} tx [description]
+   * @return {[type]}    [description]
+   */
+  OrderBook.prototype.injestOffers = function(offers) {
+    console.log("injesting", this, offers);
   };
 
   OrderBook.prototype.getPriceLevels = function(offerType) {
@@ -50,11 +89,36 @@ angular.module('stellarClient').factory('OrderBook', function($q, TradingOps, St
     return offers;
   };
 
+  /**
+   * Returns a string value that represents how the provided offer applies
+   * to this orderbook, either as a bid, or an ask, or as none (in the case
+   * that the currencies are not equal to the currencyPair for this)
+   * 
+   * @param  {Offer} offer
+   * @return {string}       "ask", "bid" or "none"
+   */
+  OrderBook.prototype.getOfferRole = function(offer) {
+    var bidPair = {
+      baseCurrency:    _.pick(offer.takerPays, 'currency', 'issuer'),
+      counterCurrency: _.pick(offer.takerGets, 'currency', 'issuer'),
+    };
+
+    var askPair = CurrencyPairs.invert(bidPair);
+
+    if (_.isEqual(bidPair, this.getCurrencyPair())) {
+      return 'bid';
+    } else if (_.isEqual(askPair, this.getCurrencyPair())) {
+      return 'ask';
+    } else {
+      return 'none';
+    }
+  };
+
   OrderBook.prototype._subscribeParams = function() {
     return {
       "books": [{
-        "taker_pays": this.counterCurrency,
-        "taker_gets": this.baseCurrency,
+        "taker_pays": this.baseCurrency,
+        "taker_gets": this.counterCurrency,
         "snapshot":   true,
         "both":       true
       }]
@@ -66,7 +130,26 @@ angular.module('stellarClient').factory('OrderBook', function($q, TradingOps, St
     return TradingOps.createOffer(takerPays, takerGets);
   };
 
-  return OrderBook;
+
+  function updateOrderBooks(e, tx) {
+    console.log("updating orderbooks", tx);
+    var offers = TransactionCurator.getOffersAffectedByTx(tx);
+
+    //TODO
+    // for each order book that has been initialized
+    // find any offers that apply to it
+    // replace the offer in the offers of the order book
+    // broadcast the updated order book
+
+    _(orderbooks).each(function (orderbook, key) {
+      orderbook.injestOffers(offers);
+    });
+  }
+
+
+  return {
+    get: getOrderBook
+  };
 });
 
 
