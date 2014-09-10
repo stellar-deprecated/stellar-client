@@ -4,7 +4,7 @@ angular.module('stellarClient').factory('UserPrivateInfo', function($http, $q, $
     var UserPrivateInfo = function (username, updateToken, data) {
         this.username = username;
         this.updateToken = updateToken;
-        this.updateUserInfo(data);
+        this.updateUserInfo(data || {});
     };
 
     /**
@@ -17,7 +17,13 @@ angular.module('stellarClient').factory('UserPrivateInfo', function($http, $q, $
         };
         return $http.post(SHOW_ENDPOINT, data)
             .then(function (response) {
-                return new UserPrivateInfo(username, updateToken, response.data.data);
+                return Util.tryGet(response, 'data.data');
+            })
+            .catch(function () {
+                return {};
+            })
+            .then(function (data) {
+                return new UserPrivateInfo(username, updateToken, data);
             });
     };
 
@@ -29,17 +35,17 @@ angular.module('stellarClient').factory('UserPrivateInfo', function($http, $q, $
         };
         return $http.post(SHOW_ENDPOINT, data)
             .success(function (response) {
-                return self.updateUserInfo(response.data);
+                self.updateUserInfo(response.data);
+                return self;
             });
     };
 
     UserPrivateInfo.prototype.updateUserInfo = function (data) {
-        this.invites = data.invites;
-        this.inviteCode = data.inviteCode;
+        this.invites           = data.invites || [];
+        this.inviteCode        = data.inviteCode;
         this.claimedInviteCode = data.claimedInviteCode;
-        this.inviterUsername = data.inviterUsername;
-        this.email = data.email;
-        return $q.resolve;
+        this.inviterUsername   = data.inviterUsername;
+        this.email             = data.email;
     };
 
     UserPrivateInfo.prototype.getInvites = function () {
