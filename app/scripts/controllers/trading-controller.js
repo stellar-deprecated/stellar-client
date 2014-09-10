@@ -67,7 +67,7 @@ sc.controller('TradingCtrl', function($scope, session, singletonPromise, Trading
   });
 
   function updateForm() {
-    $scope.payableAmount.value = $scope.baseAmount.value * $scope.unitPrice.value;
+    $scope.payableAmount.value = ($scope.baseAmount.value * $scope.unitPrice.value).toString();
     $scope.payableAmount.currency = $scope.unitPrice.currency;
     $scope.payableAmount.issuer = $scope.unitPrice.issuer;
 
