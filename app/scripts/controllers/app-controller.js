@@ -66,8 +66,8 @@ sc.controller('AppCtrl', function($scope, $rootScope, StellarNetwork, session, $
         accountObj.on('entry', handleAccountEntry);
 
         var listenerCleanupFn = function () {
-            accountObj.off("entry", handleAccountEntry);
-        }
+            accountObj.removeListener("entry", handleAccountEntry);
+        };
 
         remote.once('disconnected', listenerCleanupFn);
 
