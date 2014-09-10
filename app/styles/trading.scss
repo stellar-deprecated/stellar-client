@@ -1,0 +1,17 @@
+.current-offers-table {
+  width: 100%;
+
+  thead tr {
+    line-height: 50px;
+  }
+
+  tbody tr {
+    font-weight: $book-weight;
+    border-bottom: 1px solid $light-grey;
+    line-height: 50px;
+
+    .cancel-offer {
+      text-align: right;
+    }
+  }
+}
