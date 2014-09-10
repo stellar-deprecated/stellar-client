@@ -1,4 +1,4 @@
-<div class="trading">
+<div class="trading" ng-controller="TradingCtrl">
     <div class="container">
       <div class="client-section">
           <h1 class="title">
@@ -8,6 +8,60 @@
               </span>
           </h1>
       </div>
-      <div class="client-section"></div>
+      <div class="client-section">
+          <div class="col-sm-8">
+              <form role="form" class="form-horizontal" ng-submit="createOffer()">
+                  <div class="form-group">
+                      <div class="col-xs-4">
+                          <label class="radio-inline">
+                              <input type="radio" ng-model="tradeOperation" value="buy"> Buy
+                          </label>
+                          <label class="radio-inline">
+                              <input type="radio"ng-model="tradeOperation" value="sell"> Sell
+                          </label>
+                      </div>
+                      <div class="col-xs-6"><input type="text" min="0" class="form-control" ng-model="baseAmount"></input></div>
+                      <div class="col-xs-2">
+                          <select class="form-control" ng-model="baseCurrency.currency" ng-options="currencyName for currencyName in currencyNames">
+                              <option value=""></option>
+                          </select>
+                      </div>
+                  </div>
+                  <div class="form-group" ng-show="hasIssuer(baseCurrency.currency)">
+                      <div class="col-xs-4">ISSUED BY</div>
+                      <div class="col-xs-8">
+                          <select class="form-control" ng-model="baseCurrency.issuer" ng-options="issuer as (issuer | addressToUsername) for issuer in getIssuers(baseCurrency)"></select>
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <div class="col-xs-4">WITH EACH PRICED AT</div>
+                      <div class="col-xs-6"><input type="text" min="0" class="form-control" ng-model="unitPrice"></input></div>
+                      <div class="col-xs-2">
+                          <select class="form-control" ng-model="counterCurrency.currency" ng-options="currencyName for currencyName in currencyNames">
+                              <option value=""></option>
+                          </select>
+                      </div>
+                  </div>
+                  <div class="form-group" ng-show="hasIssuer(counterCurrency.currency)">
+                      <div class="col-xs-4">ISSUED BY</div>
+                      <div class="col-xs-8">
+                          <select class="form-control" ng-model="counterCurrency.issuer" ng-options="issuer as (issuer | addressToUsername) for issuer in getIssuers(counterCurrency)"></select>
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <div class="col-xs-4">TOTAL PAYABLE</div>
+                      <div class="col-xs-6"><input type="text" class="form-control" ng-model="counterAmount" disabled></input></div>
+                      <div class="col-xs-2"><input type="text" class="form-control" ng-model="counterCurrency.currency" disabled></input></div>
+                  </div>
+                  <div class="form-group">
+                      <div class="col-xs-offset-4 col-xs-3">
+                          <button type="submit" class="btn btn-default">
+                            {{ createOffer.isLoading() ? 'Submitting...' : 'Submit Order' }}
+                          </button>
+                      </div>
+                  </div>
+              </form>
+          </div>
+      </div>
     </div>
 </div>
