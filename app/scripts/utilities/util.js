@@ -21,18 +21,16 @@ Util.showTooltip = function (element, title, type, placement) {
       '<div class="tooltip-inner"></div>' +
     '</div>';
 
-    element.tooltip(
-      {
-        trigger: "manual",
-        template: template,
-        placement: placement,
-        title: title
-      })
-      .tooltip('show');
+  element.tooltip('destroy');
 
-    setTimeout(function() {
-      element.tooltip('destroy');
-    }, 2000);
+  element.tooltip(
+    {
+      trigger: "manual",
+      template: template,
+      placement: placement,
+      title: title
+    })
+    .tooltip('show');
 };
 
 /**
@@ -61,4 +59,12 @@ Util.ensureEntropy = function() {
   if(!isEnough()) {
     throw "Unable to seed sjcl entropy pool";
   }
+}
+
+Util.tryGet = function(rootObject, propertyChain) {
+  var propertyNames = propertyChain.split('.');
+
+  return _.reduce(propertyNames, function (currentObject, property) {
+    return _.has(currentObject, property) ? currentObject[property] : undefined;
+  }, rootObject);
 };

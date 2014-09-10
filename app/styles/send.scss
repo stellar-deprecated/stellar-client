@@ -1,5 +1,16 @@
 .send-pane {
-  form > div {
+  .title{
+    margin-bottom: 25px;
+  }
+
+
+  form {
+
+    input.form-control {
+      font-size: 22px;
+      height: auto;
+    }
+
     .send-amount {
 
       i {
@@ -11,41 +22,74 @@
         position: absolute;
       }
 
-      input[type="text"] {
-        font-size: 48px;
-        height: auto;
-        padding-right: 50px;
+      input[type="number"],
+      input[type="text"],
+      .dropdown-toggle {
+        font-size: 24px;
         height: auto;
       }
 
-      + .tip {
-        line-height: 82px
+      .dropdown-toggle {
+        margin-bottom: 0;
       }
-    }
 
-    .send-address {
+      .dropdown-menu {
+        min-width: 320px;
+        max-height: 300px;
+        overflow-y: scroll;
+        li {
+          padding: 0;
+          margin: 0;
+        }
+      }
+
+      .tip {
+        padding-top: 26px;
+      }
 
       i {
         margin-right: 15px;
         top: 3px;
         position: absolute;
-
       }
+    }
 
+    .send-address {
       input[type="text"] {
-        font-size: 22px;
-        height: auto;
         padding-right: 36px;
       }
-
-      + .tip {
-        line-height: 45px
+      i {
+        margin-right: 15px;
+        top: 5px;
       }
     }
 
-    .destination-tag {
-      padding: 0;
+    .send-destination {
+      .tip {
+        padding-top: 5px;
+      }
     }
+
+     @media (min-width: $phone-width) {
+        .send-amount {
+          input[type="number"],
+          input[type="text"],
+          .dropdown-toggle {
+            font-size: 48px;
+            height: auto;
+          }
+          .dropdown-menu {
+            min-width: 160px;
+          }
+          input[type="text"]{
+            font-size: 32px;
+            padding: 18px 15px 17px;
+          }
+          .input-group {
+            margin-left: -20px;
+          }
+        }
+     }
   }
 
   .send-error p {
@@ -126,6 +170,24 @@
     .sending-rocket {
       display: block;
       margin: 50px auto;
+    }
+  }
+
+  .currency-box {
+    @media (min-width: $phone-width) {
+        height: 150px;
+        position: relative;
+        button {
+          position: absolute;
+          bottom: 15px;
+          left: 10%;
+          width: 80%;
+        }
+    }
+
+    .rate {
+      font-size: 12px;
+      color: fade_out($grey, 0.2);
     }
   }
 }

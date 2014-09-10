@@ -9,9 +9,9 @@
  * @namespace rpStellarTxt
  */
 
-var module = angular.module('stellarClient');
+var sc = angular.module('stellarClient');
 
-module.factory('rpStellarTxt', ['$q', '$rootScope',
+sc.factory('rpStellarTxt', ['$q', '$rootScope',
     function ($q, $scope) {
         var txts = {};
 

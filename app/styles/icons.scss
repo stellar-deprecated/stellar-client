@@ -2,6 +2,9 @@
 
 .icon-close {
 	@include icon(times-circle-thin);
+  span {
+    display: none;
+  }
 }
 
 .glyphicon {

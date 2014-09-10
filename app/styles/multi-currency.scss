@@ -1,0 +1,222 @@
+.plus {
+  border: 1px solid fade_out($grey, 0.5);
+  border-radius: 100%;
+  width: 1.5em;
+  height: 1.5em;
+  display: inline-block;
+  line-height: 1.3em;
+  background: #fff;
+}
+
+.gateway-form {
+  padding-bottom: 25px;
+  p {
+    margin: 15px 0;
+  }
+  input[type="text"] {
+    width: 100%;
+  }
+  label{
+    padding-right: 15px;
+  }
+  button {
+    margin-top: 15px;
+  }
+  @media (min-width: $mobile-width) {
+    input[type="text"] {
+      width: 400px;
+    }
+    button {
+      margin-top: 0;
+    }
+  }
+}
+
+.dash-links {
+  border-top: 1px solid $grey-border;
+  width: 80%;
+  margin: 8px 0 8px 10%;
+  padding-top: 10px;
+
+  a {
+    display: block;
+    margin: 0;
+    color: $grey;
+    @include transition(color 200ms ease-in-out);
+  }
+
+  @media (min-width: $phone-width) {
+    margin-bottom: 0;
+  }
+}
+
+.manage-currency-link {
+  color: $grey;
+
+  i {
+    font-size: 0.8em;
+    margin-right: 5px;
+    color: fade_out($grey, 0.5);
+    top: 0;
+  }
+
+  &:hover {
+    color: $brand-primary;
+    text-decoration: none;
+    i {
+      color: fade_out($grey, 0.3);
+    }
+  }
+
+}
+
+.currencies-list {
+  padding: 0;
+  margin: 15px 0 0 0;
+  overflow: hidden;
+  width: 100%;
+}
+
+.currency-box {
+  display: block;
+  float: left;
+  border: 1px solid $grey-border;
+  width: 100%;
+  margin-right: 15px;
+  margin-bottom: 15px;
+  
+  padding: 8px;
+  border-radius: 3px;
+  height: auto;
+
+  color: $grey;
+  font-weight: $book-weight;
+
+  button {
+    float: right;
+    
+  }
+
+  &.add-currency-box {
+    cursor: pointer;
+    @include transition(border-color 200ms ease-in-out,
+                        color 200ms ease-in-out);
+
+    &:hover {
+      border-color: $brand-primary;
+      color: $brand-primary;
+
+      .glyphicon-cog {
+        color: rgba($grey, 1);
+      }
+    }
+
+    .manage-currency-link {
+      position: relative;
+    }
+
+    .glyphicon-cog {
+      top: 3px;
+      color: rgba($grey, 0.5);
+      @include transition(color 200ms ease-in-out);
+    }
+  }
+
+  h5 {
+    float: left;
+    font-size: 24px;
+    font-weight: $heavy-weight;
+    margin: 0 5px 0 0;
+    color: $dark-grey;
+  }
+
+  @media (min-width: $phone-width) {
+    width: 200px;
+    height: 130px;
+    text-align: center;
+    padding: 15px;
+
+    button {
+      float: none;
+      margin-top: 15px;
+    }
+
+    h5, p {
+      float: none;
+    }
+
+    .manage-currency-link {
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+  }
+}
+
+.currency {
+  clear: none;
+  margin-bottom: 3px;
+}
+
+p.currency-issuer {
+  margin: 0;
+  font-size: 10px;
+  word-wrap:break-word;
+  clear: both;
+  color: fade_out($grey,0.25);
+}
+
+.currency-auth {
+  font-size: 10px;
+  text-transform: uppercase;
+  margin-top: 5px;
+  background-color: $state-warning-bg;
+  color: $state-warning-text;
+  float: left;
+  clear: both;
+  margin-top: 5px;
+  a {
+    color: $state-warning-text;
+  }
+}
+
+.gateway-list {
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  li {
+    border-bottom: 1px solid $grey-border;
+    padding: 10px 0;
+  }
+}
+
+
+
+.manage-currencies-container {
+  padding-bottom: 15px;
+  .subtitle {
+      color: $grey;
+      font-size: 16px;
+      text-transform: uppercase;
+  }
+}
+.gateway-list-actions {
+  text-align: right;
+}
+
+.gateway-search-status {
+  padding: 15px 0;
+  color: fade_out($grey, 0.2);
+  font-weight: $book-weight;
+}
+
+.gateway-currencies {
+  padding-bottom: 15px;
+  .currency-box {
+    @media (min-width: $phone-width) {
+      height: 90px;
+    }
+  }
+}

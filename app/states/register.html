@@ -2,9 +2,7 @@
     <div class="container">
         <h1 class="title">Create Your Account</h1>
 
-        <div ng-show="messages.length" ng-controller="FlashMessageCtrl">
-            <div ng-include="'templates/flash-message-container.html'"></div>
-        </div>
+        <flash-messages></flash-messages>
 
         <form role="form" name="registration" class="form-horizontal" ng-controller="RegistrationCtrl" novalidate>
             <div class="form-group">

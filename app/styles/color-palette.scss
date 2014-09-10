@@ -9,6 +9,25 @@ $success: #67AE19;
 $error: #D41B32;
 $in-progress: $brand-primary;
 $pending: #E0961D;
+$state-info-text: $pending;
+$notice: #08B5E5;
+
+// Bootstrap Alerts
+$state-success-border: $success;
+$state-success-bg: white;
+$state-success-text: $success;
+
+$state-info-text: $notice;
+$state-info-bg: white;
+$state-info-border: $notice;
+
+$state-warning-text: $pending;
+$state-warning-bg: white;
+$state-warning-border: $pending;
+
+$state-danger-text: $error;
+$state-danger-bg: white;
+$state-danger-border: $error;
 
 // Colors sampled from mocks
 $grey: #96A0A9;

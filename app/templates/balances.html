@@ -1,0 +1,28 @@
+
+<div class="pane">
+    <div class="pane-close" ng-click="closePane()">
+        <span>Close</span>
+        <i class="icon icon-times-circle-thin"></i>
+    </div>
+
+    <div class="balance-currencies">
+        <h4 class="title">Balances</h4>
+        <ul class="currencies-list">
+            <li class="currency-box">
+                <h5>{{ balance | rpamount:{rel_precision: 0} }}</h5>
+                <p class="currency">{{ 'STR' | currencyName }}</p>
+            </li>
+            <li ng-repeat="accountLine in nonZeroAccountLines" class="currency-box">
+                <h5>{{ accountLine.balance }}</h5>
+                <p class="currency">{{ accountLine.currency | currencyName }}</p>
+                <p class="currency-issuer">{{ accountLine.account | addressToUsername }}</p>
+                <p class="currency-auth" ng-if="accountLineNeedsAuth(accountLine)">Requires authorization</p>
+            </li>
+            <li class="currency-box add-currency-box" ng-click="openManageCurrencies();">
+                <div class="manage-currency-link">
+                    <i class="glyphicon glyphicon-th-list"></i>Manage
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>

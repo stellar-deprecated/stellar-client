@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('DashboardCtrl', function($rootScope, $scope, $timeout, $state, session, TutorialHelper) {
+sc.controller('DashboardCtrl', function($rootScope, $scope, $timeout, $state, session, TutorialHelper, StellarNetwork, contacts) {
     $rootScope.tab = 'none';
     $rootScope.showTab = false;
 
@@ -11,6 +11,12 @@ sc.controller('DashboardCtrl', function($rootScope, $scope, $timeout, $state, se
     $scope.username = session.get('username');
     $scope.tutorials = TutorialHelper;
 
+    $scope.accountLines = [];
+    $scope.nonZeroAccountLines = [];
+    $scope.balances = {};
+    $scope.currencies = [];
+    $scope.topCurrencies = [];
+
     $scope.typeIcons = {
         'sent':     'icon icon-send',
         'received': 'icon icon-receive'
@@ -18,6 +24,7 @@ sc.controller('DashboardCtrl', function($rootScope, $scope, $timeout, $state, se
 
     $rootScope.closePane = function(){
       $rootScope.showTab = false;
+      $rootScope.overflowVisible = false;
     };
 
     $rootScope.openSend = function() {
@@ -29,6 +36,16 @@ sc.controller('DashboardCtrl', function($rootScope, $scope, $timeout, $state, se
 
     $rootScope.openReceive = function() {
         $rootScope.tab = 'receive';
+        $rootScope.showTab = true;
+    };
+
+    $rootScope.openBalances = function() {
+        $rootScope.tab = 'balances';
+        $rootScope.showTab = true;
+    };
+
+    $rootScope.openManageCurrencies = function() {
+        $rootScope.tab = 'manage-currencies';
         $rootScope.showTab = true;
     };
 
@@ -64,6 +81,47 @@ sc.controller('DashboardCtrl', function($rootScope, $scope, $timeout, $state, se
         $timeout.cancel(cleanupTimer);
         $scope.showTransaction = false;
     };
+
+    // Account lines only need authorization when authorized is defined and set to false.
+    $scope.accountLineNeedsAuth = function(accountLine) {
+        return _.has(accountLine, 'authorized') && accountLine.authorized;
+    };
+
+    function fetchCurrencies() {
+        StellarNetwork.request('account_lines', { 'account': session.get('address') })
+            .then(function(result) {
+                processAccountLines(result.lines);
+            });
+    }
+
+    function processAccountLines(accountLines) {
+        $scope.accountLines = accountLines;
+        $scope.balances = {};
+
+        // Filter out account lines with zero balances.
+        $scope.nonZeroAccountLines = accountLines.filter(function(accountLine) {
+            return accountLine.balance != '0';
+        });
+
+        $scope.nonZeroAccountLines.forEach(function(accountLine) {
+            var balance = Number(accountLine.balance);
+            var currency = accountLine.currency;
+            $scope.balances[currency] = ($scope.balances[currency] || 0) + balance;
+
+            contacts.fetchContactByAddress(accountLine.account);
+        });
+
+        $scope.currencies = Object.getOwnPropertyNames($scope.balances);
+
+        var sortedCurrencies = $scope.currencies.sort(function(a, b) {
+            return $scope.balances[b] - $scope.balances[a];
+        });
+        $scope.topCurrencies = sortedCurrencies.slice(0, 2);
+    }
+
+    $rootScope.$on('$appTxNotification', fetchCurrencies);
+
+    fetchCurrencies();
 });
 
 

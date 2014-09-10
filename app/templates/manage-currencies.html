@@ -1,0 +1,48 @@
+<div class="pane" ng-controller="ManageCurrenciesCtrl">
+    <div class="pane-close" ng-click="closePane()">
+        <span>Close</span>
+        <i class="icon icon-times-circle-thin"></i>
+    </div>
+
+    <div class="gateway-form" ng-controller="AddGatewayCtrl">
+        <div class="title">Manage currencies</div>
+        <p>Add a gateway to send and receive in a new currency with your account. Find out <a href="https://github.com/stellar/docs/blob/master/docs/Adding-Multiple-Currencies.md" target="_blank">more</a>.
+
+        <form class="form-inline">
+            <div class="form-group">
+                <label>Add gateway</label>
+                <input class="form-control" type="text" ng-model="gatewaySearch" placeholder="gatewaydomain.com" />
+                <button type="submit" class="btn btn-default btn-primary form-control" ng-click="loadCurrencies()">
+                    {{ loadCurrencies.isLoading() ? 'Loading...' : 'Show supported currencies' }}
+                </button>
+            </div>
+        </form>
+        <div class="gateway-search-status" ng-hide="searchStatus == ''">
+            <div ng-show="searchStatus == 'loading'">Loading...</div>
+            <div ng-show="searchStatus == 'not_found'">No results found for {{ gatewaySearch }}</div>
+            <div ng-show="searchStatus == 'no_currencies'">No currencies found for {{ gatewaySearch }}</div>
+            <div ng-show="searchStatus == 'already_added'">{{ gatewaySearch }} was already added</div>
+        </div>
+
+        <div class="gateway-currencies" ng-show="searchStatus == 'found'">
+            <h3 class="title">Supported currencies for {{ foundGateway.domain }}:</h3>
+            <ul class="currencies-list">
+                <li ng-repeat="currency in foundGateway.currencies" class="currency-box">
+                    <h5>{{ currency.currency }}</h5>
+                    <p class="currency-issuer">{{ currency.issuer | addressToUsername }}</p>
+                    <p ng-if="currency.requireAuth" class="currency-auth">
+                        <a href="http://{{ gatewayDomain }}" target="_blank">Requires authorization</a>
+                    </p>
+                </li>
+            </ul>
+            <button class="btn btn-default btn-primary" ng-click="addGateway()">Trust {{foundGateway.domain}}</button>
+        </div>
+    </div>
+
+    <alert type="success" dismissible="true" ng-show="addedGatewayDomain" dismiss-click="hideAddAlert()">Successfully added {{addedGatewayDomain}}</alert>
+    <alert type="success" dismissible="true" ng-show="removedGatewayDomain" dismiss-click="hideRemoveAlert()">Successfully removed {{removedGatewayDomain}}</alert>
+
+    <div class="gateways row">
+        <ng-include src="'templates/gateways.html'" />
+    </div>
+</div>

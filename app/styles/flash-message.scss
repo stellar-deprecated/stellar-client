@@ -139,3 +139,23 @@
     }
   }
 }
+
+.alert {
+  border-bottom-width: 3px;
+}
+
+.alert-dismissable .close {
+  font-weight: $book-weight;
+  color: $info-grey;
+  opacity: 1.0;
+
+  i {
+    font-size: 26px;
+  }
+
+  @include transition(color 200ms ease-in-out);
+
+  &:hover {
+    color: $error;
+  }
+}

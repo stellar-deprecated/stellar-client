@@ -7,7 +7,7 @@ var sc = angular.module('stellarClient');
     waits for:
      walletAddressLoaded
  */
-sc.controller('AppCtrl', function($scope, $rootScope, stNetwork, session, $state, $element, $timeout, FlashMessages) {
+sc.controller('AppCtrl', function($scope, $rootScope, StellarNetwork, session, $state, $element, $timeout, FlashMessages, ActionLink, Gateways) {
     $scope.$on('userLoaded', function () {
         $scope.getSentInvites = function () {
             return session.getUser() && session.getUser().getSentInvites().length;
@@ -32,9 +32,9 @@ sc.controller('AppCtrl', function($scope, $rootScope, stNetwork, session, $state
         return session.get('loggedIn') ? '#/' : 'http://www.stellar.org';
     }
 
-    $scope.$on('$netConnected', handleAccountLoad);
+    $scope.$on('stellar-network:connected', handleAccountLoad);
     $scope.$on('walletAddressLoaded', function() {
-        if (stNetwork.connected) {
+        if (StellarNetwork.connected) {
             handleAccountLoad();
         }
     });
@@ -51,7 +51,7 @@ sc.controller('AppCtrl', function($scope, $rootScope, stNetwork, session, $state
     }
 
     function handleAccountLoad() {
-        var remote = stNetwork.remote;
+        var remote = StellarNetwork.remote;
         var keys = session.get('signingKeys');
         if(!keys) {
             return;
@@ -82,17 +82,20 @@ sc.controller('AppCtrl', function($scope, $rootScope, stNetwork, session, $state
                             break;
                         default:
                             $rootScope.accountStatus = 'error';
+                            return;
                     }
                 } else {
                     $rootScope.accountStatus = 'loaded';
+                    Gateways.syncTrustlines();
                 }
 
+                // Process any pending actions now that the account is loaded.
+                ActionLink.process();
             });
         });
     };
 
     function handleAccountEntry(data) {
-        var remote = stNetwork.remote;
         $rootScope.account = data;
 
         // As per json wire format convention, real ledger entries are CamelCase,
@@ -133,12 +136,13 @@ sc.controller('AppCtrl', function($scope, $rootScope, stNetwork, session, $state
 
         if (!account.InflationDest && account.InflationDest !== Options.INFLATION_DEST &&
             Math.floor(account.Balance/1000000) === Math.floor((account.Balance-20)/1000000)) {
+
             $scope.setInflationDest(Options.INFLATION_DEST);
         }
     }
 
     $scope.setInflationDest = function(address) {
-        var tx = stNetwork.remote.transaction();
+        var tx = StellarNetwork.remote.transaction();
         tx.accountSet($scope.account.Account);
         tx.inflationDest(address);
 

@@ -75,10 +75,18 @@ stellarClient.config(function($httpProvider, $stateProvider, $urlRouterProvider,
       templateUrl: 'states/invites.html',
       authenticate: true
     })
+    .state('style-docs', {
+      url:         '/style-docs',
+      templateUrl: 'states/style-docs.html'
+    })
   ;
 
   $urlRouterProvider.otherwise('/dashboard');
 
+});
+
+stellarClient.run(function(ActionLink) {
+  ActionLink.recognize();
 });
 
 stellarClient.run(function($location, $state, ipCookie){

@@ -18,5 +18,5 @@
     "trailing": true,
     "smarttabs": true,
     "jquery": true,
-    "predef": ["angular", "_", "sjcl", "Options", "Util", "stellar", "Modernizr"]
+    "predef": ["angular", "_", "sjcl", "Options", "Util", "stellar", "StellarDefaultCurrencyList", "Modernizr"]
 }

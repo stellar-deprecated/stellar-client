@@ -6,6 +6,24 @@ var Base = stellar.Base;
 // TODO: var webutil = require('../utilities/web');
 
 /**
+* Pretty print an Amount object with the correct number of decimal places based on currency.
+*/
+module.filter('amountToHuman', function () {
+
+    return function (input) {
+        if (!input) {
+            return "";
+        }
+        var opts = {};
+        var currency = StellarDefaultCurrencyMap[input._currency.to_human()];
+        opts.precision = currency ? currency.max_decimal_places : 2;
+        opts.skip_empty_fraction = true;
+        opts.max_sig_digits = 6;
+        return input.to_human(opts);
+    }
+});
+
+/**
 * Turn a stellar address into a username
 */
 module.filter('addressToUsername', function (contacts) {
@@ -13,7 +31,7 @@ module.filter('addressToUsername', function (contacts) {
         var contact = contacts.getContactByAddress(input);
 
         if (contact) {
-          if (contact.domain == Options.DEFAULT_FEDERATION_DOMAIN) {
+          if (contact.domain === Options.DEFAULT_FEDERATION_DOMAIN) {
             return contact.destination;
           } else {
             return contact.destination + "@" + contact.domain;
@@ -46,14 +64,14 @@ module.filter('rpamount', function () {
             opts = {};
         }
 
-        if (input === null || typeof input === 'undefined') return "n/a";
+        if (input === null || typeof input === 'undefined') { return "n/a"; }
 
         if (opts.xtr_human && input === ("" + parseInt(input, 10))) {
             input = input + ".0";
         }
 
         var amount = Amount.from_json(input);
-        if (!amount.is_valid()) return "n/a";
+        if (!amount.is_valid()) { return "n/a"; }
 
         // Currency default precision
         var currency = iso4217[amount.currency().to_json()];
@@ -101,7 +119,7 @@ module.filter('rpamount', function () {
  */
 module.filter('rpcurrency', function () {
     return function (input) {
-        if (!input) return "";
+        if (!input) { return ""; }
 
         var amount = Amount.from_json(input);
         return amount.currency().to_json();
@@ -113,7 +131,7 @@ module.filter('rpcurrency', function () {
  */
 module.filter('rpissuer', function () {
     return function (input) {
-        if (!input) return "";
+        if (!input) { return ""; }
 
         var amount = Amount.from_json(input);
         return amount.issuer().to_json();
@@ -125,7 +143,7 @@ module.filter('rpissuer', function () {
  */
 module.filter('rpcurrencyfull', ['$rootScope', function ($scope) {
     return function (input) {
-        if (!input) return "";
+        if (!input) { return ""; }
 
         var amount = Amount.from_json(input);
         var currency = $.grep($scope.currencies_all, function(e){ return e.value == amount.currency().to_json(); })[0];
@@ -294,7 +312,7 @@ module.filter('rpfilesize', function () {
 
     return function (str) {
         var bytes = +str;
-        if (bytes < unit) return bytes + " B";
+        if (bytes < unit) { return bytes + " B"; }
         var exp = Math.floor(Math.log(bytes) / Math.log(unit));
         var pre = " "+prefixes[exp-1] + common;
         return number_format(bytes / Math.pow(unit, exp), 2, '.', '')+pre;
@@ -334,8 +352,9 @@ module.filter('rprange', function() {
                 return input;
         }
         var result = [];
-        for (var i = lowBound; i <= highBound; i++)
+        for (var i = lowBound; i <= highBound; i++) {
             result.push(i);
+        }
         return result;
     };
 });
@@ -373,11 +392,19 @@ module.filter('shrinkText', function($sce){
    * @return {$sce.trustedHTML} The original text or a span tag containing the shrunken the text.
    */
   return function(text, fontSize, max){
-    if(text.length > max){
+    if(text.length > max) {
       var ratio = max / text.length;
       var newFontSize = Math.floor(fontSize * ratio);
       return $sce.trustAsHtml('<span style="font-size:' + newFontSize + 'px;">' + text + '</span>');
+    } else {
+      return $sce.trustAsHtml(text);
     }
-    else return $sce.trustAsHtml(text);
-  }
+  };
+});
+
+module.filter('currencyName', function() {
+    return function(currency) {
+        var description = StellarDefaultCurrencyMap[currency] || {};
+        return description.name || currency;
+    };
 });

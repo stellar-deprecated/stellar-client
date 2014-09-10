@@ -1,0 +1,92 @@
+<div class="mode-sending">
+    <div ng-show="send.result=='sending'" class="mode-sending">
+        <img class="sending-rocket" src="./images/sending.gif"/>
+        <p rp-spinner="4" class="literal">Sending transaction to Stellar network</p>
+        <hr/>
+        <p>
+            <button ng-click="reset()" class="btn btn-default">Stop waiting</button>
+        </p>
+    </div>
+    <div ng-show="send.result=='error'" class="mode-error">
+        <div ng-switch on="error_type">
+            <div ng-switch-when="noDest" class="result-error">
+                <h2 class="tx-status">Destination does not exist</h2>
+                <p>The wallet you&#39;re trying to send to does not exist.</p>
+            </div>
+            <div ng-switch-when="noPath" class="result-error">
+                <h2 class="tx-status">No Path</h2>
+                <p>Stellar was unable to find a path between you and the destination account.</p>
+            </div>
+            <div ng-switch-when="invalidTransaction" class="result-error">
+                <h2 class="tx-status">Invalid transaction</h2>
+                <p>The transaction was rejected by the server due to a client issue.</p>
+            </div>
+            <div ng-switch-default="ng-switch-default">
+                <p class="literal">
+                    Sorry, an error occurred while submitting your transaction.
+                    Make sure you are connected to the Internet and try again later.
+                </p>
+                <p class="literal">Please ensure you don't send your payment more than once.</p>
+            </div>
+        </div>
+        <p>
+            <button ng-click="cancelConfirm()" class="btn btn-default">&laquo; Back</button>
+        </p>
+    </div>
+
+    <div ng-show="send.result=='stellarerror'" class="modalStatus error-modalStatus">
+        <div class="modalStatus-title">Oops</div>
+        <div class="modalStatus-info">{{error_message}}</div>
+        <button class="btn btn-default modalStatus-btn" ng-click="reset()">Try again</button>
+    </div>
+
+    <div ng-show="send.result=='status'" class="modalStatus">
+        <div ng-show="tx_result=='pending'" class="pending">
+            <img class="sending-rocket" src="./images/sending.gif"/>
+            <h2 class="tx-status">Your transaction has been submitted.</h2>
+            <p>Your account balance will update once the payment has cleared.</p>
+        </div>
+        <div ng-show="tx_result=='cleared'" class="result-success">
+            <i class="icon icon-check-circle-thin modalStatus-icon"></i>
+            <p class="modalStatus-title">Transaction cleared.</p>
+        </div>
+        <div ng-show="tx_result=='partial'" class="result-partial">
+            <h2 class="tx-status">Transaction partially valid!</h2>
+            <p>Your transaction could only be partially applied.</p>
+        </div>
+        <div ng-show="tx_result=='error'" class="result-error">
+            <h2 class="tx-status">Transaction could not be submitted!</h2>
+            <p>
+                We were unable to submit the transaction to the server.
+                Please try again later.
+            </p>
+        </div>
+        <div ng-show="tx_result=='malformed'" class="result-malformed">
+            <h2 class="tx-status">Transaction malformed!</h2>
+            <p ng-switch on="engine_result"><span ng-switch-default="ng-switch-default">Your transaction is invalid, reason: {{engine_result}} - {{engine_result_message}}</span></p>
+        </div>
+        <div ng-show="tx_result=='failure'" class="result-malformed">
+            <h2 class="tx-status">Transaction malformed!</h2>
+            <p ng-switch on="engine_result"><span ng-switch-when="tefDST_TAG_NEEDED">Destination account requires destination tag to be specified when making payments.</span></p>
+        </div>
+        <div ng-show="tx_result=='local'" class="result-failed">
+            <h2 class="tx-status">Transaction failed!</h2>
+            <p ng-switch on="engine_result"><span ng-switch-when="telINSUF_FEE_P">
+              The particular server you sent the transaction to was too busy to forward or process
+               your transaction at the fee you included in it.</span></p>
+        </div>
+        <div ng-show="tx_result=='claim'" class="result-malformed">
+            <h2 class="tx-status">Transaction failed!</h2>
+            <p ng-switch on="engine_result"><span ng-switch-when="tecNO_DST">The destination account does not exist.</span><span ng-switch-when="tecNO_DST_INSUF_XRP">The destination account does not exist. Too little STR sent to create it.</span><span ng-switch-default="ng-switch-default">Error: {{engine_result_message}}</span></p>
+        </div>
+        <div ng-show="tx_result=='failed'" class="result-failed">
+            <h2 class="tx-status">Transaction failed!</h2>
+            <p ng-switch on="engine_result"><span ng-switch-when="terNO_LINE">You have no trust line in this currency.</span><span ng-switch-default="ng-switch-default">Your transaction failed to clear, reason: {{engine_result_message}}</span></p>
+        </div>
+
+        <button ng-show="tx_result=='cleared'" class="btn btn-default modalStatus-btn" ng-click="reset()">
+            <i class="icon icon-send"></i>
+            Send another payment
+        </button>
+    </div>
+</div>
