@@ -117,8 +117,8 @@ angular.module('stellarClient').factory('OrderBook', function($q, $rootScope, Tr
   OrderBook.prototype._subscribeParams = function() {
     return {
       "books": [{
-        "taker_pays": this.counterCurrency,
-        "taker_gets": this.baseCurrency,
+        "taker_pays": this.baseCurrency,
+        "taker_gets": this.counterCurrency,
         "snapshot":   true,
         "both":       true
       }]
