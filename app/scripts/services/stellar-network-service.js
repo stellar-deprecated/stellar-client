@@ -126,7 +126,15 @@ sc.factory('StellarNetwork', function($rootScope, $timeout, $q) {
      */
     self.amount.encode = function(normalizedAmount) {
       if(normalizedAmount.currency === "STR") {
-        return new BigNumber(normalizedAmount.value).times(1000000).toString();
+        var stroopAmount = new BigNumber(normalizedAmount.value).times(1000000);
+
+        // confirm there resultant stroop value isn't fractional
+        var hasFraction = !stroopAmount.ceil().equals(stroopAmount);
+        if(hasFraction) {
+          throw new Error("Cannot encode STR amount: " + normalizedAmount.value);
+        }
+
+        return stroopAmount.toString();
       } else {
         return _.cloneDeep(normalizedAmount);
       }
