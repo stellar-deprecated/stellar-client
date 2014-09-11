@@ -1,0 +1,26 @@
+<div ng-controller="CurrentOffersCtrl">
+    <table class="current-offers-table">
+        <thead>
+            <tr>
+                <th>Order Type</th>
+                <th>Pair</th>
+                <th>Amount</th>
+                <th>Price</th>
+                <th>Total Value</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="offer in myOffers" ng-controller="OfferRowCtrl">
+                <td>{{ offer.operation }}</td>
+                <td>{{ offer.baseAmount.currency }}/{{ offer.counterAmount.currency }}</td>
+                <td>{{ offer.baseAmount.value }} {{ offer.baseAmount.currency }}</td>
+                <td>{{ offer.price.value }} {{ offer.price.currency }}</td>
+                <td>{{ offer.counterAmount.value }} {{ offer.counterAmount.currency }}</td>
+                <td class="cancel-offer">
+                    <a ng-click="remove()">{{ remove.isLoading() ? 'canceling...' : 'cancel' }}</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
