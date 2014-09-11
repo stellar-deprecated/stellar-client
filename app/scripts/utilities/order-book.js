@@ -1,4 +1,4 @@
-angular.module('stellarClient').factory('OrderBook', function($q, $rootScope, TradingOps, StellarNetwork, CurrencyPairs, TransactionCurator) {
+angular.module('stellarClient').factory('OrderBook', function($q, $rootScope, TradingOps, StellarNetwork, CurrencyPairs, TransactionCurator, FriendlyOffers) {
 
   var orderbooks = {};
 
@@ -98,20 +98,7 @@ angular.module('stellarClient').factory('OrderBook', function($q, $rootScope, Tr
    * @return {string}       "ask", "bid" or "none"
    */
   OrderBook.prototype.getOfferRole = function(offer) {
-    var bidPair = {
-      baseCurrency:    _.pick(offer.takerPays, 'currency', 'issuer'),
-      counterCurrency: _.pick(offer.takerGets, 'currency', 'issuer'),
-    };
-
-    var askPair = CurrencyPairs.invert(bidPair);
-
-    if (_.isEqual(bidPair, this.getCurrencyPair())) {
-      return 'bid';
-    } else if (_.isEqual(askPair, this.getCurrencyPair())) {
-      return 'ask';
-    } else {
-      return 'none';
-    }
+    return FriendlyOffers.getOfferRole(offer, this.getCurrencyPair());
   };
 
   OrderBook.prototype._subscribeParams = function() {

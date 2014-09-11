@@ -1,6 +1,6 @@
 var sc = angular.module('stellarClient');
 
-sc.factory('Trading', function($rootScope, $q, session, StellarNetwork, TransactionCurator, OrderBook, TradingOps, CurrencyPairs) {
+sc.factory('Trading', function($rootScope, $q, session, StellarNetwork, TransactionCurator, OrderBook, TradingOps, CurrencyPairs, FriendlyOffers) {
   /**
    *
    * The main service that interacts with the trading features of the stellar network.
@@ -59,54 +59,12 @@ sc.factory('Trading', function($rootScope, $q, session, StellarNetwork, Transact
 
   Trading.offer.toFriendlyOffer = function(offer) {
     
-    var takerPaysCurrency = _.pick(offer.takerPays, 'currency', 'issuer');
-    var takerGetsCurrency = _.pick(offer.takerGets, 'currency', 'issuer');
-
     var currencyPair = CurrencyPairs.normalize({
-      baseCurrency:    takerPaysCurrency,
-      counterCurrency: takerGetsCurrency,
+      baseCurrency:    _.pick(offer.takerPays, 'currency', 'issuer'),
+      counterCurrency: _.pick(offer.takerGets, 'currency', 'issuer'),
     });
 
-    var orderBook = OrderBook.get(currencyPair);
-    var operation;
-
-    switch(orderBook.getOfferRole(offer)) {
-    case "bid":
-      operation = "buy";
-      break;
-    case "ask":
-      operation = "sell";
-      break;
-    default:
-      // NOTE: we should never get here since we loaded the order book
-      // from the currencyPair of the offer, meaning the offer should always
-      // be a member of the order book.  For some reason, it is not.
-      throw new Error("Cannot create a FriendlyOffer: source offer is not a member of this orderBook");
-    }
-
-    var baseAmount, counterAmount;
-
-    if(_.isEqual(takerPaysCurrency, currencyPair.baseCurrency)) {
-      baseAmount    = offer.takerPays;
-      counterAmount = offer.takerGets;
-    } else {
-      baseAmount    = offer.takerGets;
-      counterAmount = offer.takerPays;
-    }
-
-    var rawPrice = new BigNumber(counterAmount.value).div(baseAmount.value).toString();
-    var price    = _.extend({value:rawPrice}, currencyPair.counterCurrency);
-
-    return {
-      account:       offer.account,
-      sequence:      offer.sequence,
-      currencyPair:  currencyPair,
-      operation:     operation,
-      baseAmount:    baseAmount,
-      counterAmount: counterAmount,
-      price:         price
-    };
-
+    return FriendlyOffers.get(offer, currencyPair);
   };
 
   /**
