@@ -17,7 +17,7 @@ angular.module('stellarClient').factory('OrderBook', function($q, $rootScope, Tr
   };
 
   var mergePriceLevels = function(priceLevels) {
-    
+
     function toBigNumber(priceLevel) {
       return _.mapValues(priceLevel, function(v, k) {
         if(k === 'currencyPair'){ return v; }
@@ -122,13 +122,22 @@ angular.module('stellarClient').factory('OrderBook', function($q, $rootScope, Tr
   OrderBook.prototype.injestOffers = function(added, changed, removed) {
     var self = this;
 
+    _.each(added, overwriteOffer);
+    _.each(changed, overwriteOffer);
+    _.each(removed, removeOffer);
+
+    // debugger;
+    $rootScope.$broadcast("trading:order-book-updated", self);
+
     function overwriteOffer(offer) {
+      removeOffer(offer);
+
       switch(self.getOfferRole(offer)) {
       case 'bid':
-        //TODO
+        self.currentOffers['bids'].push(offer);
         break;
       case 'ask':
-        //TODO
+        self.currentOffers['asks'].push(offer);
         break;
       }
     }
@@ -136,20 +145,13 @@ angular.module('stellarClient').factory('OrderBook', function($q, $rootScope, Tr
     function removeOffer(offer) {
       switch(self.getOfferRole(offer)) {
       case 'bid':
-        //TODO
+        self.currentOffers['bids'] = _.reject(self.currentOffers['bids'], _.pick(offer, 'account', 'sequence'));
         break;
       case 'ask':
-        //TODO
+        self.currentOffers['asks'] = _.reject(self.currentOffers['asks'], _.pick(offer, 'account', 'sequence'));
         break;
       }
     }
-
-    _.each(added, overwriteOffer);
-    _.each(changed, overwriteOffer);
-    _.each(removed, removeOffer);
-
-
-    $rootScope.$broadcast("trading:order-book-updated", self);
   };
 
   OrderBook.prototype.getPriceLevels = function(offerType) {
