@@ -62,12 +62,43 @@
 
         <div class="order-book row">
             <div class="col-xs-6">
-                <h3>Bids</h3>                
-                <ul><li ng-repeat="priceLevel in currentOrderBook.getPriceLevels('bids')">{{priceLevel | json}}</li></ul>
+                <h3>Bids</h3>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>PRICE</th>
+                            <th>QUANTITY</th>
+                            <th>TOTAL VALUE</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="priceLevel in currentBids">
+                            <td>{{priceLevel.price}}</td>
+                            <td>{{priceLevel.amount}}</td>
+                            <td>{{priceLevel.totalValue}}</td>
+                        </tr>
+                    </tbody>
+                </table>           
+
             </div>
             <div class="col-xs-6">
                 <h3>Asks</h3>                
-                <ul><li ng-repeat="priceLevel in currentOrderBook.getPriceLevels('asks')">{{priceLevel | json}}</li></ul>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>PRICE</th>
+                            <th>QUANTITY</th>
+                            <th>TOTAL VALUE</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="priceLevel in currentAsks">
+                            <td>{{priceLevel.price}}</td>
+                            <td>{{priceLevel.amount}}</td>
+                            <td>{{priceLevel.totalValue}}</td>
+                        </tr>
+                    </tbody>
+                </table>  
             </div>
         </div>
     </div>
