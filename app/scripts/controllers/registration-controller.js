@@ -32,7 +32,7 @@ sc.controller('RegistrationCtrl', function($rootScope, $scope, $state, $statePar
     captchaErrors:         []
   };
 
-
+  $scope.captchaKey = Options.CAPTCHA_KEY;
 
   $scope.validators = [];
   $scope.noEmailWarning = false;
