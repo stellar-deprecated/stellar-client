@@ -12,10 +12,9 @@ angular.module('stellarClient').service('FriendlyOffers', function($q, CurrencyP
       operation = "sell";
       break;
     default:
-      // NOTE: we should only get here when the forced currencyPair
-      // from the currencyPair of the offer, meaning the offer should always
-      // be a member of the order book.  For some reason, it is not.
-      throw new Error("Cannot create a FriendlyOffer: source offer is not a member of this orderBook");
+      // NOTE: we should only get here when the currencyPair
+      // does not match the currencies of the offer we are classifying
+      throw new Error("Cannot create a FriendlyOffer: offer is not compatible with the provided currencyPair");
     }
 
     var baseAmount, counterAmount;
