@@ -89,7 +89,7 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, S
         // parse the dt parameter if it has one
         var destinationTag = webutil.getDestTagFromAddress(input);
         if (destinationTag) {
-            $scope.send.destination.destinationTag = destinationTag;
+            $scope.send.destination.destinationTag = Number(destinationTag);
         }
 
         whileValid(function() {
