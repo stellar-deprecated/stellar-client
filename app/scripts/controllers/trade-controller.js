@@ -27,7 +27,10 @@ sc.controller('TradeCtrl', function($scope, session, Trading, CurrencyPairs) {
   $scope.currentOrderBook = null;
   $scope.currentOffers    = null;
   $scope.myOffers         = null;
+  $scope.currentBids      = [];
+  $scope.currentAsks      = [];
   $scope.tradeOperation   = 'buy';
+
 
   $scope.$on("trading:my-offers:partially-filled", function(e, offer) {
     var index = _.findIndex($scope.myOffers, _.pick(offer, 'account', 'sequence'));
@@ -37,6 +40,12 @@ sc.controller('TradeCtrl', function($scope, session, Trading, CurrencyPairs) {
   $scope.$on("trading:my-offers:filled", function(e, offer) {
     var index = _.findIndex($scope.myOffers, _.pick(offer, 'account', 'sequence'));
     $scope.myOffers.splice(index, 1);
+  });
+
+  $scope.$on("trading:order-book-updated", function(e, orderBook) {
+    if(orderBook === $scope.currentOrderBook) {
+      $scope.loadOrderBookData();
+    }
   });
 
 
@@ -84,6 +93,16 @@ sc.controller('TradeCtrl', function($scope, session, Trading, CurrencyPairs) {
     });
   };
 
+  $scope.loadOrderBookData = function() {
+    if($scope.currentOrderBook){ 
+      $scope.currentBids = $scope.currentOrderBook.getPriceLevels('bids');
+      $scope.currentAsks = $scope.currentOrderBook.getPriceLevels('asks');
+    } else {
+      $scope.currentBids = [];
+      $scope.currentAsks = [];
+    }
+  };
+
   $scope.currencyPairDisplay = function(favorite) {
     //TODO
     return favorite.baseCurrency.currency + ":" + favorite.counterCurrency.currency;
@@ -112,18 +131,19 @@ sc.controller('TradeCtrl', function($scope, session, Trading, CurrencyPairs) {
   }
 
   function setCurrentOrderBook() {
-    if (!$scope.validOrderBook()) {
-      return;
-    }
-
     if($scope.currentOrderBook) {
       $scope.currentOrderBook.destroy();
     }
 
     //TODO: canonicali
-    $scope.currentOrderBook = Trading.getOrderBook(currentCurrencyPair());
+    if ($scope.validOrderBook()) {
+      $scope.currentOrderBook = Trading.getOrderBook(currentCurrencyPair());
+      $scope.currentOrderBook.subscribe();
+    } else {
+      $scope.currentOrderBook = null;
+    }
 
-    $scope.currentOrderBook.subscribe();
+    $scope.loadOrderBookData();
   }
 
   function currentCurrencyPair() {
@@ -134,4 +154,5 @@ sc.controller('TradeCtrl', function($scope, session, Trading, CurrencyPairs) {
   }
 
   $scope.refreshMyOffers();
+  $scope.loadOrderBookData();
 });

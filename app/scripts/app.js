@@ -18,6 +18,18 @@ var stellarClient = angular.module('stellarClient', [
   'vcRecaptcha'
 ]);
 
+
+/**
+ * DEBUG TOOL!  $get makes it easy to retrieve an instance from the angular
+ * dependency injection system.
+ * 
+ * @param  {string} dependency the dependency to retrieve, by name
+ * @return {object}            the resolved dependency
+ */
+window.$get = function (dependency) {
+  return angular.element(document).injector().get(dependency);
+}
+
 stellarClient.config(function($httpProvider, $stateProvider, $urlRouterProvider, RavenProvider, ngClipProvider) {
 
   ngClipProvider.setPath("bower_components/zeroclipboard/dist/ZeroClipboard.swf");

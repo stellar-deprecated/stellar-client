@@ -1,4 +1,4 @@
-angular.module('stellarClient').factory('OrderBook', function($q, $rootScope, TradingOps, StellarNetwork, CurrencyPairs, TransactionCurator) {
+angular.module('stellarClient').factory('OrderBook', function($q, $rootScope, TradingOps, StellarNetwork, CurrencyPairs, TransactionCurator, FriendlyOffers) {
 
   var orderbooks = {};
 
@@ -12,6 +12,48 @@ angular.module('stellarClient').factory('OrderBook', function($q, $rootScope, Tr
       result = new OrderBook(currencyPair.baseCurrency, currencyPair.counterCurrency);
       orderbooks[bookKey] = result;
     }
+
+    return result;
+  };
+
+  var mergePriceLevels = function(priceLevels) {
+    
+    function toBigNumber(priceLevel) {
+      return _.mapValues(priceLevel, function(v, k) {
+        if(k === 'currencyPair'){ return v; }
+        return new BigNumber(v);
+      });
+    }
+    function toString(priceLevel) {
+      return _.mapValues(priceLevel, function(v, k) {
+        if(k === 'currencyPair'){ return v; }
+        return v.toString();
+      });
+    }
+
+    var result = _(priceLevels)
+      .map(toBigNumber)
+      .groupBy('price')
+      .map(function(priceLevels, price) {
+
+        var sum = function(numbers) {
+          return numbers.reduce(function(left, right) {
+            return left.plus(right);
+          });
+        };
+
+        var totalAmount = sum(_(priceLevels).pluck('amount'));
+        var totalValue  = sum(_(priceLevels).pluck('totalValue'));
+
+        return {
+          price:      price,
+          amount:     totalAmount,
+          totalValue: totalValue,
+        };
+      })
+      .sortBy('price')
+      .map(toString)
+      .value();
 
     return result;
   };
@@ -57,6 +99,8 @@ angular.module('stellarClient').factory('OrderBook', function($q, $rootScope, Tr
         bids: bids,
         asks: asks
       };
+
+      $rootScope.$broadcast("trading:order-book-updated", self);
     });
   };
 
@@ -72,21 +116,54 @@ angular.module('stellarClient').factory('OrderBook', function($q, $rootScope, Tr
    * This method is the means through which we update order books in a live
    * manner.  Rather than having OrderBooks manage their own communication with
    * stellard (since subscriptions are owned on the Remote) t
-   * 
-   * @param  {[type]} tx [description]
-   * @return {[type]}    [description]
+   *
+   * @param {[type]} [varname] [description]
    */
-  OrderBook.prototype.injestOffers = function(offers) {
-    console.log("injesting", this, offers);
+  OrderBook.prototype.injestOffers = function(added, changed, removed) {
+    var self = this;
+
+    function overwriteOffer(offer) {
+      switch(self.getOfferRole(offer)) {
+      case 'bid':
+        //TODO
+        break;
+      case 'ask':
+        //TODO
+        break;
+      }
+    }
+
+    function removeOffer(offer) {
+      switch(self.getOfferRole(offer)) {
+      case 'bid':
+        //TODO
+        break;
+      case 'ask':
+        //TODO
+        break;
+      }
+    }
+
+    _.each(added, overwriteOffer);
+    _.each(changed, overwriteOffer);
+    _.each(removed, removeOffer);
+
+
+    $rootScope.$broadcast("trading:order-book-updated", self);
   };
 
   OrderBook.prototype.getPriceLevels = function(offerType) {
-    var offers = this.currentOffers[offerType];
+    var offers       = this.currentOffers[offerType] || [];
+    var currencyPair = this.getCurrencyPair();
 
-    // map from offers to price/amount pairs
-    // sum amounts at same price
+    var priceLevels = offers.map(function(offer) {
+      var friendlyOffer = FriendlyOffers.get(offer, currencyPair);
+      return FriendlyOffers.toPriceLevel(friendlyOffer);
+    });
 
-    return offers;
+    var result = mergePriceLevels(priceLevels);
+    
+    return result;
   };
 
   /**
@@ -98,20 +175,7 @@ angular.module('stellarClient').factory('OrderBook', function($q, $rootScope, Tr
    * @return {string}       "ask", "bid" or "none"
    */
   OrderBook.prototype.getOfferRole = function(offer) {
-    var bidPair = {
-      baseCurrency:    _.pick(offer.takerPays, 'currency', 'issuer'),
-      counterCurrency: _.pick(offer.takerGets, 'currency', 'issuer'),
-    };
-
-    var askPair = CurrencyPairs.invert(bidPair);
-
-    if (_.isEqual(bidPair, this.getCurrencyPair())) {
-      return 'bid';
-    } else if (_.isEqual(askPair, this.getCurrencyPair())) {
-      return 'ask';
-    } else {
-      return 'none';
-    }
+    return FriendlyOffers.getOfferRole(offer, this.getCurrencyPair());
   };
 
   OrderBook.prototype._subscribeParams = function() {
@@ -133,7 +197,9 @@ angular.module('stellarClient').factory('OrderBook', function($q, $rootScope, Tr
 
   function updateOrderBooks(e, tx) {
     console.log("updating orderbooks", tx);
-    var offers = TransactionCurator.getOffersAffectedByTx(tx);
+    var added   = TransactionCurator.getOffersAffectedByTx(tx, 'CreatedNode');
+    var changed = TransactionCurator.getOffersAffectedByTx(tx, 'ModifiedNode');
+    var removed = TransactionCurator.getOffersAffectedByTx(tx, 'DeletedNode');
 
     //TODO
     // for each order book that has been initialized
@@ -142,7 +208,7 @@ angular.module('stellarClient').factory('OrderBook', function($q, $rootScope, Tr
     // broadcast the updated order book
 
     _(orderbooks).each(function (orderbook, key) {
-      orderbook.injestOffers(offers);
+      orderbook.injestTransaction(added, changed, removed);
     });
   }
 

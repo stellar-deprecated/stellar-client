@@ -61,6 +61,8 @@
 /**
  * @typedef {object} PriceLevel
  * @memberOf Trading
- * @property {string} price
- * @property {string} amount the quantity available at the specified price
+ * @property {CurrencyPair} currencyPair - the currencyPair the pricelevel pertains to
+ * @property {string} price              - an amount, priced in the counter currency, per unit of the base currency
+ * @property {string} amount             - the quantity available at the specified price
+ * @property {string} totalValue         - the totalValue, i.e. price * amount
  */
