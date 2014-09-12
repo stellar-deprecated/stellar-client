@@ -16,7 +16,7 @@ angular.module('stellarClient').factory('OrderBook', function($q, $rootScope, Tr
     return result;
   };
 
-  var mergePriceLevels = function(priceLevels) {
+  var mergePriceLevels = function(priceLevels, ascending) {
 
     function toBigNumber(priceLevel) {
       return _.mapValues(priceLevel, function(v, k) {
@@ -31,7 +31,7 @@ angular.module('stellarClient').factory('OrderBook', function($q, $rootScope, Tr
       });
     }
 
-    var result = _(priceLevels)
+    var merged = _(priceLevels)
       .map(toBigNumber)
       .groupBy('price')
       .map(function(priceLevels, price) {
@@ -50,10 +50,16 @@ angular.module('stellarClient').factory('OrderBook', function($q, $rootScope, Tr
           amount:     totalAmount,
           totalValue: totalValue,
         };
-      })
-      .sortBy('price')
-      .map(toString)
-      .value();
+      });
+
+    var sorted = merged.sortBy('price');
+
+    if(!ascending) {
+      sorted = sorted.reverse();
+    }
+        
+    var result = sorted.map(toString).value();
+
 
     return result;
   };
@@ -163,7 +169,7 @@ angular.module('stellarClient').factory('OrderBook', function($q, $rootScope, Tr
       return FriendlyOffers.toPriceLevel(friendlyOffer);
     });
 
-    var result = mergePriceLevels(priceLevels);
+    var result = mergePriceLevels(priceLevels, offerType === 'asks');
     
     return result;
   };
