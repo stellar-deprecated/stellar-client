@@ -131,18 +131,19 @@ sc.controller('TradeCtrl', function($scope, session, Trading, CurrencyPairs) {
   }
 
   function setCurrentOrderBook() {
-    if (!$scope.validOrderBook()) {
-      return;
-    }
-
     if($scope.currentOrderBook) {
       $scope.currentOrderBook.destroy();
     }
 
     //TODO: canonicali
-    $scope.currentOrderBook = Trading.getOrderBook(currentCurrencyPair());
+    if ($scope.validOrderBook()) {
+      $scope.currentOrderBook = Trading.getOrderBook(currentCurrencyPair());
+      $scope.currentOrderBook.subscribe();
+    } else {
+      $scope.currentOrderBook = null;
+    }
+
     $scope.loadOrderBookData();
-    $scope.currentOrderBook.subscribe();
   }
 
   function currentCurrencyPair() {
