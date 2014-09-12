@@ -208,7 +208,7 @@ angular.module('stellarClient').factory('OrderBook', function($q, $rootScope, Tr
     // broadcast the updated order book
 
     _(orderbooks).each(function (orderbook, key) {
-      orderbook.injestTransaction(added, changed, removed);
+      orderbook.injestOffers(added, changed, removed);
     });
   }
 
