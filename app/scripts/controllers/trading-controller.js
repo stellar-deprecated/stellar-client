@@ -46,7 +46,7 @@ sc.controller('TradingCtrl', function($scope, session, singletonPromise, Trading
     if (_.isEmpty($scope.baseCurrency)) { return false; }
     if (_.isEmpty($scope.counterCurrency)) { return false; }
 
-    if ($scope.baseCurrency === $scope.counterCurrency) { return false; }
+    if (_.isEqual($scope.baseCurrency, $scope.counterCurrency)) { return false; }
 
     return true;
   };
