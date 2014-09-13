@@ -71,14 +71,25 @@ sc.controller('TradingCtrl', function($scope, session, singletonPromise, Trading
   }
 
   function setCurrentOrderBook() {
-    if (!$scope.validOrderBook()) { return; }
-
-    // Only update the order book if it has changed.
     if ($scope.currentOrderBook) {
       var baseCurrencyUnchanged = _.isEqual($scope.currentOrderBook.baseCurrency, $scope.baseCurrency);
       var counterCurrencyUnchanged = _.isEqual($scope.currentOrderBook.counterCurrency, $scope.payableCurrency);
 
-      if (baseCurrencyUnchanged && counterCurrencyUnchanged) { return; }
+      if (baseCurrencyUnchanged && counterCurrencyUnchanged) {
+        return;
+      } else {
+        $scope.currentOrderBook.destroy();
+      }
+    }
+
+    if ($scope.validOrderBook()) {
+      $scope.currentOrderBook = Trading.getOrderBook(_.pick($scope, 'baseCurrency', 'counterCurrency'));
+      $scope.currentOrderBook.subscribe();
+    } else {
+      $scope.currentOrderBook = null;
+    }
+  }
+
 
       $scope.currentOrderBook.destroy();
     }
