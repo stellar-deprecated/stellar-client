@@ -67,7 +67,7 @@ sc.controller('TradingCtrl', function($scope, session, singletonPromise, Trading
   });
 
   function calculateCounterAmount() {
-    $scope.counterAmount = ($scope.baseAmount * $scope.unitPrice).toString();
+    $scope.counterAmount = new BigNumber($scope.baseAmount).times($scope.unitPrice).toString();
   }
 
   function setCurrentOrderBook() {
