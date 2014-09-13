@@ -83,18 +83,25 @@ sc.controller('TradingCtrl', function($scope, session, singletonPromise, Trading
     }
 
     if ($scope.validOrderBook()) {
-      $scope.currentOrderBook = Trading.getOrderBook(_.pick($scope, 'baseCurrency', 'counterCurrency'));
+      $scope.currentOrderBook = Trading.getOrderBook(currentCurrencyPair());
       $scope.currentOrderBook.subscribe();
     } else {
       $scope.currentOrderBook = null;
     }
   }
 
-
-      $scope.currentOrderBook.destroy();
+  function currentCurrencyPair() {
+    if (!$scope.baseCurrency.issuer) {
+      delete $scope.baseCurrency.issuer;
     }
 
-    $scope.currentOrderBook = Trading.getOrderBook(_.pick($scope, 'baseCurrency', 'counterCurrency'));
-    $scope.currentOrderBook.subscribe();
+    if (!$scope.counterCurrency.issuer) {
+      delete $scope.counterCurrency.issuer;
+    }
+
+    return {
+      baseCurrency:    $scope.baseCurrency,
+      counterCurrency: $scope.counterCurrency
+    };
   }
 });
