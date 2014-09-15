@@ -1,0 +1,42 @@
+<div class="order-book" ng-controller="OrderBookCtrl">
+    <div ng-show="currentOrderBook">
+        <div class="col-sm-6">
+            <h3 class="order-type">Bids</h1>
+            <table class="order-book-table">
+                <thead>
+                    <tr>
+                        <th>Price ({{ currentOrderBook.counterCurrency.currency }}/{{ currentOrderBook.baseCurrency.currency }})</th>
+                        <th>Amount</th>
+                        <th>Value ({{ currentOrderBook.counterCurrency.currency }})</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="priceLevel in currentBids">
+                        <td>{{ roundedAmount(priceLevel.price, precision) }}</td>
+                        <td>{{ roundedAmount(priceLevel.amount, precision) }}</td>
+                        <td>{{ roundedAmount(priceLevel.totalValue, precision) }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-sm-6">
+            <h3 class="order-type">Asks</h1>
+            <table class="order-book-table">
+                <thead>
+                    <tr>
+                        <th>Price ({{ currentOrderBook.counterCurrency.currency }}/{{ currentOrderBook.baseCurrency.currency }})</th>
+                        <th>Amount</th>
+                        <th>Value ({{ currentOrderBook.counterCurrency.currency }})</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="priceLevel in currentAsks">
+                        <td>{{ roundedAmount(priceLevel.price, precision) }}</td>
+                        <td>{{ roundedAmount(priceLevel.amount, precision) }}</td>
+                        <td>{{ roundedAmount(priceLevel.totalValue, precision) }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
