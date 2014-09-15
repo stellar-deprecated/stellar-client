@@ -56,8 +56,7 @@ angular.module('stellarClient').factory('OrderBook', function($q, $rootScope, Tr
           amount:     totalAmount,
           totalValue: totalValue,
         };
-      })
-      .value();
+      });
 
     var sorted;
 
@@ -70,7 +69,7 @@ angular.module('stellarClient').factory('OrderBook', function($q, $rootScope, Tr
     var result = sorted.map(toString);
 
 
-    return result;
+    return result.value();
   };
 
   var OrderBook = function(baseCurrency, counterCurrency) {
