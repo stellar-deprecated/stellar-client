@@ -30,6 +30,12 @@ angular.module('stellarClient').factory('OrderBook', function($q, $rootScope, Tr
         return v.toString();
       });
     }
+    function sortAscending(a, b) {
+      return new BigNumber(a.price).cmp(b.price);
+    }
+    function sortDescending(a, b) {
+      return sortAscending(b, a);
+    }
 
     var merged = _(priceLevels)
       .map(toBigNumber)
@@ -52,16 +58,18 @@ angular.module('stellarClient').factory('OrderBook', function($q, $rootScope, Tr
         };
       });
 
-    var sorted = merged.sortBy('price');
+    var sorted;
 
-    if(!ascending) {
-      sorted = sorted.reverse();
+    if(ascending) {
+      sorted = merged.sort(sortAscending);
+    } else {
+      sorted = merged.sort(sortDescending);
     }
         
-    var result = sorted.map(toString).value();
+    var result = sorted.map(toString);
 
 
-    return result;
+    return result.value();
   };
 
   var OrderBook = function(baseCurrency, counterCurrency) {
