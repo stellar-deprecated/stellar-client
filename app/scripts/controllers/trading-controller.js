@@ -46,7 +46,7 @@ sc.controller('TradingCtrl', function($scope, session, singletonPromise, Trading
     if (_.isEmpty($scope.baseCurrency)) { return false; }
     if (_.isEmpty($scope.counterCurrency)) { return false; }
 
-    if ($scope.baseCurrency === $scope.counterCurrency) { return false; }
+    if (_.isEqual($scope.baseCurrency, $scope.counterCurrency)) { return false; }
 
     return true;
   };
@@ -67,23 +67,41 @@ sc.controller('TradingCtrl', function($scope, session, singletonPromise, Trading
   });
 
   function calculateCounterAmount() {
-    $scope.counterAmount = ($scope.baseAmount * $scope.unitPrice).toString();
+    $scope.counterAmount = new BigNumber($scope.baseAmount).times($scope.unitPrice).toString();
   }
 
   function setCurrentOrderBook() {
-    if (!$scope.validOrderBook()) { return; }
-
-    // Only update the order book if it has changed.
     if ($scope.currentOrderBook) {
       var baseCurrencyUnchanged = _.isEqual($scope.currentOrderBook.baseCurrency, $scope.baseCurrency);
       var counterCurrencyUnchanged = _.isEqual($scope.currentOrderBook.counterCurrency, $scope.payableCurrency);
 
-      if (baseCurrencyUnchanged && counterCurrencyUnchanged) { return; }
-
-      $scope.currentOrderBook.destroy();
+      if (baseCurrencyUnchanged && counterCurrencyUnchanged) {
+        return;
+      } else {
+        $scope.currentOrderBook.destroy();
+      }
     }
 
-    $scope.currentOrderBook = Trading.getOrderBook(_.pick($scope, 'baseCurrency', 'counterCurrency'));
-    $scope.currentOrderBook.subscribe();
+    if ($scope.validOrderBook()) {
+      $scope.currentOrderBook = Trading.getOrderBook(currentCurrencyPair());
+      $scope.currentOrderBook.subscribe();
+    } else {
+      $scope.currentOrderBook = null;
+    }
+  }
+
+  function currentCurrencyPair() {
+    if (!$scope.baseCurrency.issuer) {
+      delete $scope.baseCurrency.issuer;
+    }
+
+    if (!$scope.counterCurrency.issuer) {
+      delete $scope.counterCurrency.issuer;
+    }
+
+    return {
+      baseCurrency:    $scope.baseCurrency,
+      counterCurrency: $scope.counterCurrency
+    };
   }
 });
