@@ -19,9 +19,9 @@
         </form>
         <div class="gateway-search-status" ng-hide="searchStatus == ''">
             <div ng-show="searchStatus == 'loading'">Loading...</div>
-            <div ng-show="searchStatus == 'not_found'">No results found for {{ gatewaySearch }}</div>
-            <div ng-show="searchStatus == 'no_currencies'">No currencies found for {{ gatewaySearch }}</div>
-            <div ng-show="searchStatus == 'already_added'">{{ gatewaySearch }} was already added</div>
+            <div ng-show="searchStatus == 'not_found'">No results found for {{ lastGatewaySearch }}</div>
+            <div ng-show="searchStatus == 'no_currencies'">No currencies found for {{ lastGatewaySearch }}</div>
+            <div ng-show="searchStatus == 'already_added'">{{ lastGatewaySearch }} was already added</div>
         </div>
 
         <div class="gateway-currencies" ng-show="searchStatus == 'found'">
