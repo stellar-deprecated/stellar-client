@@ -76,6 +76,7 @@ angular.module('stellarClient').factory('OrderBook', function($q, $rootScope, Tr
     this.baseCurrency    = _.cloneDeep(baseCurrency);
     this.counterCurrency = _.cloneDeep(counterCurrency);
     this.currentOffers   = {};
+    this.lastTrade       = null;
   };
 
   OrderBook.prototype.getCurrencyPair = function() {
@@ -140,7 +141,6 @@ angular.module('stellarClient').factory('OrderBook', function($q, $rootScope, Tr
     _.each(changed, overwriteOffer);
     _.each(removed, removeOffer);
 
-    // debugger;
     $rootScope.$broadcast("trading:order-book-updated", self);
 
     function overwriteOffer(offer) {
@@ -182,6 +182,27 @@ angular.module('stellarClient').factory('OrderBook', function($q, $rootScope, Tr
     return result;
   };
 
+
+  OrderBook.prototype.getSummary = function() {
+    console.log(this.getPriceLevels('asks'));
+    var lowestAsk  = Util.tryGet(this.getPriceLevels('asks')[0], 'price');
+    var highestBid = Util.tryGet(this.getPriceLevels('bids')[0], 'price');
+    var spread;
+
+    if(lowestAsk && highestBid) {
+      spread = new BigNumber(lowestAsk).minus(highestBid).toString()
+    } else {
+      spread = null;
+    }
+
+    return {
+      lowestAsk:  lowestAsk,
+      highestBid: highestBid,
+      spread:     spread,
+      lastTrade:  null,
+    }
+  }
+
   /**
    * Returns a string value that represents how the provided offer applies
    * to this orderbook, either as a bid, or an ask, or as none (in the case
@@ -212,16 +233,9 @@ angular.module('stellarClient').factory('OrderBook', function($q, $rootScope, Tr
 
 
   function updateOrderBooks(e, tx) {
-    console.log("updating orderbooks", tx);
     var added   = TransactionCurator.getOffersAffectedByTx(tx, 'CreatedNode');
     var changed = TransactionCurator.getOffersAffectedByTx(tx, 'ModifiedNode');
     var removed = TransactionCurator.getOffersAffectedByTx(tx, 'DeletedNode');
-
-    //TODO
-    // for each order book that has been initialized
-    // find any offers that apply to it
-    // replace the offer in the offers of the order book
-    // broadcast the updated order book
 
     _(orderbooks).each(function (orderbook, key) {
       orderbook.injestOffers(added, changed, removed);

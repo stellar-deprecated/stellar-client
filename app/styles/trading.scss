@@ -39,3 +39,27 @@
     }
   }
 }
+
+.trading-top {
+  padding-top: 20px;
+}
+
+.order-book-summary {
+  border: solid 1px $light-grey;
+  padding-top: 15px;
+  padding-bottom: 15px;
+
+  .order-book-summary-title {
+    margin-top: 0px;
+  }
+
+  .order-book-summary-value {
+    font-weight: $book-weight;
+  }
+
+  .order-book-summary-value:empty{
+    &:after {
+      content: "--";
+    }
+  }
+}
