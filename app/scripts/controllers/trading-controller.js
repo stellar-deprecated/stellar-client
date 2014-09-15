@@ -66,6 +66,10 @@ sc.controller('TradingCtrl', function($scope, session, singletonPromise, Trading
       });
   });
 
+  $scope.roundedAmount = function(value, precision) {
+    return new BigNumber(value).round(precision).toString();
+  };
+
   function calculateCounterAmount() {
     $scope.counterAmount = new BigNumber($scope.baseAmount).times($scope.unitPrice).toString();
   }
