@@ -42,15 +42,6 @@ sc.controller('TradingCtrl', function($scope, session, singletonPromise, Trading
     return currencyName && currencyName !== 'STR';
   };
 
-  $scope.validOrderBook = function() {
-    if (_.isEmpty($scope.baseCurrency)) { return false; }
-    if (_.isEmpty($scope.counterCurrency)) { return false; }
-
-    if (_.isEqual($scope.baseCurrency, $scope.counterCurrency)) { return false; }
-
-    return true;
-  };
-
   $scope.createOffer = singletonPromise(function(e) {
     var offerPromise;
 
@@ -75,19 +66,20 @@ sc.controller('TradingCtrl', function($scope, session, singletonPromise, Trading
   }
 
   function setCurrentOrderBook() {
-    if ($scope.currentOrderBook) {
-      var baseCurrencyUnchanged = _.isEqual($scope.currentOrderBook.baseCurrency, $scope.baseCurrency);
-      var counterCurrencyUnchanged = _.isEqual($scope.currentOrderBook.counterCurrency, $scope.payableCurrency);
+    var currencyPair = currentCurrencyPair();
 
-      if (baseCurrencyUnchanged && counterCurrencyUnchanged) {
+    if ($scope.currentOrderBook) {
+      var currencyPairUnchanged = _.isEqual($scope.currentOrderBook.getCurrencyPair(), currencyPair);
+
+      if (currencyPairUnchanged) {
         return;
       } else {
         $scope.currentOrderBook.destroy();
       }
     }
 
-    if ($scope.validOrderBook()) {
-      $scope.currentOrderBook = Trading.getOrderBook(currentCurrencyPair());
+    if (currencyPair) {
+      $scope.currentOrderBook = Trading.getOrderBook(currencyPair);
       $scope.currentOrderBook.subscribe();
     } else {
       $scope.currentOrderBook = null;
@@ -95,17 +87,40 @@ sc.controller('TradingCtrl', function($scope, session, singletonPromise, Trading
   }
 
   function currentCurrencyPair() {
-    if (!$scope.baseCurrency.issuer) {
-      delete $scope.baseCurrency.issuer;
-    }
+    if (_.isEmpty($scope.baseCurrency)) { return null; }
+    if (_.isEmpty($scope.counterCurrency)) { return null; }
 
-    if (!$scope.counterCurrency.issuer) {
-      delete $scope.counterCurrency.issuer;
-    }
+    var baseCurrency    = sanitizeIssuer($scope.baseCurrency);
+    var counterCurrency = sanitizeIssuer($scope.counterCurrency);
+    
+    if (_.isEqual(baseCurrency, counterCurrency)) { return null; }
+
+    if (!validCurrency(baseCurrency)) { return null; }
+    if (!validCurrency(counterCurrency)) { return null; }
+
 
     return {
-      baseCurrency:    $scope.baseCurrency,
-      counterCurrency: $scope.counterCurrency
+      baseCurrency:    baseCurrency,
+      counterCurrency: counterCurrency
     };
+  }
+
+  function sanitizeIssuer(currency) {
+    var result = _.cloneDeep(currency);
+
+    if (!result.issuer || !$scope.hasIssuer(result.currency)) {
+      delete result.issuer;
+    }
+
+    return result;
+  }
+
+  function validCurrency(currency) {
+    if(typeof currency !== 'object'){ return false; }
+    if(!currency.currency){ return false; }
+
+    if($scope.hasIssuer(currency.currency) && !currency.issuer){ return false; }
+
+    return true;
   }
 });
