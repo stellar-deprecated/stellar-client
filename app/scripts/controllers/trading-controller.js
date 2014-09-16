@@ -1,6 +1,6 @@
 var sc = angular.module('stellarClient');
 
-sc.controller('TradingCtrl', function($scope, session, singletonPromise, Trading) {
+sc.controller('TradingCtrl', function($scope, session, singletonPromise, Trading, FlashMessages) {
   // Populate the currency lists from the wallet's gateways.
   var gateways = session.get('wallet').get('mainData', 'gateways', []);
   var gatewayCurrencies = _.flatten(_.pluck(gateways, 'currencies'));
@@ -61,8 +61,20 @@ sc.controller('TradingCtrl', function($scope, session, singletonPromise, Trading
     }
     
     return offerPromise
+      .then(function() {
+        FlashMessages.add({
+          title: 'Success!',
+          info: 'The order has been successfully placed.',
+          type: 'success'
+        });
+      })
       .catch(function(e) {
         // TODO: Handle errors.
+        FlashMessages.add({
+          title: 'Error occured',
+          info: e.engine_result_message,
+          type: 'error'
+        });
       });
   });
 
