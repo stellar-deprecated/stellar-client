@@ -2,7 +2,8 @@
     <div ng-show="currentOrderBook">
         <div class="col-sm-6">
             <h3 class="order-type">Bids</h1>
-            <table class="order-book-table">
+            <p ng-hide="currentBids.length">There are no current bids for this currency pair from the selected issuer yet. Make some by submitting a new trade order.</p>
+            <table class="order-book-table" ng-show="currentBids.length">
                 <thead>
                     <tr>
                         <th>Price ({{ currentOrderBook.counterCurrency.currency }}/{{ currentOrderBook.baseCurrency.currency }})</th>
@@ -21,7 +22,8 @@
         </div>
         <div class="col-sm-6">
             <h3 class="order-type">Asks</h1>
-            <table class="order-book-table">
+            <p ng-hide="currentAsks.length">There are no current asks for this currency pair from the selected issuer yet. Make some by submitting a new trade order.</p>
+            <table class="order-book-table" ng-show="currentAsks.length">
                 <thead>
                     <tr>
                         <th>Price ({{ currentOrderBook.counterCurrency.currency }}/{{ currentOrderBook.baseCurrency.currency }})</th>
