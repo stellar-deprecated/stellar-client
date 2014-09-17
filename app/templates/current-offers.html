@@ -1,5 +1,6 @@
 <div ng-controller="CurrentOffersCtrl">
-    <table class="current-offers-table">
+    <p ng-hide="myOffers.length">You currently have no offers. Make some by submitting a new trade order.</p>
+    <table class="current-offers-table" ng-show="myOffers.length">
         <thead>
             <tr>
                 <th>Order Type</th>
