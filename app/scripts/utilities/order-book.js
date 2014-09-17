@@ -76,7 +76,7 @@ angular.module('stellarClient').factory('OrderBook', function($q, $rootScope, Tr
     this.baseCurrency    = _.cloneDeep(baseCurrency);
     this.counterCurrency = _.cloneDeep(counterCurrency);
     this.currentOffers   = {};
-    this.lastTrade       = null;
+    this.lastPrice       = null;
   };
 
   OrderBook.prototype.getCurrencyPair = function() {
@@ -132,7 +132,6 @@ angular.module('stellarClient').factory('OrderBook', function($q, $rootScope, Tr
    * manner.  Rather than having OrderBooks manage their own communication with
    * stellard (since subscriptions are owned on the Remote) t
    *
-   * @param {[type]} [varname] [description]
    */
   OrderBook.prototype.injestOffers = function(added, changed, removed) {
     var self = this;
@@ -190,7 +189,7 @@ angular.module('stellarClient').factory('OrderBook', function($q, $rootScope, Tr
     var spread;
 
     if(lowestAsk && highestBid) {
-      spread = new BigNumber(lowestAsk).minus(highestBid).toString()
+      spread = new BigNumber(lowestAsk).minus(highestBid).toString();
     } else {
       spread = null;
     }
@@ -199,9 +198,9 @@ angular.module('stellarClient').factory('OrderBook', function($q, $rootScope, Tr
       lowestAsk:  lowestAsk,
       highestBid: highestBid,
       spread:     spread,
-      lastTrade:  null,
-    }
-  }
+      lastPrice:  null,
+    };
+  };
 
   /**
    * Returns a string value that represents how the provided offer applies
@@ -241,7 +240,6 @@ angular.module('stellarClient').factory('OrderBook', function($q, $rootScope, Tr
       orderbook.injestOffers(added, changed, removed);
     });
   }
-
 
   return {
     get: getOrderBook
