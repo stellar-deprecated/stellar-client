@@ -116,6 +116,9 @@ sc.factory('Trading', function($rootScope, $q, session, StellarNetwork, Transact
 
     _(tradeOffers)
       .map(function(offer) {
+        //NOTE: we have to retrieve both friendly offers, because a single
+        // trade in the TakerPays/TakerGets form actually is represented as 2 
+        // trades in the currencyPair/price form.
         return FriendlyOffers.getBoth(offer);
       })
       .flatten()
