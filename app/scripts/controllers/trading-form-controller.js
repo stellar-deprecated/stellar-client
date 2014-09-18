@@ -37,6 +37,21 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
     return issuers;
   };
 
+  $scope.formIsValid = function() {
+    if (!$scope.currentOrderBook) { return false; }
+
+    try {
+      if (new BigNumber($scope.formData.baseAmount).lessThanOrEqualTo(0)) { return false; }
+      if (new BigNumber($scope.formData.unitPrice).lessThanOrEqualTo(0)) { return false; }
+      if (new BigNumber($scope.formData.counterAmount).lessThanOrEqualTo(0)) { return false; }
+    } catch(e) {
+      // Invalid input.
+      return false;
+    }
+
+    return true;
+  };
+
   $scope.createOffer = singletonPromise(function(e) {
     var offerPromise;
 
