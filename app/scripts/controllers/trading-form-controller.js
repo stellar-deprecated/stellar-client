@@ -7,21 +7,6 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
   $scope.currencies = [{currency:"STR"}].concat(gatewayCurrencies);
   $scope.currencyNames = _.uniq(_.pluck($scope.currencies, 'currency'));
 
-  $scope.formData.tradeOperation = 'buy';
-  $scope.formData.baseAmount = '0';
-  $scope.formData.unitPrice = '0';
-  $scope.formData.counterAmount = '0';
-
-  $scope.formData.baseCurrency = {
-    currency: $scope.currencyNames[0],
-    issuer: null
-  };
-
-  $scope.formData.counterCurrency = {
-    currency: $scope.currencyNames[1],
-    issuer: null
-  };
-
   $scope.$watch('formData.baseAmount', calculateCounterAmount);
   $scope.$watch('formData.unitPrice', calculateCounterAmount);
 
@@ -37,6 +22,51 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
     return issuers;
   };
 
+  $scope.confirmOffer = function() {
+    $scope.state = 'confirm';
+  };
+
+  $scope.editForm = function() {
+    $scope.state = 'form';
+  };
+
+  $scope.resetForm = function() {
+    $scope.formData.tradeOperation = 'buy';
+    $scope.formData.baseAmount = '0';
+    $scope.formData.unitPrice = '0';
+    $scope.formData.counterAmount = '0';
+
+    $scope.formData.baseCurrency = {
+      currency: $scope.currencyNames[0],
+      issuer: null
+    };
+
+    $scope.formData.counterCurrency = {
+      currency: $scope.currencyNames[1],
+      issuer: null
+    };
+
+    $scope.state = 'form';
+    $scope.offerError = '';
+  };
+
+  $scope.resetForm();
+
+  $scope.formIsValid = function() {
+    if (!$scope.currentOrderBook) { return false; }
+
+    try {
+      if (new BigNumber($scope.formData.baseAmount).lessThanOrEqualTo(0)) { return false; }
+      if (new BigNumber($scope.formData.unitPrice).lessThanOrEqualTo(0)) { return false; }
+      if (new BigNumber($scope.formData.counterAmount).lessThanOrEqualTo(0)) { return false; }
+    } catch(e) {
+      // Invalid input.
+      return false;
+    }
+
+    return true;
+  };
+
   $scope.createOffer = singletonPromise(function(e) {
     var offerPromise;
 
@@ -45,22 +75,16 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
     } else {
       offerPromise = $scope.currentOrderBook.sell($scope.formData.baseAmount, $scope.formData.counterAmount);
     }
+
+    $scope.state = 'sending';
     
     return offerPromise
       .then(function() {
-        FlashMessages.add({
-          title: 'Success!',
-          info: 'The order has been successfully placed.',
-          type: 'success'
-        });
+        $scope.state = 'sent';
       })
       .catch(function(e) {
-        // TODO: Handle errors.
-        FlashMessages.add({
-          title: 'Error occured',
-          info: e.engine_result_message,
-          type: 'error'
-        });
+        $scope.state = 'error';
+        $scope.offerError = e.engine_result_message;
       });
   });
 });

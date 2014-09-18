@@ -1,3 +1,27 @@
+.trading-form {
+  .offer-status {
+    width: 100%;
+    min-height: 400px;
+    background-color: $grey-background;
+    padding-top: 70px;
+    text-align: center;
+    font-size: 24px;
+    color: black;
+
+    .button-group {
+      padding: 35px 0;
+
+      button {
+        width: 200px;
+      }
+    }
+
+    &.trade-sent .modalStatus-icon {
+      color: $success;
+    }
+  }
+}
+
 .current-offers-table {
   width: 100%;
 

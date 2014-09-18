@@ -51,3 +51,7 @@ $font-family-sans-serif: $base-font, "Helvetica Neue", Helvetica, Arial, sans-se
 
   font-weight: $book-weight;
 }
+
+.capitalize {
+  text-transform: capitalize;
+}
