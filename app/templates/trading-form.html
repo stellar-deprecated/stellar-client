@@ -56,36 +56,36 @@
             </div>
         </div>
     </form>
-    <div class="trading-form-overlay confirm-trade" ng-show="state == 'confirm'">
+    <div class="offer-status confirm-trade" ng-show="state == 'confirm'">
         You are offering to <b>{{ formData.tradeOperation }}</b><br>
         <b>{{ formData.baseAmount }} {{ formData.baseCurrency.currency }}</b><br>
         for<br>
         <b>{{ formData.counterAmount }} {{ formData.counterCurrency.currency }}</b><br>
         at<br>
         <b>{{ formData.unitPrice }} {{ formData.counterCurrency.currency }}/{{ formData.baseCurrency.currency }}</b><br>
-        <div class="overlay-buttons">
+        <div class="button-group">
             <button ng-click="editForm()" class="btn btn-default">Edit</button>
             <button ng-click="createOffer()" class="btn btn-default">Confirm</button>
         </div>
     </div>
-    <div class="trading-form-overlay sending-trade" ng-show="state == 'sending'">
-        Sending offer<br>
+    <div class="offer-status sending-trade" ng-show="state == 'sending'">
+        <p class="modalStatus-title">Sending offer</p>
         <img class="sending-rocket" src="./images/sending.gif"/><br>
-        <div class="overlay-buttons">
+        <div class="button-group">
             <button ng-click="resetForm()" class="btn btn-default">Continue</button>
         </div>
     </div>
-    <div class="trading-form-overlay trade-sent" ng-show="state == 'sent'">
+    <div class="offer-status trade-sent" ng-show="state == 'sent'">
         <i class="icon icon-check-circle-thin modalStatus-icon"></i><br>
-        Offer created successfully!<br>
-        <div class="overlay-buttons">
+        <p class="modalStatus-title">Offer created successfully!</p>
+        <div class="button-group">
             <button ng-click="resetForm()" class="btn btn-default">Continue</button>
         </div>
     </div>
-    <div class="trading-form-overlay trade-error" ng-show="state == 'error'">
-        Error creating offer!<br>
-        <span class="info">{{ offerError }}</span><br>
-        <div class="overlay-buttons">
+    <div class="offer-status trade-error error-modalStatus" ng-show="state == 'error'">
+        <p class="modalStatus-title">Error creating offer!</p>
+        <span class="modalStatus-info">{{ offerError }}</span><br>
+        <div class="button-group">
             <button ng-click="editForm()" class="btn btn-default">Back</button>
         </div>
     </div>
