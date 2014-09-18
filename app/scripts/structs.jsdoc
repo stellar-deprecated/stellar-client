@@ -66,3 +66,11 @@
  * @property {string} amount             - the quantity available at the specified price
  * @property {string} totalValue         - the totalValue, i.e. price * amount
  */
+
+/**
+ * @typedef {object} Trade
+ * @memberOf Trading
+ * @property {CurrencyPair} currencyPair - a normalized currencyPair that the trade was executed against
+ * @property {string} price - the price the trade executed at, in terms of the counter currency
+ * 
+ */

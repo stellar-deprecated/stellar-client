@@ -3,6 +3,7 @@ angular.module('stellarClient').factory('OrderBook', function($q, $rootScope, Tr
   var orderbooks = {};
 
   $rootScope.$on('stellar-network:transaction', updateOrderBooks);
+  $rootScope.$on('trading:trade', updateLastPrices);
 
   var getOrderBook = function(currencyPair) {
     var bookKey = CurrencyPairs.getKey(currencyPair);
@@ -167,6 +168,13 @@ angular.module('stellarClient').factory('OrderBook', function($q, $rootScope, Tr
     }
   };
 
+  OrderBook.prototype.injestTrade = function(trade) {
+    if (_.isEqual(this.getCurrencyPair(), trade.currencyPair)) {
+      this.lastPrice = trade.price;
+      $rootScope.$broadcast("trading:order-book-updated", this);
+    }
+  };
+
   OrderBook.prototype.getPriceLevels = function(offerType) {
     var offers       = this.currentOffers[offerType] || [];
     var currencyPair = this.getCurrencyPair();
@@ -183,7 +191,6 @@ angular.module('stellarClient').factory('OrderBook', function($q, $rootScope, Tr
 
 
   OrderBook.prototype.getSummary = function() {
-    console.log(this.getPriceLevels('asks'));
     var lowestAsk  = Util.tryGet(this.getPriceLevels('asks')[0], 'price');
     var highestBid = Util.tryGet(this.getPriceLevels('bids')[0], 'price');
     var spread;
@@ -198,7 +205,7 @@ angular.module('stellarClient').factory('OrderBook', function($q, $rootScope, Tr
       lowestAsk:  lowestAsk,
       highestBid: highestBid,
       spread:     spread,
-      lastPrice:  null,
+      lastPrice:  this.lastPrice,
     };
   };
 
@@ -238,6 +245,12 @@ angular.module('stellarClient').factory('OrderBook', function($q, $rootScope, Tr
 
     _(orderbooks).each(function (orderbook, key) {
       orderbook.injestOffers(added, changed, removed);
+    });
+  }
+
+  function updateLastPrices(e, trade) {
+    _(orderbooks).each(function (orderbook, key) {
+      orderbook.injestTrade(trade);
     });
   }
 

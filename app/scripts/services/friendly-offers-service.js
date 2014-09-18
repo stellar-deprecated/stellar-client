@@ -43,6 +43,27 @@ angular.module('stellarClient').service('FriendlyOffers', function($q, CurrencyP
   };
 
   /**
+   * Returns both FriendlyOffer objects that vcan be derived from a given Offer,
+   * one given one direction of the currencyPair involved, as well as the inverse
+   * 
+   * @param  {Offer} offer
+   * @return {Array.<FriendlyOffer>}
+   */
+  this.getBoth = function(offer) {
+    var currencyPair = {
+      baseCurrency:    _.pick(offer.takerGets, 'currency', 'issuer'),
+      counterCurrency: _.pick(offer.takerPays, 'currency', 'issuer'),
+    };
+
+    var inverseCurrencyPair = CurrencyPairs.invert(currencyPair);
+
+    return [
+      this.get(offer, currencyPair),
+      this.get(offer, inverseCurrencyPair),
+    ];
+  };
+
+  /**
    * Returns the "role" that an offer plays in relation to the provided
    * currencyPair.  That is, within an order book identified by the 
    * provided currencyPair, would this offer be an ask, a bid, or none in the

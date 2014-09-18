@@ -26,6 +26,7 @@ sc.factory('Trading', function($rootScope, $q, session, StellarNetwork, Transact
    * - `trading:my-offers:partially-filled`:  An order from the current account was partially filled by someone else's transaction
    * - `trading:my-offers:filled`: An order from the current account was filled by someone else's transaction
    * - `trading:order-books:updated`: Emitted when an orderbook is updated
+   * - `trading:trade`: Emitted when a trade occurs as result of a transaction
    * 
    *
    * @namespace Trading 
@@ -33,6 +34,7 @@ sc.factory('Trading', function($rootScope, $q, session, StellarNetwork, Transact
   var Trading = {};
 
   $rootScope.$on('stellar-network:transaction', updateMyOffers);
+  $rootScope.$on('stellar-network:transaction', broadcastTrades);
 
 
   Trading.getOrderBook = function(currencyPair) {
@@ -107,6 +109,22 @@ sc.factory('Trading', function($rootScope, $q, session, StellarNetwork, Transact
         $rootScope.$broadcast("trading:my-offers:partially-filled", offer);
       });
     }
+  }
+
+  function broadcastTrades(e, tx) {
+    var tradeOffers = TransactionCurator.getTradeOffers(tx);
+
+    _(tradeOffers)
+      .map(function(offer) {
+        return FriendlyOffers.getBoth(offer);
+      })
+      .flatten()
+      .each(function(friendlyOffer) {
+        $rootScope.$broadcast("trading:trade", {
+          currencyPair: friendlyOffer.currencyPair,
+          price: friendlyOffer.price.value
+        });
+      });
   }
  
   return Trading;
