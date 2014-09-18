@@ -43,7 +43,7 @@ angular.module('stellarClient').service('FriendlyOffers', function($q, CurrencyP
   };
 
   /**
-   * Returns both FriendlyOffer objects that vcan be derived from a given Offer,
+   * Returns both FriendlyOffer objects that can be derived from a given Offer,
    * one given one direction of the currencyPair involved, as well as the inverse
    * 
    * @param  {Offer} offer
