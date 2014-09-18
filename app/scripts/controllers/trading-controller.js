@@ -1,81 +1,20 @@
 var sc = angular.module('stellarClient');
 
-sc.controller('TradingCtrl', function($scope, session, singletonPromise, Trading, FlashMessages) {
-  // Populate the currency lists from the wallet's gateways.
-  var gateways = session.get('wallet').get('mainData', 'gateways', []);
-  var gatewayCurrencies = _.flatten(_.pluck(gateways, 'currencies'));
-  $scope.currencies = [{currency:"STR"}].concat(gatewayCurrencies);
-  $scope.currencyNames = _.uniq(_.pluck($scope.currencies, 'currency'));
-
-  $scope.tradeOperation = 'buy';
+sc.controller('TradingCtrl', function($scope, Trading) {
   $scope.currentOrderBook = null;
 
-  $scope.baseAmount = 0;
-  $scope.unitPrice = 0;
-  $scope.counterAmount = 0;
+  $scope.formData = {};
 
-  $scope.baseCurrency = {
-    currency: $scope.currencyNames[0],
-    issuer: null
-  };
-
-  $scope.counterCurrency = {
-    currency: $scope.currencyNames[1],
-    issuer: null
-  };
-
-  $scope.$watch('baseCurrency', setCurrentOrderBook, true);
-  $scope.$watch('counterCurrency', setCurrentOrderBook, true);
-
-  $scope.$watch('baseAmount', calculateCounterAmount);
-  $scope.$watch('unitPrice', calculateCounterAmount);
-
-  $scope.getIssuers = function(currency) {
-    var currencies = _.filter($scope.currencies, {currency: currency.currency});
-    var issuers = _.pluck(currencies, 'issuer');
-
-    currency.issuer = issuers[0];
-    return issuers;
-  };
-
-  $scope.hasIssuer = function(currencyName) {
-    return currencyName && currencyName !== 'STR';
-  };
-
-  $scope.createOffer = singletonPromise(function(e) {
-    var offerPromise;
-
-    if ($scope.tradeOperation === 'buy') {
-      offerPromise = $scope.currentOrderBook.buy($scope.baseAmount, $scope.counterAmount);
-    } else {
-      offerPromise = $scope.currentOrderBook.sell($scope.baseAmount, $scope.counterAmount);
-    }
-    
-    return offerPromise
-      .then(function() {
-        FlashMessages.add({
-          title: 'Success!',
-          info: 'The order has been successfully placed.',
-          type: 'success'
-        });
-      })
-      .catch(function(e) {
-        // TODO: Handle errors.
-        FlashMessages.add({
-          title: 'Error occured',
-          info: e.engine_result_message,
-          type: 'error'
-        });
-      });
-  });
+  $scope.$watch('formData.baseCurrency', setCurrentOrderBook, true);
+  $scope.$watch('formData.counterCurrency', setCurrentOrderBook, true);
 
   $scope.roundedAmount = function(value, precision) {
     return new BigNumber(value).round(precision).toString();
   };
 
-  function calculateCounterAmount() {
-    $scope.counterAmount = new BigNumber($scope.baseAmount).times($scope.unitPrice).toString();
-  }
+  $scope.hasIssuer = function(currencyName) {
+    return currencyName && currencyName !== 'STR';
+  };
 
   function setCurrentOrderBook() {
     var currencyPair = currentCurrencyPair();
@@ -99,11 +38,11 @@ sc.controller('TradingCtrl', function($scope, session, singletonPromise, Trading
   }
 
   function currentCurrencyPair() {
-    if (_.isEmpty($scope.baseCurrency)) { return null; }
-    if (_.isEmpty($scope.counterCurrency)) { return null; }
+    if (_.isEmpty($scope.formData.baseCurrency)) { return null; }
+    if (_.isEmpty($scope.formData.counterCurrency)) { return null; }
 
-    var baseCurrency    = sanitizeIssuer($scope.baseCurrency);
-    var counterCurrency = sanitizeIssuer($scope.counterCurrency);
+    var baseCurrency    = sanitizeIssuer($scope.formData.baseCurrency);
+    var counterCurrency = sanitizeIssuer($scope.formData.counterCurrency);
     
     if (_.isEqual(baseCurrency, counterCurrency)) { return null; }
 
