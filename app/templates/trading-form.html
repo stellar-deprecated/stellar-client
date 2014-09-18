@@ -1,7 +1,7 @@
 <div class="trading-form" ng-controller="TradingFormCtrl">
     <form role="form" class="form-horizontal" ng-submit="confirmOffer()" ng-show="state == 'form'">
-        <div class="form-group radio-group">
-            <div class="col-xs-4">
+        <div class="form-group">
+            <div class="radio-buttons col-xs-4">
                 <input type="radio" ng-model="formData.tradeOperation" id="trade-radio-buy" value="buy">
                 <label for="trade-radio-buy">Buy</label><!-- No whitespace
                 --><input type="radio" ng-model="formData.tradeOperation" id="trade-radio-sell" value="sell"><!-- No whitespace

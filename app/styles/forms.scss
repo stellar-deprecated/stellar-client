@@ -225,30 +225,37 @@ select.form-control {
   color: $dark-grey;
 }
 
-.radio-group {
-  input[type=radio] {
+.radio-buttons {
+  input[type="radio"] {
     display:none;
-  }
 
-  input[type=radio] + label {
-    border: 1px solid black;
-    border-right: none;
-    // height: 42px;
-    // line-height: 42px;
-    // text-align: middle;
-    padding: 9px 12px;
-    &:first-of-type {
-      border-radius: 3px 0px 0px 3px;
+    &:checked + label {
+      background: $dark-grey;
+      color: white;
     }
-    &:last-of-type {
-      border-radius: 0px 3px 3px 0px;
-      border-right: 1px solid black;
-    }
-  }
 
-  input[type=radio]:checked + label {
-    background: black;
-    color: white;
+    &:not(:checked) + label {
+      cursor: pointer;
+
+      &:hover {
+        background-color: $light-grey;
+      }
+    }
+
+    + label {
+      border: 1px solid $dark-grey;
+      border-right: none;
+      padding: 9px 12px;
+
+      &:first-of-type {
+        border-radius: 3px 0px 0px 3px;
+      }
+
+      &:last-of-type {
+        border-radius: 0px 3px 3px 0px;
+        border-right: 1px solid $dark-grey;
+      }
+    }
   }
 }
 
