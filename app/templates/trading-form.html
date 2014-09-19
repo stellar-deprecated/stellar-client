@@ -1,13 +1,11 @@
 <div class="trading-form" ng-controller="TradingFormCtrl">
     <form role="form" class="form-horizontal" ng-submit="confirmOffer()" ng-show="state == 'form'">
         <div class="form-group">
-            <div class="col-xs-4">
-                <label class="radio-inline">
-                    <input type="radio" ng-model="formData.tradeOperation" value="buy"> Buy
-                </label>
-                <label class="radio-inline">
-                    <input type="radio"ng-model="formData.tradeOperation" value="sell"> Sell
-                </label>
+            <div class="radio-buttons col-xs-4">
+                <input type="radio" ng-model="formData.tradeOperation" id="trade-radio-buy" value="buy">
+                <label for="trade-radio-buy">Buy</label><!-- No whitespace
+                --><input type="radio" ng-model="formData.tradeOperation" id="trade-radio-sell" value="sell"><!-- No whitespace
+                --><label for="trade-radio-sell">Sell</label>
             </div>
             <div class="col-xs-6"><input type="text" class="form-control" ng-model="formData.baseAmount"></input></div>
             <div class="col-xs-2">

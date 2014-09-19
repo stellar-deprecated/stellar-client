@@ -224,3 +224,38 @@ select.form-control {
   border-radius: 2px;
   color: $dark-grey;
 }
+
+.radio-buttons {
+  input[type="radio"] {
+    display:none;
+
+    &:checked + label {
+      background: $dark-grey;
+      color: white;
+    }
+
+    &:not(:checked) + label {
+      cursor: pointer;
+
+      &:hover {
+        background-color: $light-grey;
+      }
+    }
+
+    + label {
+      border: 1px solid $dark-grey;
+      border-right: none;
+      padding: 9px 12px;
+
+      &:first-of-type {
+        border-radius: 3px 0px 0px 3px;
+      }
+
+      &:last-of-type {
+        border-radius: 0px 3px 3px 0px;
+        border-right: 1px solid $dark-grey;
+      }
+    }
+  }
+}
+
