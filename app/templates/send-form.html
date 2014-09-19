@@ -42,10 +42,10 @@
                 <p ng-show="send.fundStatus == 'insufficient-str'" class="send-form-status">
                     Destination account is unfunded; send at least
                     {{send.str_deficiency | rpamount}} STR to fund it.
-                    <a href="https://www.stellar.org/glossary/#Reserves" target="_blank" >More information</a>
+                    <a href="https://www.stellar.org/faq/#_Why_is_there_a_minimum_balance" target="_blank" >More information</a>
                 </p>
                 <p ng-show="account.max_spend.to_number() < send.amount * 1000000" class="send-form-status">
-                    You need a minimum balance of 20 Stellars to send. <a href="https://www.stellar.org/glossary/#Reserves" target="_blank" >More information</a>
+                    You need a minimum balance of 20 Stellars to send. <a href="https://www.stellar.org/faq/#_Why_is_there_a_minimum_balance" target="_blank" >More information</a>
                 </p>
                 <p ng-show="send.pathStatus == 'checking'" class="send-form-status">Checking</p>
                 <p ng-show="send.pathStatus == 'fed-check'" class="send-form-status">Analyzing address</p>
