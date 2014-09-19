@@ -408,3 +408,11 @@ module.filter('currencyName', function() {
         return description.name || currency;
     };
 });
+
+module.filter('roundedAmount', function() {
+    return function(amount, precision) {
+        if(amount) {
+             return new BigNumber(amount).round(precision).toString();
+        }
+    };
+});

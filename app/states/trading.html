@@ -9,12 +9,36 @@
           </h1>
       </div>
       <div>
+      <div class="row trading-top">
           <flash-messages></flash-messages>
           <div class="col-sm-8">
               <div ng-include="'templates/trading-form.html'"></div>
           </div>
+          <div class="col-sm-4 order-book-summary" ng-controller="OrderBookSummaryCtrl">
+            <h4 class="order-book-summary-title">Latest orders for TODO</h4>
+            <div class="row">
+              <div class="col-sm-6">
+                <div>HIGHEST BID PRICE</div>
+                <div class="order-book-summary-value">{{highestBid | roundedAmount:4}}</div>
+              </div>
+              <div class="col-sm-6">
+                <div>LOWEST ASK PRICE</div>
+                <div class="order-book-summary-value">{{lowestAsk | roundedAmount:4}}</div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-6">
+                <div>SPREAD</div>
+                <div class="order-book-summary-value">{{spread | roundedAmount:4}}</div>
+              </div>
+              <div class="col-sm-6">
+                <div>LAST PRICE</div>
+                <div class="order-book-summary-value">{{lastPrice | roundedAmount:4}}</div>
+              </div>
+            </div>
+          </div>
       </div>
-      <div>
+      <div class="row">
           <div class="col-sm-12">
               <tabbed-section>
                   <tab selected="true" tab-template="templates/current-offers.html">Current Orders</tab>

@@ -3,6 +3,7 @@ angular.module('stellarClient').factory('OrderBook', function($q, $rootScope, Tr
   var orderbooks = {};
 
   $rootScope.$on('stellar-network:transaction', updateOrderBooks);
+  $rootScope.$on('trading:trade', updateLastPrices);
 
   var getOrderBook = function(currencyPair) {
     var bookKey = CurrencyPairs.getKey(currencyPair);
@@ -76,6 +77,7 @@ angular.module('stellarClient').factory('OrderBook', function($q, $rootScope, Tr
     this.baseCurrency    = _.cloneDeep(baseCurrency);
     this.counterCurrency = _.cloneDeep(counterCurrency);
     this.currentOffers   = {};
+    this.lastPrice       = null;
   };
 
   OrderBook.prototype.getCurrencyPair = function() {
@@ -131,7 +133,6 @@ angular.module('stellarClient').factory('OrderBook', function($q, $rootScope, Tr
    * manner.  Rather than having OrderBooks manage their own communication with
    * stellard (since subscriptions are owned on the Remote) t
    *
-   * @param {[type]} [varname] [description]
    */
   OrderBook.prototype.injestOffers = function(added, changed, removed) {
     var self = this;
@@ -140,7 +141,6 @@ angular.module('stellarClient').factory('OrderBook', function($q, $rootScope, Tr
     _.each(changed, overwriteOffer);
     _.each(removed, removeOffer);
 
-    // debugger;
     $rootScope.$broadcast("trading:order-book-updated", self);
 
     function overwriteOffer(offer) {
@@ -168,6 +168,13 @@ angular.module('stellarClient').factory('OrderBook', function($q, $rootScope, Tr
     }
   };
 
+  OrderBook.prototype.injestTrade = function(trade) {
+    if (_.isEqual(this.getCurrencyPair(), trade.currencyPair)) {
+      this.lastPrice = trade.price;
+      $rootScope.$broadcast("trading:order-book-updated", this);
+    }
+  };
+
   OrderBook.prototype.getPriceLevels = function(offerType) {
     var offers       = this.currentOffers[offerType] || [];
     var currencyPair = this.getCurrencyPair();
@@ -180,6 +187,26 @@ angular.module('stellarClient').factory('OrderBook', function($q, $rootScope, Tr
     var result = mergePriceLevels(priceLevels, offerType === 'asks');
     
     return result;
+  };
+
+
+  OrderBook.prototype.getSummary = function() {
+    var lowestAsk  = Util.tryGet(this.getPriceLevels('asks')[0], 'price');
+    var highestBid = Util.tryGet(this.getPriceLevels('bids')[0], 'price');
+    var spread;
+
+    if(lowestAsk && highestBid) {
+      spread = new BigNumber(lowestAsk).minus(highestBid).toString();
+    } else {
+      spread = null;
+    }
+
+    return {
+      lowestAsk:  lowestAsk,
+      highestBid: highestBid,
+      spread:     spread,
+      lastPrice:  this.lastPrice,
+    };
   };
 
   /**
@@ -212,22 +239,20 @@ angular.module('stellarClient').factory('OrderBook', function($q, $rootScope, Tr
 
 
   function updateOrderBooks(e, tx) {
-    console.log("updating orderbooks", tx);
     var added   = TransactionCurator.getOffersAffectedByTx(tx, 'CreatedNode');
     var changed = TransactionCurator.getOffersAffectedByTx(tx, 'ModifiedNode');
     var removed = TransactionCurator.getOffersAffectedByTx(tx, 'DeletedNode');
-
-    //TODO
-    // for each order book that has been initialized
-    // find any offers that apply to it
-    // replace the offer in the offers of the order book
-    // broadcast the updated order book
 
     _(orderbooks).each(function (orderbook, key) {
       orderbook.injestOffers(added, changed, removed);
     });
   }
 
+  function updateLastPrices(e, trade) {
+    _(orderbooks).each(function (orderbook, key) {
+      orderbook.injestTrade(trade);
+    });
+  }
 
   return {
     get: getOrderBook

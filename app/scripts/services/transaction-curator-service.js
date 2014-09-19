@@ -8,7 +8,7 @@ var sc = angular.module('stellarClient');
  * 
  * @namespace TransactionCurator
  */
-sc.service('TransactionCurator', function(StellarNetwork) {
+sc.service('TransactionCurator', function(StellarNetwork, FriendlyOffers) {
 
   /**
    * Given an offer create object, will return a 
@@ -79,6 +79,17 @@ sc.service('TransactionCurator', function(StellarNetwork) {
     });
 
     return offers.value();
+  };
+
+  this.getTradeOffers = function(tx) {
+    var type = tx.transaction.TransactionType;
+    if (type === 'OfferCancel'){ return []; }
+
+    var updatedOffers = this.getOffersAffectedByTx(tx, 'ModifiedNode');
+    var deletedOffers = this.getOffersAffectedByTx(tx, 'DeletedNode');
+    var tradeOffers   = updatedOffers.concat(deletedOffers);
+
+    return tradeOffers;
   };
 
 
