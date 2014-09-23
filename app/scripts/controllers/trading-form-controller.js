@@ -30,6 +30,16 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
     return issuers;
   };
 
+  $scope.issuerToGateway = function(issuer) {
+    var gateway = _.find(gateways, function(gateway) {
+      return !!_.find(gateway.currencies, {issuer: issuer});
+    });
+
+    if(gateway) {
+      return gateway.domain;
+    }
+  };
+
   $scope.confirmOffer = function() {
     $scope.state = 'confirm';
   };

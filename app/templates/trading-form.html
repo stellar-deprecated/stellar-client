@@ -22,7 +22,7 @@
         <div class="form-group" ng-show="hasIssuer(formData.baseCurrency.currency)">
             <div class="col-md-4"><label>ISSUED BY</label></div>
             <div class="col-md-8">
-                <select class="form-control" ng-model="formData.baseCurrency.issuer" ng-options="issuer as (issuer | addressToUsername) for issuer in getIssuers(formData.baseCurrency)"></select>
+                <select class="form-control" ng-model="formData.baseCurrency.issuer" ng-options="issuer as (issuerToGateway(issuer)) for issuer in getIssuers(formData.baseCurrency)"></select>
             </div>
         </div>
         <div class="form-group">
@@ -42,7 +42,7 @@
         <div class="form-group" ng-show="hasIssuer(formData.counterCurrency.currency)">
             <div class="col-md-4"><label>ISSUED BY</label></div>
             <div class="col-md-8">
-                <select class="form-control" ng-model="formData.counterCurrency.issuer" ng-options="issuer as (issuer | addressToUsername) for issuer in getIssuers(formData.counterCurrency)"></select>
+                <select class="form-control" ng-model="formData.counterCurrency.issuer" ng-options="issuer as (issuerToGateway(issuer)) for issuer in getIssuers(formData.counterCurrency)"></select>
             </div>
         </div>
         <div class="form-group">
