@@ -1,29 +1,28 @@
 <div class="trading" ng-controller="TradingCtrl">
     <div class="container">
-      <div class="client-section">
-          <h1 class="title">
-              Trading
-              <span class="link-dashboard">
-                  <a href="/#/dashboard">&#8592; back to dashboard</a>
-              </span>
-          </h1>
-      </div>
-      <div>
-      <div class="row trading-top">
-          <flash-messages></flash-messages>
-          <div class="col-sm-8">
-              <div ng-include="'templates/trading-form.html'"></div>
-          </div>
-          <div ng-include="'templates/trading-balance.html'"></div>
-          <div ng-include="'templates/order-book-summary.html'"></div>
-      </div>
-      <div class="row">
-          <div class="col-sm-12">
-              <tabbed-section>
-                  <tab selected="true" tab-template="templates/current-offers.html">Current Orders</tab>
-                  <tab tab-template="templates/order-book.html">Order Book</tab>
-              </tabbed-section>
-          </div>
-      </div>
+        <div class="client-section">
+            <h1 class="title">
+                Trading
+                <span class="link-dashboard">
+                    <a href="/#/dashboard">&#8592; back to dashboard</a>
+                </span>
+            </h1>
+        </div>
+        <div class="row trading-top">
+            <flash-messages></flash-messages>
+            <div class="col-sm-8">
+                <div ng-include="'templates/trading-form.html'"></div>
+            </div>
+            <div ng-include="'templates/trading-balance.html'"></div>
+            <div ng-include="'templates/order-book-summary.html'"></div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <tabbed-section>
+                    <tab selected="true" tab-template="templates/current-offers.html">Current Orders</tab>
+                    <tab tab-template="templates/order-book.html">Order Book</tab>
+                </tabbed-section>
+            </div>
+        </div>
     </div>
 </div>
