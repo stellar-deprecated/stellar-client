@@ -2,12 +2,12 @@
     <h4 class="trading-info-widget-title">Corresponding Balances</h4>
     <div class="row">
         <div class="col-sm-6">
-            <div>Currency (issuer)</div>
-            <div class="trading-info-widget-value">Amount</div>
+            <div>{{formData.baseCurrency.currency}} <span ng-show="formData.baseCurrency.issuer"> ({{formData.baseCurrency.issuer | addressToUsername}})</div>
+            <div class="trading-info-widget-value">{{getCurrencyBalance(formData.baseCurrency)}}</div>
         </div>
         <div class="col-sm-6">
-            <div>Currency (issuer)</div>
-            <div class="trading-info-widget-value">Amount</div>
+            <div>{{formData.counterCurrency.currency}} <span ng-show="formData.counterCurrency.issuer"> ({{formData.counterCurrency.issuer | addressToUsername}})</div>
+            <div class="trading-info-widget-value">{{getCurrencyBalance(formData.counterCurrency)}}</div>
         </div>
     </div>
 </div>
