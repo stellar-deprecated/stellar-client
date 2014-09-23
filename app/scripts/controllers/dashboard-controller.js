@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('DashboardCtrl', function($rootScope, $scope, $timeout, $state, session, TutorialHelper, StellarNetwork, contacts) {
+sc.controller('DashboardCtrl', function($rootScope, $scope, $timeout, $state, session, TutorialHelper, StellarNetwork, contacts, AccountLines) {
     $rootScope.tab = 'none';
     $rootScope.showTab = false;
 
@@ -87,11 +87,9 @@ sc.controller('DashboardCtrl', function($rootScope, $scope, $timeout, $state, se
         return _.has(accountLine, 'authorized') && accountLine.authorized;
     };
 
-    function fetchCurrencies() {
-        StellarNetwork.request('account_lines', { 'account': session.get('address') })
-            .then(function(result) {
-                processAccountLines(result.lines);
-            });
+    function getAccountLines() {
+        AccountLines.get()
+            .then(processAccountLines);
     }
 
     function processAccountLines(accountLines) {
@@ -119,9 +117,12 @@ sc.controller('DashboardCtrl', function($rootScope, $scope, $timeout, $state, se
         $scope.topCurrencies = sortedCurrencies.slice(0, 2);
     }
 
-    $rootScope.$on('$appTxNotification', fetchCurrencies);
+    $scope.$on('AccountLines:update', function(event, accountLines) {
+        processAccountLines(accountLines);
+    });
 
-    fetchCurrencies();
+    getAccountLines();
+
 });
 
 
