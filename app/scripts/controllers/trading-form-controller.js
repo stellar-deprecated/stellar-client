@@ -9,6 +9,8 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
 
   $scope.favoriteTrades = CurrencyPairs.getFavorites();
 
+  $scope.$watch('formData.baseCurrency', updateSelectedFavorite, true);
+  $scope.$watch('formData.counterCurrency', updateSelectedFavorite, true);
   $scope.$watch('formData.baseAmount', calculateCounterAmount);
   $scope.$watch('formData.unitPrice', calculateCounterAmount);
   $scope.$watch('formData.favorite', useFavoriteCurrencyPair);
@@ -20,6 +22,19 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
   $scope.changeCounterCurrency = function(newCurrency) {
     $scope.formData.counterCurrency.currency = newCurrency;
   };
+
+  function setFavorite(currencyPair) {
+    // This find operation ensures that if the current currency pair deep equals
+    // one of the favorites, the dropdown uses that reference to properly update.
+    // If the current currency pair is not found, the dropdown will show its placeholder.
+    $scope.formData.favorite = _.find($scope.favoriteTrades, currencyPair);
+  }
+
+  function updateSelectedFavorite() {
+    if ($scope.currentOrderBook) {
+      setFavorite($scope.currentOrderBook.getCurrencyPair());
+    }
+  }
 
   function calculateCounterAmount() {
     $scope.formData.counterAmount = new BigNumber($scope.formData.baseAmount).times($scope.formData.unitPrice).toString();
@@ -78,7 +93,8 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
     $scope.formData.baseAmount = '0';
     $scope.formData.unitPrice = '0';
     $scope.formData.counterAmount = '0';
-    $scope.formData.favorite = CurrencyPairs.getLastUsedFavorite();
+
+    setFavorite(CurrencyPairs.getLastUsedFavorite());
 
     $scope.formData.baseCurrency = {
       currency: $scope.currencyNames[0],
