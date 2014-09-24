@@ -76,7 +76,7 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
     $scope.formData.baseAmount = '0';
     $scope.formData.unitPrice = '0';
     $scope.formData.counterAmount = '0';
-    $scope.formData.favorite = '';
+    $scope.formData.favorite = CurrencyPairs.getLastUsedFavorite();
 
     $scope.formData.baseCurrency = {
       currency: $scope.currencyNames[0],

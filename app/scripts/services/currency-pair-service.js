@@ -16,12 +16,19 @@ var sc = angular.module('stellarClient');
  * We need some mechanism to track the the base currency of any order so that we
  * can present it to the user in a way that makes sense to them.  This mechanism
  * is the priority system in this service.  Any time a trade is made, we call
- * {@link CurrencyPairs.recordPriority}, which establishes how the user wants the
+ * {@link CurrencyPairs.recordUse}, which establishes how the user wants the
  * given currency pair to be represented.
  *
  * After the fact, given an currencyPair (most likely pulled from an Offer) we
  * can call {@link CurrencyPairs.normalize} that will optionally reverse the pair
  * if the priority is towards the "opposite" pair.
+ *
+ * ### Order
+ *
+ * Any time a trade is made, we call {@link CurrencyPairs.recordUse} to move
+ * the used currencyPair to the top of the favorites to keep the list sorted
+ * latest first. {@link CurrencyPairs.getLastUsedFavorite} can be called to get
+ * the last favorite that was used.
  * 
  * @namespace CurrencyPairs
  * 
@@ -40,7 +47,8 @@ sc.service('CurrencyPairs', function($q, session) {
   this.markFavorite = function(currencyPair) {
     if(this.isFavorite(currencyPair)) { return; }
 
-    walletTradingPairs().favorites = getFavorites().concat(currencyPair);
+    var favorites = [currencyPair].concat(getFavorites());
+    setFavorites(favorites);
   };
 
   /**
@@ -58,7 +66,7 @@ sc.service('CurrencyPairs', function($q, session) {
       return !_.isEqual(currencyPair, favoritePair);
     });
 
-    walletTradingPairs().favorites = newFavs; 
+    setFavorites(newFavs);
   };
 
   /**
@@ -69,9 +77,7 @@ sc.service('CurrencyPairs', function($q, session) {
    * @memberOf CurrencyPairs
    */
   this.isFavorite = function(currencyPair) {
-    return _.any(getFavorites(), function(favoritePair) {
-      return _.isEqual(currencyPair, favoritePair);
-    });
+    return isFavorite(currencyPair);
   };
 
   /**
@@ -84,23 +90,24 @@ sc.service('CurrencyPairs', function($q, session) {
   };
 
   /**
-   * Records that the given currencyPair is the prioritized pair (over the inverse)
-   * 
-   * @param  {CurrencyPair} currencyPair the pair the prioritize
+   * Moves the used favorite currency pair to the top of the favorites
+   * and records the priority of the currency pair
+   * @param {CurrencyPair} the last favorite CurrencyPair that was used
+   * @memberOf CurrencyPairs
    */
-  this.recordPriority = function(currencyPair) {
-    // we record the provided currency pair under two keys, one for each direction
-    // this adds to the size of the wallet but greatly simplifies lookup
+  this.recordUse = function(currencyPair) {
+    moveFavoriteToTop(currencyPair);
+    recordPriority(currencyPair);
+  };
 
-    var key1 = priorityKey(currencyPair.baseCurrency, currencyPair.counterCurrency);
-    var key2 = priorityKey(currencyPair.counterCurrency, currencyPair.baseCurrency);
-
-    getCurrencyPriorities()[key1] = currencyPair.baseCurrency.currency;
-    getCurrencyPriorities()[key2] = currencyPair.baseCurrency.currency;
-
-    //TODO: but this behind a debounced "save at your leisure type function" that
-    //also doesn't actually sync if the wallets state hasn't changed
-    session.syncWallet('update');
+  /**
+   * Returns the last favorite CurrencyPair that was used
+   * @return {CurrencyPair} the last favorite CurrencyPair that was used
+   * @memberOf CurrencyPairs
+   */
+  this.getLastUsedFavorite = function() {
+    // the favorite CurrencyPairs are sorted last used first
+    return _.cloneDeep(getFavorites()[0]);
   };
 
   /**
@@ -149,6 +156,27 @@ sc.service('CurrencyPairs', function($q, session) {
     return basePart + ":" + counterPart;
   };
 
+  function moveFavoriteToTop(currencyPair) {
+    if(isFavorite(currencyPair)) {
+      var favorites = _.reject(getFavorites(), currencyPair);
+      setFavorites([currencyPair].concat(favorites));
+    }
+  }
+
+  function recordPriority(currencyPair) {
+    // we record the provided currency pair under two keys, one for each direction
+    // this adds to the size of the wallet but greatly simplifies lookup
+
+    var key1 = priorityKey(currencyPair.baseCurrency, currencyPair.counterCurrency);
+    var key2 = priorityKey(currencyPair.counterCurrency, currencyPair.baseCurrency);
+
+    var priorities = getCurrencyPriorities();
+    priorities[key1] = currencyPair.baseCurrency.currency;
+    priorities[key2] = currencyPair.baseCurrency.currency;
+
+    setCurrencyPriorities(priorities);
+  }
+
   function priorityKey(currency1, currency2) {
     return currency1.currency +  ":" + currency2.currency;
   }
@@ -157,9 +185,25 @@ sc.service('CurrencyPairs', function($q, session) {
     return walletTradingPairs().priorities;
   }
 
+  function setCurrencyPriorities(priorities) {
+    walletTradingPairs().priorities = priorities;
+    syncWallet();
+  }
+
   function getFavorites() {
     return walletTradingPairs().favorites;
   }
+
+  function setFavorites(favorites) {
+    walletTradingPairs().favorites = favorites;
+    syncWallet();
+  }
+
+  function isFavorite(currencyPair) {
+    return _.any(getFavorites(), function(favoritePair) {
+      return _.isEqual(currencyPair, favoritePair);
+    });
+  };
 
   function walletTradingPairs() {
     var mainData = session.get('wallet').mainData;
@@ -172,5 +216,11 @@ sc.service('CurrencyPairs', function($q, session) {
     }
 
     return mainData.tradingPairs;
+  }
+
+  function syncWallet() {
+    //TODO: put this behind a debounced "save at your leisure type function" that
+    //also doesn't actually sync if the wallets state hasn't changed
+    session.syncWallet('update');
   }
 });
