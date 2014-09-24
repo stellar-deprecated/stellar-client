@@ -7,7 +7,7 @@ sc.controller('TradingBalanceCtrl', function($scope, $rootScope, $filter, Accoun
 
   $scope.getCurrencyBalance = function(currency) {
     if (currency.currency === 'STR') {
-      return $filter('rpamount')($rootScope.balance);
+      return $rootScope.balance / 1000000;
     }
 
     var accountLine = _.find($scope.accountLines, {

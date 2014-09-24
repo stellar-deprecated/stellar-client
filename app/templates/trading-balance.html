@@ -3,11 +3,11 @@
     <div class="row">
         <div class="col-sm-6">
             <div>{{formData.baseCurrency.currency}} <span ng-show="formData.baseCurrency.issuer"> ({{formData.baseCurrency.issuer | addressToUsername}})</div>
-            <div class="trading-info-widget-value">{{getCurrencyBalance(formData.baseCurrency)}}</div>
+            <div class="trading-info-widget-value">{{getCurrencyBalance(formData.baseCurrency) | roundAmount:formData.baseCurrency.currency}}</div>
         </div>
         <div class="col-sm-6">
             <div>{{formData.counterCurrency.currency}} <span ng-show="formData.counterCurrency.issuer"> ({{formData.counterCurrency.issuer | addressToUsername}})</div>
-            <div class="trading-info-widget-value">{{getCurrencyBalance(formData.counterCurrency)}}</div>
+            <div class="trading-info-widget-value">{{getCurrencyBalance(formData.counterCurrency) | roundAmount:formData.counterCurrency.currency}}</div>
         </div>
     </div>
 </div>
