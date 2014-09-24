@@ -41,7 +41,7 @@
         <div class="form-group" ng-show="formIsValid()">
             <div class="col-xs-offset-4 col-xs-8">
                 <b>
-                    <span class="capitalize">{{ formData.tradeOperation }}</span>
+                    {{ formData.tradeOperation }}
                     {{ formData.baseAmount }} {{ formData.baseCurrency.currency }}
                     for {{ formData.counterAmount }} {{ formData.counterCurrency.currency }}
                     at {{ formData.unitPrice }} {{ formData.counterCurrency.currency }}/{{ formData.baseCurrency.currency }}
