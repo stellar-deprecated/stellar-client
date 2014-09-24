@@ -27,8 +27,10 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
 
   function useFavoriteCurrencyPair() {
     if ($scope.formData.favorite) {
-      $scope.formData.baseCurrency = $scope.formData.favorite.baseCurrency;
-      $scope.formData.counterCurrency = $scope.formData.favorite.counterCurrency;
+      $scope.formData.baseCurrency.currency = $scope.formData.favorite.baseCurrency.currency;
+      $scope.formData.baseCurrency.issuer = $scope.formData.favorite.baseCurrency.issuer;
+      $scope.formData.counterCurrency.currency = $scope.formData.favorite.counterCurrency.currency;
+      $scope.formData.counterCurrency.issuer = $scope.formData.favorite.counterCurrency.issuer;
     }
   }
 
