@@ -29,7 +29,7 @@ sc.controller('TradeCtrl', function($scope, session, Trading, CurrencyPairs) {
   $scope.myOffers         = null;
   $scope.currentBids      = [];
   $scope.currentAsks      = [];
-  $scope.tradeOperation   = 'buy';
+  $scope.tradeOperation   = 'Buy';
 
 
   $scope.$on("trading:my-offers:partially-filled", function(e, offer) {
@@ -62,10 +62,10 @@ sc.controller('TradeCtrl', function($scope, session, Trading, CurrencyPairs) {
     var offerPromise;
 
     switch($scope.tradeOperation) {
-    case "buy":
+    case "Buy":
       offerPromise = $scope.currentOrderBook.buy($scope.baseCurrencyAmount, $scope.counterCurrencyAmount);
       break;
-    case "sell":
+    case "Sell":
       offerPromise = $scope.currentOrderBook.sell($scope.baseCurrencyAmount, $scope.counterCurrencyAmount);
       break;
     default:

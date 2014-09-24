@@ -31,7 +31,7 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
   };
 
   $scope.resetForm = function() {
-    $scope.formData.tradeOperation = 'buy';
+    $scope.formData.tradeOperation = 'Buy';
     $scope.formData.baseAmount = '0';
     $scope.formData.unitPrice = '0';
     $scope.formData.counterAmount = '0';
@@ -70,7 +70,7 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
   $scope.createOffer = singletonPromise(function(e) {
     var offerPromise;
 
-    if ($scope.formData.tradeOperation === 'buy') {
+    if ($scope.formData.tradeOperation === 'Buy') {
       offerPromise = $scope.currentOrderBook.buy($scope.formData.baseAmount, $scope.formData.counterAmount);
     } else {
       offerPromise = $scope.currentOrderBook.sell($scope.formData.baseAmount, $scope.formData.counterAmount);
