@@ -25,16 +25,9 @@
     margin-bottom: 15px;
   }
 
-  .form-control {
-    margin: 5px 0;
-  }
-
-  .radio-buttons {
-    margin-top: 5px;
-  }
   @media (min-width: $mobile-width) { 
     .form-group {
-      margin-bottom: 5px;
+      margin-bottom: 15px;
     }
   }
 }

@@ -7,11 +7,21 @@
                 --><input type="radio" ng-model="formData.tradeOperation" id="trade-radio-sell" value="sell"><!-- No whitespace
                 --><label for="trade-radio-sell">Sell</label>
             </div>
-            <div class="col-md-6"><input type="text" class="form-control" ng-model="formData.baseAmount"></input></div>
-            <div class="col-md-2">
+            <div class="col-md-8">
+                <div class="input-group">
+                    <input type="text" class="form-control" ng-model="formData.baseAmount"></input>
+                    <div class="input-group-btn">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">{{formData.baseCurrency.currency}} <span class="caret"></span></button>
+                        <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                            <li ng-repeat="currencyName in currencyNames"><a href="javascript:void(0)" ng-click="changeBaseCurrency(currencyName)">{{currencyName}}</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+<!--             <div class="col-md-2">
                 <select class="form-control" ng-model="formData.baseCurrency.currency" ng-options="currencyName for currencyName in currencyNames">
                 </select>
-            </div>
+            </div> -->
         </div>
         <div class="form-group" ng-show="hasIssuer(formData.baseCurrency.currency)">
             <div class="col-md-4"><label>ISSUED BY</label></div>
@@ -21,10 +31,16 @@
         </div>
         <div class="form-group">
             <div class="col-md-4"><label>WITH EACH PRICED AT</label></div>
-            <div class="col-md-6"><input type="text" class="form-control" ng-model="formData.unitPrice"></input></div>
-            <div class="col-md-2">
-                <select class="form-control" ng-model="formData.counterCurrency.currency" ng-options="currencyName for currencyName in currencyNames">
-                </select>
+            <div class="col-md-8">
+                <div class="input-group">
+                    <input type="text" class="form-control" ng-model="formData.unitPrice"></input>
+                    <div class="input-group-btn">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">{{formData.counterCurrency.currency}} <span class="caret"></span></button>
+                        <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                            <li ng-repeat="currencyName in currencyNames"><a href="javascript:void(0)" ng-click="changeCounterCurrency(currencyName)">{{currencyName}}</a></li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="form-group" ng-show="hasIssuer(formData.counterCurrency.currency)">
