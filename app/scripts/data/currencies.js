@@ -13,7 +13,7 @@
  */
 var StellarDefaultCurrencyList =
 [
-    {value: 'STR', name: 'STR - Stellars', order: 4, max_decimal_places: 6},
+    {value: 'STR', name: 'STR - Stellars', order: 4, max_decimal_places: 0},
     {value: 'USD', name: 'USD - US Dollar', order: 3, max_decimal_places: 2},
     {value: 'EUR', name: 'EUR - Euro', order: 2, max_decimal_places: 2},
     {value: 'BTC', name: 'BTC - Bitcoin', order: 1, max_decimal_places: 6},
