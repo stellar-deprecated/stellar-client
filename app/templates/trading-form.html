@@ -1,45 +1,45 @@
 <div class="trading-form" ng-controller="TradingFormCtrl">
     <form role="form" class="form-horizontal" ng-submit="confirmOffer()" ng-show="state == 'form'">
         <div class="form-group">
-            <div class="radio-buttons col-xs-4">
+            <div class="radio-buttons col-md-4">
                 <input type="radio" ng-model="formData.tradeOperation" id="trade-radio-buy" value="buy">
                 <label for="trade-radio-buy">Buy</label><!-- No whitespace
                 --><input type="radio" ng-model="formData.tradeOperation" id="trade-radio-sell" value="sell"><!-- No whitespace
                 --><label for="trade-radio-sell">Sell</label>
             </div>
-            <div class="col-xs-6"><input type="text" class="form-control" ng-model="formData.baseAmount"></input></div>
-            <div class="col-xs-2">
+            <div class="col-md-6"><input type="text" class="form-control" ng-model="formData.baseAmount"></input></div>
+            <div class="col-md-2">
                 <select class="form-control" ng-model="formData.baseCurrency.currency" ng-options="currencyName for currencyName in currencyNames">
                 </select>
             </div>
         </div>
         <div class="form-group" ng-show="hasIssuer(formData.baseCurrency.currency)">
-            <div class="col-xs-4">ISSUED BY</div>
-            <div class="col-xs-8">
+            <div class="col-md-4"><label>ISSUED BY</label></div>
+            <div class="col-md-8">
                 <select class="form-control" ng-model="formData.baseCurrency.issuer" ng-options="issuer as (issuer | addressToUsername) for issuer in getIssuers(formData.baseCurrency)"></select>
             </div>
         </div>
         <div class="form-group">
-            <div class="col-xs-4">WITH EACH PRICED AT</div>
-            <div class="col-xs-6"><input type="text" class="form-control" ng-model="formData.unitPrice"></input></div>
-            <div class="col-xs-2">
+            <div class="col-md-4"><label>WITH EACH PRICED AT</label></div>
+            <div class="col-md-6"><input type="text" class="form-control" ng-model="formData.unitPrice"></input></div>
+            <div class="col-md-2">
                 <select class="form-control" ng-model="formData.counterCurrency.currency" ng-options="currencyName for currencyName in currencyNames">
                 </select>
             </div>
         </div>
         <div class="form-group" ng-show="hasIssuer(formData.counterCurrency.currency)">
-            <div class="col-xs-4">ISSUED BY</div>
-            <div class="col-xs-8">
+            <div class="col-md-4"><label>ISSUED BY</label></div>
+            <div class="col-md-8">
                 <select class="form-control" ng-model="formData.counterCurrency.issuer" ng-options="issuer as (issuer | addressToUsername) for issuer in getIssuers(formData.counterCurrency)"></select>
             </div>
         </div>
         <div class="form-group">
-            <div class="col-xs-4">TOTAL PAYABLE</div>
-            <div class="col-xs-6"><input type="text" class="form-control" ng-model="formData.counterAmount" disabled></input></div>
-            <div class="col-xs-2"><input type="text" class="form-control" ng-model="formData.counterCurrency.currency" disabled></input></div>
+            <div class="col-md-4"><label>TOTAL PAYABLE</label></div>
+            <div class="col-md-6"><input type="text" class="form-control" ng-model="formData.counterAmount" disabled></input></div>
+            <div class="col-md-2"><input type="text" class="form-control" ng-model="formData.counterCurrency.currency" disabled></input></div>
         </div>
         <div class="form-group" ng-show="formIsValid()">
-            <div class="col-xs-offset-4 col-xs-8">
+            <div class="col-md-offset-4 col-md-8">
                 <b>
                     <span class="capitalize">{{ formData.tradeOperation }}</span>
                     {{ formData.baseAmount }} {{ formData.baseCurrency.currency }}
@@ -49,7 +49,7 @@
             </div>
         </div>
         <div class="form-group">
-            <div class="col-xs-offset-4 col-xs-3">
+            <div class="col-md-offset-4 col-md-3">
                 <button type="submit" class="btn btn-default" ng-disabled="!formIsValid()">Submit Order</button>
             </div>
         </div>
