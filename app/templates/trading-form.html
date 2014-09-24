@@ -51,8 +51,12 @@
         </div>
         <div class="form-group">
             <div class="col-md-4"><label>TOTAL PAYABLE</label></div>
-            <div class="col-md-6"><input type="text" class="form-control" ng-model="formData.counterAmount" disabled></input></div>
-            <div class="col-md-2"><input type="text" class="form-control" ng-model="formData.counterCurrency.currency" disabled></input></div>
+            <div class="col-md-8">
+                <div class="input-group">
+                    <input type="text" class="form-control" ng-model="formData.counterAmount" disabled></input>
+                    <span class="input-group-addon">{{formData.counterCurrency.currency}}</span>
+                </div>
+            </div>
         </div>
         <div class="form-group" ng-show="formIsValid()">
             <div class="col-md-offset-4 col-md-8">
