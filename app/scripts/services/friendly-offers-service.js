@@ -6,10 +6,10 @@ angular.module('stellarClient').service('FriendlyOffers', function($q, CurrencyP
 
     switch(self.getOfferRole(offer, currencyPair)) {
     case "bid":
-      operation = "buy";
+      operation = "Buy";
       break;
     case "ask":
-      operation = "sell";
+      operation = "Sell";
       break;
     default:
       // NOTE: we should only get here when the currencyPair

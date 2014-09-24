@@ -2,9 +2,9 @@
     <form role="form" class="form-horizontal" ng-submit="confirmOffer()" ng-show="state == 'form'">
         <div class="form-group">
             <div class="radio-buttons col-xs-4">
-                <input type="radio" ng-model="formData.tradeOperation" id="trade-radio-buy" value="buy">
+                <input type="radio" ng-model="formData.tradeOperation" id="trade-radio-buy" value="Buy">
                 <label for="trade-radio-buy">Buy</label><!-- No whitespace
-                --><input type="radio" ng-model="formData.tradeOperation" id="trade-radio-sell" value="sell"><!-- No whitespace
+                --><input type="radio" ng-model="formData.tradeOperation" id="trade-radio-sell" value="Sell"><!-- No whitespace
                 --><label for="trade-radio-sell">Sell</label>
             </div>
             <div class="col-xs-6"><input type="text" class="form-control" ng-model="formData.baseAmount"></input></div>
@@ -41,7 +41,7 @@
         <div class="form-group" ng-show="formIsValid()">
             <div class="col-xs-offset-4 col-xs-8">
                 <b>
-                    <span class="capitalize">{{ formData.tradeOperation }}</span>
+                    {{ formData.tradeOperation }}
                     {{ formData.baseAmount }} {{ formData.baseCurrency.currency }}
                     for {{ formData.counterAmount }} {{ formData.counterCurrency.currency }}
                     at {{ formData.unitPrice }} {{ formData.counterCurrency.currency }}/{{ formData.baseCurrency.currency }}
@@ -50,7 +50,7 @@
         </div>
         <div class="form-group">
             <div class="col-xs-offset-4 col-xs-3">
-                <button type="submit" class="btn btn-default" ng-disabled="!formIsValid()">Submit Order</button>
+                <button type="submit" class="btn btn-default" ng-disabled="!formIsValid()">{{formData.tradeOperation}} {{formData.baseCurrency.currency}}</button>
             </div>
         </div>
     </form>
