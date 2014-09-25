@@ -19,7 +19,7 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, S
         if (params.dt) {
             // use a short timeout to allow digest from watchers of above values
             // to run first and call $scope.resetDestinationDependencies() (which overwrites values below)
-            setTimeout(function () {
+            $timeout(function () {
                 $scope.send.showDestinationTag = true;
                 $scope.send.destination.destinationTag =  Number(params.dt);
             }, 100);
