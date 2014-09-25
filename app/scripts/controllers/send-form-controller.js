@@ -14,9 +14,16 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, S
         $scope.openSend();
 
         $scope.sendFormModel.recipient = params.dest;
-        $scope.send.destination.destinationTag = params.dt;
         $scope.sendFormModel.amount = Number(params.amount);
         $scope.sendFormModel.currency = params.currency || 'STR';
+        if (params.dt) {
+            // use a short timeout to allow digest from watchers of above values
+            // to run first and call $scope.resetDestinationDependencies() (which overwrites values below)
+            $timeout(function () {
+                $scope.send.showDestinationTag = true;
+                $scope.send.destination.destinationTag =  Number(params.dt);
+            }, 100);
+        }
     });
 
     /**
