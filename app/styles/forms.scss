@@ -1,7 +1,8 @@
 label {
-  font-weight: $heavy-weight;
-  font-size: 15px;
+  font-weight: $medium-weight;
+  font-size: 14px;
   text-transform: uppercase;
+  letter-spacing: 0.02em;
 }
 
 input[type="text"],
@@ -126,11 +127,15 @@ input[type=number]::-webkit-outer-spin-button {
   margin-top: 0;
   margin-bottom: 5px;
 
-  button {
+ button {
     width: 100%;
     margin-bottom: 40px;
     font-weight: $heavy-weight;
     font-size: 17px;
+  }
+
+  .dropdown-toggle {
+    margin-bottom: 0;
   }
 
   .errors {
@@ -230,22 +235,25 @@ select.form-control {
     display:none;
 
     &:checked + label {
-      background: $dark-grey;
+      background: $brand-primary;
       color: white;
     }
 
     &:not(:checked) + label {
       cursor: pointer;
+      color: $grey;
 
       &:hover {
-        background-color: $light-grey;
+        background-color: fade-out($brand-primary, 0.9);
       }
     }
 
     + label {
-      border: 1px solid $dark-grey;
+      border: 1px solid darken($brand-primary, 15);
       border-right: none;
       padding: 9px 12px;
+      width: 50%;
+      text-align: center;
 
       &:first-of-type {
         border-radius: 3px 0px 0px 3px;
@@ -253,7 +261,7 @@ select.form-control {
 
       &:last-of-type {
         border-radius: 0px 3px 3px 0px;
-        border-right: 1px solid $dark-grey;
+        border-right: 1px solid darken($brand-primary, 15);
       }
     }
   }

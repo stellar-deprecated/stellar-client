@@ -20,6 +20,21 @@
       color: $success;
     }
   }
+
+  .form-group {
+    margin-bottom: 15px;
+  }
+
+  .dropdown-toggle {
+    color: $dark-grey;
+    font-weight: $medium-weight;
+  }
+
+  @media (min-width: $mobile-width) { 
+    .form-group {
+      margin-bottom: 15px;
+    }
+  }
 }
 
 .current-offers-table {
