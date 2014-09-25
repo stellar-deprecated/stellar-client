@@ -11,11 +11,11 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
   $scope.$watch('formData.unitPrice', calculateCounterAmount);
 
   $scope.changeBaseCurrency = function(newCurrency) {
-          $scope.formData.baseCurrency.currency = newCurrency;
+    $scope.formData.baseCurrency.currency = newCurrency;
   };
 
   $scope.changeCounterCurrency = function(newCurrency) {
-          $scope.formData.counterCurrency.currency = newCurrency;
+    $scope.formData.counterCurrency.currency = newCurrency;
   };
 
   function calculateCounterAmount() {
