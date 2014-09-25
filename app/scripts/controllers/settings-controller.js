@@ -132,6 +132,22 @@ sc.controller('SettingsCtrl', function($scope, $http, $state, session, singleton
       .tooltip('show');
   }
 
+  $scope.idleTimeout = getIdleTimeoutAsMinutes();
+  $scope.timeoutOptions = [15, 30, 60, 120];
+
+  $scope.setIdleTimeout = function (minutes) {
+    session.setIdleTimeout(minutes);
+  };
+
+  $scope.resetIdleTimeout = function () {
+    $scope.idleTimeout = getIdleTimeoutAsMinutes();
+  };
+
+  // get idle timeout and convert to minutes
+  function getIdleTimeoutAsMinutes() {
+    return session.getIdleTimeout() / (60 * 1000);
+  }
+
   getSettings()
     .then(function () {
       $scope.$broadcast('settings-refresh');

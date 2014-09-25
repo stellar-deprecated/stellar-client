@@ -4,7 +4,7 @@ var sc = angular.module('stellarClient');
 
 var cache = {};
 
-sc.service('session', function($rootScope, $http, $timeout, StellarNetwork, Wallet, contacts, UserPrivateInfo) {
+sc.service('session', function($rootScope, $http, $timeout, $window, StellarNetwork, Wallet, contacts, UserPrivateInfo) {
   var Session = function() {};
 
   Session.prototype.get = function(name){ return cache[name]; };
@@ -33,12 +33,32 @@ sc.service('session', function($rootScope, $http, $timeout, StellarNetwork, Wall
 
   }, 1000, true);
 
-  Session.prototype.setIdleTimeout = function() {
-    var self = this;
+  function minutesToMS(minutes) {
+    var milliseconds = minutes * 60 * 1000;
+      if (isNaN(milliseconds)) {
+        milliseconds = 0;
+      }
+
+      return milliseconds;
+  }
+
+  Session.prototype.getIdleTimeout = function() {
+    var defaultTimeout = Options.DEFAULT_IDLE_LOGOUT_TIMEOUT || 15 * 60 * 1000,
+      userDefinedTimeout = $window.localStorage[Options.USER_DEFINED_IDLE_LOGOUT_TIMEOUT_KEY];
+
+      return userDefinedTimeout && !isNaN(userDefinedTimeout) ? userDefinedTimeout : defaultTimeout;
+  };
+
+  Session.prototype.setIdleTimeout = function(minutes) {
+    var self = this,
+      timeout = minutesToMS(minutes);
+      if (timeout > 0) {
+          $window.localStorage[Options.USER_DEFINED_IDLE_LOGOUT_TIMEOUT_KEY] = timeout;
+      }
 
     this.idleTimeout = $timeout(function() {
       self.logout(true);
-    }, Options.IDLE_LOGOUT_TIMEOUT || 15 * 60 * 1000);
+    }, self.getIdleTimeout());
   };
 
   Session.prototype.clearIdleTimeout = function() {

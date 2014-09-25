@@ -24,7 +24,8 @@ var Options = {
     // If set, login will persist across sessions (page reload). This is mostly
     // intended for developers, be careful about using this in a real setting.
     PERSISTENT_SESSION : true,
-    IDLE_LOGOUT_TIMEOUT : 60 * 60 * 1000, //an hour
+    DEFAULT_IDLE_LOGOUT_TIMEOUT : 60 * 60 * 1000, //an hour,
+    USER_DEFINED_IDLE_LOGOUT_TIMEOUT_KEY: 'idleLogoutTimeout',
     COOKIE_SECURE: false,
 
 

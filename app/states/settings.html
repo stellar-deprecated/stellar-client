@@ -2,7 +2,6 @@
     <div class="container">
         <div class="client-section">
             <h1 class="title">Settings<span class="link-dashboard"><a href="/#/dashboard">&#8592; back to dashboard</a></span></h1>
-
         </div>
 
         <!-- TODO: add user photos
@@ -243,6 +242,28 @@
                         </div>
                         <div class="secondary-action">
                             <span id="reveal-key" ng-click="reveal = !reveal">{{reveal ? 'Hide' : 'Reveal'}}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="settings-label col-md-3 col-xs-6">IDLE TIME BEFORE LOGOUT (MINUTES)</div>
+                        <div class="settings-control col-md-9 col-xs-6">
+                            <div class="col-xs-10">
+                                <div class="row">
+                                    <div class="col-md-5 col-xs-12">
+                                        <select class="form-control"  ng-model="idleTimeout" ng-options="o as o for o in timeoutOptions"></select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 col-xs-12 col-md-push-1">
+                                        <button class="btn btn-default stellar-button settings-confirm-button" ng-click="setIdleTimeout(idleTimeout)">Save Changes</button>
+                                    </div>
+                                    <div class="settings-cancel-button col-md-1 col-xs-1 col-md-pull-4">
+                                        <a href="" ng-click="resetIdleTimeout()">Reset</a>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
