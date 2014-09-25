@@ -44,6 +44,7 @@
     line-height: 50px;
   }
 
+
   tbody tr {
     font-weight: $book-weight;
     border-bottom: 1px solid $light-grey;
@@ -58,18 +59,41 @@
 .order-book {
   .order-type {
     text-align: center;
+    text-transform: uppercase;
+    font-size: 16px;
+    letter-spacing: 0.1em;
+    color: $grey;
+    padding: 15px 0;
+    border-bottom: 1px solid $light-grey;
   }
 
   .order-book-table {
     width: 100%;
+    border-spacing: 3px;
+    border-collapse: separate;
 
-    thead tr {
-      line-height: 50px;
+    td {
+      margin: 0 1px;
+      border-top: 0;
+      border-bottom: 1px solid $light-grey;
     }
+
+    thead {
+      tr {
+      line-height: 50px;
+      border:0;
+      font-size: 13px;
+      }
+      th {
+        padding-top: 0;
+      }
+    }
+
+
 
     tbody tr {
       font-weight: $book-weight;
-      border-bottom: 1px solid $light-grey;
+      
       line-height: 50px;
 
       .cancel-offer {
