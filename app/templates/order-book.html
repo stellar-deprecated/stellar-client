@@ -2,7 +2,7 @@
     <div ng-show="currentOrderBook">
         <div class="col-sm-6">
             <h4 class="order-type">Bids</h4>
-            <p ng-hide="currentBids.length">There are no current bids for this currency pair from the selected issuer yet. Make some by submitting a new trade order.</p>
+            <p ng-hide="currentBids.length" class="order-status">There are no current bids for this currency pair from the selected issuer yet. Make some by submitting a new trade order.</p>
             <table class="order-book-table table" ng-show="currentBids.length">
                 <thead>
                     <tr>

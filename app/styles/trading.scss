@@ -39,20 +39,18 @@
 
 .current-offers-table {
   width: 100%;
+  border-spacing: 3px;
+  border-collapse: separate;
+  font-weight: $book-weight;
+  td, th {
+    border-bottom: 1px solid $light-grey;
+    padding: 10px 5px;
 
-  thead tr {
-    line-height: 50px;
   }
 
 
-  tbody tr {
-    font-weight: $book-weight;
-    border-bottom: 1px solid $light-grey;
-    line-height: 50px;
-
-    .cancel-offer {
-      text-align: right;
-    }
+  .cancel-offer {
+    text-align: right;
   }
 }
 
@@ -125,4 +123,9 @@
       content: "--";
     }
   }
+}
+
+.order-status {
+  padding: 15px 0;
+  font-weight: $book-weight;
 }
