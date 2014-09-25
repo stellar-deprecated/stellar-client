@@ -1,0 +1,35 @@
+//overrides for bootstrap tabs
+.nav-tabs {
+  border-bottom: 3px solid $nav-tabs-border-color;
+  > li {
+    float: left;
+    // Make the list-items overlay the bottom border
+    margin-bottom: -3px;
+
+    // Actual tabs (as links)
+    > a {
+      margin-right: 0;
+      line-height: $line-height-base;
+      border: 0;
+      border-radius: 0;
+      color: $grey;
+      &:hover {
+      	color: $dark-grey;
+      	background: none;
+        border-bottom: 3px solid $dark-grey;
+      }
+    }
+
+    // Active state, and its :hover to override normal :hover
+    &.active > a {
+      &,
+      &:hover,
+      &:focus {
+        color: $brand-primary;
+        background: none;
+        border: 0;
+        border-bottom: 3px solid $brand-primary;
+      }
+    }
+  }
+}
