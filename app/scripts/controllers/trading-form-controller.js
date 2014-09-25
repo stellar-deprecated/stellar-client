@@ -7,8 +7,6 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
   $scope.currencies = [{currency:"STR"}].concat(gatewayCurrencies);
   $scope.currencyNames = _.uniq(_.pluck($scope.currencies, 'currency'));
 
-  $scope.favoriteTrades = CurrencyPairs.getFavorites();
-
   $scope.$watch('formData.baseCurrency', updateSelectedFavorite, true);
   $scope.$watch('formData.counterCurrency', updateSelectedFavorite, true);
   $scope.$watch('formData.baseAmount', calculateCounterAmount);
@@ -23,16 +21,13 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
     $scope.formData.counterCurrency.currency = newCurrency;
   };
 
-  function setFavorite(currencyPair) {
-    // This find operation ensures that if the current currency pair deep equals
-    // one of the favorites, the dropdown uses that reference to properly update.
-    // If the current currency pair is not found, the dropdown will show its placeholder.
-    $scope.formData.favorite = _.find($scope.favoriteTrades, currencyPair);
+  function updateFavoriteTrades() {
+    $scope.favoriteTrades = CurrencyPairs.getFavorites();
   }
 
   function updateSelectedFavorite() {
     if ($scope.currentOrderBook) {
-      setFavorite($scope.currentOrderBook.getCurrencyPair());
+      $scope.setFavorite($scope.currentOrderBook.getCurrencyPair());
     }
   }
 
@@ -48,6 +43,21 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
       $scope.formData.counterCurrency.issuer = $scope.formData.favorite.counterCurrency.issuer;
     }
   }
+
+  $scope.setFavorite = function(currencyPair) {
+    // This find operation ensures that if the current currency pair deep equals
+    // one of the favorites, the dropdown uses that reference to properly update.
+    // If the current currency pair is not found, the dropdown will show its placeholder.
+    $scope.formData.favorite = _.find($scope.favoriteTrades, currencyPair);
+  };
+
+  $scope.addFavoritePair = function(currencyPair) {
+    if ($scope.currentOrderBook) {
+      CurrencyPairs.markFavorite($scope.currentOrderBook.getCurrencyPair());
+      updateFavoriteTrades();
+      updateSelectedFavorite();
+    }
+  };
 
   $scope.getIssuers = function(currency) {
     var currencies = _.filter($scope.currencies, {currency: currency.currency});
@@ -94,7 +104,8 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
     $scope.formData.unitPrice = '0';
     $scope.formData.counterAmount = '0';
 
-    setFavorite(CurrencyPairs.getLastUsedFavorite());
+    updateFavoriteTrades();
+    $scope.setFavorite(CurrencyPairs.getLastUsedFavorite());
 
     $scope.formData.baseCurrency = {
       currency: $scope.currencyNames[0],
@@ -137,16 +148,10 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
     }
 
     $scope.state = 'sending';
-    var currencyPair = $scope.currentOrderBook.getCurrencyPair();
     
     return offerPromise
       .then(function() {
         $scope.state = 'sent';
-
-        CurrencyPairs.markFavorite(currencyPair);
-        session.syncWallet('update');
-
-        $scope.favoriteTrades = CurrencyPairs.getFavorites();
       })
       .catch(function(e) {
         $scope.state = 'error';
