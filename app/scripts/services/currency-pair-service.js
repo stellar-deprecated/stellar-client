@@ -45,7 +45,7 @@ sc.service('CurrencyPairs', function($q, session) {
    * @memberOf CurrencyPairs
    */
   this.markFavorite = function(currencyPair) {
-    if(this.isFavorite(currencyPair)) { return; }
+    if(isFavorite(currencyPair)) { return; }
 
     var favorites = [currencyPair].concat(getFavorites());
     setFavorites(favorites);
@@ -60,7 +60,7 @@ sc.service('CurrencyPairs', function($q, session) {
    * @memberOf CurrencyPairs
    */
   this.unmarkFavorite = function(currencyPair) {
-    if(!this.isFavorite(currencyPair)) { return; }
+    if(!isFavorite(currencyPair)) { return; }
 
     var newFavs = _.filter(getFavorites(), function(favoritePair) {
       return !_.isEqual(currencyPair, favoritePair);
