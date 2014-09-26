@@ -138,6 +138,21 @@ input[type=number]::-webkit-outer-spin-button {
     margin-bottom: 0;
   }
 
+  .dropdown-combo {
+    .dropdown-toggle {
+      text-align: left;
+
+      .caret {
+        float: right;
+        margin-top: 12px;
+      }
+    }
+
+    .dropdown-menu {
+      width: 100%;
+    }
+  }
+
   .errors {
     height: 40px;
 

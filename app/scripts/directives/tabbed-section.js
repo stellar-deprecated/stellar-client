@@ -3,7 +3,7 @@ module.directive('tabbedSection', function() {
     restrict: 'E',
     transclude: true,
     controller: function($scope) {
-      $scope.templateUrl = 'templates/news.html';
+      $scope.templateUrl = '';
 
       $scope.$on('tabbedSection:select', function(event, tabTemplate) {
         $scope.templateUrl = tabTemplate;

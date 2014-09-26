@@ -233,7 +233,7 @@ angular.module('stellarClient').factory('OrderBook', function($q, $rootScope, Tr
   };
 
   OrderBook.prototype._createOffer = function(takerPays, takerGets) {
-    CurrencyPairs.recordPriority(this.getCurrencyPair());
+    CurrencyPairs.recordUse(this.getCurrencyPair());
     return TradingOps.createOffer(takerPays, takerGets);
   };
 
