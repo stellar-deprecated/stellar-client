@@ -1,6 +1,6 @@
 var sc = angular.module('stellarClient');
 
-sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, FlashMessages) {
+sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, FlashMessages, Gateways) {
   // Populate the currency lists from the wallet's gateways.
   var gateways = session.get('wallet').get('mainData', 'gateways', []);
   var gatewayCurrencies = _.flatten(_.pluck(gateways, 'currencies'));
@@ -9,6 +9,14 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
 
   $scope.$watch('formData.baseAmount', calculateCounterAmount);
   $scope.$watch('formData.unitPrice', calculateCounterAmount);
+
+  $scope.changeBaseCurrency = function(newCurrency) {
+    $scope.formData.baseCurrency.currency = newCurrency;
+  };
+
+  $scope.changeCounterCurrency = function(newCurrency) {
+    $scope.formData.counterCurrency.currency = newCurrency;
+  };
 
   function calculateCounterAmount() {
     $scope.formData.counterAmount = new BigNumber($scope.formData.baseAmount).times($scope.formData.unitPrice).toString();
@@ -22,6 +30,14 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
     return issuers;
   };
 
+  $scope.issuerToGateway = function(issuer) {
+    var gateway = Gateways.findByIssuer(issuer);
+
+    if(gateway) {
+      return gateway.domain;
+    }
+  };
+
   $scope.confirmOffer = function() {
     $scope.state = 'confirm';
   };
@@ -32,22 +48,28 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
 
   $scope.resetForm = function() {
     $scope.formData.tradeOperation = 'buy';
-    $scope.formData.baseAmount = '0';
-    $scope.formData.unitPrice = '0';
-    $scope.formData.counterAmount = '0';
+    $scope.resetAmounts();
 
     $scope.formData.baseCurrency = {
-      currency: $scope.currencyNames[0],
+      currency: null,
       issuer: null
     };
 
     $scope.formData.counterCurrency = {
-      currency: $scope.currencyNames[1],
+      currency: null,
       issuer: null
     };
 
+    $scope.$broadcast('trading-form-controller:reset');
+
     $scope.state = 'form';
     $scope.offerError = '';
+  };
+
+  $scope.resetAmounts = function() {
+    $scope.formData.baseAmount = '0';
+    $scope.formData.unitPrice = '0';
+    $scope.formData.counterAmount = '0';
   };
 
   $scope.resetForm();

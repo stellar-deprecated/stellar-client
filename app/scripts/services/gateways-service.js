@@ -77,6 +77,12 @@ sc.service('Gateways', function($q, session, StellarNetwork, rpStellarTxt) {
       .then(function () { return session.syncWallet('update'); });
   };
 
+  Gateways.findByIssuer = function(issuer) {
+    return _.find(walletGateways(), function(gateway) {
+      return !!_.find(gateway.currencies, {issuer: issuer});
+    });
+  };
+
   function removeGateway(gateway) {
     return $q.all(gateway.currencies.map(function (currency) {
       return trustCurrency(currency, '0');
