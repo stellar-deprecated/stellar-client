@@ -49,6 +49,7 @@ sc.service('CurrencyPairs', function($q, session) {
 
     var favorites = [currencyPair].concat(getFavorites());
     setFavorites(favorites);
+    syncWallet();
   };
 
   /**
@@ -67,6 +68,7 @@ sc.service('CurrencyPairs', function($q, session) {
     });
 
     setFavorites(newFavs);
+    syncWallet();
   };
 
   /**
@@ -98,6 +100,7 @@ sc.service('CurrencyPairs', function($q, session) {
   this.recordUse = function(currencyPair) {
     moveFavoriteToTop(currencyPair);
     recordPriority(currencyPair);
+    syncWallet();
   };
 
   /**
@@ -187,7 +190,6 @@ sc.service('CurrencyPairs', function($q, session) {
 
   function setCurrencyPriorities(priorities) {
     walletTradingPairs().priorities = priorities;
-    syncWallet();
   }
 
   function getFavorites() {
@@ -196,7 +198,6 @@ sc.service('CurrencyPairs', function($q, session) {
 
   function setFavorites(favorites) {
     walletTradingPairs().favorites = favorites;
-    syncWallet();
   }
 
   function isFavorite(currencyPair) {
