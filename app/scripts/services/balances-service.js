@@ -65,36 +65,16 @@ sc.service('Balances', function($rootScope, $q, StellarNetwork, session) {
    * @return A promise that resolves to a amount struct representing in the balance.
    */
   this.get = function(currency) {
-    if (typeof currency !== 'object' ||
-        !('currency' in currency) ||
-        (currency.currency !== 'STR' && !('issuer' in currency))
-        ) {
-      throw new Error("invalid currency type " + typeof currency + ": expected a currency struct");
-    }
-
-    // Check if credits have an invalid address
-    if (currency.currency !== 'STR' && !stellar.UInt160.is_valid(currency.issuer)) {
-      throw new Error("invalid issuer " + currency.issuer + ": credit issuer address is invalid");
-    }
+    assertCurrency(currency);
+    assertValidIssuer(currency);
 
     if (balances === null) {
       throw new Error("Balances haven't been loaded yet. Use Balances.fetchBalances to load them first");
     }
 
-    var foundAmount = _.find(balances, function(balance) {
-      return balance.currency === currency.currency &&
-        (balance.currency === 'STR' || balance.issuer === currency.issuer);
-    });
+    var foundAmount = _.find(balances, currency);
 
-    if (typeof foundAmount === 'object' && 'value' in foundAmount) {
-      return foundAmount;
-    } else {
-      return {
-        'currency': currency.currency,
-        'issuer': currency.issuer,
-        'value': 0
-      };
-    }
+    return foundAmount ? foundAmount : _.extend({value:"0"}, currency);
   };
 
   /**
@@ -105,4 +85,37 @@ sc.service('Balances', function($rootScope, $q, StellarNetwork, session) {
   this.areLoaded = function() {
     return balances !== null;
   };
+
+  function isValidCurrency(currency) {
+    var isObject    = typeof currency === 'object';
+    var hasCurrency = 'currency' in currency;
+    var hasIssuer   = currency.currency === 'STR' || ('issuer' in currency);
+
+    if (isObject && hasCurrency && hasIssuer) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  function assertCurrency(currency) {
+    if(!isValidCurrency(currency)) {
+      throw new Error("invalid currency type " + typeof currency + ": expected a currency struct");
+    }
+  }
+
+  function assertValidIssuer(currency) {
+    var isStellar      = currency.currency === 'STR';
+    var isValidAddress = stellar.UInt160.is_valid(currency.issuer);
+
+    if(isStellar) {
+      if(currency.issuer) {
+        throw new Error("invalid issuer " + currency.issuer + ": STR does not have an issuer");
+      }
+    } else {
+      if(!isValidAddress) {
+        throw new Error("invalid issuer " + currency.issuer + ": credit issuer address is invalid");
+      }
+    }
+  }
 });
