@@ -1,14 +1,18 @@
 'use strict';
 // generated on 2014-04-24 using generator-gulp-webapp 0.0.8
 
-var gulp        = require('gulp');
-var exec        = require('child_process').exec;
-var mergeStream = require('merge-stream');
-var git         = require('git-rev');
-var karma       = require('karma').server;
-var _           = require('lodash');
-var fs          = require('fs');
-var runSequence = require('run-sequence');
+var gulp          = require('gulp');
+var exec          = require('child_process').exec;
+var mergeStream   = require('merge-stream');
+var git           = require('git-rev');
+var karma         = require('karma').server;
+var _             = require('lodash');
+var fs            = require('fs');
+var runSequence   = require('run-sequence');
+var path          = require('path');
+var child_process = require('child_process');
+var protractor    = require("gulp-protractor").protractor;
+//var webdriver_standalone = require("gulp-protractor").webdriver_standalone;
 
 // load plugins
 var $ = require('gulp-load-plugins')();
@@ -314,23 +318,29 @@ gulp.task('serve-dist-without-build', [], function() {
         });
 });
 
+var webdriver;
 
-gulp.task('test', function (done) {
-    karma.start({
-        browsers: ['PhantomJS'],
-        frameworks: ['mocha', 'sinon-chai'],
-        reporters: ['dots'],
-        files: [
-            'app/scripts/libraries/stellar-0.7.35.js',
-            'app/scripts/utilities/sjcl.js',
-            'app/scripts/libraries/sjcl-scrypt.js',
-
-            'app/scripts/utilities/wallet.js',
-            'test/helper.js',
-            'test/unit/**/*.spec.js'
-        ],
-        singleRun: true
-    }, done);
+gulp.task('ensure_webdriver_standalone',function(done) {
+  child_process.spawn(path.resolve(require("gulp-protractor").getProtractorDir() + '/webdriver-manager'), ['update', '--standalone'], {
+    stdio: 'inherit'
+  }).once('close', done);
 });
 
+gulp.task('webdriver_standalone', ['ensure_webdriver_standalone'], function(done) {
+  webdriver = child_process.spawn(path.resolve(require("gulp-protractor").getProtractorDir() + '/webdriver-manager'), ['start']);
+  setTimeout(function() {
+    done();
+  }, 1000);
+});
 
+gulp.task('test', ['webdriver_standalone'], function (done) {
+    gulp.src(["./src/tests/*.js"])
+      .pipe(protractor({
+        configFile: "test/e2e/protractor_conf.js"
+      }))
+      .on('error', function(e) { throw e })
+      .on('end', function() {
+        webdriver.kill('SIGKILL');
+        done();
+      });
+});
