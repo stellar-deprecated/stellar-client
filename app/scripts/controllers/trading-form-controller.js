@@ -1,6 +1,6 @@
 var sc = angular.module('stellarClient');
 
-sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, FlashMessages, CurrencyPairs) {
+sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, FlashMessages, CurrencyPairs, Gateways) {
   // Populate the currency lists from the wallet's gateways.
   var gateways = session.get('wallet').get('mainData', 'gateways', []);
   var gatewayCurrencies = _.flatten(_.pluck(gateways, 'currencies'));
@@ -81,9 +81,7 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
   };
 
   $scope.issuerToGateway = function(issuer) {
-    var gateway = _.find(gateways, function(gateway) {
-      return !!_.find(gateway.currencies, {issuer: issuer});
-    });
+    var gateway = Gateways.findByIssuer(issuer);
 
     if(gateway) {
       return gateway.domain;
