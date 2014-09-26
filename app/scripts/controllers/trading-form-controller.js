@@ -29,6 +29,8 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
     if ($scope.currentOrderBook) {
       $scope.setFavorite($scope.currentOrderBook.getCurrencyPair());
     }
+
+    resetAmounts();
   }
 
   function calculateCounterAmount() {
@@ -42,6 +44,12 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
       $scope.formData.counterCurrency.currency = $scope.formData.favorite.counterCurrency.currency;
       $scope.formData.counterCurrency.issuer = $scope.formData.favorite.counterCurrency.issuer;
     }
+  }
+
+  function resetAmounts() {
+    $scope.formData.baseAmount = '0';
+    $scope.formData.unitPrice = '0';
+    $scope.formData.counterAmount = '0';
   }
 
   $scope.setFavorite = function(currencyPair) {
@@ -98,9 +106,7 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
 
   $scope.resetForm = function() {
     $scope.formData.tradeOperation = 'buy';
-    $scope.formData.baseAmount = '0';
-    $scope.formData.unitPrice = '0';
-    $scope.formData.counterAmount = '0';
+    resetAmounts();
 
     updateFavoriteTrades();
     $scope.setFavorite(CurrencyPairs.getLastUsedFavorite());
