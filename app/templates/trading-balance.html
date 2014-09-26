@@ -1,13 +1,18 @@
 <div class="col-sm-4 trading-info-widget" ng-controller="TradingBalanceCtrl">
     <h4 class="trading-info-widget-title">Corresponding Balances</h4>
-    <div class="row">
+    <div class="row" ng-show="balancesLoaded">
         <div class="col-sm-6">
-            <div>{{formData.baseCurrency.currency}} <span ng-show="formData.baseCurrency.issuer"> ({{formData.baseCurrency.issuer | addressToUsername}})</div>
-            <div class="trading-info-widget-value">{{getCurrencyBalance(formData.baseCurrency) | roundAmount:formData.baseCurrency.currency}}</div>
+            <div>{{baseBalance.currency}} <span ng-show="baseBalance.issuer"> ({{baseBalance.issuer | addressToUsername}})</div>
+            <div class="trading-info-widget-value">{{baseBalance.value | roundAmount:baseBalance.currency}}</div>
         </div>
         <div class="col-sm-6">
-            <div>{{formData.counterCurrency.currency}} <span ng-show="formData.counterCurrency.issuer"> ({{formData.counterCurrency.issuer | addressToUsername}})</div>
-            <div class="trading-info-widget-value">{{getCurrencyBalance(formData.counterCurrency) | roundAmount:formData.counterCurrency.currency}}</div>
+            <div>{{counterBalance.currency}} <span ng-show="counterBalance.issuer"> ({{counterBalance.issuer | addressToUsername}})</div>
+            <div class="trading-info-widget-value">{{counterBalance.value | roundAmount:counterBalance.currency}}</div>
+        </div>
+    </div>
+    <div class="row" ng-hide="balancesLoaded">
+        <div class="col-sm-12">
+            Loading
         </div>
     </div>
 </div>

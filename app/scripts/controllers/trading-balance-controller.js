@@ -2,36 +2,29 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('TradingBalanceCtrl', function($scope, $rootScope, $filter, AccountLines) {
-  $scope.accountLines = [];
+sc.controller('TradingBalanceCtrl', function($scope, $rootScope, $filter, Balances) {
+  $scope.baseBalance = null;
+  $scope.counterBalance = null;
 
-  $scope.getCurrencyBalance = function(currency) {
-    if (currency.currency === 'STR') {
-      return $rootScope.balance / 1000000;
-    }
+  $scope.balancesLoaded = false;
 
-    var accountLine = _.find($scope.accountLines, {
-      'currency': currency.currency,
-      'account': currency.issuer
-    });
-
-    if (accountLine) {
-      return accountLine.balance;
-    } else {
-      return 0;
-    }
-  };
-
-  function getAccountLines() {
-    AccountLines.get()
-      .then(function(accountLines) {
-        $scope.accountLines = accountLines;
-      });
-  }
-
-  $scope.$on('AccountLines:update', function(event, accountLines) {
-      $scope.accountLines = accountLines;
+  $scope.$on('balances:update', function(event, accountLines) {
+    refreshBalances();
   });
 
-  getAccountLines();
+  function refreshBalances() {
+    if (!Balances.areLoaded()) {
+      return;
+    }
+
+    $scope.baseBalance = Balances.get($scope.formData.baseCurrency);
+    $scope.counterBalance = Balances.get($scope.formData.counterCurrency);
+    $scope.balancesLoaded = true;
+  }
+
+  Balances.ensureBalancesLoaded()
+    .then(refreshBalances);
+
+  $scope.$watch('formData.baseCurrency', refreshBalances, true);
+  $scope.$watch('formData.counterCurrency', refreshBalances, true);
 });
