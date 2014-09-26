@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('SettingsCtrl', function($scope, $http, $state, session, singletonPromise) {
+sc.controller('SettingsCtrl', function($scope, $http, $state, session, $timeout, $q, singletonPromise) {
   var wallet = session.get('wallet');
 
   $scope.secretKey = wallet.keychainData.signingKeys.secret;
@@ -23,23 +23,38 @@ sc.controller('SettingsCtrl', function($scope, $http, $state, session, singleton
 
   // TODO: move into user object and initialize settings
   function getSettings() {
+    $scope.loaded = false;
+    var waitForTimeout = function() {
+      var deferred = $q.defer();
+      $timeout(function() {
+        deferred.resolve();
+      }, 1000);
+      return deferred.promise;
+    };
+
     var data = {
       params: {
         username: session.get('username'),
         updateToken: session.get('wallet').keychainData.updateToken
       }
-    }
+    };
+    var timeoutPassed = waitForTimeout();
     return $http.get(Options.API_SERVER + "/user/settings", data)
-    .success(function (response) {
-      $scope.toggle.recover.on = response.data.recover;
-      $scope.toggle.federate.on = response.data.federate;
-      $scope.toggle.email.on = response.data.email;
-    })
-    .error(function (response) {
-      $scope.toggle.error = "Server error";
-      $scope.toggle.disableToggles = true;
-      // TODO retry
-    });
+      .success(function (response) {
+        $scope.toggle.recover.on = response.data.recover;
+        $scope.toggle.federate.on = response.data.federate;
+        $scope.toggle.email.on = response.data.email;
+      })
+      .error(function (response) {
+        $scope.toggle.error = "Server error";
+        $scope.toggle.disableToggles = true;
+        // TODO retry
+      })
+      .finally(function() {
+        timeoutPassed.then(function() {
+            $scope.loaded = true;
+        });
+      });
   }
 
   $scope.toggle = {
@@ -77,8 +92,14 @@ sc.controller('SettingsCtrl', function($scope, $http, $state, session, singleton
       click: toggleTrading,
       on: wallet.get('mainData', 'showTrading', false),
       wrapper: angular.element('#tradingtoggle')
+    },
+    twofa: {
+      NAME: "2fa",
+      click: toggle2FA,
+      on: false,
+      wrapper: angular.element('#2FAtoggle')
     }
-  }
+  };
 
   function toggleWalletSetting(toggle, settingName) {
     toggle.on = !toggle.on;
@@ -95,6 +116,21 @@ sc.controller('SettingsCtrl', function($scope, $http, $state, session, singleton
 
   function toggleTrading(showTradingToggle) {
     return toggleWalletSetting(showTradingToggle, 'showTrading');
+  }
+
+  function toggle2FA(twofaToggle) {
+    if (twofaToggle.on) {
+      // Turn it off
+    } else {
+      var uri = 'otpauth://totp/Stellar:'+
+          session.getUser().getEmailAddress()+
+          '/stellar-client?secret={secret}&issuer=Stellar+Development+Foundation';
+      var key = sjcl.codec.bytes.fromBits(sjcl.random.randomWords(3)).slice(0, 10); // 10 random bytes
+      var encoder = new base32.Encoder();
+      var encodedKey = encoder.update(key, true);
+      $scope.totpKey = encodedKey.toString().replace(/=/g,'');
+      $scope.totpUri = uri.replace('{secret}', $scope.totpKey);
+    }
   }
 
   var toggleRequestData = {

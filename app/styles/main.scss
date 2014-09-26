@@ -76,7 +76,15 @@ a {
   }
 }
 
+.loading {
+  text-align: center;
+  margin-bottom: 50px;
 
+  .sending-rocket {
+    display: block;
+    margin: 50px auto;
+  }
+}
 
 .wrapper {
   min-height: 100%;

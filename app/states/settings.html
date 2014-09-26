@@ -25,7 +25,9 @@
         </div>
         -->
 
-        <div class="client-section">
+        <loading ng-if="!loaded" text="Loading Settings..."></loading>
+
+        <div ng-if="loaded" class="client-section">
             <div class="settings-section">
                 <div class="title">
                     <div class="icon-col">
@@ -265,6 +267,28 @@
                         </div>
                         <div class="secondary-action">
                             <span id="reveal-key" ng-click="reveal = !reveal">{{reveal ? 'Hide' : 'Reveal'}}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="settings-label col-md-3 col-xs-6">2-FACTOR AUTHENTICATION</div>
+                    <div class="settings-control col-md-9 col-xs-6">
+                        <div class="icon-col">
+                            <span class="icon icon-lock"/>
+                        </div>
+                        <span id="2FAtoggle" class="error-block" data-toggle="tooltip" data-placement="right" data-template='<div class="tooltip error-tip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>' st-toggle ctrl="toggle.twofa"></span>
+                        <div ng-if="totpUri">
+                            <p>
+                                To finish adding a 2FA to your account scan a code below (or enter it manually) to your mobile app.
+                                Then enter a key and press "Confirm" button to complete a process.
+                            </p>
+                            <qr text="totpUri"></qr>
+                            <p><code>{{ totpKey }}</code></p>
+                            <p>
+                                Code: <input class="form-control stellar-input" type="text" ng-model="" />
+                                <button ng-click="confirm2FAcode()">Confirm</button>
+                            </p>
                         </div>
                     </div>
                 </div>

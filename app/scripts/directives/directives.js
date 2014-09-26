@@ -226,3 +226,13 @@ module.directive('rpErrorValid', [function() {
         }
     };
 }]);
+
+module.directive('loading', function() {
+    return {
+        restrict: 'E',
+        scope: {
+            text: '@text'
+        },
+        templateUrl: 'templates/loading.html'
+    }
+});
