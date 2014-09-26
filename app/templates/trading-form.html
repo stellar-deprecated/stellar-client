@@ -2,7 +2,7 @@
     <form role="form" class="form-horizontal" ng-submit="confirmOffer()" ng-show="state == 'form'">
         <div class="form-group">
             <div class="col-md-12">
-                <div class="dropdown dropdown-combo">
+                <div class="dropdown dropdown-combo" ng-controller="FavoriteTradesCtrl">
                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                         {{ formData.favorite ? currencyPairToString(formData.favorite) : 'Favorite Trades' }}
                         <span class="caret"></span>

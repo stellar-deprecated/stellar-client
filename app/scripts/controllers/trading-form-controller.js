@@ -1,17 +1,14 @@
 var sc = angular.module('stellarClient');
 
-sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, FlashMessages, CurrencyPairs, Gateways) {
+sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, FlashMessages, Gateways) {
   // Populate the currency lists from the wallet's gateways.
   var gateways = session.get('wallet').get('mainData', 'gateways', []);
   var gatewayCurrencies = _.flatten(_.pluck(gateways, 'currencies'));
   $scope.currencies = [{currency:"STR"}].concat(gatewayCurrencies);
   $scope.currencyNames = _.uniq(_.pluck($scope.currencies, 'currency'));
 
-  $scope.$watch('formData.baseCurrency', updateSelectedFavorite, true);
-  $scope.$watch('formData.counterCurrency', updateSelectedFavorite, true);
   $scope.$watch('formData.baseAmount', calculateCounterAmount);
   $scope.$watch('formData.unitPrice', calculateCounterAmount);
-  $scope.$watch('formData.favorite', useFavoriteCurrencyPair);
 
   $scope.changeBaseCurrency = function(newCurrency) {
     $scope.formData.baseCurrency.currency = newCurrency;
@@ -21,51 +18,9 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
     $scope.formData.counterCurrency.currency = newCurrency;
   };
 
-  function updateFavoriteTrades() {
-    $scope.favoriteTrades = CurrencyPairs.getFavorites();
-  }
-
-  function updateSelectedFavorite() {
-    if ($scope.currentOrderBook) {
-      $scope.setFavorite($scope.currentOrderBook.getCurrencyPair());
-    }
-
-    resetAmounts();
-  }
-
   function calculateCounterAmount() {
     $scope.formData.counterAmount = new BigNumber($scope.formData.baseAmount).times($scope.formData.unitPrice).toString();
   }
-
-  function useFavoriteCurrencyPair() {
-    if ($scope.formData.favorite) {
-      $scope.formData.baseCurrency.currency = $scope.formData.favorite.baseCurrency.currency;
-      $scope.formData.baseCurrency.issuer = $scope.formData.favorite.baseCurrency.issuer;
-      $scope.formData.counterCurrency.currency = $scope.formData.favorite.counterCurrency.currency;
-      $scope.formData.counterCurrency.issuer = $scope.formData.favorite.counterCurrency.issuer;
-    }
-  }
-
-  function resetAmounts() {
-    $scope.formData.baseAmount = '0';
-    $scope.formData.unitPrice = '0';
-    $scope.formData.counterAmount = '0';
-  }
-
-  $scope.setFavorite = function(currencyPair) {
-    // This find operation ensures that if the current currency pair deep equals
-    // one of the favorites, the dropdown uses that reference to properly update.
-    // If the current currency pair is not found, the dropdown will show its placeholder.
-    $scope.formData.favorite = _.find($scope.favoriteTrades, currencyPair);
-  };
-
-  $scope.addFavoritePair = function(currencyPair) {
-    if ($scope.currentOrderBook) {
-      CurrencyPairs.markFavorite($scope.currentOrderBook.getCurrencyPair());
-      updateFavoriteTrades();
-      updateSelectedFavorite();
-    }
-  };
 
   $scope.getIssuers = function(currency) {
     var currencies = _.filter($scope.currencies, {currency: currency.currency});
@@ -73,19 +28,6 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
 
     currency.issuer = issuers[0];
     return issuers;
-  };
-
-  $scope.currencyPairToGateway = function(currencyPair) {
-    var issuer = currencyPair.baseCurrency.issuer || currencyPair.counterCurrency.issuer;
-    return $scope.issuerToGateway(issuer);
-  };
-
-  $scope.currencyPairToString = function(currencyPair) {
-    var gateway = $scope.currencyPairToGateway(currencyPair);
-
-    return currencyPair.baseCurrency.currency    + '/' +
-           currencyPair.counterCurrency.currency + ' ' +
-           '(' + gateway + ')';
   };
 
   $scope.issuerToGateway = function(issuer) {
@@ -106,23 +48,28 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
 
   $scope.resetForm = function() {
     $scope.formData.tradeOperation = 'buy';
-    resetAmounts();
-
-    updateFavoriteTrades();
-    $scope.setFavorite(CurrencyPairs.getLastUsedFavorite());
+    $scope.resetAmounts();
 
     $scope.formData.baseCurrency = {
-      currency: $scope.currencyNames[0],
+      currency: null,
       issuer: null
     };
 
     $scope.formData.counterCurrency = {
-      currency: $scope.currencyNames[1],
+      currency: null,
       issuer: null
     };
 
+    $scope.$broadcast('trading-form-controller:reset');
+
     $scope.state = 'form';
     $scope.offerError = '';
+  };
+
+  $scope.resetAmounts = function() {
+    $scope.formData.baseAmount = '0';
+    $scope.formData.unitPrice = '0';
+    $scope.formData.counterAmount = '0';
   };
 
   $scope.resetForm();
