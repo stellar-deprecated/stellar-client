@@ -24,6 +24,26 @@ module.filter('amountToHuman', function () {
 });
 
 /**
+* Takes an amount and currency code and formats it with the the number of decimal places as specified in currencies.js
+*/
+module.filter('roundAmount', function () {
+    return function (amount, currency) {
+        if (typeof amount === 'undefined') {
+            return 0;
+        }
+
+        var precision = 4;
+        var currencyInfo = StellarDefaultCurrencyMap[currency];
+        // Also handles the case where currency is undefined
+        if (typeof currencyInfo !== 'undefined') {
+            precision = currencyInfo.max_decimal_places;
+        }
+
+        return new BigNumber(amount).round(precision).toString();
+    };
+});
+
+/**
 * Turn a stellar address into a username
 */
 module.filter('addressToUsername', function (contacts) {

@@ -114,6 +114,26 @@ sc.factory('StellarNetwork', function($rootScope, $timeout, $q) {
       }
     };
 
+    /**
+     * Converts a account line returned from stellard's account_line and
+     * turns it into a amount struct
+     *
+     * @param {object} accountLine an accountLine object from stellard's account_line
+     * @return {Structs.Amount} amount struct built from the account line
+     * @memberOf StellarNetwork.amount
+     * @function decodeFromAccountLine
+     */
+    self.amount.decodeFromAccountLine = function(accountLine) {
+      if (typeof accountLine !== 'object') {
+          throw new Error("invalid accountLine type " + typeof accountLine + ": expected an object");
+      }
+
+      return {
+          currency: accountLine.currency,
+          value: accountLine.balance,
+          issuer: accountLine.account
+        };
+    };
 
     /**
      * Given a {@link Structs.Amount}, convert it back to a form that can be used

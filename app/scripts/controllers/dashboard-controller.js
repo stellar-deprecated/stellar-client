@@ -87,6 +87,7 @@ sc.controller('DashboardCtrl', function($rootScope, $scope, $timeout, $state, se
         return _.has(accountLine, 'authorized') && accountLine.authorized;
     };
 
+    // TODO: Use the Balances service
     function fetchCurrencies() {
         StellarNetwork.request('account_lines', { 'account': session.get('address') })
             .then(function(result) {

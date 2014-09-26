@@ -105,20 +105,21 @@
   padding-top: 20px;
 }
 
-.order-book-summary {
+.trading-info-widget {
   border: solid 1px $light-grey;
   padding-top: 15px;
   padding-bottom: 15px;
+  margin-bottom: 1em;
 
-  .order-book-summary-title {
+  .trading-info-widget-title {
     margin-top: 0px;
   }
 
-  .order-book-summary-value {
+  .trading-info-widget-value {
     font-weight: $book-weight;
   }
 
-  .order-book-summary-value:empty{
+  .trading-info-widget-value:empty {
     &:after {
       content: "--";
     }
