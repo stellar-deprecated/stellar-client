@@ -1,5 +1,8 @@
 <div class="order-book" ng-controller="OrderBookCtrl">
-    <div ng-show="currentOrderBook">
+    <div ng-show="setCurrentOrderBook.isLoading()">
+        <p class="order-status">Loading...</p>
+    </div>
+    <div ng-hide="setCurrentOrderBook.isLoading()">
         <div class="col-sm-6">
             <h4 class="order-type">Bids</h4>
             <p ng-hide="currentBids.length" class="order-status">There are no current bids for this currency pair from the selected issuer yet. Make some by submitting a new trade order.</p>
@@ -22,7 +25,7 @@
         </div>
         <div class="col-sm-6">
             <h4 class="order-type">Asks</h4>
-            <p ng-hide="currentAsks.length">There are no current asks for this currency pair from the selected issuer yet. Make some by submitting a new trade order.</p>
+            <p ng-hide="currentAsks.length" class="order-status">There are no current asks for this currency pair from the selected issuer yet. Make some by submitting a new trade order.</p>
             <table class="order-book-table table" ng-show="currentAsks.length">
                 <thead>
                     <tr>
