@@ -8,7 +8,7 @@
                         <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu" role="menu">
-                        <li role="presentation" ng-click="addFavoritePair()" ng-hide="formData.favorite">
+                        <li role="presentation" ng-click="addFavoritePair()" ng-show="canSave()">
                             <a role="menuitem" tabindex="-1">+ Save pair</a>
                         </li>
                         <li ng-repeat="currencyPair in favoriteTrades" role="presentation" ng-click="setFavorite(currencyPair)">

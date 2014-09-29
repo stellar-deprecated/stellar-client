@@ -38,6 +38,17 @@ sc.controller('FavoriteTradesCtrl', function($scope, session, CurrencyPairs) {
     $scope.formData.favorite = _.find($scope.favoriteTrades, currencyPair);
   };
 
+  $scope.canSave = function() {
+    if ($scope.formData.favorite) { return false; }
+
+    if ($scope.currentOrderBook) {
+      var currencyPair = $scope.currentOrderBook.getCurrencyPair();
+      return !CurrencyPairs.isFavorite(currencyPair);
+    }
+
+    return false;
+  };
+
   $scope.addFavoritePair = function(currencyPair) {
     if ($scope.currentOrderBook) {
       CurrencyPairs.markFavorite($scope.currentOrderBook.getCurrencyPair());
