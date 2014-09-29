@@ -2,34 +2,33 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('TradingBalanceCtrl', function($scope, $q, Balances) {
+sc.controller('TradingBalanceCtrl', function($scope, $q, Balances, singletonPromise) {
   $scope.baseBalance = null;
   $scope.counterBalance = null;
-  $scope.state = 'loading';
 
   $scope.$on('balances:update', function(event, accountLines) {
-    refreshBalances();
+    $scope.refreshBalances();
   });
 
-  function refreshBalances() {
-    if (!$scope.formData.baseCurrency.currency || !$scope.formData.counterCurrency.currency) {
-      $scope.state = 'pair-not-selected';
-      return;
-    } else {
-      $scope.state = 'loading';
+  $scope.refreshBalances = singletonPromise(function() {
+    if (!$scope.pairSelected()) {
+      return $q.when();
     }
 
-    $q.all([
+    return $q.all([
       Balances.get($scope.formData.baseCurrency),
       Balances.get($scope.formData.counterCurrency),
     ]).then(function(results) {
       $scope.baseBalance    = results[0];
       $scope.counterBalance = results[1];
-      $scope.state = 'available';
     });
-  }
+  });
 
-  refreshBalances();
-  $scope.$watch('formData.baseCurrency', refreshBalances, true);
-  $scope.$watch('formData.counterCurrency', refreshBalances, true);
+  $scope.pairSelected = function() {
+    return $scope.formData.baseCurrency.currency && $scope.formData.counterCurrency.currency;
+  };
+
+  $scope.refreshBalances();
+  $scope.$watch('formData.baseCurrency', $scope.refreshBalances, true);
+  $scope.$watch('formData.counterCurrency', $scope.refreshBalances, true);
 });
