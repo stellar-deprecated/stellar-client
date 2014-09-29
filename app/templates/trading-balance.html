@@ -1,18 +1,25 @@
 <div class="col-sm-4 trading-info-widget" ng-controller="TradingBalanceCtrl">
     <h4 class="trading-info-widget-title">Corresponding Balances</h4>
-    <div class="row" ng-show="balancesLoaded">
-        <div class="col-sm-6">
-            <div>{{baseBalance.currency}} <span ng-show="baseBalance.issuer"> ({{baseBalance.issuer | addressToUsername}})</div>
-            <div class="trading-info-widget-value">{{baseBalance.value | roundAmount:baseBalance.currency}}</div>
-        </div>
-        <div class="col-sm-6">
-            <div>{{counterBalance.currency}} <span ng-show="counterBalance.issuer"> ({{counterBalance.issuer | addressToUsername}})</div>
-            <div class="trading-info-widget-value">{{counterBalance.value | roundAmount:counterBalance.currency}}</div>
+    <div class="row" ng-hide="pairSelected()">
+        <div class="col-sm-12">
+            Please select a pair to trade.
         </div>
     </div>
-    <div class="row" ng-hide="balancesLoaded">
-        <div class="col-sm-12">
-            Loading
+    <div ng-show="pairSelected()">
+        <div class="row" ng-show="refreshBalances.isLoading()">
+            <div class="col-sm-12">
+                Loading...
+            </div>
+        </div>
+        <div class="row" ng-hide="refreshBalances.isLoading()">
+            <div class="col-sm-6">
+                <div>{{baseBalance.currency}}<span ng-show="baseBalance.issuer"> ({{baseBalance.issuer | addressToUsername}})</span></div>
+                <div class="trading-info-widget-value">{{baseBalance.value | roundAmount:baseBalance.currency}}</div>
+            </div>
+            <div class="col-sm-6">
+                <div>{{counterBalance.currency}}<span ng-show="counterBalance.issuer"> ({{counterBalance.issuer | addressToUsername}})</span></div>
+                <div class="trading-info-widget-value">{{counterBalance.value | roundAmount:counterBalance.currency}}</div>
+            </div>
         </div>
     </div>
 </div>
