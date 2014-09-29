@@ -1,8 +1,6 @@
 var sc = angular.module('stellarClient');
 
 sc.controller('FavoriteTradesCtrl', function($scope, session, CurrencyPairs) {
-  $scope.$watch('formData.baseCurrency', updateSelectedFavorite, true);
-  $scope.$watch('formData.counterCurrency', updateSelectedFavorite, true);
   $scope.$watch('formData.favorite', useFavoriteCurrencyPair);
 
   $scope.$on('trading-form-controller:reset', resetFavorites);
