@@ -34,7 +34,7 @@
                 <div class="input-group">
                     <input type="text" class="form-control" ng-model="formData.baseAmount"></input>
                     <div class="input-group-btn">
-                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" ng-disabled="formData.favorite">
                             <span ng-show="formData.baseCurrency.currency">{{ formData.baseCurrency.currency }}</span>
                             <span ng-hide="formData.baseCurrency.currency" class="currency-default">CURRENCY</span>
                             <span class="caret"></span>
@@ -46,7 +46,7 @@
                 </div>
             </div>
         </div>
-        <div class="form-group" ng-show="hasIssuer(formData.baseCurrency.currency)">
+        <div class="form-group" ng-show="hasIssuer(formData.baseCurrency.currency) && !formData.favorite">
             <div class="col-md-4"><label>ISSUED BY</label></div>
             <div class="col-md-8">
                 <div class="dropdown dropdown-combo">
@@ -74,7 +74,7 @@
                 <div class="input-group">
                     <input type="text" class="form-control" ng-model="formData.unitPrice"></input>
                     <div class="input-group-btn">
-                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" ng-disabled="formData.favorite">
                             <span ng-show="formData.counterCurrency.currency">{{ formData.counterCurrency.currency }}</span>
                             <span ng-hide="formData.counterCurrency.currency" class="currency-default">CURRENCY</span>
                             <span class="caret"></span>
@@ -86,7 +86,7 @@
                 </div>
             </div>
         </div>
-        <div class="form-group" ng-show="hasIssuer(formData.counterCurrency.currency)">
+        <div class="form-group" ng-show="hasIssuer(formData.counterCurrency.currency) && !formData.favorite">
             <div class="col-md-4"><label>ISSUED BY</label></div>
             <div class="col-md-8">
                 <div class="dropdown dropdown-combo">
