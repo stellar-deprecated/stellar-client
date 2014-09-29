@@ -30,6 +30,9 @@ sc.controller('FavoriteTradesCtrl', function($scope, session, CurrencyPairs) {
       $scope.formData.baseCurrency.issuer = $scope.formData.favorite.baseCurrency.issuer;
       $scope.formData.counterCurrency.currency = $scope.formData.favorite.counterCurrency.currency;
       $scope.formData.counterCurrency.issuer = $scope.formData.favorite.counterCurrency.issuer;
+    } else {
+      $scope.formData.baseCurrency = _.pick($scope.currencies[0], ['issuer', 'currency']);
+      $scope.formData.counterCurrency = _.pick($scope.currencies[1], ['issuer', 'currency']);
     }
   }
 
