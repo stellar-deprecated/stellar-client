@@ -6,9 +6,10 @@ var sc = angular.module('stellarClient');
 
  @namespace  StellarNetwork */
 sc.factory('StellarNetwork', function($rootScope, $timeout, $q) {
-    var self   = {};
-    self.remote    = null;
-    self.connected = false;
+    var self                  = {};
+    self.remote               = null;
+    self.connected            = false;
+    self.waitingForConnection = null;
 
     var handleDisconnect = function(e) {
         $timeout(function () {
@@ -26,6 +27,10 @@ sc.factory('StellarNetwork', function($rootScope, $timeout, $q) {
 
             $rootScope.connected = true;
             $rootScope.$broadcast('stellar-network:connected');
+
+            if(self.waitingForConnection) {
+                self.waitingForConnection.resolve();
+            }
         });
     };
 
@@ -46,6 +51,24 @@ sc.factory('StellarNetwork', function($rootScope, $timeout, $q) {
     self.shutdown = function () {
         self.remote.disconnect();
         // self.remote = null;
+    };
+
+    self.ensureConnection = function() {
+        if(self.connected) { 
+            return $q.resolve();
+        } else if (self.waitingForConnection) {
+            return self.waitingForConnection.promise;
+        } else {
+            self.waitingForConnection = $q.defer();
+
+            if(self.remote) {
+                self.remote.connect();
+            } else {
+                self.init();
+            }
+
+            return self.waitingForConnection.promise;
+        }
     };
 
     self.request = function (method, params) {

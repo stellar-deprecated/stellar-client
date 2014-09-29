@@ -51,7 +51,7 @@ sc.service('Balances', function($rootScope, $q, StellarNetwork, session) {
     if (balances === null) {
       return this.fetchBalances();
     } else {
-      return $q.resolve(_.cloneDeep(balances));
+      return $q.when(_.cloneDeep(balances));
     }
   };
 
@@ -65,44 +65,43 @@ sc.service('Balances', function($rootScope, $q, StellarNetwork, session) {
    * @return A promise that resolves to a amount struct representing in the balance.
    */
   this.get = function(currency) {
-    if (typeof currency !== 'object' ||
-        !('currency' in currency) ||
-        (currency.currency !== 'STR' && !('issuer' in currency))
-        ) {
-      throw new Error("invalid currency type " + typeof currency + ": expected a currency struct");
+    if(!isValidCurrency(currency)) {
+      return $q.reject(new Error("invalid currency type " + typeof currency + ": expected a currency struct"));
     }
 
-    // Check if credits have an invalid address
-    if (currency.currency !== 'STR' && !stellar.UInt160.is_valid(currency.issuer)) {
-      throw new Error("invalid issuer " + currency.issuer + ": credit issuer address is invalid");
+    if(!hasValidIssuer(currency)) {
+      return $q.reject(new Error("invalid currency: issuer was not valid"));
     }
 
-    if (balances === null) {
-      throw new Error("Balances haven't been loaded yet. Use Balances.fetchBalances to load them first");
-    }
+    return this.ensureBalancesLoaded()
+      .then(function(balances) {
+        var foundAmount = _.find(balances || [], currency);
+        return foundAmount ? foundAmount : _.extend({value:"0"}, currency);
+      });
+  };
 
-    var foundAmount = _.find(balances, function(balance) {
-      return balance.currency === currency.currency &&
-        (balance.currency === 'STR' || balance.issuer === currency.issuer);
-    });
+  function isValidCurrency(currency) {
+    var isObject    = typeof currency === 'object';
+    var hasCurrency = 'currency' in currency;
+    var hasIssuer   = currency.currency === 'STR' || ('issuer' in currency);
 
-    if (typeof foundAmount === 'object' && 'value' in foundAmount) {
-      return foundAmount;
+    if (isObject && hasCurrency && hasIssuer) {
+      return true;
     } else {
-      return {
-        'currency': currency.currency,
-        'issuer': currency.issuer,
-        'value': 0
-      };
+      return false;
     }
-  };
+  }
 
-  /**
-   * Checks if the Balances service internal balances are loaded
-   *
-   * @return {boolean}
-   */
-  this.areLoaded = function() {
-    return balances !== null;
-  };
+  function hasValidIssuer(currency) {
+    var isStellar      = currency.currency === 'STR';
+    var isValidAddress = stellar.UInt160.is_valid(currency.issuer);
+
+    if(isStellar && currency.issuer) {
+      return false;
+    } else if(!isStellar && !isValidAddress) {
+      return false;
+    } else {
+      return true;
+    }
+  }
 });
