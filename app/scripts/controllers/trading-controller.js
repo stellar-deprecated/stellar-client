@@ -1,6 +1,6 @@
 var sc = angular.module('stellarClient');
 
-sc.controller('TradingCtrl', function($scope, Trading) {
+sc.controller('TradingCtrl', function($scope, Trading, Gateways) {
   $scope.currentOrderBook = null;
 
   $scope.formData = {};
@@ -14,6 +14,14 @@ sc.controller('TradingCtrl', function($scope, Trading) {
 
   $scope.hasIssuer = function(currencyName) {
     return currencyName && currencyName !== 'STR';
+  };
+
+  $scope.issuerToGateway = function(issuer) {
+    var gateway = Gateways.findByIssuer(issuer);
+
+    if(gateway) {
+      return gateway.domain;
+    }
   };
 
   function setCurrentOrderBook() {
