@@ -4,18 +4,19 @@
             <div class="col-md-12">
                 <div class="dropdown dropdown-combo" ng-controller="FavoriteTradesCtrl">
                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                        {{ formData.favorite ? currencyPairToString(formData.favorite) : 'Favorite Trades' }}
+                        {{ formData.favorite ? currencyPairToString(formData.favorite) : 'New pair' }}
                         <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu" role="menu">
-                        <li role="presentation" class="dropdown-header">Favorite Trades</li>
+                        <li role="presentation" ng-click="addFavoritePair()" ng-hide="formData.favorite">
+                            <a role="menuitem" tabindex="-1">+ Save pair</a>
+                        </li>
                         <li ng-repeat="currencyPair in favoriteTrades" role="presentation" ng-click="setFavorite(currencyPair)">
                             <a role="menuitem" tabindex="-1">
                                 {{ currencyPairToString(currencyPair) }}
                             </a>
                         </li>
-                        <li role="presentation" class="divider"></li>
-                        <li role="presentation" ng-click="addFavoritePair()">
+                        <li role="presentation" ng-click="clearForm()" ng-show="formData.favorite">
                             <a role="menuitem" tabindex="-1">+ New pair</a>
                         </li>
                     </ul>
