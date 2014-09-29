@@ -98,7 +98,8 @@
         </div>
     </form>
     <div class="offer-status confirm-trade" ng-show="state == 'confirm'">
-        You are offering to <b>{{ formData.tradeOperation }}</b><br>
+        You are offering to <b><span ng-if="formData.tradeOperation === 'buy'">buy</span>
+        <span ng-if="formData.tradeOperation === 'sell'">sell</span></b><br>
         <b>{{ formData.baseAmount }} {{ formData.baseCurrency.currency }}</b><br>
         for<br>
         <b>{{ formData.counterAmount }} {{ formData.counterCurrency.currency }}</b><br>
