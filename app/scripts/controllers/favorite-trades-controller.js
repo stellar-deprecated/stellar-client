@@ -48,17 +48,21 @@ sc.controller('FavoriteTradesCtrl', function($scope, session, CurrencyPairs) {
     }
   };
 
-  $scope.currencyPairToGateway = function(currencyPair) {
-    var issuer = currencyPair.baseCurrency.issuer || currencyPair.counterCurrency.issuer;
-    return $scope.issuerToGateway(issuer);
-  };
-
   $scope.currencyPairToString = function(currencyPair) {
-    var gateway = $scope.currencyPairToGateway(currencyPair);
+    var baseCurrencyGateway    = $scope.issuerToGateway(currencyPair.baseCurrency.issuer);
+    var counterCurrencyGateway = $scope.issuerToGateway(currencyPair.counterCurrency.issuer);
 
-    return currencyPair.baseCurrency.currency    + '/' +
-           currencyPair.counterCurrency.currency + ' ' +
-           '(' + gateway + ')';
+    var twoGateways = baseCurrencyGateway && counterCurrencyGateway &&
+                      baseCurrencyGateway != counterCurrencyGateway;
+
+    if (twoGateways) {
+      return currencyPair.baseCurrency.currency    + '(' + baseCurrencyGateway    + ')' + ' / ' +
+             currencyPair.counterCurrency.currency + '(' + counterCurrencyGateway + ')';
+    } else {
+      return currencyPair.baseCurrency.currency    + '/' +
+             currencyPair.counterCurrency.currency + ' ' +
+             '(' + (baseCurrencyGateway || counterCurrencyGateway) + ')';
+    }
   };
 
   resetFavorites();
