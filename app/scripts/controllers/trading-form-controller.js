@@ -52,7 +52,15 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
   };
 
   $scope.resetForm = function() {
+    $scope.state = 'form';
     $scope.formData.tradeOperation = 'buy';
+
+    $scope.clearForm();
+
+    $scope.$broadcast('trading-form-controller:reset');
+  };
+
+  $scope.clearForm = function() {
     $scope.resetAmounts();
 
     $scope.formData.baseCurrency = {
@@ -65,9 +73,7 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
       issuer: null
     };
 
-    $scope.$broadcast('trading-form-controller:reset');
-
-    $scope.state = 'form';
+    $scope.formData.favorite = null;
     $scope.offerError = '';
   };
 
