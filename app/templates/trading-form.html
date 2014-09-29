@@ -33,7 +33,11 @@
                 <div class="input-group">
                     <input type="text" class="form-control" ng-model="formData.baseAmount"></input>
                     <div class="input-group-btn">
-                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">{{formData.baseCurrency.currency}} <span class="caret"></span></button>
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                            <span ng-show="formData.baseCurrency.currency">{{ formData.baseCurrency.currency }}</span>
+                            <span ng-hide="formData.baseCurrency.currency" class="currency-default">CURRENCY</span>
+                            <span class="caret"></span>
+                        </button>
                         <ul class="dropdown-menu dropdown-menu-right" role="menu">
                             <li ng-repeat="currencyName in currencyNames"><a href="javascript:void(0)" ng-click="changeBaseCurrency(currencyName)">{{currencyName}}</a></li>
                         </ul>
@@ -69,7 +73,11 @@
                 <div class="input-group">
                     <input type="text" class="form-control" ng-model="formData.unitPrice"></input>
                     <div class="input-group-btn">
-                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">{{formData.counterCurrency.currency}} <span class="caret"></span></button>
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                            <span ng-show="formData.counterCurrency.currency">{{ formData.counterCurrency.currency }}</span>
+                            <span ng-hide="formData.counterCurrency.currency" class="currency-default">CURRENCY</span>
+                            <span class="caret"></span>
+                        </button>
                         <ul class="dropdown-menu dropdown-menu-right" role="menu">
                             <li ng-repeat="currencyName in currencyNames"><a href="javascript:void(0)" ng-click="changeCounterCurrency(currencyName)">{{currencyName}}</a></li>
                         </ul>
