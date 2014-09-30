@@ -13,21 +13,21 @@
         </div>
         <div class="row" ng-hide="refreshBalances.isLoading()">
             <div class="col-sm-6">
-                <div>
+                <h5>
                     {{baseBalance.currency}}
                     <span ng-show="baseBalance.issuer">
                         (<a href="http://{{issuerToGateway(baseBalance.issuer)}}" target="_blank">{{issuerToGateway(baseBalance.issuer)}}</a>)
                     </span>
-                </div>
+                </h5>
                 <div class="trading-info-widget-value">{{baseBalance.value | roundAmount:baseBalance.currency}}</div>
             </div>
             <div class="col-sm-6">
-                <div>
+                <h5>
                     {{counterBalance.currency}}
                     <span ng-show="counterBalance.issuer">
                         (<a href="http://{{issuerToGateway(counterBalance.issuer)}}" target="_blank">{{issuerToGateway(counterBalance.issuer)}}</a>)
                     </span>
-                </div>
+                </h5>
                 <div class="trading-info-widget-value">{{counterBalance.value | roundAmount:counterBalance.currency}}</div>
             </div>
         </div>
