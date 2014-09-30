@@ -1,8 +1,6 @@
 var sc = angular.module('stellarClient');
 
 sc.controller('FavoriteTradesCtrl', function($scope, session, CurrencyPairs) {
-  $scope.$watch('formData.baseCurrency', updateSelectedFavorite, true);
-  $scope.$watch('formData.counterCurrency', updateSelectedFavorite, true);
   $scope.$watch('formData.favorite', useFavoriteCurrencyPair);
 
   $scope.$on('trading-form-controller:reset', resetFavorites);
@@ -38,6 +36,17 @@ sc.controller('FavoriteTradesCtrl', function($scope, session, CurrencyPairs) {
     // one of the favorites, the dropdown uses that reference to properly update.
     // If the current currency pair is not found, the dropdown will show its placeholder.
     $scope.formData.favorite = _.find($scope.favoriteTrades, currencyPair);
+  };
+
+  $scope.canSave = function() {
+    if ($scope.formData.favorite) { return false; }
+
+    if ($scope.currentOrderBook) {
+      var currencyPair = $scope.currentOrderBook.getCurrencyPair();
+      return !CurrencyPairs.isFavorite(currencyPair);
+    }
+
+    return false;
   };
 
   $scope.addFavoritePair = function(currencyPair) {
