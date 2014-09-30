@@ -148,11 +148,13 @@ input[type=number]::-webkit-outer-spin-button {
   .dropdown-menu {
     box-shadow: 1px 1px 1px fade-out($grey,0.7);
     border-radius: 2px;
+
     >li {
       >a {
         padding: 10px 15px;
         font-size: 16px;
         font-weight: $book-weight;
+        
         &:hover {
           font-weight: $medium-weight;
         }
