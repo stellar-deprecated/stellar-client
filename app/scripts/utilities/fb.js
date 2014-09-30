@@ -43,7 +43,7 @@ function fbLoginStart(http, success, error){
   console.log("fbAuth");
   var data = {};
   FB.login(function (response) {
-    if (response.status === 'connected') {
+    if (response.authResponse) {
       data.fbID = response.authResponse.userID;
       data.fbAccessToken = response.authResponse.accessToken;
       success(data);
