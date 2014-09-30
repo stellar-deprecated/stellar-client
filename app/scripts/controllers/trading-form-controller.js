@@ -11,11 +11,17 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
   $scope.$watch('formData.unitPrice', calculateCounterAmount);
 
   $scope.changeBaseCurrency = function(newCurrency) {
-    $scope.formData.baseCurrency.currency = newCurrency;
+    $scope.formData.baseCurrency = {
+      currency: newCurrency,
+      issuer: $scope.getIssuers(newCurrency)[0]
+    };
   };
 
   $scope.changeCounterCurrency = function(newCurrency) {
-    $scope.formData.counterCurrency.currency = newCurrency;
+    $scope.formData.counterCurrency = {
+      currency: newCurrency,
+      issuer: $scope.getIssuers(newCurrency)[0]
+    };
   };
 
   function calculateCounterAmount() {
@@ -23,10 +29,9 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
   }
 
   $scope.getIssuers = function(currency) {
-    var currencies = _.filter($scope.currencies, {currency: currency.currency});
+    var currencies = _.filter($scope.currencies, {currency: currency});
     var issuers = _.pluck(currencies, 'issuer');
 
-    currency.issuer = issuers[0];
     return issuers;
   };
 

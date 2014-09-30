@@ -1,12 +1,9 @@
 var sc = angular.module('stellarClient');
 
-sc.controller('TradingCtrl', function($scope, Trading, Gateways) {
+sc.controller('TradingCtrl', function($scope, Trading, Gateways, singletonPromise) {
   $scope.currentOrderBook = null;
 
   $scope.formData = {};
-
-  $scope.$watch('formData.baseCurrency', setCurrentOrderBook, true);
-  $scope.$watch('formData.counterCurrency', setCurrentOrderBook, true);
 
   $scope.roundedAmount = function(value, precision) {
     return new BigNumber(value).round(precision).toString();
@@ -24,14 +21,14 @@ sc.controller('TradingCtrl', function($scope, Trading, Gateways) {
     }
   };
 
-  function setCurrentOrderBook() {
+  $scope.setCurrentOrderBook = singletonPromise(function() {
     var currencyPair = currentCurrencyPair();
 
     if ($scope.currentOrderBook) {
       var currencyPairUnchanged = _.isEqual($scope.currentOrderBook.getCurrencyPair(), currencyPair);
 
       if (currencyPairUnchanged) {
-        return;
+        return $q.when();
       } else {
         $scope.currentOrderBook.destroy();
       }
@@ -39,11 +36,15 @@ sc.controller('TradingCtrl', function($scope, Trading, Gateways) {
 
     if (currencyPair) {
       $scope.currentOrderBook = Trading.getOrderBook(currencyPair);
-      $scope.currentOrderBook.subscribe();
+      return $scope.currentOrderBook.subscribe();
     } else {
       $scope.currentOrderBook = null;
+      return $q.when();
     }
-  }
+  });
+
+  $scope.$watch('formData.baseCurrency', $scope.setCurrentOrderBook, true);
+  $scope.$watch('formData.counterCurrency', $scope.setCurrentOrderBook, true);
 
   function currentCurrencyPair() {
     if (_.isEmpty($scope.formData.baseCurrency)) { return null; }
