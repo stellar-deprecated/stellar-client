@@ -33,6 +33,17 @@
       color: white;
     }
 
+    &:disabled {
+      background: $light-grey;
+      padding: 6px 18px;
+      color: $dark-grey;
+      opacity: 1.0;
+
+      .caret {
+        display: none;
+      }
+    }
+
     .currency-default {
       font-size: 12px;
       display: inline-block;
@@ -46,6 +57,14 @@
     &, &:hover {
       color: $brand-primary;
     }
+  }
+
+  .input-group-addon {
+    font-size: 18px;
+    padding: 6px 17px;
+    border-top-right-radius: 2px;
+    border-bottom-right-radius: 2px;
+    background: $light-grey;
   }
 
   @media (min-width: $mobile-width) { 
