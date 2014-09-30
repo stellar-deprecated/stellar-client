@@ -107,10 +107,6 @@ stellarClient.config(function($httpProvider, $stateProvider, $urlRouterProvider,
 
 });
 
-stellarClient.run(function(ActionLink) {
-  ActionLink.recognize();
-});
-
 stellarClient.run(function($location, $state, ipCookie){
   var atRoot    = _.isEmpty($location.path());
   var firstTime = !ipCookie("weve_been_here_before")
@@ -120,6 +116,19 @@ stellarClient.run(function($location, $state, ipCookie){
       $state.transitionTo('register');
       ipCookie("weve_been_here_before", "true", {expires: new Date('01 Jan 2030 00:00:00 GMT')})
     }
+});
+
+stellarClient.run(function($rootScope, $timeout, StellarNetwork, ActionLink){
+  $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){
+    ActionLink.recognize();
+  });
+
+  $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
+    StellarNetwork.ensureConnection().then(function() {
+      // HACK: Timeout required to allow templates' controllers initialize and start listening.
+      $timeout(ActionLink.process, 0);
+    });
+  });
 });
 
 stellarClient.run(function($rootScope, $state, $timeout, ipCookie, session, FlashMessages){
