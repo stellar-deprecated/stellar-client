@@ -1,3 +1,7 @@
+.trading {
+  margin-bottom: 55px;
+}
+
 .trading-form {
   .offer-status {
     width: 100%;
@@ -26,11 +30,16 @@
   }
 
   .dropdown-toggle {
-    color: $dark-grey;
-    font-weight: $medium-weight;
 
-    &:hover {
-      color: white;
+    &:disabled {
+      background: fade-out($light-grey, 0.5);
+      padding: 6px 18px;
+      color: $dark-grey;
+      opacity: 1.0;
+
+      .caret {
+        display: none;
+      }
     }
 
     .currency-default {
@@ -46,6 +55,14 @@
     &, &:hover {
       color: $brand-primary;
     }
+  }
+
+  .input-group-addon {
+    font-size: 18px;
+    padding: 6px 17px;
+    border-top-right-radius: 2px;
+    border-bottom-right-radius: 2px;
+    background: fade-out($light-grey, 0.5);
   }
 
   @media (min-width: $mobile-width) { 
@@ -119,19 +136,12 @@
   }
 }
 
-.trading-top {
-  padding-top: 20px;
+.trading-top-section {
+  padding-top: 35px;
 }
 
 .trading-info-widget {
-  border: solid 1px $light-grey;
-  padding-top: 15px;
-  padding-bottom: 15px;
   margin-bottom: 1em;
-
-  .trading-info-widget-title {
-    margin-top: 0px;
-  }
 
   .trading-info-widget-value {
     font-weight: $book-weight;
