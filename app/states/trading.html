@@ -13,16 +13,17 @@
             <div class="col-sm-8">
                 <div ng-include="'templates/trading-form.html'"></div>
             </div>
-            <div ng-include="'templates/trading-balance.html'"></div>
-            <div ng-include="'templates/order-book-summary.html'"></div>
-        </div>
-        <div class="row">
-            <div class="col-sm-12">
-                <tabbed-section>
-                    <tab selected="true" tab-template="templates/current-offers.html">Current Orders</tab>
-                    <tab tab-template="templates/order-book.html">Order Book</tab>
-                </tabbed-section>
+
+            <div class="col-sm-4 trading-widgets">
+              <div class="widget" ng-include="'templates/trading-balance.html'"></div>
+              <div class="widget" ng-include="'templates/order-book-summary.html'"></div>
             </div>
         </div>
+
+        <tabbed-section>
+            <tab selected="true" tab-template="templates/current-offers.html">Current Orders</tab>
+            <tab tab-template="templates/order-book.html">Order Book</tab>
+        </tabbed-section>
+
     </div>
 </div>
