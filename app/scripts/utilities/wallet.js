@@ -277,7 +277,7 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, $window, i
     var encryptedWalletKey = Wallet.encryptData(this.key, loginWalletKey);
 
     catchAndSwallowSecurityErrors(function() {
-      ipCookie("localWalletKey", loginWalletKey, {expires:getExpires(), expirationUnit:'seconds', secure: Options.COOKIE_SECURE});
+      ipCookie("localWalletKey", loginWalletKey, {expires:getExpires(self), expirationUnit:'seconds', secure: Options.COOKIE_SECURE});
       localStorage.encryptedWalletKey = encryptedWalletKey;
       localStorage.wallet             = Wallet.encryptData(self, sjcl.codec.hex.toBits(self.key));
       sessionStorage.wallet           = JSON.stringify(self);
@@ -286,18 +286,16 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, $window, i
 
 
   Wallet.prototype.bumpLocalTimeout = function() {
+    var self = this;
+
     //TODO: push the cookie timeout forward
     catchAndSwallowSecurityErrors(function() {
-      ipCookie("localWalletKey", ipCookie("localWalletKey"), {expires:getExpires(), expirationUnit:'seconds', secure: Options.COOKIE_SECURE});
+      ipCookie("localWalletKey", ipCookie("localWalletKey"), {expires: getExpires(self), expirationUnit: 'seconds', secure: Options.COOKIE_SECURE});
     });
   };
 
-  // gets the expires value for ipCookie using either the user defined idle timeout or the default value
-  function getExpires() {
-    var userDefinedIdleTimeout = $window.location[Options.USER_DEFINED_IDLE_LOGOUT_TIMEOUT_KEY],
-      defaultIdleTimeout = Options.DEFAULT_IDLE_LOGOUT_TIMEOUT;
-
-    return userDefinedIdleTimeout ? userDefinedIdleTimeout / 1000 : defaultIdleTimeout / 1000;
+  function getExpires(wallet) {
+      return wallet.get('mainData', 'idleLogoutTime', Options.DEFAULT_IDLE_LOGOUT_TIMEOUT) / 1000;
   }
 
   /**

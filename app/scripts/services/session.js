@@ -33,28 +33,13 @@ sc.service('session', function($rootScope, $http, $timeout, $window, StellarNetw
 
   }, 1000, true);
 
-  function minutesToMS(minutes) {
-    var milliseconds = minutes * 60 * 1000;
-      if (isNaN(milliseconds)) {
-        milliseconds = 0;
-      }
-
-      return milliseconds;
-  }
-
   Session.prototype.getIdleTimeout = function() {
-    var defaultTimeout = Options.DEFAULT_IDLE_LOGOUT_TIMEOUT || 15 * 60 * 1000,
-      userDefinedTimeout = $window.localStorage[Options.USER_DEFINED_IDLE_LOGOUT_TIMEOUT_KEY];
-
-      return userDefinedTimeout && !isNaN(userDefinedTimeout) ? userDefinedTimeout : defaultTimeout;
+    var self = this, wallet = self.get('wallet');
+    return wallet.get('mainData', 'idleLogoutTime', Options.DEFAULT_IDLE_LOGOUT_TIMEOUT || 15 * 60 * 1000);
   };
 
-  Session.prototype.setIdleTimeout = function(minutes) {
-    var self = this,
-      timeout = minutesToMS(minutes);
-      if (timeout > 0) {
-          $window.localStorage[Options.USER_DEFINED_IDLE_LOGOUT_TIMEOUT_KEY] = timeout;
-      }
+  Session.prototype.setIdleTimeout = function() {
+    var self = this;
 
     this.idleTimeout = $timeout(function() {
       self.logout(true);

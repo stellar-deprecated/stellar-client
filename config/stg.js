@@ -25,7 +25,6 @@ var Options = {
     // intended for developers, be careful about using this in a real setting.
     PERSISTENT_SESSION : false,
     DEFAULT_IDLE_LOGOUT_TIMEOUT : 15 * 60 * 1000, //15 minutes
-    USER_DEFINED_IDLE_LOGOUT_TIMEOUT_KEY: 'idleLogoutTimeout',
 
     REPORT_ERRORS : true,
     SENTRY_DSN : "https://4574695240794dc090caaa3f2d02fd6c@app.getsentry.com/27687",

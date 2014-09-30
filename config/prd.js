@@ -23,7 +23,6 @@ var Options = {
 
     PERSISTENT_SESSION : false,
     DEFAULT_IDLE_LOGOUT_TIMEOUT : 30 * 60 * 1000, //15 minutes
-    USER_DEFINED_IDLE_LOGOUT_TIMEOUT_KEY: 'idleLogoutTimeout',
     COOKIE_SECURE: true,
 
     REPORT_ERRORS : true,
