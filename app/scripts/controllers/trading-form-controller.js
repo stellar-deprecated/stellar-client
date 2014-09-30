@@ -35,6 +35,14 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
     return issuers;
   };
 
+  $scope.setBaseIssuer = function(issuer) {
+    $scope.formData.baseCurrency.issuer = issuer;
+  };
+
+  $scope.setCounterIssuer = function(issuer) {
+    $scope.formData.counterCurrency.issuer = issuer;
+  };
+
   $scope.confirmOffer = function() {
     $scope.state = 'confirm';
   };

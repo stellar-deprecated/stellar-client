@@ -44,7 +44,23 @@
         <div class="form-group" ng-show="hasIssuer(formData.baseCurrency.currency)">
             <div class="col-md-4"><label>ISSUED BY</label></div>
             <div class="col-md-8">
-                <select class="form-control" ng-model="formData.baseCurrency.issuer" ng-options="issuer as (issuerToGateway(issuer)) for issuer in getIssuers(formData.baseCurrency.currency)"></select>
+                <div class="dropdown dropdown-combo">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        {{ issuerToGateway(formData.baseCurrency.issuer) }}
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li ng-repeat="issuer in getIssuers(formData.baseCurrency)" role="presentation" ng-click="setBaseIssuer(issuer)">
+                            <a role="menuitem" tabindex="-1">
+                                {{ issuerToGateway(issuer) }}
+                            </a>
+                        </li>
+                        <li role="presentation" class="divider"></li>
+                        <li role="presentation" class="dropdown-link">
+                            <a role="menuitem" tabindex="-1" href="#/dashboard?action=add-gateway">Manage Issuers & Gateways</a>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
         <div class="form-group">
@@ -64,7 +80,23 @@
         <div class="form-group" ng-show="hasIssuer(formData.counterCurrency.currency)">
             <div class="col-md-4"><label>ISSUED BY</label></div>
             <div class="col-md-8">
-                <select class="form-control" ng-model="formData.counterCurrency.issuer" ng-options="issuer as (issuerToGateway(issuer)) for issuer in getIssuers(formData.counterCurrency.currency)"></select>
+                <div class="dropdown dropdown-combo">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        {{ issuerToGateway(formData.counterCurrency.issuer) }}
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li ng-repeat="issuer in getIssuers(formData.counterCurrency)" role="presentation" ng-click="setCounterIssuer(issuer)">
+                            <a role="menuitem" tabindex="-1">
+                                {{ issuerToGateway(issuer) }}
+                            </a>
+                        </li>
+                        <li role="presentation" class="divider"></li>
+                        <li role="presentation" class="dropdown-link">
+                            <a role="menuitem" tabindex="-1" href="#/dashboard?action=add-gateway">Manage Issuers & Gateways</a>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
         <div class="form-group">
