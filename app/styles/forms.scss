@@ -127,7 +127,7 @@ input[type=number]::-webkit-outer-spin-button {
   margin-top: 0;
   margin-bottom: 5px;
 
- button {
+  button {
     width: 100%;
     margin-bottom: 40px;
     font-weight: $heavy-weight;
@@ -136,6 +136,28 @@ input[type=number]::-webkit-outer-spin-button {
 
   .dropdown-toggle {
     margin-bottom: 0;
+    color: $dark-grey;
+    font-weight: $medium-weight;
+    &:hover {
+      background: #fff;
+      color: $dark-grey;
+      border-color: $grey;
+    }
+  }
+
+  .dropdown-menu {
+    box-shadow: 1px 1px 1px fade-out($grey,0.7);
+    border-radius: 2px;
+    >li {
+      >a {
+        padding: 10px 15px;
+        font-size: 16px;
+        font-weight: $book-weight;
+        &:hover {
+          font-weight: $medium-weight;
+        }
+      }
+    }
   }
 
   .dropdown-combo {

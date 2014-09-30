@@ -26,12 +26,6 @@
   }
 
   .dropdown-toggle {
-    color: $dark-grey;
-    font-weight: $medium-weight;
-
-    &:hover {
-      color: white;
-    }
 
     &:disabled {
       background: $light-grey;
