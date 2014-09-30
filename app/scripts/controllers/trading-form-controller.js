@@ -26,14 +26,22 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
   };
 
   function calculateCounterAmount() {
-    $scope.formData.counterAmount = new BigNumber($scope.formData.baseAmount).times($scope.formData.unitPrice).toString();
+    try {
+      $scope.formData.counterAmount = new BigNumber($scope.formData.baseAmount).times($scope.formData.unitPrice).toString();
+    } catch(e) {
+      // Ignore invalid input.
+    }
   }
 
   function calculateUnitPrice() {
-    if ($scope.formData.baseAmount === '0') {
-      $scope.formData.unitPrice = '0';
-    } else {
-      $scope.formData.unitPrice = new BigNumber($scope.formData.counterAmount).dividedBy($scope.formData.baseAmount).toString();
+    try {
+      var baseAmount = new BigNumber($scope.formData.baseAmount);
+
+      if (!baseAmount.equals('0')) {
+        $scope.formData.unitPrice = new BigNumber($scope.formData.counterAmount).dividedBy($scope.formData.baseAmount).toString();
+      }
+    } catch(e) {
+      // Ignore invalid input.
     }
   }
 
