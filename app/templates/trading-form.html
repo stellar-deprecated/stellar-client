@@ -55,7 +55,7 @@
                         <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu" role="menu">
-                        <li ng-repeat="issuer in getIssuers(formData.baseCurrency)" role="presentation" ng-click="setBaseIssuer(issuer)">
+                        <li ng-repeat="issuer in getIssuers(formData.baseCurrency.currency)" role="presentation" ng-click="setBaseIssuer(issuer)">
                             <a role="menuitem" tabindex="-1">
                                 {{ issuerToGateway(issuer) }}
                             </a>
@@ -95,7 +95,7 @@
                         <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu" role="menu">
-                        <li ng-repeat="issuer in getIssuers(formData.counterCurrency)" role="presentation" ng-click="setCounterIssuer(issuer)">
+                        <li ng-repeat="issuer in getIssuers(formData.counterCurrency.currency)" role="presentation" ng-click="setCounterIssuer(issuer)">
                             <a role="menuitem" tabindex="-1">
                                 {{ issuerToGateway(issuer) }}
                             </a>
