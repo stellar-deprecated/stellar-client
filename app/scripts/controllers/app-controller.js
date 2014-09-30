@@ -86,9 +86,6 @@ sc.controller('AppCtrl', function($scope, $rootScope, StellarNetwork, session, $
                     $rootScope.accountStatus = 'loaded';
                     Gateways.syncTrustlines();
                 }
-
-                // Process any pending actions now that the account is loaded.
-                ActionLink.process();
             });
         });
     };

@@ -28,6 +28,18 @@
   .dropdown-toggle {
     color: $dark-grey;
     font-weight: $medium-weight;
+
+    &:hover {
+      color: white;
+    }
+  }
+
+  .dropdown-link a {
+    font-size: 12px;
+
+    &, &:hover {
+      color: $brand-primary;
+    }
   }
 
   @media (min-width: $mobile-width) { 

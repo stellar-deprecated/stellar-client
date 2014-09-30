@@ -19,6 +19,8 @@ sc.controller('AddGatewayCtrl', function($scope, $q, session, singletonPromise, 
   };
 
   $scope.loadCurrencies = singletonPromise(function (){
+    if (!$scope.gatewaySearch) { return; }
+
     $scope.searchStatus = 'loading';
 
     if($scope.gateways[$scope.gatewaySearch]) {
