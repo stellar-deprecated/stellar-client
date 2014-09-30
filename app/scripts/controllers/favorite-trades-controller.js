@@ -56,8 +56,8 @@ sc.controller('FavoriteTradesCtrl', function($scope, session, CurrencyPairs) {
                       baseCurrencyGateway != counterCurrencyGateway;
 
     if (twoGateways) {
-      return currencyPair.baseCurrency.currency    + '(' + baseCurrencyGateway    + ')' + ' / ' +
-             currencyPair.counterCurrency.currency + '(' + counterCurrencyGateway + ')';
+      return currencyPair.baseCurrency.currency    + ' (' + baseCurrencyGateway    + ')' + ' / ' +
+             currencyPair.counterCurrency.currency + ' (' + counterCurrencyGateway + ')';
     } else {
       return currencyPair.baseCurrency.currency    + '/' +
              currencyPair.counterCurrency.currency + ' ' +
