@@ -35,10 +35,10 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
 
   function calculateUnitPrice() {
     try {
-      var baseAmount = new BigNumber($scope.formData.baseAmount);
+      var unitPrice = new BigNumber($scope.formData.unitPrice);
 
-      if (!baseAmount.equals('0')) {
-        $scope.formData.unitPrice = new BigNumber($scope.formData.counterAmount).dividedBy($scope.formData.baseAmount).toString();
+      if (!unitPrice.equals('0')) {
+        $scope.formData.baseAmount = new BigNumber($scope.formData.counterAmount).dividedBy(unitPrice).toString();
       }
     } catch(e) {
       // Ignore invalid input.
