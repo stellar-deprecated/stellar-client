@@ -22,6 +22,7 @@ sc.controller('AddGatewayCtrl', function($scope, $q, session, singletonPromise, 
     if (!$scope.gatewaySearch) { return; }
 
     $scope.searchStatus = 'loading';
+    $scope.lastGatewaySearch = $scope.gatewaySearch;
 
     if($scope.gateways[$scope.gatewaySearch]) {
       $scope.searchStatus = 'already_added';

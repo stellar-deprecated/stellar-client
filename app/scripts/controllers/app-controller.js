@@ -10,16 +10,16 @@ var sc = angular.module('stellarClient');
 sc.controller('AppCtrl', function($scope, $rootScope, StellarNetwork, session, $state, $element, $timeout, FlashMessages, ActionLink, Gateways) {
     $scope.$on('userLoaded', function () {
         $scope.getSentInvites = function () {
-            return session.getUser() && session.getUser().getSentInvites().length;
-        }
+            return session.getUser().getSentInvites().length;
+        };
         $scope.getInvitesLeft = function () {
-            return session.getUser() && session.getUser().getUnsentInvites().length;
-        }
+            return session.getUser().getUnsentInvites().length;
+        };
         $scope.getInvitesClass = function () {
             return $scope.getInvitesLeft() > 0 
                 ? 'nav-has-invites'
                 : null;
-        }
+        };
     });
 
     $rootScope.reserve=20000000;
@@ -64,8 +64,8 @@ sc.controller('AppCtrl', function($scope, $rootScope, StellarNetwork, session, $
         accountObj.on('entry', handleAccountEntry);
 
         var listenerCleanupFn = function () {
-            accountObj.off("entry", handleAccountEntry);
-        }
+            accountObj.removeListener("entry", handleAccountEntry);
+        };
 
         remote.once('disconnected', listenerCleanupFn);
 

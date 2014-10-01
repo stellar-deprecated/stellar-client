@@ -36,5 +36,7 @@ var Options = {
     LOGOUT_WITH_REFRESH: true,
     MAX_WALLET_ATTEMPTS: 3,
 
-    MAX_CONTACT_AGE: 24 * 60 * 60 * 1000 // One day in milliseconds.
+    MAX_CONTACT_AGE: 24 * 60 * 60 * 1000, // One day in milliseconds.
+
+    CAPTCHA_KEY: '6LdSLvoSAAAAAHMyFDqGHGBDQhXdjnCwmhmV71nL'
 };
