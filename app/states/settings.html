@@ -247,12 +247,12 @@
                 </div>
 
                 <div class="row">
-                    <div class="settings-label col-md-3 col-xs-6">IDLE TIME BEFORE LOGOUT (MINUTES)</div>
+                    <div class="settings-label col-md-3 col-xs-6">IDLE TIME BEFORE LOGOUT</div>
                         <div class="settings-control col-md-9 col-xs-6">
                             <div class="col-xs-10">
                                 <div class="row">
                                     <div class="col-md-5 col-xs-12">
-                                        <select class="form-control"  ng-model="idleTimeout" ng-options="time for time in timeoutOptions"></select>
+                                        <select class="form-control" ng-model="idleTimeout" ng-options="option.time as option.text for option in timeoutOptions"></select>
                                     </div>
                                 </div>
                             </div>
