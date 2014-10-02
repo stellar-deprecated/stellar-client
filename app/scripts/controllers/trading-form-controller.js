@@ -113,11 +113,27 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
     
     return offerPromise
       .then(function() {
-        $scope.state = 'sent';
+        if($scope.state === 'sending') {
+          $scope.state = 'sent';
+        } else {
+          FlashMessages.add({
+            title: 'Success!',
+            info: 'Offer created.',
+            type: 'success'
+          });
+        }
       })
       .catch(function(e) {
-        $scope.state = 'error';
-        $scope.offerError = e.engine_result_message;
+        if($scope.state === 'sending') {
+          $scope.state = 'error';
+          $scope.offerError = e.engine_result_message;
+        } else {
+          FlashMessages.add({
+            title: 'Unable to create offer!',
+            info: e.engine_result_message,
+            type: 'error'
+          });
+        }
       });
   });
 });
