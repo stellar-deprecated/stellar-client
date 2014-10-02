@@ -126,6 +126,7 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, S
                 address = result;
             } else if (result) {
                 address = result.destination_address;
+                $scope.send.destination.destinationTag = result.destination_tag;
             } else {
                 // TODO: error, could not successfully find address
                 return $q.reject("federation-error");
