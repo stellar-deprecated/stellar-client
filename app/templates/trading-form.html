@@ -32,7 +32,7 @@
             </div>
             <div class="col-md-8">
                 <div class="input-group">
-                    <input type="text" class="form-control" ng-model="formData.baseAmount"></input>
+                    <input type="text" class="form-control" ng-model="formData.baseAmount" placeholder="0"></input>
                     <div class="input-group-btn">
                         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" ng-disabled="formData.favorite">
                             <span ng-show="formData.baseCurrency.currency">{{ formData.baseCurrency.currency }}</span>
@@ -72,7 +72,7 @@
             <div class="col-md-4"><label>WITH EACH PRICED AT</label></div>
             <div class="col-md-8">
                 <div class="input-group">
-                    <input type="text" class="form-control" ng-model="formData.unitPrice"></input>
+                    <input type="text" class="form-control" ng-model="formData.unitPrice" placeholder="0"></input>
                     <div class="input-group-btn">
                         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" ng-disabled="formData.favorite">
                             <span ng-show="formData.counterCurrency.currency">{{ formData.counterCurrency.currency }}</span>
@@ -112,7 +112,7 @@
             <div class="col-md-4"><label>TOTAL PAYABLE</label></div>
             <div class="col-md-8">
                 <div class="input-group">
-                    <input type="text" class="form-control" ng-model="formData.counterAmount" disabled></input>
+                    <input type="text" class="form-control" ng-model="formData.counterAmount" placeholder="0" disabled></input>
                     <span class="input-group-addon">{{formData.counterCurrency.currency}}</span>
                 </div>
             </div>

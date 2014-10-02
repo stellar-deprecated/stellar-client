@@ -78,9 +78,9 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
   };
 
   $scope.resetAmounts = function() {
-    $scope.formData.baseAmount = '0';
-    $scope.formData.unitPrice = '0';
-    $scope.formData.counterAmount = '0';
+    $scope.formData.baseAmount = null;
+    $scope.formData.unitPrice = null;
+    $scope.formData.counterAmount = null;
   };
 
   $scope.resetForm();
