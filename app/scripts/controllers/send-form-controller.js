@@ -351,7 +351,12 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, S
     }
 
     function showAddressFound(address) {
-        Util.showTooltip($('#recipient'), "wallet address found: " + address, "info", "top");
+        var displayAddress = address;
+        if($scope.send.destination.destinationTag) {
+            displayAddress += '?dt=' + $scope.send.destination.destinationTag;
+        }
+
+        Util.showTooltip($('#recipient'), "wallet address found: " + displayAddress, "info", "top");
     }
 
     function showUserFound(username) {
