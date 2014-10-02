@@ -57,22 +57,5 @@ sc.controller('FavoriteTradesCtrl', function($scope, session, CurrencyPairs) {
     }
   };
 
-  $scope.currencyPairToString = function(currencyPair) {
-    var baseCurrencyGateway    = $scope.issuerToGateway(currencyPair.baseCurrency.issuer);
-    var counterCurrencyGateway = $scope.issuerToGateway(currencyPair.counterCurrency.issuer);
-
-    var twoGateways = baseCurrencyGateway && counterCurrencyGateway &&
-                      baseCurrencyGateway != counterCurrencyGateway;
-
-    if (twoGateways) {
-      return currencyPair.baseCurrency.currency    + ' (' + baseCurrencyGateway    + ')' + ' / ' +
-             currencyPair.counterCurrency.currency + ' (' + counterCurrencyGateway + ')';
-    } else {
-      return currencyPair.baseCurrency.currency    + '/' +
-             currencyPair.counterCurrency.currency + ' ' +
-             '(' + (baseCurrencyGateway || counterCurrencyGateway) + ')';
-    }
-  };
-
   resetFavorites();
 });
