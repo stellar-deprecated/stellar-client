@@ -140,9 +140,9 @@ sc.controller('SettingsCtrl', function($scope, $http, $state, session, singleton
     session.syncWallet('update');
   };
 
-  $scope.resetIdleTimeout = function () {
-    $scope.idleTimeout = getIdleTimeout();
-  };
+  $scope.$watch('idleTimeout', function() {
+    $scope.setIdleTimeout($scope.idleTimeout);
+  });
 
   function getIdleTimeout() {
     return session.getIdleTimeout() / (60 * 1000); // convert to minutes
