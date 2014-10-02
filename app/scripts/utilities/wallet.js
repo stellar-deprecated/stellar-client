@@ -295,7 +295,8 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
   };
 
   function getExpires(wallet) {
-      return wallet.get('mainData', 'idleLogoutTime', Options.DEFAULT_IDLE_LOGOUT_TIMEOUT) / 1000;
+    var milliseconds = wallet.get('mainData', 'idleLogoutTime', Options.DEFAULT_IDLE_LOGOUT_TIMEOUT || 15 * 60 * 1000);
+    return milliseconds / 1000;
   }
 
   /**
