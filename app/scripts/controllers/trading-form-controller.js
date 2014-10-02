@@ -6,6 +6,9 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
   var gatewayCurrencies = _.flatten(_.pluck(gateways, 'currencies'));
   $scope.currencies = [{currency:"STR"}].concat(gatewayCurrencies);
   $scope.currencyNames = _.uniq(_.pluck($scope.currencies, 'currency'));
+  var MAX_STR_AMOUNT = new BigNumber(2).toPower(64).minus(1).dividedBy('1000000'); // (2^64-1)/10^6
+  var MAX_CREDIT_PRECISION = 14; // stellard credits supports up to 15 significant digits
+
 
   $scope.$watch('formData.baseAmount', calculateCounterAmount);
   $scope.$watch('formData.unitPrice', calculateCounterAmount);
@@ -85,20 +88,88 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
 
   $scope.resetForm();
 
-  $scope.formIsValid = function() {
+  $scope.formFilled = function() {
     if (!$scope.currentOrderBook) { return false; }
 
-    try {
-      if (new BigNumber($scope.formData.baseAmount).lessThanOrEqualTo(0)) { return false; }
-      if (new BigNumber($scope.formData.unitPrice).lessThanOrEqualTo(0)) { return false; }
-      if (new BigNumber($scope.formData.counterAmount).lessThanOrEqualTo(0)) { return false; }
-    } catch(e) {
-      // Invalid input.
+    if (!$scope.formData.baseCurrency.currency) { return false; }
+    if (!$scope.formData.counterCurrency.currency) { return false; }
+
+    if ($scope.formData.baseAmount === '') { return false; }
+    if ($scope.formData.baseAmount === null) { return false; }
+    if ($scope.formData.baseAmount === '0') { return false; }
+
+    if ($scope.formData.unitPrice === '') { return false; }
+    if ($scope.formData.unitPrice === null) { return false; }
+    if ($scope.formData.unitPrice === '0') { return false; }
+
+    if ($scope.formData.counterAmount === '') { return false; }
+    if ($scope.formData.counterAmount === null) { return false; }
+    if ($scope.formData.counterAmount === '0') { return false; }
+
+    return true;
+  };
+
+  $scope.formIsValid = function() {
+    var errorMessage = $scope.formErrorMessage();
+    if (errorMessage) {
       return false;
     }
 
     return true;
   };
+
+  $scope.canSubmit = function() {
+    return $scope.formFilled() && $scope.formIsValid();
+  };
+
+  $scope.formErrorMessage = function() {
+    try {
+      validateForm();
+    } catch (e) {
+      return e.message;
+    }
+  };
+
+  function validateForm() {
+    var amounts = [
+      _.extend({value: $scope.formData.baseAmount},    $scope.formData.baseCurrency),
+      _.extend({value: $scope.formData.unitPrice},     $scope.formData.counterCurrency),
+      _.extend({value: $scope.formData.counterAmount}, $scope.formData.counterCurrency),
+    ];
+
+    _.forEach(amounts, validateTradeAmount);
+  }
+
+  function validateTradeAmount(amount) {
+    if (amount.value === null) {
+      return;
+    }
+
+    var value;
+    try {
+      value = new BigNumber(amount.value);
+    } catch (e) {
+      throw new Error('Error parsing amount: ' + amount.value);
+    }
+
+    var amountNegative    = value.lessThanOrEqualTo(0);
+    var STRBoundsError    = amount.currency === "STR" && value.greaterThan(MAX_STR_AMOUNT);
+    var STRPrecisionError = amount.currency === "STR" && !value.equals(value.toFixed(6));
+    var creditBoundsError = amount.currency !== "STR" && value.c.length > MAX_CREDIT_PRECISION;
+
+    if (amountNegative) {
+      throw new Error(amount.currency + ' amount must be a positive number');
+    }
+    if (STRBoundsError) {
+      throw new Error('STR amount is too large: ' + value.toString());
+    }
+    if (STRPrecisionError) {
+      throw new Error('STR amount has too many decimals: ' + value.toString());
+    }
+    if (creditBoundsError) {
+      throw new Error(amount.currency + ' amount has too much precision: ' + value.toString());
+    }
+  }
 
   $scope.createOffer = singletonPromise(function(e) {
     var offerPromise;
