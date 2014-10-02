@@ -1,6 +1,7 @@
 var sc = angular.module('stellarClient');
 
-sc.controller('OrderBookSummaryCtrl', function($scope) { 
+sc.controller('OrderBookSummaryCtrl', function($scope) {
+  $scope.currencyPairName = '';
 
   $scope.$on("trading:order-book-updated", function(e, orderBook) {
     if(orderBook === $scope.currentOrderBook) {
@@ -14,6 +15,9 @@ sc.controller('OrderBookSummaryCtrl', function($scope) {
 
   $scope.loadOrderBookSummary = function() {
     if($scope.currentOrderBook) {
+      var currencyPair = $scope.currentOrderBook.getCurrencyPair();
+      $scope.currencyPairName = $scope.currencyPairToString(currencyPair);
+
       var summary       = $scope.currentOrderBook.getSummary();
       $scope.highestBid = summary.highestBid;
       $scope.lowestAsk  = summary.lowestAsk;
