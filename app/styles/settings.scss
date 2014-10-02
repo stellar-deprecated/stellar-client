@@ -26,6 +26,12 @@
         width: 25px;
         display: inline-block;
         float: left;
+
+        .icon-clock {
+            display: inline-block;
+            font-size: 16px;
+            margin-top: 6px;
+        }
     }
 
     button[type="submit"] {

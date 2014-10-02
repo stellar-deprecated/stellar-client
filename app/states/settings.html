@@ -229,6 +229,20 @@
                 -->
 
                 <div class="row">
+                    <div class="settings-label col-md-3 col-xs-6">IDLE TIME BEFORE LOGOUT</div>
+                    <div class="settings-control col-md-9 col-xs-6">
+                        <div class="row">
+                            <div class="icon-col col-xs-1">
+                                <span class="icon icon-clock"/>
+                            </div>
+                            <div class="col-md-5 col-xs-10">
+                                <select class="form-control" ng-model="idleTimeout" ng-options="option.time as option.text for option in timeoutOptions"></select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
                     <div class="settings-label col-md-3 col-xs-6">SECRET KEY</div>
                     <div class="settings-control col-md-9 col-xs-6">
                         <div ng-hide="reveal">
@@ -242,20 +256,6 @@
                         </div>
                         <div class="secondary-action">
                             <span id="reveal-key" ng-click="reveal = !reveal">{{reveal ? 'Hide' : 'Reveal'}}</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="settings-label col-md-3 col-xs-6">IDLE TIME BEFORE LOGOUT</div>
-                        <div class="settings-control col-md-9 col-xs-6">
-                            <div class="col-xs-10">
-                                <div class="row">
-                                    <div class="col-md-5 col-xs-12">
-                                        <select class="form-control" ng-model="idleTimeout" ng-options="option.time as option.text for option in timeoutOptions"></select>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
