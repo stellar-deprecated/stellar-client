@@ -94,17 +94,9 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
     if (!$scope.formData.baseCurrency.currency) { return false; }
     if (!$scope.formData.counterCurrency.currency) { return false; }
 
-    if ($scope.formData.baseAmount === '') { return false; }
-    if ($scope.formData.baseAmount === null) { return false; }
-    if ($scope.formData.baseAmount === '0') { return false; }
-
-    if ($scope.formData.unitPrice === '') { return false; }
-    if ($scope.formData.unitPrice === null) { return false; }
-    if ($scope.formData.unitPrice === '0') { return false; }
-
-    if ($scope.formData.counterAmount === '') { return false; }
-    if ($scope.formData.counterAmount === null) { return false; }
-    if ($scope.formData.counterAmount === '0') { return false; }
+    if (!$scope.formData.baseAmount) { return false; }
+    if (!$scope.formData.unitPrice) { return false; }
+    if (!$scope.formData.counterAmount) { return false; }
 
     return true;
   };
