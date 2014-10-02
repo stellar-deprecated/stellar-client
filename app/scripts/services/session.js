@@ -33,17 +33,12 @@ sc.service('session', function($rootScope, $http, $timeout, StellarNetwork, Wall
 
   }, 1000, true);
 
-  Session.prototype.getIdleTimeout = function() {
-    var wallet = this.get('wallet');
-    return wallet.get('mainData', 'idleLogoutTime', Options.DEFAULT_IDLE_LOGOUT_TIMEOUT || 15 * 60 * 1000);
-  };
-
   Session.prototype.setIdleTimeout = function() {
     var self = this;
 
     this.idleTimeout = $timeout(function() {
       self.logout(true);
-    }, this.getIdleTimeout());
+    }, this.get('wallet').getIdleLogoutTime());
   };
 
   Session.prototype.clearIdleTimeout = function() {
