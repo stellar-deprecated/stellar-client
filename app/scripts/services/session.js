@@ -4,7 +4,7 @@ var sc = angular.module('stellarClient');
 
 var cache = {};
 
-sc.service('session', function($rootScope, $http, $timeout, $window, StellarNetwork, Wallet, contacts, UserPrivateInfo) {
+sc.service('session', function($rootScope, $http, $timeout, StellarNetwork, Wallet, contacts, UserPrivateInfo) {
   var Session = function() {};
 
   Session.prototype.get = function(name){ return cache[name]; };

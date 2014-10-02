@@ -1,4 +1,4 @@
-angular.module('stellarClient').factory('Wallet', function($q, $http, $window, ipCookie) {
+angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) {
 
   var SWALLOWED_SECURITY_ERRORS = _([
     'SecurityError',
