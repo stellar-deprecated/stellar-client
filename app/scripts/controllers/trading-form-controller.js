@@ -7,10 +7,6 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
   $scope.currencies = [{currency:"STR"}].concat(gatewayCurrencies);
   $scope.currencyNames = _.uniq(_.pluck($scope.currencies, 'currency'));
 
-  $scope.$watch('formData.baseAmount', calculateCounterAmount);
-  $scope.$watch('formData.unitPrice', calculateCounterAmount);
-  $scope.$watch('formData.counterAmount', calculateBaseAmount);
-
   $scope.changeBaseCurrency = function(newCurrency) {
     $scope.formData.baseCurrency = {
       currency: newCurrency,
@@ -25,15 +21,15 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
     };
   };
 
-  function calculateCounterAmount() {
+  $scope.calculateCounterAmount = function() {
     try {
       $scope.formData.counterAmount = new BigNumber($scope.formData.baseAmount).times($scope.formData.unitPrice).toString();
     } catch(e) {
       // Ignore invalid input.
     }
-  }
+  };
 
-  function calculateBaseAmount() {
+  $scope.calculateBaseAmount = function() {
     try {
       var unitPrice = new BigNumber($scope.formData.unitPrice);
 
@@ -43,7 +39,7 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
     } catch(e) {
       // Ignore invalid input.
     }
-  }
+  };
 
   $scope.getIssuers = function(currency) {
     var currencies = _.filter($scope.currencies, {currency: currency});
