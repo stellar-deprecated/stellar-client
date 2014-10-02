@@ -9,7 +9,7 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
 
   $scope.$watch('formData.baseAmount', calculateCounterAmount);
   $scope.$watch('formData.unitPrice', calculateCounterAmount);
-  $scope.$watch('formData.counterAmount', calculateUnitPrice);
+  $scope.$watch('formData.counterAmount', calculateBaseAmount);
 
   $scope.changeBaseCurrency = function(newCurrency) {
     $scope.formData.baseCurrency = {
@@ -33,7 +33,7 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
     }
   }
 
-  function calculateUnitPrice() {
+  function calculateBaseAmount() {
     try {
       var unitPrice = new BigNumber($scope.formData.unitPrice);
 
