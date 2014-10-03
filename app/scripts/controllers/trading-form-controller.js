@@ -26,7 +26,9 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
 
   $scope.calculateCounterAmount = function() {
     try {
-      $scope.formData.counterAmount = new BigNumber($scope.formData.baseAmount).times($scope.formData.unitPrice).toString();
+      var counterAmount = new BigNumber($scope.formData.baseAmount).times($scope.formData.unitPrice).toString();
+      counterAmount = normalizeAmount(counterAmount, $scope.formData.counterCurrency.currency);
+      $scope.formData.counterAmount = counterAmount;
     } catch(e) {
       // Ignore invalid input.
     }
@@ -37,7 +39,9 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
       var unitPrice = new BigNumber($scope.formData.unitPrice);
 
       if (!unitPrice.equals('0')) {
-        $scope.formData.baseAmount = new BigNumber($scope.formData.counterAmount).dividedBy(unitPrice).toString();
+        var baseAmount = new BigNumber($scope.formData.counterAmount).dividedBy(unitPrice).toString();
+        baseAmount = normalizeAmount(baseAmount, $scope.formData.baseCurrency.currency);
+        $scope.formData.baseAmount = baseAmount;
       }
     } catch(e) {
       // Ignore invalid input.
@@ -134,6 +138,21 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
     if (!$scope.formData.counterAmount) { return false; }
 
     return true;
+  }
+
+  // Truncate the amount to match stellard's max precision
+  // and round STR to 6 decimal places.
+  function normalizeAmount(amount, currency) {
+    if(currency === 'STR') {
+      amount = new BigNumber(amount).toFixed(6);
+      amount = new BigNumber(amount).toString();
+    }
+
+    if(amount.length > MAX_CREDIT_PRECISION) {
+      amount = new BigNumber(amount).toPrecision(MAX_CREDIT_PRECISION);
+    }
+
+    return amount;
   }
 
   function isValidTradeAmount(amount) {
