@@ -2,6 +2,7 @@ var sc = angular.module('stellarClient');
 
 sc.controller('TradingCtrl', function($scope, $q, Trading, Gateways, singletonPromise) {
   $scope.currentOrderBook = null;
+  $scope.precision        = 5;
 
   $scope.formData = {};
 

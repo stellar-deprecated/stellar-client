@@ -28,7 +28,9 @@ module.filter('amountToHuman', function () {
 */
 module.filter('roundAmount', function () {
     return function (amount, currency) {
-        if (typeof amount === 'undefined') {
+        try {
+            new BigNumber(amount);
+        } catch (e) {
             return 0;
         }
 
