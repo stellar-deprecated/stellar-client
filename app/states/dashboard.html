@@ -24,7 +24,7 @@
                         </div>
                         <div ng-repeat="currency in topCurrencies" class="dash-currency-line row">
                             <div class="currency-unit col-xs-6">{{ currency | currencyName }}</div>
-                            <div class="currency-balance col-xs-6">{{ balances[currency] }}</div>
+                            <div class="currency-balance col-xs-6">{{ balances[currency] | roundAmount:currency }}</div>
                         </div>
                         <div class="dash-links">
                             <a class="manage-currency-link" ng-click="openBalances();" href="#">view all balances ({{ nonZeroAccountLines.length + 1 }})</a>
