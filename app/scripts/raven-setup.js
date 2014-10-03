@@ -39,5 +39,5 @@ var ravenOptions = {
       /metrics\.itunes\.apple\.com\.edgesuite\.net\//i
     ]
 };
-
-Raven.config(Options.SENTRY_DSN, ravenOptions).install()
+/* global Raven */
+Raven.config(Options.SENTRY_DSN, ravenOptions).install();
