@@ -16,7 +16,7 @@ sc.controller('RegistrationCtrl', function(
   Wallet,
   FlashMessages,
   invites,
-  vcRecaptchaService) {
+  reCAPTCHA) {
 
   // Provide a default value to protect against stale config files.
   Options.MAX_WALLET_ATTEMPTS = Options.MAX_WALLET_ATTEMPTS || 3;
@@ -25,7 +25,8 @@ sc.controller('RegistrationCtrl', function(
     username:             '',
     email:                '',
     password:             '',
-    passwordConfirmation: ''
+    passwordConfirmation: '',
+    recap:                ''
   };
 
   session.put('inviteCode', $stateParams.inviteCode);
@@ -44,8 +45,6 @@ sc.controller('RegistrationCtrl', function(
     passwordConfirmErrors: [],
     captchaErrors:         []
   };
-
-  $scope.captchaKey = Options.CAPTCHA_KEY;
 
   $scope.validators = [];
   $scope.noEmailWarning = false;
@@ -207,7 +206,7 @@ sc.controller('RegistrationCtrl', function(
       username: $scope.data.username,
       // email: $scope.data.email,
       address: signingKeys.address,
-      recap: vcRecaptchaService.data()
+      recap: $scope.data.recap
     };
 
     // Submit the registration data to the server.
@@ -226,7 +225,7 @@ sc.controller('RegistrationCtrl', function(
       'invalid': 'The email is invalid.'
     };
 
-      vcRecaptchaService.reload();
+    reCAPTCHA.reload();
 
     if (response && response.status === "fail") {
       var field;
