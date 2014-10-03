@@ -6,6 +6,9 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
   var gatewayCurrencies = _.flatten(_.pluck(gateways, 'currencies'));
   $scope.currencies = [{currency:"STR"}].concat(gatewayCurrencies);
   $scope.currencyNames = _.uniq(_.pluck($scope.currencies, 'currency'));
+  var MAX_STR_AMOUNT = new BigNumber(2).toPower(64).minus(1).dividedBy('1000000'); // (2^64-1)/10^6
+  var MAX_CREDIT_PRECISION = 14; // stellard credits supports up to 15 significant digits
+
 
   $scope.changeBaseCurrency = function(newCurrency) {
     $scope.formData.baseCurrency = {
@@ -94,24 +97,77 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
     $scope.formData.baseAmount = null;
     $scope.formData.unitPrice = null;
     $scope.formData.counterAmount = null;
+
+    $scope.formIsFilled = false;
+    $scope.formIsValid = false;
+    $scope.formErrorMessage = '';
   };
 
   $scope.resetForm();
 
-  $scope.formIsValid = function() {
+  $scope.$watch('formData.baseAmount', validateForm);
+  $scope.$watch('formData.counterAmount', validateForm);
+  $scope.$watch('formData.baseCurrency', validateForm);
+  $scope.$watch('formData.counterCurrency', validateForm);
+
+  function validateForm() {
+    $scope.formIsFilled = isFormFilled();
+
+    var baseAmount    = _.extend({value: $scope.formData.baseAmount}, $scope.formData.baseCurrency);
+    var counterAmount = _.extend({value: $scope.formData.counterAmount}, $scope.formData.counterCurrency);
+
+    if (isValidTradeAmount(baseAmount) && isValidTradeAmount(counterAmount)) {
+      $scope.formIsValid = true;
+    } else {
+      $scope.formIsValid = false;
+    }
+  }
+
+  function isFormFilled() {
     if (!$scope.currentOrderBook) { return false; }
 
-    try {
-      if (new BigNumber($scope.formData.baseAmount).lessThanOrEqualTo(0)) { return false; }
-      if (new BigNumber($scope.formData.unitPrice).lessThanOrEqualTo(0)) { return false; }
-      if (new BigNumber($scope.formData.counterAmount).lessThanOrEqualTo(0)) { return false; }
-    } catch(e) {
-      // Invalid input.
+    if (!$scope.formData.baseCurrency.currency) { return false; }
+    if (!$scope.formData.counterCurrency.currency) { return false; }
+
+    if (!$scope.formData.baseAmount) { return false; }
+    if (!$scope.formData.unitPrice) { return false; }
+    if (!$scope.formData.counterAmount) { return false; }
+
+    return true;
+  }
+
+  function isValidTradeAmount(amount) {
+    if (amount.value === null) {
       return false;
     }
 
-    return true;
-  };
+    var value;
+    try {
+      value = new BigNumber(amount.value);
+    } catch (e) {
+      $scope.formErrorMessage = 'Error parsing amount: ' + amount.value;
+      return false;
+    }
+
+    var amountNegative    = value.lessThanOrEqualTo(0);
+    var STRBoundsError    = amount.currency === "STR" && value.greaterThan(MAX_STR_AMOUNT);
+    var STRPrecisionError = amount.currency === "STR" && !value.equals(value.toFixed(6));
+    var creditBoundsError = amount.currency !== "STR" && value.c.length > MAX_CREDIT_PRECISION;
+
+    if (amountNegative) {
+      $scope.formErrorMessage = amount.currency + ' amount must be a positive number';
+    } else if (STRBoundsError) {
+      $scope.formErrorMessage = 'STR amount is too large: ' + value.toString();
+    } else if (STRPrecisionError) {
+      $scope.formErrorMessage = 'STR amount has too many decimals: ' + value.toString();
+    } else if (creditBoundsError) {
+      $scope.formErrorMessage = amount.currency + ' amount has too much precision: ' + value.toString();
+    } else {
+      return true;
+    }
+
+    return false;
+  }
 
   $scope.createOffer = singletonPromise(function(e) {
     var offerPromise;

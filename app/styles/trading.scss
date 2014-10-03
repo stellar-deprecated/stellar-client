@@ -3,6 +3,10 @@
 }
 
 .trading-form {
+  .error {
+    color: $error;
+  }
+
   .offer-status {
     width: 100%;
     min-height: 400px;
