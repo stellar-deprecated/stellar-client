@@ -61,7 +61,7 @@ sc.controller('DashboardCtrl', function($rootScope, $scope, $timeout, $state, se
 
     // Show a notification when new transactions are received.
     $scope.$on('$appTxNotification', function(event, tx){
-        if (tx.type == 'received' || tx.type == 'sent') {
+        if (tx.type === 'received' || tx.type === 'sent') {
             $scope.showTransaction = true;
             $scope.newTransaction = tx;
 
@@ -101,7 +101,7 @@ sc.controller('DashboardCtrl', function($rootScope, $scope, $timeout, $state, se
 
         // Filter out account lines with zero balances.
         $scope.nonZeroAccountLines = accountLines.filter(function(accountLine) {
-            return accountLine.balance != '0';
+            return accountLine.balance !== '0';
         });
 
         $scope.nonZeroAccountLines.forEach(function(accountLine) {
@@ -124,6 +124,3 @@ sc.controller('DashboardCtrl', function($rootScope, $scope, $timeout, $state, se
 
     fetchCurrencies();
 });
-
-
-

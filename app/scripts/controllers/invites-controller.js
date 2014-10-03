@@ -1,4 +1,5 @@
 'use strict';
+/* global inviteForm */
 
 var sc = angular.module('stellarClient');
 

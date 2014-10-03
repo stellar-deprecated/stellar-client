@@ -81,9 +81,9 @@ sc.controller('LoginCtrl', function($rootScope, $scope, $state, $http, $timeout,
       });
   }
 
-  if (sessionStorage['display_reload_message'] === "display") {
+  if (sessionStorage.displayReloadMessage === "display") {
     try {
-      sessionStorage['display_reload_message'] = false;
+      sessionStorage.displayReloadMessage = false;
     } catch (e) {}
     FlashMessages.add({
       title: 'Logout',

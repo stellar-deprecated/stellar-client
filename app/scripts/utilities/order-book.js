@@ -148,10 +148,10 @@ angular.module('stellarClient').factory('OrderBook', function($q, $rootScope, Tr
 
       switch(self.getOfferRole(offer)) {
       case 'bid':
-        self.currentOffers['bids'].push(offer);
+        self.currentOffers.bids.push(offer);
         break;
       case 'ask':
-        self.currentOffers['asks'].push(offer);
+        self.currentOffers.asks.push(offer);
         break;
       }
     }
@@ -159,10 +159,10 @@ angular.module('stellarClient').factory('OrderBook', function($q, $rootScope, Tr
     function removeOffer(offer) {
       switch(self.getOfferRole(offer)) {
       case 'bid':
-        self.currentOffers['bids'] = _.reject(self.currentOffers['bids'], _.pick(offer, 'account', 'sequence'));
+        self.currentOffers.bids = _.reject(self.currentOffers.bids, _.pick(offer, 'account', 'sequence'));
         break;
       case 'ask':
-        self.currentOffers['asks'] = _.reject(self.currentOffers['asks'], _.pick(offer, 'account', 'sequence'));
+        self.currentOffers.asks = _.reject(self.currentOffers.asks, _.pick(offer, 'account', 'sequence'));
         break;
       }
     }
@@ -258,5 +258,3 @@ angular.module('stellarClient').factory('OrderBook', function($q, $rootScope, Tr
     get: getOrderBook
   };
 });
-
-

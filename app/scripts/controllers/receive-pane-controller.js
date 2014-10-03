@@ -7,9 +7,9 @@ sc.controller('ReceivePaneCtrl', function($scope, session) {
 
   $scope.currentAddress = function() {
     return session.get('address');
-  }
+  };
 
   $scope.toggleAddress = function() {
   	$scope.showAddress = !$scope.showAddress;
-  }
+  };
 });
