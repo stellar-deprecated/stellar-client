@@ -124,8 +124,8 @@
                         <span ng-if="formData.tradeOperation === 'buy'">Buy</span>
                         <span ng-if="formData.tradeOperation === 'sell'">Sell</span>
                         {{ formData.baseAmount | roundAmount:formData.baseCurrency.currency }} {{ formData.baseCurrency.currency }}
-                        for {{ formData.counterAmount }} {{ formData.counterCurrency.currency }}
-                        at {{ formData.unitPrice | roundAmount:formData.counterCurrency.currency }} {{ formData.counterCurrency.currency }}/{{ formData.baseCurrency.currency }}
+                        for {{ formData.counterAmount | roundAmount:formData.counterCurrency.currency }} {{ formData.counterCurrency.currency }}
+                        at {{ formData.unitPrice | roundedAmount:precision }} {{ formData.counterCurrency.currency }}/{{ formData.baseCurrency.currency }}
                     </b>
                 </div>
             </div>
@@ -152,9 +152,9 @@
         <span ng-if="formData.tradeOperation === 'sell'">sell</span></b><br>
         <b>{{ formData.baseAmount | roundAmount:formData.baseCurrency.currency }} {{ formData.baseCurrency.currency }}</b><br>
         for<br>
-        <b>{{ formData.counterAmount }} {{ formData.counterCurrency.currency }}</b><br>
+        <b>{{ formData.counterAmount | roundAmount:formData.counterCurrency.currency }} {{ formData.counterCurrency.currency }}</b><br>
         at<br>
-        <b>{{ formData.unitPrice | roundAmount:formData.counterCurrency.currency }} {{ formData.counterCurrency.currency }}/{{ formData.baseCurrency.currency }}</b><br>
+        <b>{{ formData.unitPrice | roundedAmount:precision }} {{ formData.counterCurrency.currency }}/{{ formData.baseCurrency.currency }}</b><br>
         <div class="button-group">
             <button ng-click="editForm()" class="btn btn-default">Edit</button>
             <button ng-click="createOffer()" class="btn btn-default">Confirm</button>

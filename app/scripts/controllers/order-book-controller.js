@@ -3,7 +3,6 @@ var sc = angular.module('stellarClient');
 sc.controller('OrderBookCtrl', function($scope, Trading) {
   $scope.currentBids      = [];
   $scope.currentAsks      = [];
-  $scope.precision        = 6;
 
   $scope.$on("trading:order-book-updated", function(e, orderBook) {
     if(orderBook === $scope.currentOrderBook) {
