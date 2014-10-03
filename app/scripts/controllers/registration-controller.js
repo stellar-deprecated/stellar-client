@@ -2,9 +2,22 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('RegistrationCtrl', function($rootScope, $scope, $state, $stateParams, $timeout, $http, $q,
-                                           session, debounce, singletonPromise, Wallet, FlashMessages,
-                                           invites,vcRecaptchaService) {
+sc.controller('RegistrationCtrl', function(
+  $rootScope,
+  $scope,
+  $state,
+  $stateParams,
+  $timeout,
+  $http,
+  $q,
+  session,
+  debounce,
+  singletonPromise,
+  Wallet,
+  FlashMessages,
+  invites,
+  reCAPTCHA) {
+
   // Provide a default value to protect against stale config files.
   Options.MAX_WALLET_ATTEMPTS = Options.MAX_WALLET_ATTEMPTS || 3;
 
@@ -12,7 +25,8 @@ sc.controller('RegistrationCtrl', function($rootScope, $scope, $state, $statePar
     username:             '',
     email:                '',
     password:             '',
-    passwordConfirmation: ''
+    passwordConfirmation: '',
+    recap:                ''
   };
 
   session.put('inviteCode', $stateParams.inviteCode);
@@ -31,8 +45,6 @@ sc.controller('RegistrationCtrl', function($rootScope, $scope, $state, $statePar
     passwordConfirmErrors: [],
     captchaErrors:         []
   };
-
-  $scope.captchaKey = Options.CAPTCHA_KEY;
 
   $scope.validators = [];
   $scope.noEmailWarning = false;
@@ -194,7 +206,7 @@ sc.controller('RegistrationCtrl', function($rootScope, $scope, $state, $statePar
       username: $scope.data.username,
       // email: $scope.data.email,
       address: signingKeys.address,
-      recap: vcRecaptchaService.data()
+      recap: $scope.data.recap
     };
 
     // Submit the registration data to the server.
@@ -213,7 +225,7 @@ sc.controller('RegistrationCtrl', function($rootScope, $scope, $state, $statePar
       'invalid': 'The email is invalid.'
     };
 
-      vcRecaptchaService.reload();
+    reCAPTCHA.reload();
 
     if (response && response.status === "fail") {
       var field;
