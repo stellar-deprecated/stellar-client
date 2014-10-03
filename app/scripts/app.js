@@ -181,3 +181,8 @@ stellarClient.run(function($rootScope, $state, $timeout, ipCookie, session, Flas
     FlashMessages.dismissAll();
   });
 });
+
+stellarClient.config(function() {
+  // Configure BigNumber to never return exponential notation
+  BigNumber.config({ EXPONENTIAL_AT : 1e+9 });
+});
