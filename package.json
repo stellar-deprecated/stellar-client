@@ -61,5 +61,8 @@
   "repository": {
     "type": "git",
     "url": "http://github.com/stellar/stellar-client.git"
+  },
+  "scripts": {
+    "test": "gulp test"
   }
 }
