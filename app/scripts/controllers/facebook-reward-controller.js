@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, session) {
+sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, $q, session, Facebook) {
   $scope.reward = {
     rewardType: 1,
     status: 'incomplete',
@@ -92,17 +92,76 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, session
     return 'Log in with Facebook';
   };
 
-  $scope.facebookLogin = function () {
+  $scope.$watch(function() {
+    // This is for convenience, to notify if Facebook is loaded and ready to go.
+    return Facebook.isReady();
+  }, function(newVal) {
+    if (newVal) {
+      $scope.facebookReady = true;
+    }
+  });
+
+  $scope.connectWithFacebook = function() {
     $scope.loading = true;
-    fbLoginStart($http, claim, facebookLoginError);
+    facebookLogin()
+      .then(linkUserFacebook)
+      .then(claimFacebookReward)
+      .finally(function () {
+        $scope.loading = false;
+      })
   };
 
-  function facebookLoginSuccess(status) {
-    $scope.rewards[1].status = status;
-    $scope.updateRewards();
+  function facebookLogin() {
+    var deferred = $q.defer();
+
+    Facebook.login(function(response) {
+      if (response.status === 'connected') {
+        var data = {};
+        data.fbID = response.authResponse.userID;
+        data.fbAccessToken = response.authResponse.accessToken;
+        deferred.resolve(data);
+      } else {
+        onFacebookLoginError(response);
+        deferred.reject(response);
+      }
+    }, {scope: 'user_photos', auth_type: 'reauthenticate'});
+
+    return deferred.promise;
+  }
+
+  function onFacebookLoginError(response) {
+    // TODO: show error
+    console.log("facebook login error");
   }
 
   /**
+  * Links the given facebook data to the user's account.
+  */
+  function linkUserFacebook(data) {
+    _.extend(data, {
+      username: session.get('username'),
+      updateToken: session.get('wallet').keychainData.updateToken
+    });
+
+    return $http.post(Options.API_SERVER + "/user/add_facebook", data)
+      .error(onLinkUserFacebookError);
+  }
+
+  function onLinkUserFacebookError(response) {
+    // TODO: show error
+    console.log("link user facebook error");
+    console.log(response);
+    switch (response.code) {
+      case 'facebook_error':
+        // TODO: show error
+      case 'already_taken':
+        // TODO: show error
+      case 'already_linked':
+        // TODO: show error
+    }
+  }
+
+/**
  * Send the facebook auth data to the server to be verified and saved.
  *
  * @param {object} data
@@ -113,27 +172,31 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, session
  * @param {function} success callback
  * @param {function} error callback
  */
-function claim(data) {
-  _.extend(data, {
-    username: session.get('username'),
-    updateToken: session.get('wallet').keychainData.updateToken
-  });
+  function claimFacebookReward(data) {
+    var data = {
+      username: session.get('username'),
+      updateToken: session.get('wallet').keychainData.updateToken
+    };
 
-  $http.post(Options.API_SERVER + "/claim/facebook", data)
-    .success(
-      function (response) {
+    return $http.post(Options.API_SERVER + "/claim/facebook", data)
+      .success(function (response) {
         console.log(response.status);
-        facebookLoginSuccess(response.message);
+        $scope.rewards[1].status = response.message;
+        $scope.updateRewards();
       })
-    .error(function (response) {
-      facebookLoginError(response);
-    });
+      .error(onClaimFacebookRewardError);
   }
 
-  function facebookLoginError(response) {
-    $scope.loading = false;
+  function onClaimFacebookRewardError(response) {
+    console.log(response);
     if (response && response.status === 'fail') {
       switch (response.code) {
+        case 'no_facebook':
+          // TODO: no facebook account for this user
+          break;
+        case 'facebook_error':
+          // TODO: reauthenticate the user
+          break;
         case 'already_taken':
           $scope.reward.updateReward('already_taken');
           break;
@@ -157,10 +220,5 @@ function claim(data) {
     } else {
       $scope.reward.status = 'incomplete';
     }
-  }
-
-  // if
-  if (typeof FB !== 'undefined') {
-    $rootScope.fbinit = true;
   }
 });
