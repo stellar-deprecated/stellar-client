@@ -19,7 +19,8 @@
                 <td>{{ offer.price.value }} {{ offer.price.currency }}</td>
                 <td>{{ offer.counterAmount.value | roundAmount:offer.counterAmount.currency }} {{ offer.counterAmount.currency }}</td>
                 <td class="cancel-offer">
-                    <a ng-click="remove()">{{ remove.isLoading() ? 'canceling...' : 'cancel' }}</a>
+                    <a ng-click="remove()" ng-hide="remove.isLoading()">cancel</a>
+                    <span ng-show="remove.isLoading()">canceling...</span>
                 </td>
             </tr>
         </tbody>
