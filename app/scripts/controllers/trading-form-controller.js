@@ -84,14 +84,14 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
     $scope.formData.baseAmount = null;
     $scope.formData.unitPrice = null;
     $scope.formData.counterAmount = null;
+
+    $scope.formIsFilled = false;
+    $scope.formIsValid = false;
+    $scope.formErrorMessage = '';
   };
 
   $scope.resetForm();
 
-  $scope.formIsFilled = false;
-  $scope.formIsValid = false;
-  $scope.canSubmit = false;
-  $scope.formErrorMessage = '';
   $scope.$watch('formData.baseAmount', validateForm);
   $scope.$watch('formData.counterAmount', validateForm);
   $scope.$watch('formData.baseCurrency', validateForm);
@@ -107,12 +107,6 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
       $scope.formIsValid = true;
     } else {
       $scope.formIsValid = false;
-    }
-
-    if ($scope.formIsFilled && $scope.formIsValid) {
-      $scope.canSubmit = true;
-    } else {
-      $scope.canSubmit = false;
     }
   }
 
