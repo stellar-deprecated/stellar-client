@@ -14,6 +14,8 @@ var path          = require('path');
 var protractor    = require("gulp-protractor").protractor;
 var glob          = require('glob');
 
+var runningServer = null;
+
 // load plugins
 var $ = require('gulp-load-plugins')();
 
@@ -293,8 +295,8 @@ gulp.task('connect-dist', ['dist'], function() {
         .use(connect.static('dist'))
         .use(connect.directory('dist'));
 
-    require('http').createServer(app)
-        .listen(8001)
+    runningServer = require('http').createServer(app);
+    runningServer.listen(8001)
         .on('listening', function () {
             console.log('Started connect web server on http://localhost:8001');
         });
@@ -309,9 +311,9 @@ gulp.task('serve-dist-without-build', [], function() {
     var app = connect()
         .use(connect.static('dist'))
         .use(connect.directory('dist'));
-
-    require('http').createServer(app)
-        .listen(8001)
+    
+    runningServer = require('http').createServer(app);
+    runningServer.listen(8001)
         .on('listening', function () {
             console.log('Started connect web server on http://localhost:8001');
             require('opn')('http://localhost:8001');
@@ -324,7 +326,7 @@ gulp.task('ensure_webdriver_standalone',function(done) {
   }).once('close', done);
 });
 
-gulp.task('test', ['ensure_webdriver_standalone'], function (done) {
+gulp.task('test', ['ensure_webdriver_standalone', 'connect-dist'], function (done) {
     var searchPath = path.join(__dirname, 'node_modules', 'protractor', 'selenium', 'selenium-server-*.jar');
     var files = glob.sync(searchPath);
     var jarPath = files[0];
@@ -340,6 +342,10 @@ gulp.task('test', ['ensure_webdriver_standalone'], function (done) {
       }))
       .on('error', function(e) { throw e })
       .on('end', function() {
+        if (runningServer) {
+            runningServer.close()
+        }
+        
         done();
       });
 });
