@@ -92,14 +92,9 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, $q, ses
     return 'Log in with Facebook';
   };
 
-  $scope.$watch(function() {
-    // This is for convenience, to notify if Facebook is loaded and ready to go.
+  $scope.isFacebookReady = function () {
     return Facebook.isReady();
-  }, function(newVal) {
-    if (newVal) {
-      $scope.facebookReady = true;
-    }
-  });
+  }
 
   /**
   * Facebook login the user, add their Facebook data to their user account, and then
