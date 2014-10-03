@@ -1,3 +1,6 @@
+/* export StellarDefaultCurrencyMap */
+/* export StellarDefaultCurrencyList */
+
 /**
  * Stellar default external currency list.
  *
@@ -36,5 +39,6 @@ var StellarDefaultCurrencyList =
     {value: 'TWD', name: 'TWD - New Taiwan Dollar', order: 0, maxDecimalPlaces: 2},
     {value: 'HKD', name: 'HKD - Hong Kong Dollar', order: 0, maxDecimalPlaces: 2}
 ];
+
 
 var StellarDefaultCurrencyMap = _.indexBy(StellarDefaultCurrencyList, 'value');
