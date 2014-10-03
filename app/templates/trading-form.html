@@ -117,8 +117,8 @@
                 </div>
             </div>
         </div>
-        <div ng-show="formFilled()">
-            <div class="form-group" ng-show="formIsValid()">
+        <div ng-show="formIsFilled">
+            <div class="form-group" ng-show="formIsValid">
                 <div class="col-md-offset-4 col-md-8">
                     <b>
                         <span ng-if="formData.tradeOperation === 'buy'">Buy</span>
@@ -129,17 +129,17 @@
                     </b>
                 </div>
             </div>
-            <div class="form-group" ng-hide="formIsValid()">
+            <div class="form-group" ng-hide="formIsValid">
                 <div class="col-md-offset-4 col-md-8">
                     <b class="error">
-                        {{formErrorMessage()}}
+                        {{formErrorMessage}}
                     </b>
                 </div>
             </div>
         </div>
         <div class="form-group">
             <div class="col-md-offset-4 col-md-3">
-                <button type="submit" class="btn btn-default" ng-disabled="!canSubmit()">
+                <button type="submit" class="btn btn-default" ng-disabled="!canSubmit">
                     <span ng-if="formData.tradeOperation === 'buy'">Buy</span>
                     <span ng-if="formData.tradeOperation === 'sell'">Sell</span>
                     {{ formData.baseCurrency.currency }}

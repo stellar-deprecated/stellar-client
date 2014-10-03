@@ -88,7 +88,35 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
 
   $scope.resetForm();
 
-  $scope.formFilled = function() {
+  $scope.formIsFilled = false;
+  $scope.formIsValid = false;
+  $scope.canSubmit = false;
+  $scope.formErrorMessage = '';
+  $scope.$watch('formData.baseAmount', validateForm);
+  $scope.$watch('formData.counterAmount', validateForm);
+  $scope.$watch('formData.baseCurrency', validateForm);
+  $scope.$watch('formData.counterCurrency', validateForm);
+
+  function validateForm() {
+    $scope.formIsFilled = isFormFilled();
+
+    var baseAmount    = _.extend({value: $scope.formData.baseAmount}, $scope.formData.baseCurrency);
+    var counterAmount = _.extend({value: $scope.formData.counterAmount}, $scope.formData.counterCurrency);
+
+    if (isValidTradeAmount(baseAmount) && isValidTradeAmount(counterAmount)) {
+      $scope.formIsValid = true;
+    } else {
+      $scope.formIsValid = false;
+    }
+
+    if ($scope.formIsFilled && $scope.formIsValid) {
+      $scope.canSubmit = true;
+    } else {
+      $scope.canSubmit = false;
+    }
+  }
+
+  function isFormFilled() {
     if (!$scope.currentOrderBook) { return false; }
 
     if (!$scope.formData.baseCurrency.currency) { return false; }
@@ -99,49 +127,19 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
     if (!$scope.formData.counterAmount) { return false; }
 
     return true;
-  };
-
-  $scope.formIsValid = function() {
-    var errorMessage = $scope.formErrorMessage();
-    if (errorMessage) {
-      return false;
-    }
-
-    return true;
-  };
-
-  $scope.canSubmit = function() {
-    return $scope.formFilled() && $scope.formIsValid();
-  };
-
-  $scope.formErrorMessage = function() {
-    try {
-      validateForm();
-    } catch (e) {
-      return e.message;
-    }
-  };
-
-  function validateForm() {
-    var amounts = [
-      _.extend({value: $scope.formData.baseAmount},    $scope.formData.baseCurrency),
-      _.extend({value: $scope.formData.unitPrice},     $scope.formData.counterCurrency),
-      _.extend({value: $scope.formData.counterAmount}, $scope.formData.counterCurrency),
-    ];
-
-    _.forEach(amounts, validateTradeAmount);
   }
 
-  function validateTradeAmount(amount) {
+  function isValidTradeAmount(amount) {
     if (amount.value === null) {
-      return;
+      return false;
     }
 
     var value;
     try {
       value = new BigNumber(amount.value);
     } catch (e) {
-      throw new Error('Error parsing amount: ' + amount.value);
+      $scope.formErrorMessage = 'Error parsing amount: ' + amount.value;
+      return false;
     }
 
     var amountNegative    = value.lessThanOrEqualTo(0);
@@ -150,17 +148,18 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
     var creditBoundsError = amount.currency !== "STR" && value.c.length > MAX_CREDIT_PRECISION;
 
     if (amountNegative) {
-      throw new Error(amount.currency + ' amount must be a positive number');
+      $scope.formErrorMessage = amount.currency + ' amount must be a positive number';
+    } else if (STRBoundsError) {
+      $scope.formErrorMessage = 'STR amount is too large: ' + value.toString();
+    } else if (STRPrecisionError) {
+      $scope.formErrorMessage = 'STR amount has too many decimals: ' + value.toString();
+    } else if (creditBoundsError) {
+      $scope.formErrorMessage = amount.currency + ' amount has too much precision: ' + value.toString();
+    } else {
+      return true;
     }
-    if (STRBoundsError) {
-      throw new Error('STR amount is too large: ' + value.toString());
-    }
-    if (STRPrecisionError) {
-      throw new Error('STR amount has too many decimals: ' + value.toString());
-    }
-    if (creditBoundsError) {
-      throw new Error(amount.currency + ' amount has too much precision: ' + value.toString());
-    }
+
+    return false;
   }
 
   $scope.createOffer = singletonPromise(function(e) {
