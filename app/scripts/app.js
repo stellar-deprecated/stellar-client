@@ -5,6 +5,7 @@ var STELLAR_CLIENT_REVISION = '_GIT_REVISION_GOES_HERE_';
 var stellarClient = angular.module('stellarClient', [
   'angularMoment',
   'bruteRequest',
+  'facebook',
   'filters',
   'ipCookie',
   'ngGrid',
@@ -18,7 +19,9 @@ var stellarClient = angular.module('stellarClient', [
   'reCAPTCHA'
 ]);
 
-stellarClient.config(function($httpProvider, $stateProvider, $urlRouterProvider, RavenProvider, ngClipProvider, reCAPTCHAProvider) {
+stellarClient.config(function($httpProvider, $stateProvider, $urlRouterProvider, RavenProvider, ngClipProvider, reCAPTCHAProvider, FacebookProvider) {
+
+  FacebookProvider.init(Options.APP_ID);
 
   ngClipProvider.setPath("bower_components/zeroclipboard/dist/ZeroClipboard.swf");
 
