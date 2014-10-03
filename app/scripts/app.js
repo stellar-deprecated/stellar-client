@@ -1,4 +1,5 @@
 'use strict';
+/* exported STELLAR_CLIENT_REVISION */
 var STELLAR_CLIENT_REVISION = '_GIT_REVISION_GOES_HERE_';
 
 
@@ -28,7 +29,7 @@ var stellarClient = angular.module('stellarClient', [
  */
 window.$get = function (dependency) {
   return angular.element(document).injector().get(dependency);
-}
+};
 
 stellarClient.config(function($httpProvider, $stateProvider, $urlRouterProvider, RavenProvider, ngClipProvider) {
 
@@ -109,12 +110,12 @@ stellarClient.config(function($httpProvider, $stateProvider, $urlRouterProvider,
 
 stellarClient.run(function($location, $state, ipCookie){
   var atRoot    = _.isEmpty($location.path());
-  var firstTime = !ipCookie("weve_been_here_before")
+  var firstTime = !ipCookie("weve_been_here_before");
   var forceToRegister = atRoot && firstTime;
 
     if(forceToRegister) {
       $state.transitionTo('register');
-      ipCookie("weve_been_here_before", "true", {expires: new Date('01 Jan 2030 00:00:00 GMT')})
+      ipCookie("weve_been_here_before", "true", {expires: new Date('01 Jan 2030 00:00:00 GMT')});
     }
 });
 
