@@ -101,10 +101,22 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, $q, ses
     }
   });
 
+  /**
+  * Facebook login the user, add their Facebook data to their user account, and then
+  * claim their Facebook reward.
+  */
   $scope.connectWithFacebook = function() {
     $scope.loading = true;
     facebookLogin()
-      .then(linkUserFacebook)
+      .then(function (data) {
+        if (session.getUser().hasLinkedFacebook()) {
+          // update the auth token using their reauthenticated token
+          return updateUserFacebookToken(data);
+        } else {
+          // add the facebook to the user's account
+          return linkUserFacebook(data);
+        }
+      })
       .then(claimFacebookReward)
       .finally(function () {
         $scope.loading = false;
@@ -144,21 +156,25 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, $q, ses
     });
 
     return $http.post(Options.API_SERVER + "/user/add_facebook", data)
-      .error(onLinkUserFacebookError);
+      .error(function (response) {
+        onLinkUserFacebookError(response, data);
+      });
   }
 
-  function onLinkUserFacebookError(response) {
+  function updateUserFacebookToken(data) {
+    _.extend(data, {
+      username: session.get('username'),
+      updateToken: session.get('wallet').keychainData.updateToken
+    });
+
+    return $http.post(Options.API_SERVER + "/user/update_facebook_token", data)
+      .error(function (response) {
+        onLinkUserFacebookError(response, data);
+      });
+  }
+
+  function onLinkUserFacebookError(response, data) {
     // TODO: show error
-    console.log("link user facebook error");
-    console.log(response);
-    switch (response.code) {
-      case 'facebook_error':
-        // TODO: show error
-      case 'already_taken':
-        // TODO: show error
-      case 'already_linked':
-        // TODO: show error
-    }
   }
 
 /**
