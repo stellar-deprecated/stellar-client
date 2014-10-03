@@ -2,9 +2,22 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('RegistrationCtrl', function($rootScope, $scope, $state, $stateParams, $timeout, $http, $q,
-                                           session, debounce, singletonPromise, Wallet, FlashMessages,
-                                           invites,vcRecaptchaService) {
+sc.controller('RegistrationCtrl', function(
+  $rootScope,
+  $scope,
+  $state,
+  $stateParams,
+  $timeout,
+  $http,
+  $q,
+  session,
+  debounce,
+  singletonPromise,
+  Wallet,
+  FlashMessages,
+  invites,
+  vcRecaptchaService) {
+
   // Provide a default value to protect against stale config files.
   Options.MAX_WALLET_ATTEMPTS = Options.MAX_WALLET_ATTEMPTS || 3;
 
