@@ -12,6 +12,7 @@ var fs            = require('fs');
 var runSequence   = require('run-sequence');
 var path          = require('path');
 var protractor    = require("gulp-protractor").protractor;
+var glob          = require('glob');
 
 // load plugins
 var $ = require('gulp-load-plugins')();
@@ -324,9 +325,17 @@ gulp.task('ensure_webdriver_standalone',function(done) {
 });
 
 gulp.task('test', ['ensure_webdriver_standalone'], function (done) {
+    var searchPath = path.join(__dirname, 'node_modules', 'protractor', 'selenium', 'selenium-server-*.jar');
+    var files = glob.sync(searchPath);
+    var jarPath = files[0];
+
+    if(!jarPath) {
+        throw new Error('Unable to find ' + searchPath);
+    }
+
     gulp.src(["./src/tests/e2e/spec/*_spec.js"])
       .pipe(protractor({
-        seleniumServerJar: './node_modules/protractor/selenium/selenium-server-standalone-2.39.0.jar',
+        seleniumServerJar: jarPath,
         configFile: "test/e2e/protractor_conf.js"
       }))
       .on('error', function(e) { throw e })
