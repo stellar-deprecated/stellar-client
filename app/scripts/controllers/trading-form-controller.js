@@ -140,6 +140,8 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
     return true;
   }
 
+  // Truncate the amount to match stellard's max precision
+  // and round STR to 6 decimal places.
   function normalizeAmount(amount, currency) {
     if(currency === 'STR') {
       amount = new BigNumber(amount).toFixed(6);
