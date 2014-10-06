@@ -13,7 +13,7 @@
                 <p class="currency">{{ 'STR' | currencyName }}</p>
             </li>
             <li ng-repeat="accountLine in nonZeroAccountLines" class="currency-box">
-                <h5>{{ accountLine.balance }}</h5>
+                <h5>{{ accountLine.balance | roundAmount:accountLine.currency }}</h5>
                 <p class="currency">{{ accountLine.currency | currencyName }}</p>
                 <p class="currency-issuer">{{ accountLine.account | addressToUsername }}</p>
                 <p class="currency-auth" ng-if="accountLineNeedsAuth(accountLine)">Requires authorization</p>
