@@ -122,7 +122,7 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, $q, ses
     var deferred = $q.defer();
 
     Facebook.login(function(response) {
-      if (response.status === 'connected') {
+      if (response.authResponse) {
         var data = {};
         data.fbID = response.authResponse.userID;
         data.fbAccessToken = response.authResponse.accessToken;

@@ -45,6 +45,7 @@ angular.module('stellarClient').factory('UserPrivateInfo', function($http, $q, $
         this.inviteCode        = data.inviteCode;
         this.claimedInviteCode = data.claimedInviteCode;
         this.inviterUsername   = data.inviterUsername;
+        this.email             = data.email;
         this.linkedFacebook    = data.linkedFacebook;
     };
 
