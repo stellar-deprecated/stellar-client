@@ -229,7 +229,6 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, $q, ses
 
     return $http.post(Options.API_SERVER + "/claim/facebook", data)
       .success(function (response) {
-        console.log(response.status);
         $scope.rewards[1].status = response.message;
         $scope.updateRewards();
       })
@@ -237,7 +236,6 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, $q, ses
   }
 
   function onClaimFacebookRewardError(response) {
-    console.log(response);
     if (response && response.status === 'fail') {
       switch (response.code) {
         case 'unverified':
