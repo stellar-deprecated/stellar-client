@@ -46,6 +46,7 @@ angular.module('stellarClient').factory('UserPrivateInfo', function($http, $q, $
         this.claimedInviteCode = data.claimedInviteCode;
         this.inviterUsername   = data.inviterUsername;
         this.email             = data.email;
+        this.linkedFacebook    = data.linkedFacebook;
     };
 
     UserPrivateInfo.prototype.getInvites = function () {
@@ -116,6 +117,10 @@ angular.module('stellarClient').factory('UserPrivateInfo', function($http, $q, $
         };
         return $http.post(Options.API_SERVER + "/user/verifyEmail", data);
     };
+
+    UserPrivateInfo.prototype.hasLinkedFacebook = function () {
+        return this.linkedFacebook;
+    }
 
     return UserPrivateInfo;
 });

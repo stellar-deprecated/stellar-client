@@ -6,6 +6,7 @@ var STELLAR_CLIENT_REVISION = '_GIT_REVISION_GOES_HERE_';
 var stellarClient = angular.module('stellarClient', [
   'angularMoment',
   'bruteRequest',
+  'facebook',
   'filters',
   'ipCookie',
   'ngGrid',
@@ -19,11 +20,10 @@ var stellarClient = angular.module('stellarClient', [
   'reCAPTCHA'
 ]);
 
-
 /**
  * DEBUG TOOL!  $get makes it easy to retrieve an instance from the angular
  * dependency injection system.
- * 
+ *
  * @param  {string} dependency the dependency to retrieve, by name
  * @return {object}            the resolved dependency
  */
@@ -31,7 +31,9 @@ window.$get = function (dependency) {
   return angular.element(document).injector().get(dependency);
 };
 
-stellarClient.config(function($httpProvider, $stateProvider, $urlRouterProvider, RavenProvider, ngClipProvider, reCAPTCHAProvider) {
+stellarClient.config(function($httpProvider, $stateProvider, $urlRouterProvider, RavenProvider, ngClipProvider, reCAPTCHAProvider, FacebookProvider) {
+
+  FacebookProvider.init(Options.APP_ID);
 
   ngClipProvider.setPath("bower_components/zeroclipboard/dist/ZeroClipboard.swf");
 
