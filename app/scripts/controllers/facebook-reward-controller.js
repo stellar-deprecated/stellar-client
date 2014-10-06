@@ -68,6 +68,22 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, $q, ses
             $scope.reward.status = 'incomplete';
           };
           break;
+        case 'facebook_error':
+          $scope.reward.error = {};
+          $scope.reward.error.info = "Error getting Facebook details.";
+          $scope.reward.error.action = function () {
+            $scope.reward.error = null;
+            $scope.reward.status = 'incomplete';
+          };
+          break;
+        case 'server_error':
+          $scope.reward.error = {};
+          $scope.reward.error.info = "Server error.";
+          $scope.reward.error.action = function () {
+            $scope.reward.error = null;
+            $scope.reward.status = 'incomplete';
+          };
+          break;
         case 'fake':
           // TODO: their account is fake
           /* falls through */
@@ -137,8 +153,7 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, $q, ses
   }
 
   function onFacebookLoginError(response) {
-    // TODO: show error
-    console.log("facebook login error");
+    $scope.reward.updateReward('facebook_error');
   }
 
   /**
@@ -169,7 +184,18 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, $q, ses
   }
 
   function onLinkUserFacebookError(response, data) {
-    // TODO: show error
+    if (response && response.status === 'fail') {
+      switch (response.code) {
+        case 'already_taken':
+          $scope.reward.updateReward('already_taken');
+          break;
+        default:
+          $scope.reward.updateReward('server_error');
+          break;
+      }
+    } else {
+      $scope.reward.updateReward('server_error');
+    }
   }
 
 /**
@@ -202,15 +228,6 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, $q, ses
     console.log(response);
     if (response && response.status === 'fail') {
       switch (response.code) {
-        case 'no_facebook':
-          // TODO: no facebook account for this user
-          break;
-        case 'facebook_error':
-          // TODO: reauthenticate the user
-          break;
-        case 'already_taken':
-          $scope.reward.updateReward('already_taken');
-          break;
         case 'unverified':
           $scope.reward.updateReward('unverified');
           break;
@@ -224,12 +241,10 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, $q, ses
         case 'reward_limit_reached':
           /* falls through */
         default:
-        // TODO: generic error
+          $scope.reward.updateReward('server_error');
       }
-    } else if (response && response.status === 'error') {
-      // TODO: generic error
     } else {
-      $scope.reward.status = 'incomplete';
+      $scope.reward.updateReward('server_error');
     }
   }
 });
