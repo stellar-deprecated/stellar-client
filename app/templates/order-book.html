@@ -16,7 +16,7 @@
                 </thead>
                 <tbody>
                     <tr ng-repeat="priceLevel in currentBids">
-                        <td>{{ roundedAmount(priceLevel.price, precision) }}</td>
+                        <td>{{ priceLevel.price | roundedAmount:precision) }}</td>
                         <td>{{ priceLevel.amount | roundAmount:currentOrderBook.baseCurrency.currency }}</td>
                         <td>{{ priceLevel.totalValue | roundAmount:currentOrderBook.counterCurrency.currency }}</td>
                     </tr>
@@ -36,7 +36,7 @@
                 </thead>
                 <tbody>
                     <tr ng-repeat="priceLevel in currentAsks">
-                        <td>{{ roundedAmount(priceLevel.price, precision) }}</td>
+                        <td>{{ priceLevel.price | roundedAmount:precision) }}</td>
                         <td>{{ priceLevel.amount | roundAmount:currentOrderBook.baseCurrency.currency }}</td>
                         <td>{{ priceLevel.totalValue | roundAmount:currentOrderBook.counterCurrency.currency }}</td>
                     </tr>
