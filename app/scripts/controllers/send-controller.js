@@ -1,4 +1,5 @@
 'use strict';
+/* jshint camelcase:false */
 
 var sc = angular.module('stellarClient');
 
@@ -217,6 +218,9 @@ sc.controller('SendController', function($rootScope, $scope, StellarNetwork) {
             case 'tec':
                 $scope.send.result = "error";
                 $scope.error_type = "noPath";
+                $scope.send.result = "stellarerror";
+                $scope.error_message = "An error occurred: " + res.engine_result_message;
+                break;
             default:
                 $scope.send.result = "stellarerror";
                 //TODO: set an error type and unify our error reporting for the send pane

@@ -1,4 +1,5 @@
 'use strict';
+/* global SigningKeys */
 
 var sc = angular.module('stellarClient');
 

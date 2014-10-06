@@ -1,4 +1,5 @@
 'use strict';
+/* jshint camelcase:false */
 
 var sc = angular.module('stellarClient');
 
@@ -126,6 +127,7 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, S
                 address = result;
             } else if (result) {
                 address = result.destination_address;
+                $scope.send.destination.destinationTag = result.destination_tag;
             } else {
                 // TODO: error, could not successfully find address
                 return $q.reject("federation-error");
@@ -350,7 +352,12 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, S
     }
 
     function showAddressFound(address) {
-        Util.showTooltip($('#recipient'), "wallet address found: " + address, "info", "top");
+        var displayAddress = address;
+        if($scope.send.destination.destinationTag) {
+            displayAddress += '?dt=' + $scope.send.destination.destinationTag;
+        }
+
+        Util.showTooltip($('#recipient'), "wallet address found: " + displayAddress, "info", "top");
     }
 
     function showUserFound(username) {

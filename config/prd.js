@@ -1,5 +1,5 @@
 /* exported Options */
-var Options = {
+window.Options = {
     server: {
         "trusted" : true,
         "websocket_ip" : "live.stellar.org",
@@ -22,7 +22,7 @@ var Options = {
     WALLET_SERVER: 'https://wallet.stellar.org',
 
     PERSISTENT_SESSION : false,
-    IDLE_LOGOUT_TIMEOUT : 30 * 60 * 1000, //15 minutes
+    DEFAULT_IDLE_LOGOUT_TIMEOUT : 30 * 60 * 1000, //15 minutes
     COOKIE_SECURE: true,
 
     REPORT_ERRORS : true,

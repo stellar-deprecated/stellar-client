@@ -1,8 +1,8 @@
 label {
-  font-weight: $heavy-weight;
-  font-size: 15px;
-  line-height: 42px;
+  font-weight: $medium-weight;
+  font-size: 14px;
   text-transform: uppercase;
+  letter-spacing: 0.02em;
 }
 
 input[type="text"],
@@ -134,6 +134,49 @@ input[type=number]::-webkit-outer-spin-button {
     font-size: 17px;
   }
 
+  .dropdown-toggle {
+    margin-bottom: 0;
+    color: $dark-grey;
+    font-weight: $medium-weight;
+    &:hover {
+      background: #fff;
+      color: $dark-grey;
+      border-color: $grey;
+    }
+  }
+
+  .dropdown-menu {
+    box-shadow: 1px 1px 1px fade-out($grey,0.7);
+    border-radius: 2px;
+
+    >li {
+      >a {
+        padding: 10px 15px;
+        font-size: 16px;
+        font-weight: $book-weight;
+        
+        &:hover {
+          font-weight: $medium-weight;
+        }
+      }
+    }
+  }
+
+  .dropdown-combo {
+    .dropdown-toggle {
+      text-align: left;
+
+      .caret {
+        float: right;
+        margin-top: 12px;
+      }
+    }
+
+    .dropdown-menu {
+      width: 100%;
+    }
+  }
+
   .errors {
     height: 40px;
 
@@ -219,3 +262,47 @@ fieldset[disabled] .form-control {
   cursor: text;
   background-color: white;
 }
+
+select.form-control {
+  height: 42px;
+  border-radius: 2px;
+  color: $dark-grey;
+}
+
+.radio-buttons {
+  input[type="radio"] {
+    display:none;
+
+    &:checked + label {
+      background: $brand-primary;
+      color: white;
+    }
+
+    &:not(:checked) + label {
+      cursor: pointer;
+      color: $grey;
+
+      &:hover {
+        background-color: fade-out($brand-primary, 0.9);
+      }
+    }
+
+    + label {
+      border: 1px solid darken($brand-primary, 15);
+      border-right: none;
+      padding: 9px 12px;
+      width: 50%;
+      text-align: center;
+
+      &:first-of-type {
+        border-radius: 3px 0px 0px 3px;
+      }
+
+      &:last-of-type {
+        border-radius: 0px 3px 3px 0px;
+        border-right: 1px solid darken($brand-primary, 15);
+      }
+    }
+  }
+}
+

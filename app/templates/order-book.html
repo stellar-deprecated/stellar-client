@@ -1,0 +1,47 @@
+<div class="order-book" ng-controller="OrderBookCtrl">
+    <div ng-show="setCurrentOrderBook.isLoading()">
+        <p class="order-status">Loading...</p>
+    </div>
+    <div ng-hide="setCurrentOrderBook.isLoading()">
+        <div class="col-sm-6">
+            <h4 class="order-type">Bids</h4>
+            <p ng-hide="currentBids.length" class="order-status">There are no current bids for this currency pair from the selected issuer yet. Make some by submitting a new trade order.</p>
+            <table class="order-book-table table" ng-show="currentBids.length">
+                <thead>
+                    <tr>
+                        <th>Price ({{ currentOrderBook.counterCurrency.currency }}/{{ currentOrderBook.baseCurrency.currency }})</th>
+                        <th>Amount</th>
+                        <th>Value ({{ currentOrderBook.counterCurrency.currency }})</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="priceLevel in currentBids">
+                        <td>{{ priceLevel.price | roundedAmount:precision) }}</td>
+                        <td>{{ priceLevel.amount | roundAmount:currentOrderBook.baseCurrency.currency }}</td>
+                        <td>{{ priceLevel.totalValue | roundAmount:currentOrderBook.counterCurrency.currency }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-sm-6">
+            <h4 class="order-type">Asks</h4>
+            <p ng-hide="currentAsks.length" class="order-status">There are no current asks for this currency pair from the selected issuer yet. Make some by submitting a new trade order.</p>
+            <table class="order-book-table table" ng-show="currentAsks.length">
+                <thead>
+                    <tr>
+                        <th>Price ({{ currentOrderBook.counterCurrency.currency }}/{{ currentOrderBook.baseCurrency.currency }})</th>
+                        <th>Amount</th>
+                        <th>Value ({{ currentOrderBook.counterCurrency.currency }})</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="priceLevel in currentAsks">
+                        <td>{{ priceLevel.price | roundedAmount:precision) }}</td>
+                        <td>{{ priceLevel.amount | roundAmount:currentOrderBook.baseCurrency.currency }}</td>
+                        <td>{{ priceLevel.totalValue | roundAmount:currentOrderBook.counterCurrency.currency }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

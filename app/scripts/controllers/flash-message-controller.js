@@ -1,3 +1,5 @@
+var sc = angular.module('stellarClient');
+
 /**
  * To show flash messages broadcast a "flashMassage" event with an object
  * containing a title, info, optional type ("error" or "success"), an

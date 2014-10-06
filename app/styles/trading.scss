@@ -1,0 +1,170 @@
+.trading {
+  margin-bottom: 55px;
+}
+
+.trading-form {
+  .error {
+    color: $error;
+  }
+
+  .offer-status {
+    width: 100%;
+    min-height: 400px;
+    background-color: $grey-background;
+    padding-top: 70px;
+    text-align: center;
+    font-size: 24px;
+    color: black;
+
+    .button-group {
+      padding: 35px 0;
+
+      button {
+        width: 200px;
+      }
+    }
+
+    &.trade-sent .modalStatus-icon {
+      color: $success;
+    }
+  }
+
+  .form-group {
+    margin-bottom: 15px;
+  }
+
+  .dropdown-toggle {
+
+    &:disabled {
+      background: fade-out($light-grey, 0.5);
+      padding: 6px 18px;
+      color: $dark-grey;
+      opacity: 1.0;
+
+      .caret {
+        display: none;
+      }
+    }
+
+    .currency-default {
+      font-size: 12px;
+      display: inline-block;
+      margin-bottom: 4px;
+    }
+  }
+
+  .dropdown-link a {
+    font-size: 12px;
+
+    &, &:hover {
+      color: $brand-primary;
+    }
+  }
+
+  .input-group-addon {
+    font-size: 18px;
+    padding: 6px 17px;
+    border-top-right-radius: 2px;
+    border-bottom-right-radius: 2px;
+    background: fade-out($light-grey, 0.5);
+  }
+
+  @media (min-width: $mobile-width) { 
+    .form-group {
+      margin-bottom: 15px;
+    }
+  }
+}
+
+.current-offers-table {
+  width: 100%;
+  border-spacing: 3px;
+  border-collapse: separate;
+  font-weight: $book-weight;
+  td, th {
+    border-bottom: 1px solid $light-grey;
+    padding: 10px 5px;
+
+  }
+
+
+  .cancel-offer {
+    text-align: right;
+  }
+}
+
+.order-book {
+  .order-type {
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 16px;
+    letter-spacing: 0.1em;
+    color: $grey;
+    padding: 15px 0;
+    border-bottom: 1px solid $light-grey;
+  }
+
+  .order-book-table {
+    width: 100%;
+    border-spacing: 3px;
+    border-collapse: separate;
+
+    td {
+      margin: 0 1px;
+      border-top: 0;
+      border-bottom: 1px solid $light-grey;
+    }
+
+    thead {
+      tr {
+      line-height: 50px;
+      border:0;
+      font-size: 13px;
+      }
+      th {
+        padding-top: 0;
+      }
+    }
+
+
+
+    tbody tr {
+      font-weight: $book-weight;
+      
+      line-height: 50px;
+
+      .cancel-offer {
+        text-align: right;
+      }
+    }
+  }
+}
+
+.trading-top-section {
+  padding-top: 35px;
+}
+
+.trading-info-widget {
+  margin-bottom: 1em;
+
+  .trading-info-widget-value {
+    font-weight: $book-weight;
+  }
+
+  .trading-info-widget-value:empty {
+    &:after {
+      content: "--";
+    }
+  }
+}
+
+.order-status {
+  padding: 15px 0;
+  font-weight: $book-weight;
+}
+
+.favpair-dropdown {
+  .favpair-action {
+    color: $brand-primary;
+  }
+}

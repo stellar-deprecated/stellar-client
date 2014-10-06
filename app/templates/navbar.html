@@ -1,0 +1,30 @@
+<nav class="client-nav navbar" role="navigation" ng-controller="NavCtrl">
+    <div class="client-section client-inner-nav container navbar-default">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" ng-href="{{ getLogoLink() }}">STELLAR</a>
+        </div>
+        <div class="collapse navbar-collapse" id="navbar" ng-cloak>
+            <ul class="nav navbar-nav navbar-right" ng-hide="loggedIn">
+                <li><a href="#/login" ui-sref="login">LOG IN</a></li>
+                <li><a href="#/register" ui-sref="register" class="sign-up">SIGN UP</a></li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right" ng-show="loggedIn">
+                <li ng-show="showInvitesLink()">
+                    <a href="#/invites" ng-class="getInvitesClass()">
+                        <span>invite ({{ getInvitesLeft() }})</span>
+                    </a>
+                </li>
+                <li ng-show="showTradingLink()"><a href="#/trading">trade</a></li>
+                <li><a href="#/settings"><span class="glyphicon glyphicon-cog"></span>{{ username }}</a></li>
+                <li><a href="#/logout" ui-sref="logout"><span class="glyphicon glyphicon-log-out"></span>LOG OUT</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>

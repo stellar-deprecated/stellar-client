@@ -2,7 +2,6 @@
     <div class="container">
         <div class="client-section">
             <h1 class="title">Settings<span class="link-dashboard"><a href="/#/dashboard">&#8592; back to dashboard</a></span></h1>
-
         </div>
 
         <!-- TODO: add user photos
@@ -67,7 +66,16 @@
                         <div class="icon-col">
                             <span class="icon icon-lock"/>
                         </div>
-                        <span id="federatetoggle" class="error-block" data-toggle="tooltip" data-placement="right" data-template='<div class="tooltip error-tip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>' st-toggle ctrl="toggle.rewards"></span>
+                        <span id="rewardtoggle" class="error-block" data-toggle="tooltip" data-placement="right" data-template='<div class="tooltip error-tip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>' st-toggle ctrl="toggle.rewards"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="settings-label col-md-3 col-xs-6">SHOW TRADING</div>
+                    <div class="settings-control col-md-9 col-xs-6">
+                        <div class="icon-col">
+                            <span class="icon icon-exchange"/>
+                        </div>
+                        <span id="tradingtoggle" class="error-block" data-toggle="tooltip" data-placement="right" data-template='<div class="tooltip error-tip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>' st-toggle ctrl="toggle.trading"></span>
                     </div>
                 </div>
                 <div class="row" ng-controller="SettingsInflationDestCtrl">
@@ -228,6 +236,20 @@
                     </div>
                 </div>
                 -->
+
+                <div class="row">
+                    <div class="settings-label col-md-3 col-xs-6">IDLE TIME BEFORE LOGOUT</div>
+                    <div class="settings-control col-md-9 col-xs-6">
+                        <div class="row">
+                            <div class="icon-col col-xs-1">
+                                <span class="icon icon-clock"/>
+                            </div>
+                            <div class="col-md-5 col-xs-10">
+                                <select class="form-control" ng-model="idleTimeout" ng-options="option.time as option.text for option in timeoutOptions"></select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="row">
                     <div class="settings-label col-md-3 col-xs-6">SECRET KEY</div>
