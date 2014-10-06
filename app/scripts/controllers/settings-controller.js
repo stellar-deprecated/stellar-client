@@ -139,6 +139,23 @@ sc.controller('SettingsCtrl', function($scope, $http, $state, session, singleton
       .tooltip('show');
   }
 
+  $scope.idleTimeout = session.get('wallet').getIdleLogoutTime();
+  $scope.timeoutOptions = [
+    {text: '15 minutes', time:  15 * 60 * 1000},
+    {text: '30 minutes', time:  30 * 60 * 1000},
+    {text: '1 hour',     time:  60 * 60 * 1000},
+    {text: '2 hours',    time: 120 * 60 * 1000},
+  ];
+
+  $scope.$watch('idleTimeout', function() {
+    var currentIdleTimeout = session.get('wallet').getIdleLogoutTime();
+
+    if ($scope.idleTimeout && $scope.idleTimeout !== currentIdleTimeout) {
+      wallet.set('mainData', 'idleLogoutTime', $scope.idleTimeout);
+      session.syncWallet('update');
+    }
+  });
+
   getSettings()
     .then(function () {
       $scope.$broadcast('settings-refresh');

@@ -38,7 +38,7 @@ sc.service('session', function($rootScope, $http, $timeout, StellarNetwork, Wall
 
     this.idleTimeout = $timeout(function() {
       self.logout(true);
-    }, Options.IDLE_LOGOUT_TIMEOUT || 15 * 60 * 1000);
+    }, this.get('wallet').getIdleLogoutTime());
   };
 
   Session.prototype.clearIdleTimeout = function() {
