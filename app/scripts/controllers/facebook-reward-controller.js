@@ -76,6 +76,14 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, $q, ses
             $scope.reward.status = 'incomplete';
           };
           break;
+        case 'already_linked':
+          $scope.reward.error = {};
+          $scope.reward.error.info = "Another Facebook is already linked to your account.";
+          $scope.reward.error.action = function () {
+            $scope.reward.error = null;
+            $scope.reward.status = 'incomplete';
+          };
+          break;
         case 'server_error':
           $scope.reward.error = {};
           $scope.reward.error.info = "Server error.";
@@ -188,6 +196,10 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, $q, ses
       switch (response.code) {
         case 'already_taken':
           $scope.reward.updateReward('already_taken');
+          break;
+        case 'already_linked':
+        case 'bad_token':
+          $scope.reward.updateReward('already_linked');
           break;
         default:
           $scope.reward.updateReward('server_error');
