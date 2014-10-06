@@ -16,11 +16,33 @@ module.filter('amountToHuman', function () {
         }
         var opts = {};
         var currency = StellarDefaultCurrencyMap[input._currency.to_human()];
-        opts.precision = currency ? currency.max_decimal_places : 2;
+        opts.precision = currency ? currency.maxDecimalPlaces : 2;
         opts.skip_empty_fraction = true;
         opts.max_sig_digits = 6;
         return input.to_human(opts);
     }
+});
+
+/**
+* Takes an amount and currency code and formats it with the the number of decimal places as specified in currencies.js
+*/
+module.filter('roundAmount', function () {
+    return function (amount, currency) {
+        try {
+            new BigNumber(amount);
+        } catch (e) {
+            return 0;
+        }
+
+        var precision = 4;
+        var currencyInfo = StellarDefaultCurrencyMap[currency];
+        // Also handles the case where currency is undefined
+        if (typeof currencyInfo !== 'undefined') {
+            precision = currencyInfo.maxDecimalPlaces;
+        }
+
+        return new BigNumber(amount).round(precision).toString();
+    };
 });
 
 /**
@@ -406,5 +428,13 @@ module.filter('currencyName', function() {
     return function(currency) {
         var description = StellarDefaultCurrencyMap[currency] || {};
         return description.name || currency;
+    };
+});
+
+module.filter('roundedAmount', function() {
+    return function(amount, precision) {
+        if(amount) {
+             return new BigNumber(amount).round(precision).toString();
+        }
     };
 });

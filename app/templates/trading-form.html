@@ -1,0 +1,192 @@
+<div class="trading-form" ng-controller="TradingFormCtrl">
+    <form role="form" class="form-horizontal" ng-submit="confirmOffer()" ng-show="state == 'form'">
+        <div class="form-group">
+            <div class="col-md-12">
+                <div class="dropdown dropdown-combo favpair-dropdown" ng-controller="FavoriteTradesCtrl">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        <span ng-hide="canSave()">
+                            {{ formData.favorite ? currencyPairToString(formData.favorite) : 'Saved pairs' }}
+                        </span>
+                        <span ng-show="canSave()">
+                            Save this pair? {{ currencyPairToString(formData) }}
+                        </span>
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li ng-repeat="currencyPair in favoriteTrades" role="presentation" ng-click="setFavorite(currencyPair)">
+                            <a role="menuitem" tabindex="-1">
+                                {{ currencyPairToString(currencyPair) }}
+                            </a>
+                        </li>
+                        <li role="presentation" ng-click="addFavoritePair()" ng-show="canSave()">
+                            <a role="menuitem" tabindex="-1" class="favpair-action">Save pair</a>
+                        </li>
+                        <li role="presentation" ng-click="clearForm()">
+                            <a role="menuitem" tabindex="-1" class="favpair-action">New pair</a>
+                        </li>
+                        <li role="presentation" ng-click="deleteFavoritePair()" ng-show="formData.favorite">
+                            <a role="menuitem" tabindex="-1" class="favpair-action">Delete pair</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="radio-buttons col-md-4">
+                <input type="radio" ng-model="formData.tradeOperation" id="trade-radio-buy" value="buy">
+                <label for="trade-radio-buy">Buy</label><!-- No whitespace
+                --><input type="radio" ng-model="formData.tradeOperation" id="trade-radio-sell" value="sell"><!-- No whitespace
+                --><label for="trade-radio-sell">Sell</label>
+            </div>
+            <div class="col-md-8">
+                <div class="input-group">
+                    <input type="text" class="form-control" ng-model="formData.baseAmount" ng-keyup="calculateCounterAmount()" placeholder="0"></input>
+                    <div class="input-group-btn">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" ng-disabled="formData.favorite">
+                            <span ng-show="formData.baseCurrency.currency">{{ formData.baseCurrency.currency }}</span>
+                            <span ng-hide="formData.baseCurrency.currency" class="currency-default">CURRENCY</span>
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                            <li ng-repeat="currencyName in currencyNames"><a href="javascript:void(0)" ng-click="changeBaseCurrency(currencyName)">{{currencyName}}</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group" ng-show="hasIssuer(formData.baseCurrency.currency) && !formData.favorite">
+            <div class="col-md-4"><label>ISSUED BY</label></div>
+            <div class="col-md-8">
+                <div class="dropdown dropdown-combo">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        {{ issuerToGateway(formData.baseCurrency.issuer) }}
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li ng-repeat="issuer in getIssuers(formData.baseCurrency.currency)" role="presentation" ng-click="setBaseIssuer(issuer)">
+                            <a role="menuitem" tabindex="-1">
+                                {{ issuerToGateway(issuer) }}
+                            </a>
+                        </li>
+                        <li role="presentation" class="divider"></li>
+                        <li role="presentation" class="dropdown-link">
+                            <a role="menuitem" tabindex="-1" href="#/dashboard?action=add-gateway">Manage Issuers & Gateways</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4"><label>WITH EACH PRICED AT</label></div>
+            <div class="col-md-8">
+                <div class="input-group">
+                    <input type="text" class="form-control" ng-model="formData.unitPrice" ng-keyup="calculateCounterAmount()" placeholder="0"></input>
+                    <div class="input-group-btn">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" ng-disabled="formData.favorite">
+                            <span ng-show="formData.counterCurrency.currency">{{ formData.counterCurrency.currency }}</span>
+                            <span ng-hide="formData.counterCurrency.currency" class="currency-default">CURRENCY</span>
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                            <li ng-repeat="currencyName in currencyNames"><a href="javascript:void(0)" ng-click="changeCounterCurrency(currencyName)">{{currencyName}}</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group" ng-show="hasIssuer(formData.counterCurrency.currency) && !formData.favorite">
+            <div class="col-md-4"><label>ISSUED BY</label></div>
+            <div class="col-md-8">
+                <div class="dropdown dropdown-combo">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        {{ issuerToGateway(formData.counterCurrency.issuer) }}
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li ng-repeat="issuer in getIssuers(formData.counterCurrency.currency)" role="presentation" ng-click="setCounterIssuer(issuer)">
+                            <a role="menuitem" tabindex="-1">
+                                {{ issuerToGateway(issuer) }}
+                            </a>
+                        </li>
+                        <li role="presentation" class="divider"></li>
+                        <li role="presentation" class="dropdown-link">
+                            <a role="menuitem" tabindex="-1" href="#/dashboard?action=add-gateway">Manage Issuers & Gateways</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4"><label>TOTAL PAYABLE</label></div>
+            <div class="col-md-8">
+                <div class="input-group">
+                    <input type="text" class="form-control" ng-model="formData.counterAmount" ng-keyup="calculateBaseAmount()" placeholder="0"></input>
+                    <span class="input-group-addon">{{formData.counterCurrency.currency}}</span>
+                </div>
+            </div>
+        </div>
+        <div ng-show="formIsFilled">
+            <div class="form-group" ng-show="formIsValid">
+                <div class="col-md-offset-4 col-md-8">
+                    <b>
+                        <span ng-if="formData.tradeOperation === 'buy'">Buy</span>
+                        <span ng-if="formData.tradeOperation === 'sell'">Sell</span>
+                        {{ formData.baseAmount | roundAmount:formData.baseCurrency.currency }} {{ formData.baseCurrency.currency }}
+                        for {{ formData.counterAmount | roundAmount:formData.counterCurrency.currency }} {{ formData.counterCurrency.currency }}
+                        at {{ formData.unitPrice | roundedAmount:precision }} {{ formData.counterCurrency.currency }}/{{ formData.baseCurrency.currency }}
+                    </b>
+                </div>
+            </div>
+            <div class="form-group" ng-hide="formIsValid">
+                <div class="col-md-offset-4 col-md-8">
+                    <b class="error">
+                        {{formErrorMessage}}
+                    </b>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-4 col-md-3">
+                <button type="submit" class="btn btn-default" ng-disabled="!formIsValid || !formIsFilled">
+                    <span ng-if="formData.tradeOperation === 'buy'">Buy</span>
+                    <span ng-if="formData.tradeOperation === 'sell'">Sell</span>
+                    {{ formData.baseCurrency.currency }}
+                </button>
+            </div>
+        </div>
+    </form>
+    <div class="offer-status confirm-trade" ng-show="state == 'confirm'">
+        You are offering to <b><span ng-if="formData.tradeOperation === 'buy'">buy</span>
+        <span ng-if="formData.tradeOperation === 'sell'">sell</span></b><br>
+        <b>{{ formData.baseAmount | roundAmount:formData.baseCurrency.currency }} {{ formData.baseCurrency.currency }}</b><br>
+        for<br>
+        <b>{{ formData.counterAmount | roundAmount:formData.counterCurrency.currency }} {{ formData.counterCurrency.currency }}</b><br>
+        at<br>
+        <b>{{ formData.unitPrice | roundedAmount:precision }} {{ formData.counterCurrency.currency }}/{{ formData.baseCurrency.currency }}</b><br>
+        <div class="button-group">
+            <button ng-click="editForm()" class="btn btn-default">Edit</button>
+            <button ng-click="createOffer()" class="btn btn-default">Confirm</button>
+        </div>
+    </div>
+    <div class="offer-status sending-trade" ng-show="state == 'sending'">
+        <p class="modalStatus-title">Sending offer</p>
+        <img class="sending-rocket" src="./images/sending.gif"/><br>
+        <div class="button-group">
+            <button ng-click="resetForm()" class="btn btn-default">Continue</button>
+        </div>
+    </div>
+    <div class="offer-status trade-sent" ng-show="state == 'sent'">
+        <i class="icon icon-check-circle-thin modalStatus-icon"></i><br>
+        <p class="modalStatus-title">Offer created successfully!</p>
+        <div class="button-group">
+            <button ng-click="resetForm()" class="btn btn-default">Continue</button>
+        </div>
+    </div>
+    <div class="offer-status trade-error error-modalStatus" ng-show="state == 'error'">
+        <p class="modalStatus-title">Error creating offer!</p>
+        <span class="modalStatus-info">{{ offerError }}</span><br>
+        <div class="button-group">
+            <button ng-click="editForm()" class="btn btn-default">Back</button>
+        </div>
+    </div>
+</div>

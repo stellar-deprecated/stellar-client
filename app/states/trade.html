@@ -1,0 +1,105 @@
+<div class="client-section" ng-controller="TradeCtrl">
+    <div class="container">
+        <h1 class="title">Trading</h1>
+
+        <form role="form">
+            <div class="form-group">
+                <select class="form-control" ng-model="chosenFavorite" ng-options="currencyPairDisplay(fav) for fav in favorites">
+                    <option value="">-- choose a favorite --</option>
+                </select>
+            </div>
+        </form>
+
+        <a ng-click="addFavorite()" ng-show="!isFavorite()">Add selections below as favorite</a>
+        <a ng-click="removeFavorite()" ng-show="isFavorite()">Remove selections below as favorite</a>
+
+        <form role="form" ng-submit="createOffer()">
+            <div class="form-group">
+                <label class="radio-inline">
+                  <input type="radio" ng-model="tradeOperation" value="buy"> Buy
+                </label>
+                <label class="radio-inline">
+                  <input type="radio"ng-model="tradeOperation" value="sell"> Sell
+                </label>
+            </div>
+
+            <div class="form-group">
+                <input class="form-control" type="text" ng-model="baseCurrencyAmount">
+                <select class="form-control" ng-model="baseCurrency" ng-options="amount.currency for amount in currencies">
+                    <option value="">-- choose base currency --</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>FOR:</label>
+                <input class="form-control" type="text" ng-model="counterCurrencyAmount">
+                <select class="form-control" ng-model="counterCurrency" ng-options="amount.currency for amount in currencies">
+                    <option value="">-- choose counter currency --</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-default">Submit</button>
+        </form>
+
+        <div class="my-offers" ng-show="myOffers">
+            <h2>My Offers</h2>
+            <ul>
+                <li ng-repeat="offer in myOffers" ng-controller="MyOffersListItemCtrl">
+                    <span>
+                        {{offer.operation}} 
+                        {{offer.baseAmount.value}}{{offer.baseAmount.currency}} 
+                        for 
+                        {{offer.counterAmount.value}}{{offer.counterAmount.currency}} 
+                        at
+                        {{offer.price.value}}{{offer.price.currency}}
+                        per
+                        {{offer.baseAmount.currency}}
+                        ({{offer.sequence}})</span>
+                    <a ng-click="remove()">cancel offer</a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="order-book row">
+            <div class="col-xs-6">
+                <h3>Bids</h3>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>PRICE</th>
+                            <th>QUANTITY</th>
+                            <th>TOTAL VALUE</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="priceLevel in currentBids">
+                            <td>{{priceLevel.price}}</td>
+                            <td>{{priceLevel.amount}}</td>
+                            <td>{{priceLevel.totalValue}}</td>
+                        </tr>
+                    </tbody>
+                </table>           
+
+            </div>
+            <div class="col-xs-6">
+                <h3>Asks</h3>                
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>PRICE</th>
+                            <th>QUANTITY</th>
+                            <th>TOTAL VALUE</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="priceLevel in currentAsks">
+                            <td>{{priceLevel.price}}</td>
+                            <td>{{priceLevel.amount}}</td>
+                            <td>{{priceLevel.totalValue}}</td>
+                        </tr>
+                    </tbody>
+                </table>  
+            </div>
+        </div>
+    </div>
+</div>

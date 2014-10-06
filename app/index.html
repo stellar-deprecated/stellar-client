@@ -39,31 +39,7 @@
 </head>
 <body ng-controller="AppCtrl">
 <div class="app-wrapper">
-    <nav class="client-nav navbar" role="navigation" ng-controller="NavCtrl">
-        <div class="client-section client-inner-nav container navbar-default">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" ng-href="{{getLogoLink()}}">STELLAR</a>
-            </div>
-            <div class="collapse navbar-collapse" id="navbar">
-                <ul class="nav navbar-nav navbar-right" ng-hide="session.get('loggedIn')">
-                    <li><a href="#/login" ui-sref="login">LOG IN</a></li>
-                    <li><a href="#/register" ui-sref="register" class="sign-up">SIGN UP</a></li>
-                </ul>
-
-                <ul class="nav navbar-nav navbar-right ng-hide" ng-show="session.get('loggedIn')">
-                    <li><a href="#/invites" ng-show="getInvitesLeft() || getSentInvites()" ng-class="getInvitesClass()"><span>invite ({{getInvitesLeft()}})</span></a></li>
-                    <li><a href="#/settings"><span class="glyphicon glyphicon-cog"></span>{{ session.get('username') }}</a></li>
-                    <li><a href="#/logout" ui-sref="logout"><span class="glyphicon glyphicon-log-out"></span>LOG OUT</a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+    <div ng-include="'templates/navbar.html'"></div>
 
     <div class="client-container" ui-view>
         <div class="page-header container">
@@ -131,6 +107,7 @@
 <script src="bower_components/ng-grid/plugins/ng-grid-flexible-height.js"></script>
 <script src="bower_components/zeroclipboard/dist/ZeroClipboard.js"></script>
 <script src="bower_components/ng-clip/src/ngClip.js"></script>
+<script src="bower_components/bignumber.js/bignumber.js"></script>
 <script src="bower_components/angular-re-captcha/angular-re-captcha.js"></script>
 <script src="scripts/utilities/sjcl.js"></script>
 <script src="scripts/libraries/sjcl-scrypt.js"></script>
@@ -195,10 +172,22 @@
 <script src="scripts/controllers/gateway-list-item-controller.js"></script>
 <script src="scripts/controllers/add-gateway-controller.js"></script>
 <script src="scripts/controllers/settings-inflation-dest-controller.js"></script>
+<script src="scripts/controllers/trade-controller.js"></script>
+<script src="scripts/controllers/my-offers-list-item-controller.js"></script>
+<script src="scripts/controllers/trading-controller.js"></script>
+<script src="scripts/controllers/current-offers-controller.js"></script>
+<script src="scripts/controllers/offer-row-controller.js"></script>
+<script src="scripts/controllers/order-book-controller.js"></script>
+<script src="scripts/controllers/trading-form-controller.js"></script>
+<script src="scripts/controllers/order-book-summary-controller.js"></script>
+<script src="scripts/controllers/trading-balance-controller.js"></script>
+<script src="scripts/controllers/favorite-trades-controller.js"></script>
 
 <script src="scripts/directives/directives.js"></script>
 <script src="scripts/directives/alert-directive.js"></script>
 <script src="scripts/directives/flash-message-directive.js"></script>
+<script src="scripts/directives/angular-recaptcha.js"></script>
+<script src="scripts/directives/tabbed-section.js"></script>
 
 <script src="scripts/utilities/wallet.js"></script>
 <script src="scripts/utilities/signingKeys.js"></script>
@@ -207,6 +196,7 @@
 <script src="scripts/utilities/singletonPromise.js"></script>
 <script src="scripts/utilities/jsonrewriter.js"></script>
 <script src="scripts/utilities/userprivateinfo.js"></script>
+<script src="scripts/utilities/order-book.js"></script>
 
 <script src="scripts/services/session.js"></script>
 <script src="scripts/services/stellar-network-service.js"></script>
@@ -222,6 +212,12 @@
 <script src="scripts/services/action_link.js"></script>
 <script src="scripts/services/gateways-service.js"></script>
 <script src="scripts/services/whileValid.js"></script>
+<script src="scripts/services/trading-ops-service.js"></script>
+<script src="scripts/services/trading-service.js"></script>
+<script src="scripts/services/transaction-curator-service.js"></script>
+<script src="scripts/services/currency-pair-service.js"></script>
+<script src="scripts/services/friendly-offers-service.js"></script>
+<script src="scripts/services/balances-service.js"></script>
 
 <!-- endbuild -->
 </body>

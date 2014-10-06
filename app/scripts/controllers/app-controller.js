@@ -32,11 +32,9 @@ sc.controller('AppCtrl', function($scope, $rootScope, StellarNetwork, session, $
         return session.get('loggedIn') ? '#/' : 'http://www.stellar.org';
     }
 
-    $scope.$on('stellar-network:connected', handleAccountLoad);
+
     $scope.$on('walletAddressLoaded', function() {
-        if (StellarNetwork.connected) {
-            handleAccountLoad();
-        }
+        StellarNetwork.ensureConnection().then(handleAccountLoad);
     });
 
     if(!session.isPersistent()) {
@@ -88,9 +86,6 @@ sc.controller('AppCtrl', function($scope, $rootScope, StellarNetwork, session, $
                     $rootScope.accountStatus = 'loaded';
                     Gateways.syncTrustlines();
                 }
-
-                // Process any pending actions now that the account is loaded.
-                ActionLink.process();
             });
         });
     };

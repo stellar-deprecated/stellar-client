@@ -1,0 +1,17 @@
+.widget {
+  padding: 15px;
+	border: 1px solid $light-grey;
+	margin-bottom: 25px;
+	border-radius: 2px;
+	h4 {
+		margin-top: 0;
+		font-size: 16px;
+		font-weight: $book-weight;
+	}
+
+	h5 {
+		font-size: 11px;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+	}
+}

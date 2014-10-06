@@ -1,0 +1,28 @@
+<div ng-controller="CurrentOffersCtrl" class="col-md-12">
+    <p ng-hide="myOffers.length" class="order-status">You currently have no offers. Make some by submitting a new trade order.</p>
+    <table class="current-offers-table" ng-show="myOffers.length">
+        <thead>
+            <tr>
+                <th>Order Type</th>
+                <th>Pair</th>
+                <th>Amount</th>
+                <th>Price</th>
+                <th>Total Value</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="offer in myOffers" ng-controller="OfferRowCtrl">
+                <td>{{ offer.operation }}</td>
+                <td>{{ offer.baseAmount.currency }}/{{ offer.counterAmount.currency }}</td>
+                <td>{{ offer.baseAmount.value | roundAmount:offer.baseAmount.currency }} {{ offer.baseAmount.currency }}</td>
+                <td>{{ offer.price.value | roundedAmount:precision }} {{ offer.price.currency }}</td>
+                <td>{{ offer.counterAmount.value | roundAmount:offer.counterAmount.currency }} {{ offer.counterAmount.currency }}</td>
+                <td class="cancel-offer">
+                    <a ng-click="remove()" ng-hide="remove.isLoading()">cancel</a>
+                    <span ng-show="remove.isLoading()">canceling...</span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

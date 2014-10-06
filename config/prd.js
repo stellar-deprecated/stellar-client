@@ -1,5 +1,5 @@
 /* exported Options */
-var Options = {
+window.Options = {
     server: {
         "trusted" : true,
         "websocket_ip" : "live.stellar.org",

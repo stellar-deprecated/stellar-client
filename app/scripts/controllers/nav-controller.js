@@ -4,8 +4,45 @@ var sc = angular.module('stellarClient');
 
 sc.controller('NavCtrl', function($scope, session) {
   // The session is initially not logged in.
-  session.put('loggedIn',  false);
+  $scope.loggedIn = false;
+  $scope.username = '';
 
-  // Allow the nav to access the session variables.
-  $scope.session = session;
+  var wallet = null;
+  var user = null;
+
+  $scope.$on('walletAddressLoaded', function() {
+    $scope.loggedIn = true;
+    $scope.username = session.get('username');
+    wallet = session.get('wallet');
+  });
+
+  $scope.$on('userLoaded', function() {
+    user = session.getUser();
+  });
+
+  $scope.getLogoLink = function () {
+    return $scope.loggedIn ? '#/' : 'http://www.stellar.org';
+  };
+
+  $scope.showTradingLink = function() {
+    return wallet && wallet.get('mainData', 'showTrading', false);
+  };
+
+  $scope.showInvitesLink = function() {
+    return $scope.getInvitesLeft() || $scope.getSentInvites();
+  };
+
+  $scope.getSentInvites = function () {
+    return user && user.getSentInvites().length;
+  };
+
+  $scope.getInvitesLeft = function () {
+    return user && user.getUnsentInvites().length;
+  };
+
+  $scope.getInvitesClass = function () {
+    if($scope.getInvitesLeft()) {
+      return 'nav-has-invites';
+    }
+  };
 });

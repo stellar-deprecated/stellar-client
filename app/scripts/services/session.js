@@ -50,7 +50,7 @@ sc.service('session', function($rootScope, $http, $timeout, StellarNetwork, Wall
   Session.prototype.login = function(wallet) {
     var self = this;
     try {
-      sessionStorage['display_reload_message'] = "display";
+      sessionStorage.displayReloadMessage = "display";
     } catch (e) {}
 
     this.put('wallet', wallet);
@@ -113,13 +113,9 @@ sc.service('session', function($rootScope, $http, $timeout, StellarNetwork, Wall
       }.bind(this));
   };
 
-  Session.prototype.loginFromStorage = function($scope) {
+  Session.prototype.getWalletFromStorage = function($scope) {
     try {
-       var wallet = Wallet.loadLocal();
-
-      if (wallet) {
-        this.login(wallet);
-      }
+       return Wallet.loadLocal();
     } catch(e) {
       Wallet.purgeLocal();
       throw e;
@@ -128,7 +124,7 @@ sc.service('session', function($rootScope, $http, $timeout, StellarNetwork, Wall
 
   Session.prototype.logout = function(idle) {
     try {
-      sessionStorage['display_reload_message'] = false;
+      sessionStorage.displayReloadMessage = false;
       localStorage.rememberUser = false;
     } catch (e) {}
 

@@ -1,0 +1,76 @@
+/**
+ * In this application we have a number of standardized objects that we 
+ * categorize as "Structs"; that is, objects that have a common shape and
+ * constituent parts, but do not bundle logic nor are full fledged javascript
+ * "classes".
+ *
+ * We document those here
+ *
+ * @namespace Structs
+ */
+
+/**
+ * @typedef {object} Currency
+ * @property {string} currency - the currency code.
+ * @property {string} [issuer] - the issuer of the currency, if not STR 
+ */
+
+/**
+ * @typedef {object} CurrencyPair
+ * @property {Currency} baseCurrency
+ * @property {Currency} counterCurrency
+ */
+
+/**
+ * @typedef {object} Amount
+ * @property {string} currency - the currency code of the amount.
+ * @property {string} value    - the string of digits representing the value.  
+ *                               Note, STR is expressed in stellars, not the native stroops
+ * @property {string} [issuer] - the issuer of the currency, if not STR
+ */
+
+
+/**
+ * @typedef {object} Offer
+ * @memberOf Trading
+ * @property {string}              account   - the address whom created this offer.
+ * @property {number}              sequence  - the sequence number of the offer.
+ * @property {Structs.Amount} takerPays -
+ * @property {Structs.Amount} takerGets -
+ */
+
+
+/**
+ * A FriendlyOffer represents a form of the offer that is compatible with how we
+ * display offers to users. That is, where an Offer simple has takerPays and takerGets,
+ * a FriendlyOffer uses tradeOperation (buy/sell), a currencyPair, an baseAmount,
+ * and pricePerUnit.  It also contains some denormalized value for ease of use.
+ * 
+ * @typedef {object} FriendlyOffer
+ * @memberOf Trading
+ * @property {string}         account       - the address whom created this offer.
+ * @property {number}         sequence      - the sequence number of the offer.
+ * @property {string}         operation     - "buy", or "sell"
+ * @property {CurrencyPair}   currencyPair  - the currency pair the offer was made on, 
+ *                                          as determined by the current users prioritization
+ * @property {Structs.Amount} baseAmount    - the amount the offer is for, in the base currency
+ * @property {Structs.Amount} counterAmount - the amount the offer is for, in the base currency
+ * @property {Structs.Amount} price         - an amount, priced in the counter currency, per unit of the base currency
+ */
+
+/**
+ * @typedef {object} PriceLevel
+ * @memberOf Trading
+ * @property {CurrencyPair} currencyPair - the currencyPair the pricelevel pertains to
+ * @property {string} price              - an amount, priced in the counter currency, per unit of the base currency
+ * @property {string} amount             - the quantity available at the specified price
+ * @property {string} totalValue         - the totalValue, i.e. price * amount
+ */
+
+/**
+ * @typedef {object} Trade
+ * @memberOf Trading
+ * @property {CurrencyPair} currencyPair - a normalized currencyPair that the trade was executed against
+ * @property {string} price - the price the trade executed at, in terms of the counter currency
+ * 
+ */
