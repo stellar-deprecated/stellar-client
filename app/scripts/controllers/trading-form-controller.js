@@ -112,11 +112,6 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
     $scope.resetAmounts();
   };
 
-  $scope.finishTransaction = function() {
-    $scope.state = 'form';
-    $scope.resetAmounts();
-  };
-
   $scope.resetForm();
 
   $scope.$watch('formData.baseAmount', validateForm);
