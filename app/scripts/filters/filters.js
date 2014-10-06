@@ -29,6 +29,7 @@ module.filter('amountToHuman', function () {
 module.filter('roundAmount', function () {
     return function (amount, currency) {
         try {
+            amount = amount.toString();
             new BigNumber(amount);
         } catch (e) {
             return 0;
