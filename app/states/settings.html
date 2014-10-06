@@ -2,7 +2,6 @@
     <div class="container">
         <div class="client-section">
             <h1 class="title">Settings<span class="link-dashboard"><a href="/#/dashboard">&#8592; back to dashboard</a></span></h1>
-
         </div>
 
         <!-- TODO: add user photos
@@ -237,6 +236,20 @@
                     </div>
                 </div>
                 -->
+
+                <div class="row">
+                    <div class="settings-label col-md-3 col-xs-6">IDLE TIME BEFORE LOGOUT</div>
+                    <div class="settings-control col-md-9 col-xs-6">
+                        <div class="row">
+                            <div class="icon-col col-xs-1">
+                                <span class="icon icon-clock"/>
+                            </div>
+                            <div class="col-md-5 col-xs-10">
+                                <select class="form-control" ng-model="idleTimeout" ng-options="option.time as option.text for option in timeoutOptions"></select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="row">
                     <div class="settings-label col-md-3 col-xs-6">SECRET KEY</div>

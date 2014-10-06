@@ -20,7 +20,8 @@
     "angular-cookie": "~4.0.2",
     "ng-clip": "*",
     "zeroclipboard": "*",
-    "bignumber.js": "~1.4.1"
+    "bignumber.js": "~1.4.1",
+    "angular-re-captcha": "0.0.3"
   },
   "devDependencies": {},
   "resolutions": {

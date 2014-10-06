@@ -22,9 +22,9 @@
         </div>
         <div class="row form-group address-row" ng-show="showAddress">
             <label for="receive_address" class="col-sm-3 address-title">YOUR STELLAR ADDRESS</label>
-            <div class="col-sm-6 receive-address">
+            <div class="col-sm-6 receive-address" st-select-on-click target-id="currentAddress">
                 <i class="glyphicon glyphicon-globe"></i>
-                <span class="address">{{currentAddress()}}</span>
+                <span class="address" id="currentAddress">{{currentAddress()}}</span>
             </div>
         </div>
     </form>

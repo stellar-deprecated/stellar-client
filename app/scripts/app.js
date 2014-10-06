@@ -16,7 +16,7 @@ var stellarClient = angular.module('stellarClient', [
   'ui.router',
   'vr.passwordStrength',
   'ngClipboard',
-  'vcRecaptcha'
+  'reCAPTCHA'
 ]);
 
 
@@ -31,9 +31,14 @@ window.$get = function (dependency) {
   return angular.element(document).injector().get(dependency);
 };
 
-stellarClient.config(function($httpProvider, $stateProvider, $urlRouterProvider, RavenProvider, ngClipProvider) {
+stellarClient.config(function($httpProvider, $stateProvider, $urlRouterProvider, RavenProvider, ngClipProvider, reCAPTCHAProvider) {
 
   ngClipProvider.setPath("bower_components/zeroclipboard/dist/ZeroClipboard.swf");
+
+  reCAPTCHAProvider.setPublicKey(Options.CAPTCHA_KEY);
+  reCAPTCHAProvider.setOptions({
+    theme: 'clean'
+  });
 
   if(Options.REPORT_ERRORS !== true) {
     RavenProvider.development(true);
