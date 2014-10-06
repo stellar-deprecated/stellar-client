@@ -150,6 +150,7 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
 
     if(amount.length > MAX_CREDIT_PRECISION) {
       amount = new BigNumber(amount).toPrecision(MAX_CREDIT_PRECISION);
+      amount = new BigNumber(amount).toString();
     }
 
     return amount;
