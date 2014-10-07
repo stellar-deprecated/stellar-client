@@ -67,12 +67,11 @@ angular.module('stellarClient').factory('OrderBook', function($q, $rootScope, Tr
       sorted = merged.sort(sortDescending);
     }
 
-    var total = new BigNumber(0);
+    var depthTotal = new BigNumber(0);
     var summed = sorted
-      .map(function(x) {
-        total = total.plus(x.totalValue);
-        x.depth = total.toString();
-        return x;
+      .forEach(function(priceLevel) {
+        depthTotal = depthTotal.plus(priceLevel.amount);
+        priceLevel.depth = depthTotal.toString();
       });
 
     var result = summed.map(toString);
