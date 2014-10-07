@@ -258,20 +258,6 @@ gulp.task('watch-docs', ['ensure_config', 'connect', 'serve'], function () {
     gulp.watch('app/scripts/**/*.js', ['scripts']);
 });
 
-gulp.task("stellar-lib", function(cb) {
-    var steps = [
-        "cd ../stellar-lib",
-        "./node_modules/.bin/grunt webpack",
-        "cp build/stellar-0.7.35.js ../stellar-client/app/scripts/libraries/stellar-0.7.35.js"
-    ];
-    console.log(steps.join(" && "));
-    exec(steps.join(" && "), function (err, stdout, stderr) {
-        console.log(stdout);
-        console.log(stderr);
-        cb(err);
-    });
-});
-
 gulp.task('iconfont', function() {
     var fontName = 'stellar-client';
     return gulp.src(['app/icons/*.svg'])

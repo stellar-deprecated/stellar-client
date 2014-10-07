@@ -20,6 +20,7 @@
     "ng-grid": "deckar01/ng-grid",
     "angular-cookie": "~4.0.2",
     "ng-clip": "*",
+    "stellar-lib": "0.9.5",
     "zeroclipboard": "*",
     "bignumber.js": "~1.4.1",
     "angular-re-captcha": "0.0.3"
