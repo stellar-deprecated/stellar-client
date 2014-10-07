@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('NavCtrl', function($scope, session, StellarNetwork) {
+sc.controller('NavCtrl', function($scope, session) {
   // The session is initially not logged in.
   $scope.loggedIn = false;
   $scope.username = '';
