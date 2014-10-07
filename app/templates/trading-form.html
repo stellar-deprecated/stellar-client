@@ -19,13 +19,13 @@
                             </a>
                         </li>
                         <li role="presentation" ng-click="addFavoritePair()" ng-show="canSave()">
-                            <a role="menuitem" tabindex="-1" class="favpair-action">Save pair</a>
+                            <a role="menuitem" tabindex="-1" class="favpair-action">Save pair: {{ currencyPairToString(formData) }}</a>
                         </li>
                         <li role="presentation" ng-click="clearForm()">
                             <a role="menuitem" tabindex="-1" class="favpair-action">New pair</a>
                         </li>
                         <li role="presentation" ng-click="deleteFavoritePair()" ng-show="formData.favorite">
-                            <a role="menuitem" tabindex="-1" class="favpair-action">Delete pair</a>
+                            <a role="menuitem" tabindex="-1" class="favpair-action">Delete pair: {{ currencyPairToString(formData) }}</a>
                         </li>
                     </ul>
                 </div>
