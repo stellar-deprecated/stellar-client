@@ -40,8 +40,7 @@ sc.controller('TransactionHistoryCtrl', function($scope, transactionHistory) {
     currentPage: 1
   };
 
-  transactionHistory.init()
-    .then(updateTransactionPage);
+  updateTransactionPage();
 
   $scope.transactionGrid = {
     data: 'transactionPage',

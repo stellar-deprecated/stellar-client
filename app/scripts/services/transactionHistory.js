@@ -5,7 +5,7 @@ var sc = angular.module('stellarClient');
 sc.service('transactionHistory', function($rootScope, $q, StellarNetwork, session, contacts) {
   // TODO: move history to an object, mapping hash -> transaction
   // then use an array of hashes to establish order
-  var history;
+  var history = [];
 
   var remote;
   var account;
@@ -13,58 +13,40 @@ sc.service('transactionHistory', function($rootScope, $q, StellarNetwork, sessio
   var currentOffset;
   var allTransactionsLoaded;
 
-  /**
-   * Initializes the transaction history once the network is connected.
-   */
+  var ensureInitialized = StellarNetwork.ensureConnection().then(init);
+
   function init() {
-    var deferred = $q.defer();
+    history = [];
 
-    function initHistory() {
-      history = [];
-      currentOffset = 0;
-      allTransactionsLoaded = false;
+    remote = StellarNetwork.remote;
+    account = remote.account(session.get('address'));
+    account.on('transaction', processNewTransaction);
 
-      remote = StellarNetwork.remote;
-      account = remote.account(session.get('address'));
-
-      account.on('transaction', processNewTransaction);
-
-      remote.once('disconnected', cleanupListeners);
-
-      requestTransactions()
-        .then(deferred.resolve);
-    }
-
-    if ($rootScope.connected) {
-        initHistory();
-    } else {
-      $rootScope.$on('stellar-network:connected', function() {
-        initHistory();
-      });
-    }
-
-    return deferred.promise;
+    currentOffset = 0;
+    allTransactionsLoaded = false;
   }
 
   function getPage(pageNumber) {
-    // Always keep one extra page of transactions.
-    var transactionsNeeded = (pageNumber + 1) * Options.TRANSACTIONS_PER_PAGE;
+    return ensureInitialized.then(function() {
+      // Always keep one extra page of transactions.
+      var transactionsNeeded = (pageNumber + 1) * Options.TRANSACTIONS_PER_PAGE;
 
-    if (!allTransactionsLoaded && history.length < transactionsNeeded) {
-      return requestTransactions().then(function() {
-        return getPage(pageNumber);
-      });
-    } else {
-      var startIndex = (pageNumber - 1) * Options.TRANSACTIONS_PER_PAGE;
-      var endIndex = pageNumber * Options.TRANSACTIONS_PER_PAGE;
-
-      if (history.length <= startIndex) {
-        return $q.reject();
+      if (!allTransactionsLoaded && history.length < transactionsNeeded) {
+        return requestTransactions().then(function() {
+          return getPage(pageNumber);
+        });
       } else {
-        var transactions = history.slice(startIndex, endIndex);
-        return $q.when(transactions);
+        var startIndex = (pageNumber - 1) * Options.TRANSACTIONS_PER_PAGE;
+        var endIndex = pageNumber * Options.TRANSACTIONS_PER_PAGE;
+
+        if (history.length <= startIndex) {
+          return $q.reject();
+        } else {
+          var transactions = history.slice(startIndex, endIndex);
+          return $q.when(transactions);
+        }
       }
-    }
+    });
   }
 
   function lastPage() {
@@ -172,15 +154,7 @@ sc.service('transactionHistory', function($rootScope, $q, StellarNetwork, sessio
     return processedTxn;
   }
 
-  /**
-   * Remove any listeners that were added when the network was connected.
-   */
-  function cleanupListeners() {
-    account.removeListener('transaction', processNewTransaction);
-  }
-
   return {
-    init: init,
     history: history,
     getPage: getPage,
     lastPage: lastPage
