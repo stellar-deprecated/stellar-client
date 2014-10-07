@@ -1,21 +1,18 @@
-// spec.js
+// registration_spec.js
 describe('registration page', function() {
-    var USERNAME_EMPTY_ERROR_MESSAGE = "The username field is required.";
-    var PASSWORD_EMPTY_ERROR_MESSAGE = "The password field is required.";
+  var ptor;
 
-    it('should show username and password missing error message', function() {
-        browser.get('/#/register');
+  beforeEach(function() {
+    browser.get('/#/register');
+    ptor = protractor.getInstance();
+  });
 
-        element(by.buttonText("Submit")).click();
+  it('should show username and password missing error message', function() {
+    element(by.buttonText('Submit')).click();
 
-        expect(element(by.binding('errors.usernameErrors')).getText())
-            .toEqual(USERNAME_EMPTY_ERROR_MESSAGE);
-
-        expect(element(by.binding('errors.passwordErrors')).getText())
-            .toEqual(PASSWORD_EMPTY_ERROR_MESSAGE);
-    });
-
-    it('should show username taken error', function () {
-        browser.get('/#/register');
-    });
+    expect(element(by.binding('errors.usernameErrors')).getText()).toEqual('The username field is required.');
+    expect(ptor.isElementPresent(by.css('#username.input-error'))).toBeTruthy();
+    expect(element(by.binding('errors.passwordErrors')).getText()).toEqual('The password field is required.');
+    expect(ptor.isElementPresent(by.css('#password.input-error'))).toBeTruthy();
+  });
 });
