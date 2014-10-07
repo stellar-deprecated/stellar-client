@@ -172,14 +172,14 @@
         <p class="modalStatus-title">Sending offer</p>
         <img class="sending-rocket" src="./images/sending.gif"/><br>
         <div class="button-group">
-            <button ng-click="resetForm()" class="btn btn-default">Continue</button>
+            <button ng-click="resetFormSoft()" class="btn btn-default">Continue</button>
         </div>
     </div>
     <div class="offer-status trade-sent" ng-show="state == 'sent'">
         <i class="icon icon-check-circle-thin modalStatus-icon"></i><br>
         <p class="modalStatus-title">Offer created successfully!</p>
         <div class="button-group">
-            <button ng-click="resetForm()" class="btn btn-default">Continue</button>
+            <button ng-click="resetFormSoft()" class="btn btn-default">Continue</button>
         </div>
     </div>
     <div class="offer-status trade-error error-modalStatus" ng-show="state == 'error'">
