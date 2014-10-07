@@ -127,6 +127,8 @@ stellarClient.run(function($location, $state, ipCookie){
 });
 
 stellarClient.run(function($rootScope, $timeout, StellarNetwork, ActionLink){
+  ActionLink.recognize();
+
   $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){
     ActionLink.recognize();
   });
