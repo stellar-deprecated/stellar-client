@@ -312,7 +312,7 @@ gulp.task('ensure_webdriver_standalone',function(done) {
   }).once('close', done);
 });
 
-gulp.task('test', ['ensure_webdriver_standalone', 'connect-dist'], function (done) {
+function runTests(baseUrl, done) {
     var searchPath = path.join(__dirname, 'node_modules', 'protractor', 'selenium', 'selenium-server-*.jar');
     var files = glob.sync(searchPath);
     var jarPath = files[0];
@@ -322,16 +322,25 @@ gulp.task('test', ['ensure_webdriver_standalone', 'connect-dist'], function (don
     }
 
     gulp.src(["./src/tests/e2e/spec/*_spec.js"])
-      .pipe(protractor({
-        seleniumServerJar: jarPath,
-        configFile: "test/e2e/protractor_conf.js"
-      }))
-      .on('error', function(e) { throw e })
-      .on('end', function() {
-        if (runningServer) {
-            runningServer.close()
-        }
-        
-        done();
-      });
+        .pipe(protractor({
+            seleniumServerJar: jarPath,
+            configFile: "test/e2e/protractor_conf.js",
+            args: ['--baseUrl', baseUrl]
+        }))
+        .on('error', function(e) { throw e })
+        .on('end', function() {
+            if (runningServer) {
+                runningServer.close()
+            }
+
+            done();
+        });
+}
+
+gulp.task('test', ['ensure_webdriver_standalone', 'connect-dist'], function (done) {
+    runTests('http://localhost:8001/', done);
+});
+
+gulp.task('test-develop', ['ensure_webdriver_standalone'], function (done) {
+    runTests('http://localhost:8000/', done);
 });
