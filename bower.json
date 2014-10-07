@@ -24,6 +24,7 @@
     "bignumber.js": "~1.4.1",
     "angular-re-captcha": "0.0.3",
     "angular-qr": "~0.2.0",
+    "stellar-wallet-js-sdk": "git+https://github.com/stellar/stellar-wallet-js-sdk.git#master",
     "zeroclipboard": "*"
   },
   "devDependencies": {},

@@ -122,14 +122,11 @@ sc.controller('SettingsCtrl', function($scope, $http, $state, session, $timeout,
     if (twofaToggle.on) {
       // Turn it off
     } else {
-      var uri = 'otpauth://totp/Stellar:'+
-          session.getUser().getEmailAddress()+
-          '/stellar-client?secret={secret}&issuer=Stellar+Development+Foundation';
-      var key = sjcl.codec.bytes.fromBits(sjcl.random.randomWords(3)).slice(0, 10); // 10 random bytes
-      var encoder = new base32.Encoder();
-      var encodedKey = encoder.update(key, true);
-      $scope.totpKey = encodedKey.toString().replace(/=/g,'');
-      $scope.totpUri = uri.replace('{secret}', $scope.totpKey);
+      $scope.totpKey = StellarWallet.util.generateRandomTotpKey();
+      $scope.totpUri = StellarWallet.util.generateTotpUri($scope.totpKey, {
+        issuer: 'Stellar Development Foundation',
+        accountName: session.get('username')
+      });
     }
   }
 
