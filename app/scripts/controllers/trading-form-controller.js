@@ -57,10 +57,12 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
 
   $scope.setBaseIssuer = function(issuer) {
     $scope.formData.baseCurrency.issuer = issuer;
+    validateForm();
   };
 
   $scope.setCounterIssuer = function(issuer) {
     $scope.formData.counterCurrency.issuer = issuer;
+    validateForm();
   };
 
   $scope.confirmOffer = function() {
@@ -103,6 +105,7 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
     $scope.formData.counterAmount = null;
 
     $scope.formIsFilled = false;
+    $scope.pairIsSame = false;
     $scope.formIsValid = false;
     $scope.formErrorMessage = '';
   };
@@ -113,9 +116,25 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
   $scope.$watch('formData.counterAmount', validateForm);
   $scope.$watch('formData.baseCurrency', validateForm);
   $scope.$watch('formData.counterCurrency', validateForm);
+  // Custom dropdowns can't be binded to scope variables like normal inputs and calls functions instead
+  // formData.baseCurrency.issuer is special; $scope.setBaseIssuer() calls validateForm()
+  // formData.counterCurrency.issuer is special; $scope.setCounterIssuer() calls validateForm()
 
   function validateForm() {
+    $scope.formErrorMessage = '';
     $scope.formIsFilled = isFormFilled();
+    $scope.pairIsSame = isPairSame();
+
+    if ($scope.pairIsSame) {
+      $scope.formIsValid = false;
+      $scope.formErrorMessage = "Pair is invalid: the two currencies can't be the same";
+      return;
+    }
+
+    // Only verify input numbers if pair is valid (not the same) and form is filled
+    if (!$scope.formIsFilled) {
+      return;
+    }
 
     var baseAmount    = _.extend({value: $scope.formData.baseAmount}, $scope.formData.baseCurrency);
     var counterAmount = _.extend({value: $scope.formData.counterAmount}, $scope.formData.counterCurrency);
@@ -140,6 +159,18 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
     return true;
   }
 
+  function isPairSame() {
+    var pairIsFilled = $scope.formData.baseCurrency.currency && $scope.formData.counterCurrency.currency;
+    var currencyIsSame = $scope.formData.baseCurrency.currency === $scope.formData.counterCurrency.currency;
+    var issuerIsSame = $scope.formData.baseCurrency.issuer === $scope.formData.counterCurrency.issuer;
+
+    if (pairIsFilled && currencyIsSame && issuerIsSame) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   // Truncate the amount to match stellard's max precision
   // and round STR to 6 decimal places.
   function normalizeAmount(amount, currency) {
@@ -158,6 +189,7 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
 
   function isValidTradeAmount(amount) {
     if (amount.value === null) {
+      // Form is not filled, no error message
       return false;
     }
 

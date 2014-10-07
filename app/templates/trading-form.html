@@ -137,12 +137,12 @@
                     </b>
                 </div>
             </div>
-            <div class="form-group" ng-hide="formIsValid">
-                <div class="col-md-offset-4 col-md-8">
-                    <b class="error">
-                        {{formErrorMessage}}
-                    </b>
-                </div>
+        </div>
+        <div class="form-group" ng-show="formErrorMessage">
+            <div class="col-md-offset-4 col-md-8">
+                <b class="error">
+                    {{formErrorMessage}}
+                </b>
             </div>
         </div>
         <div class="form-group">
