@@ -66,9 +66,16 @@ angular.module('stellarClient').factory('OrderBook', function($q, $rootScope, Tr
     } else {
       sorted = merged.sort(sortDescending);
     }
-        
-    var result = sorted.map(toString);
 
+    var total = new BigNumber(0);
+    var summed = sorted
+      .map(function(x) {
+        total = total.plus(x.totalValue);
+        x.depth = total.toString();
+        return x;
+      });
+
+    var result = summed.map(toString);
 
     return result.value();
   };
