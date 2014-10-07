@@ -341,6 +341,6 @@ gulp.task('test', ['ensure_webdriver_standalone', 'connect-dist'], function (don
     runTests('http://localhost:8001/', done);
 });
 
-gulp.task('test-standalone', ['ensure_webdriver_standalone'], function (done) {
+gulp.task('test-develop', ['ensure_webdriver_standalone'], function (done) {
     runTests('http://localhost:8000/', done);
 });
