@@ -102,8 +102,6 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
     $scope.formData.unitPrice = null;
     $scope.formData.counterAmount = null;
 
-    $scope.formIsFilled = false;
-    $scope.pairIsSame = false;
     $scope.formIsValid = false;
     $scope.formErrorMessage = '';
   };
@@ -117,52 +115,26 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
 
   function validateForm() {
     $scope.formErrorMessage = '';
-    $scope.formIsFilled = isFormFilled();
-    $scope.pairIsSame = isPairSame();
-
-    if ($scope.pairIsSame) {
-      $scope.formIsValid = false;
-      $scope.formErrorMessage = "Pair is invalid: the two currencies can't be the same";
-      return;
-    }
-
-    // Only verify input numbers if pair is valid (not the same) and form is filled
-    if (!$scope.formIsFilled) {
-      return;
-    }
 
     var baseAmount    = _.extend({value: $scope.formData.baseAmount}, $scope.formData.baseCurrency);
     var counterAmount = _.extend({value: $scope.formData.counterAmount}, $scope.formData.counterCurrency);
 
-    if (isValidTradeAmount(baseAmount) && isValidTradeAmount(counterAmount)) {
-      $scope.formIsValid = true;
-    } else {
-      $scope.formIsValid = false;
-    }
+    // Short circuit on first validation failure
+    // formIsValid is true if the form is BOTH filled AND valid
+    $scope.formIsValid = validateCurrencies() && validateTradeAmount(baseAmount) && validateTradeAmount(counterAmount);
   }
 
-  function isFormFilled() {
-    if (!$scope.currentOrderBook) { return false; }
+  function validateCurrencies() {
+    var currenciesAreFilled = $scope.formData.baseCurrency.currency && $scope.formData.counterCurrency.currency;
+    var currenciesAreSame = _.isEqual($scope.formData.baseCurrency, $scope.formData.counterCurrency);
 
-    if (!$scope.formData.baseCurrency.currency) { return false; }
-    if (!$scope.formData.counterCurrency.currency) { return false; }
-
-    if (!$scope.formData.baseAmount) { return false; }
-    if (!$scope.formData.unitPrice) { return false; }
-    if (!$scope.formData.counterAmount) { return false; }
-
-    return true;
-  }
-
-  function isPairSame() {
-    var pairIsFilled = $scope.formData.baseCurrency.currency && $scope.formData.counterCurrency.currency;
-    var currencyIsSame = $scope.formData.baseCurrency.currency === $scope.formData.counterCurrency.currency;
-    var issuerIsSame = $scope.formData.baseCurrency.issuer === $scope.formData.counterCurrency.issuer;
-
-    if (pairIsFilled && currencyIsSame && issuerIsSame) {
-      return true;
-    } else {
+    if (!currenciesAreFilled) {
       return false;
+    } else if (currenciesAreSame) {
+      $scope.formErrorMessage = "Pair is invalid: the two currencies can't be the same";
+      return false;
+    } else {
+      return true;
     }
   }
 
@@ -182,9 +154,9 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
     return amount;
   }
 
-  function isValidTradeAmount(amount) {
-    if (amount.value === null) {
-      // Form is not filled, no error message
+  function validateTradeAmount(amount) {
+    if (!amount.value) {
+      // field is not filled: form is not valid but show no error message
       return false;
     }
 

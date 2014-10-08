@@ -132,17 +132,15 @@
                 </div>
             </div>
         </div>
-        <div ng-show="formIsFilled">
-            <div class="form-group" ng-show="formIsValid">
-                <div class="col-md-offset-4 col-md-8">
-                    <b>
-                        <span ng-if="formData.tradeOperation === 'buy'">Buy</span>
-                        <span ng-if="formData.tradeOperation === 'sell'">Sell</span>
-                        {{ formData.baseAmount | roundAmount:formData.baseCurrency.currency }} {{ formData.baseCurrency.currency }}
-                        for {{ formData.counterAmount | roundAmount:formData.counterCurrency.currency }} {{ formData.counterCurrency.currency }}
-                        at {{ formData.unitPrice | roundedAmount:precision }} {{ formData.counterCurrency.currency }}/{{ formData.baseCurrency.currency }}
-                    </b>
-                </div>
+        <div class="form-group" ng-show="formIsValid">
+            <div class="col-md-offset-4 col-md-8">
+                <b>
+                    <span ng-if="formData.tradeOperation === 'buy'">Buy</span>
+                    <span ng-if="formData.tradeOperation === 'sell'">Sell</span>
+                    {{ formData.baseAmount | roundAmount:formData.baseCurrency.currency }} {{ formData.baseCurrency.currency }}
+                    for {{ formData.counterAmount | roundAmount:formData.counterCurrency.currency }} {{ formData.counterCurrency.currency }}
+                    at {{ formData.unitPrice | roundedAmount:precision }} {{ formData.counterCurrency.currency }}/{{ formData.baseCurrency.currency }}
+                </b>
             </div>
         </div>
         <div class="form-group" ng-show="formErrorMessage">
@@ -154,7 +152,7 @@
         </div>
         <div class="form-group">
             <div class="col-md-offset-4 col-md-3">
-                <button type="submit" class="btn btn-default" ng-disabled="!formIsValid || !formIsFilled">
+                <button type="submit" class="btn btn-default" ng-disabled="!formIsValid">
                     <span ng-if="formData.tradeOperation === 'buy'">Buy</span>
                     <span ng-if="formData.tradeOperation === 'sell'">Sell</span>
                     {{ formData.baseCurrency.currency }}
