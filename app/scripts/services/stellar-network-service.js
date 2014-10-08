@@ -199,11 +199,11 @@ sc.factory('StellarNetwork', function($rootScope, $timeout, $q) {
     self.currency.decode = function(nativeCurrency) {
       var currencyType = typeof nativeCurrency;
   
-      switch(amountType) {
+      switch(currencyType) {
         case "string":
           return { currency: "STR" };
         case "object":
-          return nativeAmount;
+          return nativeCurrency;
         default:
           throw new Error("invalid currency type " + currencyType + ": expected a string, or object");
       }
