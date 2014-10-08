@@ -8,7 +8,8 @@
                             <span ng-if="formData.favorite">{{currencyPairToString(formData.favorite)}}</span>
                             <span ng-hide="formData.favorite">
                                 <span ng-hide="favoritePairsAvailable()">No saved pairs: select currencies to make one</span>
-                                <span ng-show="favoritePairsAvailable()">Select currencies to make a pair</span>
+                                <span ng-show="favoritePairsAvailable() && !currentPairIsFavorite()">Select currencies to make a pair</span>
+                                <span ng-show="favoritePairsAvailable() && currentPairIsFavorite()">Current pair already saved as a favorite</span>
                             </span>
                         </span>
                         <span ng-show="canSave()">
