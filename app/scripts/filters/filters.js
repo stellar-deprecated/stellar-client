@@ -434,8 +434,11 @@ module.filter('currencyName', function() {
 
 module.filter('roundedAmount', function() {
     return function(amount, precision) {
-        if(amount) {
-             return new BigNumber(amount).round(precision).toString();
+        try {
+            amount = amount.toString();
+            return new BigNumber(amount).round(precision).toString();
+        } catch (e) {
+            return 0;
         }
     };
 });
