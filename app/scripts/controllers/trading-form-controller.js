@@ -57,12 +57,10 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
 
   $scope.setBaseIssuer = function(issuer) {
     $scope.formData.baseCurrency.issuer = issuer;
-    validateForm();
   };
 
   $scope.setCounterIssuer = function(issuer) {
     $scope.formData.counterCurrency.issuer = issuer;
-    validateForm();
   };
 
   $scope.confirmOffer = function() {
@@ -114,11 +112,8 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
 
   $scope.$watch('formData.baseAmount', validateForm);
   $scope.$watch('formData.counterAmount', validateForm);
-  $scope.$watch('formData.baseCurrency', validateForm);
-  $scope.$watch('formData.counterCurrency', validateForm);
-  // Custom dropdowns can't be binded to scope variables like normal inputs and calls functions instead
-  // formData.baseCurrency.issuer is special; $scope.setBaseIssuer() calls validateForm()
-  // formData.counterCurrency.issuer is special; $scope.setCounterIssuer() calls validateForm()
+  $scope.$watch('formData.baseCurrency', validateForm, true);
+  $scope.$watch('formData.counterCurrency', validateForm, true);
 
   function validateForm() {
     $scope.formErrorMessage = '';
