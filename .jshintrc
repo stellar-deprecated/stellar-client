@@ -19,16 +19,17 @@
     "smarttabs": true,
     "jquery": true,
     "predef": [
-        "angular", 
         "_", 
-        "sjcl", 
+        "angular", 
+        "BigNumber",
+        "iso4217",
+        "JsonRewriter",
+        "Modernizr", 
         "Options", 
-        "Util", 
+        "sjcl", 
         "stellar", 
         "StellarDefaultCurrencyList", 
         "StellarDefaultCurrencyMap",
-        "Modernizr", 
-        "BigNumber",
-        "iso4217"
+        "Util"
     ]
 }
