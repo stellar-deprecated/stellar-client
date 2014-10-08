@@ -69,5 +69,9 @@ sc.controller('FavoriteTradesCtrl', function($scope, session, CurrencyPairs) {
     return $scope.favoriteTrades.length > 0;
   };
 
+  $scope.dropdownDisabled = function() {
+    return !$scope.canSave() && !$scope.favoritePairsAvailable();
+  };
+
   resetFavorites();
 });

@@ -3,7 +3,7 @@
         <div class="form-group">
             <div class="col-md-12">
                 <div class="dropdown dropdown-combo favpair-dropdown" ng-controller="FavoriteTradesCtrl">
-                    <button type="button" class="btn btn-default dropdown-toggle" ng-class="{disabled: !canSave() && !favoritePairsAvailable()}" data-toggle="dropdown">
+                    <button type="button" class="btn btn-default dropdown-toggle" ng-class="{disabled: dropdownDisabled()}" data-toggle="dropdown">
                         <span ng-hide="canSave()">
                             <span ng-if="formData.favorite">{{currencyPairToString(formData.favorite)}}</span>
                             <span ng-hide="formData.favorite">
@@ -14,7 +14,7 @@
                         <span ng-show="canSave()">
                             Save this pair? {{ currencyPairToString(formData) }}
                         </span>
-                        <span class="caret"></span>
+                        <span class="caret" ng-hide="dropdownDisabled()"></span>
                     </button>
                     <ul class="dropdown-menu" role="menu">
                         <li ng-repeat="currencyPair in favoriteTrades" role="presentation" ng-click="setFavorite(currencyPair)">
