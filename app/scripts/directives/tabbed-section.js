@@ -12,7 +12,7 @@ module.directive('tabbedSection', function() {
     },
     templateUrl: 'templates/tabbed-section.html'
   };
-})
+});
 
 
 module.directive('tab', function() {

@@ -120,7 +120,7 @@ angular.module('stellarClient').factory('UserPrivateInfo', function($http, $q, $
 
     UserPrivateInfo.prototype.hasLinkedFacebook = function () {
         return this.linkedFacebook;
-    }
+    };
 
     return UserPrivateInfo;
 });

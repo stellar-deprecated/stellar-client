@@ -27,7 +27,7 @@ sc.controller('TradingCtrl', function($scope, $q, Trading, Gateways, singletonPr
     var counterCurrencyGateway = $scope.issuerToGateway(currencyPair.counterCurrency.issuer);
 
     var twoGateways = baseCurrencyGateway && counterCurrencyGateway &&
-                      baseCurrencyGateway != counterCurrencyGateway;
+                      baseCurrencyGateway !== counterCurrencyGateway;
 
     if (twoGateways) {
       return currencyPair.baseCurrency.currency    + ' (' + baseCurrencyGateway    + ')' + ' / ' +

@@ -204,7 +204,7 @@ sc.service('CurrencyPairs', function($q, session) {
     return _.any(getFavorites(), function(favoritePair) {
       return _.isEqual(currencyPair, favoritePair);
     });
-  };
+  }
 
   function walletTradingPairs() {
     var mainData = session.get('wallet').mainData;

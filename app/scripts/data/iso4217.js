@@ -1,8 +1,9 @@
+/* exported iso4217 */
 /**
  * @constant
  * @memberOf Data
  */
-var iso4217 = {
+window.iso4217 = {
     // Ripple Credits
     "STR":[0, 0],
 
