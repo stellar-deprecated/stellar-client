@@ -127,6 +127,8 @@ stellarClient.run(function($location, $state, ipCookie){
 });
 
 stellarClient.run(function($rootScope, $timeout, StellarNetwork, ActionLink){
+  ActionLink.recognize();
+
   $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){
     ActionLink.recognize();
   });
@@ -168,15 +170,7 @@ stellarClient.run(function($rootScope, $state, $timeout, ipCookie, session, Flas
       }
 
       if(wallet) {
-        // Login with the local wallet and continue to the requested state.
-        event.preventDefault();
-
-        // HACK: The controllers in ng-included templates have not initialized yet.
-        //       Apply a $timeout so they have time to listen for login events.
-        $timeout(function() {
-          session.login(wallet);
-          $state.transitionTo(toState);
-        }, 0);
+        session.login(wallet);
       } else if(toState.authenticate) {
         // Redirect authenticated routes to login if we are unable to login from local.
         event.preventDefault();
