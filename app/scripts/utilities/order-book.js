@@ -1,4 +1,4 @@
-angular.module('stellarClient').factory('OrderBook', function($q, $rootScope, TradingOps, StellarNetwork, CurrencyPairs, TransactionCurator, FriendlyOffers) {
+angular.module('stellarClient').factory('OrderBook', function($q, $rootScope, TradingOps, StellarNetwork, CurrencyPairs, TransactionCurator, FriendlyOffers, PriceLevelList) {
 
   var orderbooks = {};
 
@@ -15,68 +15,6 @@ angular.module('stellarClient').factory('OrderBook', function($q, $rootScope, Tr
     }
 
     return result;
-  };
-
-  var mergePriceLevels = function(priceLevels, ascending) {
-
-    function toBigNumber(priceLevel) {
-      return _.mapValues(priceLevel, function(v, k) {
-        if(k === 'currencyPair'){ return v; }
-        return new BigNumber(v);
-      });
-    }
-    function toString(priceLevel) {
-      return _.mapValues(priceLevel, function(v, k) {
-        if(k === 'currencyPair'){ return v; }
-        return v.toString();
-      });
-    }
-    function sortAscending(a, b) {
-      return new BigNumber(a.price).cmp(b.price);
-    }
-    function sortDescending(a, b) {
-      return sortAscending(b, a);
-    }
-
-    var merged = _(priceLevels)
-      .map(toBigNumber)
-      .groupBy('price')
-      .map(function(priceLevels, price) {
-
-        var sum = function(numbers) {
-          return numbers.reduce(function(left, right) {
-            return left.plus(right);
-          });
-        };
-
-        var totalAmount = sum(_(priceLevels).pluck('amount'));
-        var totalValue  = sum(_(priceLevels).pluck('totalValue'));
-
-        return {
-          price:      price,
-          amount:     totalAmount,
-          totalValue: totalValue,
-        };
-      });
-
-    var sorted;
-
-    if(ascending) {
-      sorted = merged.sort(sortAscending);
-    } else {
-      sorted = merged.sort(sortDescending);
-    }
-
-    var depthTotal = new BigNumber(0);
-    var summed = sorted
-      .forEach(function(priceLevel) {
-        depthTotal = depthTotal.plus(priceLevel.amount);
-        priceLevel.depth = depthTotal.toString();
-      });
-
-    var result = summed.map(toString);
-
-    return result.value();
   };
 
   var OrderBook = function(baseCurrency, counterCurrency) {
@@ -185,14 +123,7 @@ angular.module('stellarClient').factory('OrderBook', function($q, $rootScope, Tr
     var offers       = this.currentOffers[offerType] || [];
     var currencyPair = this.getCurrencyPair();
 
-    var priceLevels = offers.map(function(offer) {
-      var friendlyOffer = FriendlyOffers.get(offer, currencyPair);
-      return FriendlyOffers.toPriceLevel(friendlyOffer);
-    });
-
-    var result = mergePriceLevels(priceLevels, offerType === 'asks');
-    
-    return result;
+    return PriceLevelList.get(offerType, offers, currencyPair)
   };
 
 

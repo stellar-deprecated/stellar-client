@@ -93,15 +93,6 @@ angular.module('stellarClient').service('FriendlyOffers', function($q, CurrencyP
       return 'none';
     }
   };
-
-  this.toPriceLevel = function(friendlyOffer) {
-    return {
-      currencyPair: friendlyOffer.currencyPair,
-      price:        friendlyOffer.price.value,
-      amount:       friendlyOffer.baseAmount.value,
-      totalValue:   friendlyOffer.counterAmount.value,
-    };
-  };
 });
 
 
