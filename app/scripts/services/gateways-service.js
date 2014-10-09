@@ -148,7 +148,7 @@ sc.service('Gateways', function($q, session, StellarNetwork, rpStellarTxt) {
     var deferred = $q.defer();
 
     var opts = {account: currency.issuer};
-    var accountLinesRequest = StellarNetwork.remote.request_account_info(opts, function(err, result) {
+    StellarNetwork.remote.request_account_info(opts, function(err, result) {
       if (result) {
         currency.requireAuth = !!(result.account_data.Flags & stellar.Transaction.flags.AccountSet.RequireAuth);
       }

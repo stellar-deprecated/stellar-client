@@ -3,5 +3,5 @@ module.directive('flashMessages', function() {
     restrict: 'E',
     templateUrl: 'templates/flash-message-container.html',
     controller: 'FlashMessageCtrl'
-  }
+  };
 });
