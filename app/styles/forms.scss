@@ -134,6 +134,10 @@ input[type=number]::-webkit-outer-spin-button {
     font-size: 17px;
   }
 
+  .input-group-btn > button {
+    width: auto;
+  }
+
   .dropdown-toggle {
     margin-bottom: 0;
     color: $dark-grey;
