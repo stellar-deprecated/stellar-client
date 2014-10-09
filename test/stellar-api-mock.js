@@ -1,5 +1,5 @@
 exports.setup = function() {
-  var api = angular.module('stellarAPI', []);
+  var api = angular.module('stellarApi', []);
 
   api.service('HttpMock', function($q) {
     var HttpMock = function(promise) {
@@ -25,20 +25,20 @@ exports.setup = function() {
     return HttpMock;
   });
 
-  api.service('stellarAPI', function(HttpMock) {
-    var stellarAPI = {};
+  api.service('stellarApi', function(HttpMock) {
+    var stellarApi = {};
 
-    stellarAPI.User = {
+    stellarApi.User = {
       validateUsername: function(username) {
         switch(username) {
           case 'existingUsername': return HttpMock.error({code: 'already_taken'});
           case 'newUsername':      return HttpMock.success({status: 'success'});
         }
 
-        throw new Error('Unexpected username passed to stellarAPI.User.validateUsername: ' + username);
+        throw new Error('Unexpected username passed to stellarApi.User.validateUsername: ' + username);
       }
     };
 
-    return stellarAPI;
+    return stellarApi;
   });
 };

@@ -1,7 +1,7 @@
-var api = angular.module('stellarAPI', []);
+var api = angular.module('stellarApi', []);
 
-api.service('stellarAPI', function($http) {
-  var stellarAPI = {};
+api.service('stellarApi', function($http) {
+  var stellarApi = {};
 
   function post(path, data) {
     return $http.post(Options.API_SERVER + path, data);
@@ -11,11 +11,11 @@ api.service('stellarAPI', function($http) {
     return $http.get(Options.API_SERVER + path, data);
   }
 
-  stellarAPI.User = {
+  stellarApi.User = {
     validateUsername: function(username) {
       return post('/user/validname', {username: username});
     }
   };
 
-  return stellarAPI;
+  return stellarApi;
 });

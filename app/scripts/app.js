@@ -20,7 +20,7 @@ var stellarClient = angular.module('stellarClient', [
   'reCAPTCHA',
   'angulartics',
   'angulartics.segment.io',
-  'stellarAPI'
+  'stellarApi'
 ]);
 
 /**
