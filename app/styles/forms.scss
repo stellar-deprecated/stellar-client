@@ -167,8 +167,9 @@ input[type=number]::-webkit-outer-spin-button {
       text-align: left;
 
       .caret {
-        float: right;
-        margin-top: 12px;
+        position: absolute;
+        top: 50%;
+        right: 16px;
       }
     }
 
