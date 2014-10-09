@@ -23,7 +23,8 @@
     "stellar-lib": "0.9.6",
     "zeroclipboard": "*",
     "bignumber.js": "~1.4.1",
-    "angular-re-captcha": "0.0.3"
+    "angular-re-captcha": "0.0.3",
+    "angulartics": "~0.17.0"
   },
   "devDependencies": {},
   "resolutions": {
