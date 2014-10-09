@@ -18,7 +18,7 @@ var stellarClient = angular.module('stellarClient', [
   'vr.passwordStrength',
   'ngClipboard',
   'reCAPTCHA',
-  'angulartics', 
+  'angulartics',
   'angulartics.segment.io'
 ]);
 
