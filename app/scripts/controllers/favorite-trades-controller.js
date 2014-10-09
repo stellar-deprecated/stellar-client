@@ -65,5 +65,20 @@ sc.controller('FavoriteTradesCtrl', function($scope, session, CurrencyPairs) {
     }
   };
 
+  $scope.favoritePairsAvailable = function() {
+    return $scope.favoriteTrades.length > 0;
+  };
+
+  $scope.dropdownDisabled = function() {
+    return !$scope.canSave() && !$scope.favoritePairsAvailable();
+  };
+
+  $scope.currentPairIsFavorite = function() {
+    if ($scope.currentOrderBook) {
+      var currencyPair = $scope.currentOrderBook.getCurrencyPair();
+      return CurrencyPairs.isFavorite(currencyPair);
+    }
+  };
+
   resetFavorites();
 });

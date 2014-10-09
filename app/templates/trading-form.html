@@ -3,14 +3,21 @@
         <div class="form-group">
             <div class="col-md-12">
                 <div class="dropdown dropdown-combo favpair-dropdown" ng-controller="FavoriteTradesCtrl">
-                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    <button type="button" class="btn btn-default dropdown-toggle" ng-disabled="dropdownDisabled()" data-toggle="dropdown">
                         <span ng-hide="canSave()">
-                            {{ formData.favorite ? currencyPairToString(formData.favorite) : 'Saved pairs' }}
+                            <span ng-if="formData.favorite">{{currencyPairToString(formData.favorite)}}</span>
+                            <span ng-hide="formData.favorite">
+                                <span ng-hide="favoritePairsAvailable()">No saved pairs: select currencies to make one</span>
+                                <span ng-show="favoritePairsAvailable()">
+                                    <span ng-hide="currentPairIsFavorite()">Select currencies to make a pair</span>
+                                    <span ng-show="currentPairIsFavorite()">Current pair already saved as a favorite</span>
+                                </span>
+                            </span>
                         </span>
                         <span ng-show="canSave()">
                             Save this pair? {{ currencyPairToString(formData) }}
                         </span>
-                        <span class="caret"></span>
+                        <span class="caret" ng-hide="dropdownDisabled()"></span>
                     </button>
                     <ul class="dropdown-menu" role="menu">
                         <li ng-repeat="currencyPair in favoriteTrades" role="presentation" ng-click="setFavorite(currencyPair)">
@@ -125,29 +132,27 @@
                 </div>
             </div>
         </div>
-        <div ng-show="formIsFilled">
-            <div class="form-group" ng-show="formIsValid">
-                <div class="col-md-offset-4 col-md-8">
-                    <b>
-                        <span ng-if="formData.tradeOperation === 'buy'">Buy</span>
-                        <span ng-if="formData.tradeOperation === 'sell'">Sell</span>
-                        {{ formData.baseAmount | roundAmount:formData.baseCurrency.currency }} {{ formData.baseCurrency.currency }}
-                        for {{ formData.counterAmount | roundAmount:formData.counterCurrency.currency }} {{ formData.counterCurrency.currency }}
-                        at {{ formData.unitPrice | roundedAmount:precision }} {{ formData.counterCurrency.currency }}/{{ formData.baseCurrency.currency }}
-                    </b>
-                </div>
+        <div class="form-group" ng-show="formIsValid">
+            <div class="col-md-offset-4 col-md-8">
+                <b>
+                    <span ng-if="formData.tradeOperation === 'buy'">Buy</span>
+                    <span ng-if="formData.tradeOperation === 'sell'">Sell</span>
+                    {{ formData.baseAmount | roundAmount:formData.baseCurrency.currency }} {{ formData.baseCurrency.currency }}
+                    for {{ formData.counterAmount | roundAmount:formData.counterCurrency.currency }} {{ formData.counterCurrency.currency }}
+                    at {{ formData.unitPrice | roundedAmount:precision }} {{ formData.counterCurrency.currency }}/{{ formData.baseCurrency.currency }}
+                </b>
             </div>
-            <div class="form-group" ng-hide="formIsValid">
-                <div class="col-md-offset-4 col-md-8">
-                    <b class="error">
-                        {{formErrorMessage}}
-                    </b>
-                </div>
+        </div>
+        <div class="form-group" ng-show="formErrorMessage">
+            <div class="col-md-offset-4 col-md-8">
+                <b class="error">
+                    {{formErrorMessage}}
+                </b>
             </div>
         </div>
         <div class="form-group">
             <div class="col-md-offset-4 col-md-3">
-                <button type="submit" class="btn btn-default" ng-disabled="!formIsValid || !formIsFilled">
+                <button type="submit" class="btn btn-default" ng-disabled="!formIsValid">
                     <span ng-if="formData.tradeOperation === 'buy'">Buy</span>
                     <span ng-if="formData.tradeOperation === 'sell'">Sell</span>
                     {{ formData.baseCurrency.currency }}
