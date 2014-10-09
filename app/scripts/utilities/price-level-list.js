@@ -8,33 +8,24 @@ angular.module('stellarClient').factory('PriceLevelList', function(FriendlyOffer
   var getPriceLevelList = function(offerType, offers, currencyPair) {
     var priceLevels = offers.map(function(offer) {
       var friendlyOffer = FriendlyOffers.get(offer, currencyPair);
-      return toPriceLevel(friendlyOffer);
+      return {
+        currencyPair: friendlyOffer.currencyPair,
+        price:        friendlyOffer.price.value,
+        amount:       friendlyOffer.baseAmount.value,
+        totalValue:   friendlyOffer.counterAmount.value,
+        depth:        '0',
+      };
     });
 
-    return processPriceLevels(priceLevels, offerType === 'asks');
+    var merged = mergePriceLevels(priceLevels);
+    var sorted = sortPriceLevels(merged, offerType === 'asks');
+    var calculated = calculateDepths(sorted);
+    var toStringed = priceLevelsToString(calculated);
+
+    return toStringed;
   };
 
-  var processPriceLevels = function(priceLevels, ascending) {
-
-    function toBigNumber(priceLevel) {
-      return _.mapValues(priceLevel, function(v, k) {
-        if(k === 'currencyPair'){ return v; }
-        return new BigNumber(v);
-      });
-    }
-    function toString(priceLevel) {
-      return _.mapValues(priceLevel, function(v, k) {
-        if(k === 'currencyPair'){ return v; }
-        return v.toString();
-      });
-    }
-    function sortAscending(a, b) {
-      return new BigNumber(a.price).cmp(b.price);
-    }
-    function sortDescending(a, b) {
-      return sortAscending(b, a);
-    }
-
+  function mergePriceLevels(priceLevels) {
     var merged = _(priceLevels)
       .map(toBigNumber)
       .groupBy('price')
@@ -56,33 +47,59 @@ angular.module('stellarClient').factory('PriceLevelList', function(FriendlyOffer
         };
       });
 
+    return merged.value();
+  }
+
+  function sortPriceLevels(mergedPriceLevels, ascending) {
     var sorted;
 
-    if(ascending) {
-      sorted = merged.sort(sortAscending);
+    if (ascending) {
+      sorted = mergedPriceLevels.sort(sortAscending);
     } else {
-      sorted = merged.sort(sortDescending);
+      sorted = mergedPriceLevels.sort(sortDescending);
     }
 
+    return sorted;
+  }
+
+  function calculateDepths(sortedPriceLevels) {
     var depthTotal = new BigNumber(0);
-    var summed = sorted
+    var calculated = _(sortedPriceLevels)
       .forEach(function(priceLevel) {
         depthTotal = depthTotal.plus(priceLevel.amount);
         priceLevel.depth = depthTotal;
       });
 
-    var result = summed.map(toString);
+    return calculated.value();
+  }
 
-    return result.value();
-  };
+  function priceLevelsToString(priceLevels) {
+    var results = _.map(priceLevels, toString);
 
-  function toPriceLevel(friendlyOffer) {
-    return {
-      currencyPair: friendlyOffer.currencyPair,
-      price:        friendlyOffer.price.value,
-      amount:       friendlyOffer.baseAmount.value,
-      totalValue:   friendlyOffer.counterAmount.value,
-    };
+    return results;
+  }
+
+
+  function toBigNumber(priceLevel) {
+    return _.mapValues(priceLevel, function(v, k) {
+      if (k === 'currencyPair'){ return v; }
+      return new BigNumber(v);
+    });
+  }
+
+  function sortAscending(a, b) {
+    return new BigNumber(a.price).cmp(b.price);
+  }
+
+  function sortDescending(a, b) {
+    return sortAscending(b, a);
+  }
+
+  function toString(priceLevel) {
+    return _.mapValues(priceLevel, function(v, k) {
+      if(k === 'currencyPair'){ return v; }
+      return v.toString();
+    });
   }
 
   return {

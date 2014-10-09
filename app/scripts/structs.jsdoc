@@ -69,9 +69,9 @@
  */
 
 /**
- * A PriceLevelList is an ordered list of PriceLevels. PriceLevels are always to
- * be found inside a PriceLevelList so that PriceLevels can have a depth value
- * relative to it's position in the list.
+ * A PriceLevelList is an ordered list of PriceLevels. PriceLevels are only created
+ * as items inside a PriceLevelList so that PriceLevels can have a depth value
+ * relative to it's position and siblings in the list.
  *
  * @typedef {array} PriceLevelList
  * @memberOf Trading
