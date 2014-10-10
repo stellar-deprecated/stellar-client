@@ -38,5 +38,7 @@ window.Options = {
 
     MAX_CONTACT_AGE: 24 * 60 * 60 * 1000, // One day in milliseconds.
 
-    CAPTCHA_KEY: '6LdSLvoSAAAAAHMyFDqGHGBDQhXdjnCwmhmV71nL'
+    CAPTCHA_KEY: '6LdSLvoSAAAAAHMyFDqGHGBDQhXdjnCwmhmV71nL',
+
+    ANGULARTICS_WRITE_KEY: "changme"
 };
