@@ -10,15 +10,15 @@
                 <thead>
                     <tr>
                         <th>Price ({{ currentOrderBook.counterCurrency.currency }}/{{ currentOrderBook.baseCurrency.currency }})</th>
-                        <th>Amount</th>
-                        <th>Value ({{ currentOrderBook.counterCurrency.currency }})</th>
+                        <th>Amount ({{ currentOrderBook.baseCurrency.currency }})</th>
+                        <th>Depth ({{ currentOrderBook.baseCurrency.currency }})</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr ng-repeat="priceLevel in currentBids">
                         <td>{{ priceLevel.price | roundedAmount:precision }}</td>
                         <td>{{ priceLevel.amount | roundAmount:currentOrderBook.baseCurrency.currency }}</td>
-                        <td>{{ priceLevel.totalValue | roundAmount:currentOrderBook.counterCurrency.currency }}</td>
+                        <td>{{ priceLevel.depth | roundAmount:currentOrderBook.baseCurrency.currency }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -30,15 +30,15 @@
                 <thead>
                     <tr>
                         <th>Price ({{ currentOrderBook.counterCurrency.currency }}/{{ currentOrderBook.baseCurrency.currency }})</th>
-                        <th>Amount</th>
-                        <th>Value ({{ currentOrderBook.counterCurrency.currency }})</th>
+                        <th>Amount ({{ currentOrderBook.baseCurrency.currency }})</th>
+                        <th>Depth ({{ currentOrderBook.baseCurrency.currency }})</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr ng-repeat="priceLevel in currentAsks">
                         <td>{{ priceLevel.price | roundedAmount:precision }}</td>
                         <td>{{ priceLevel.amount | roundAmount:currentOrderBook.baseCurrency.currency }}</td>
-                        <td>{{ priceLevel.totalValue | roundAmount:currentOrderBook.counterCurrency.currency }}</td>
+                        <td>{{ priceLevel.depth | roundAmount:currentOrderBook.baseCurrency.currency }}</td>
                     </tr>
                 </tbody>
             </table>
