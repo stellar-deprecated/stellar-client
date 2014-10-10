@@ -52,17 +52,20 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, S
     });
 
     $scope.$watch('sendFormModel.amount', function (newValue) {
-        if (!newValue || $scope.sendForm.amount.$invalid) {
+        if (!newValue || isNaN(newValue)) {
             $scope.resetAmountDependencies();
             return;
         }
         $scope.sendFormModelCopy = angular.copy($scope.sendFormModel);
-        updateAmount();
+        updateAmount().then(updatePaths);
     });
 
     $scope.$watch('sendFormModel.currency', function () {
         $scope.sendFormModelCopy = angular.copy($scope.sendFormModel);
-        updateCurrency();
+
+        $scope.resetCurrencyDependencies();
+        $scope.send.currency = $scope.sendFormModel.currency;
+        updateAmount().then(updatePaths);
     });
 
     $scope.changeCurrency = function(newCurrency) {
@@ -91,6 +94,8 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, S
     */
     function updateDestination() {
         var input = $scope.sendFormModel.recipient;
+
+        clearPaths();
 
         // parse the raw address/federation name
         var address = webutil.stripRippleAddress(input);
@@ -151,65 +156,42 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, S
                 showAddressFound($scope.send.destination.address);
             }
 
-            updateCurrencyConstraints();
+            // Get the currency constraints
+            return StellarNetwork.request('account_currencies', {account: $scope.send.destination.address});
+        })
+        .then(function (data) {
+            if (data.receive_currencies) {
+                // Generate list of accepted currencies
+                $scope.send.currencyChoices = _(data.receive_currencies).pluck('currency').compact().uniq().value();
+            } else {
+                $scope.send.currencyChoices = [];
+            }
+
+            // Add STR
+            $scope.send.currencyChoices.unshift("STR");
         })
         .then(function () {
-            updateCurrency();
+            $scope.resetCurrencyDependencies();
+            $scope.send.currency = $scope.sendFormModel.currency;
+        })
+        .then(function () {
+            return updateAmount();
+        })
+        .then(function () {
+            return updatePaths();
         });
     }
 
-    // Updates the available currencies the current $scope.destination can receive
-    function updateCurrencyConstraints() {
-        if (_.isEmpty($scope.send.destination)) {
-            return;
-        }
-        var deferred = $q.defer();
-
-        // Check allowed currencies for this address
-        StellarNetwork.remote.request_account_currencies($scope.send.destination.address)
-            .on('success', function (data) {
-                if (data.receive_currencies) {
-                    $scope.$apply(function () {
-                        // Generate list of accepted currencies
-                        $scope.send.currencyChoices = _.uniq(_.compact(_.map(data.receive_currencies, function (currency) {
-                            return currency;
-                        })));
-                        // Add STR
-                        $scope.send.currencyChoices.unshift("STR");
-                    });
-                }
-                return deferred.resolve();
-            })
-            .on('error', function () {
-                return deferred.reject("error");
-            })
-            .request();
-
-        return deferred.promise;
-    }
-
-    function updateCurrency() {
-        $scope.resetCurrencyDependencies();
-        $scope.send.currency = $scope.sendFormModel.currency;
-        updateAmount();
-    }
-
-    var pathUpdateTimeout;
-    // Updates the amount we're sending
     function updateAmount() {
-        if (pathUpdateTimeout) {
-            $timeout.cancel(pathUpdateTimeout);
-        }
-
         // reset any amount dependencies we have
         $scope.resetAmountDependencies();
 
-        if (!$scope.sendFormModel.amount || $scope.sendForm.amount.$invalid) {
-            return;
+        var invalidAmount = !$scope.sendFormModel.amount || isNaN($scope.sendFormModel.amount);
+        var invalidCurrency = !$scope.send.currency;
+        if (invalidAmount || invalidCurrency) {
+            return $q.reject();
         }
-        if (!$scope.send.currency) {
-            return;
-        }
+
         var currency = $scope.sendFormModel.currency;
         var formatted = "" + $scope.sendFormModel.amount + " " + $scope.send.currency;
         var amount = $scope.send.amount = Amount.from_human(formatted);
@@ -225,41 +207,56 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, S
             // TODO: destination account doesn't meet reserve, send this much more to fund it
             $scope.send.str_deficiency = reserve_base.subtract($scope.send.destination.balance);
             $scope.send.fundStatus = "insufficient-str";
-            return;
+            return $q.reject();
         } else {
             $scope.send.fundStatus = "";
             $scope.send.str_deficiency = 0;
         }
 
-        pathUpdateTimeout = $timeout(updatePaths, 500);
+        return $q.when();
+    }
+
+    function clearPaths() {
+        $scope.send.paths = [];
+
+        if($scope.send.findpath) {
+            $scope.send.findpath.close();
+            delete $scope.send.findpath;
+        }
     }
 
     // Updates our find_path subscription with the current destination and amount.
     function updatePaths() {
-        if (_.isEmpty($scope.send.destination) || !$scope.send.amount) {
-            return;
+        var invalidForm = _.isEmpty($scope.send.destination) || !$scope.send.amount;
+        var invalidDT = $scope.send.destination.requireDestinationTag && !$scope.send.destination.destinationTag;
+
+        if (invalidForm || invalidDT) {
+            return $q.reject();
         }
-        if ($scope.send.destination.requireDestinationTag && !$scope.send.destination.destinationTag) {
-            return;
-        }
+
         $scope.send.pathStatus = "pending";
+
+        clearPaths();
+
+        var deferred = $q.defer();
+
         // Start path find
-        var findpath = StellarNetwork.remote.path_find($rootScope.account.Account, $scope.send.destination.address, $scope.send.amount);
-        $scope.send.findpath = findpath;
-        findpath.on('update', function (result) {
-            if (inputHasChanged()) {
-                return;
-            }
+        $scope.send.findpath = StellarNetwork.remote.path_find($rootScope.account.Account, $scope.send.destination.address, $scope.send.amount);
+        $scope.send.findpath.on('update', function (result) {
             $scope.$apply(function () {
                 if (result.alternatives) {
                     processNewPaths(result);
                 }
                 $scope.send.pathStatus = !$scope.send.paths.length ? "no-path" : "done";
+                deferred.resolve();
             });
         });
-        findpath.on('error', function (error) {
+        $scope.send.findpath.on('error', function (error) {
             $scope.send.pathStatus = "error";
+            deferred.reject('error');
         });
+
+        return deferred.promise;
     }
 
     // updates the paths the user can use to send
