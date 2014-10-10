@@ -20,9 +20,8 @@ angular.module('stellarClient').factory('PriceLevelList', function(FriendlyOffer
     var merged = mergePriceLevels(priceLevels);
     var sorted = sortPriceLevels(merged, offerType === 'asks');
     var calculated = calculateDepths(sorted);
-    var toStringed = priceLevelsToString(calculated);
 
-    return toStringed;
+    return calculated.map(toString);
   };
 
   function mergePriceLevels(priceLevels) {
@@ -71,12 +70,6 @@ angular.module('stellarClient').factory('PriceLevelList', function(FriendlyOffer
       });
 
     return calculated.value();
-  }
-
-  function priceLevelsToString(priceLevels) {
-    var results = _.map(priceLevels, toString);
-
-    return results;
   }
 
 
