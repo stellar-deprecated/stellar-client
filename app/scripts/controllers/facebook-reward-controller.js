@@ -84,6 +84,22 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, $q, ses
             $scope.reward.status = 'incomplete';
           };
           break;
+        case 'facebook_error':
+          $scope.reward.error = {};
+          $scope.reward.error.info = "An error occurred while getting your Facebook information.";
+          $scope.reward.error.action = function () {
+            $scope.reward.error = null;
+            $scope.reward.status = 'incomplete';
+          };
+          break;
+        case 'reward_already_queued':
+          $scope.reward.error = {};
+          $scope.reward.error.info = "You've already claimed this reward.";
+          $scope.reward.error.action = function () {
+            $scope.reward.error = null;
+            $scope.reward.status = 'incomplete';
+          };
+          break;
         case 'server_error':
           $scope.reward.error = {};
           $scope.reward.error.info = "Server error.";
@@ -201,6 +217,9 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, $q, ses
         case 'bad_token':
           $scope.reward.updateReward('already_linked');
           break;
+        case 'facebook_error':
+          $scope.reward.updateReward('facebook_error');
+          break;
         default:
           $scope.reward.updateReward('server_error');
           break;
@@ -248,8 +267,8 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, $q, ses
           $scope.reward.updateReward('fake');
           break;
         case 'reward_already_queued':
-        case 'reward_limit_reached':
-          /* falls through */
+          $scope.reward.updateReward('reward_already_queued');
+          break;
         default:
           $scope.reward.updateReward('server_error');
       }
