@@ -68,6 +68,13 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, S
         updateAmount().then(updatePaths);
     });
 
+    $scope.$watch('send.destination.destinationTag', function (newValue, oldValue) {
+        if(newValue && !oldValue) {
+            $scope.sendFormModelCopy = angular.copy($scope.sendFormModel);
+            updateAmount().then(updatePaths);
+        }
+    });
+
     $scope.changeCurrency = function(newCurrency) {
             $scope.sendFormModel.currency = newCurrency;
     };
