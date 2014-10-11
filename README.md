@@ -55,6 +55,12 @@ gulp develop
 
 `gulp config-prd` will overwrite app/scripts/config.js with the values from config/prd.js, pointing you at the production apis.
 
+## Public Roadmap
+
+We've created a [public roadmap](https://trello.com/b/Clb1VMP5/platform-roadmap) so that you can see what work is planned, what is in progress, and when features have been released.
+
+[![](https://trello.com/b/Clb1VMP5.png)](https://trello.com/b/Clb1VMP5/platform-roadmap)  
+
 ## Contributing
 
  1. [Fork this project](https://github.com/stellar/stellar-client/fork)
