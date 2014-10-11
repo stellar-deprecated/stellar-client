@@ -212,7 +212,7 @@ var JsonRewriter = {
       if ('tesSUCCESS' === meta.TransactionResult) {
         switch (tx.TransactionType) {
           case 'Payment':
-            var amount = stellar.Amount.from_json(tx.Amount);
+            var amount = stellar.Amount.from_json(meta.DeliveredAmount || tx.Amount);
 
             if (tx.Account === account) {
               if (tx.Destination === account) {
