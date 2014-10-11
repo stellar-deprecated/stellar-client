@@ -162,7 +162,7 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, S
         .then(function (data) {
             if (data.receive_currencies) {
                 // Generate list of accepted currencies
-                $scope.send.currencyChoices = _(data.receive_currencies).pluck('currency').compact().uniq().value();
+                $scope.send.currencyChoices = _.uniq(data.receive_currencies);
             } else {
                 $scope.send.currencyChoices = [];
             }
