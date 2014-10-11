@@ -1,5 +1,7 @@
 'use strict';
 
+/* jshint camelcase:false */
+
 var sc = angular.module('stellarClient');
 
 sc.controller('SettingsInflationDestCtrl', function($scope, $q, session, singletonPromise, contacts) {
