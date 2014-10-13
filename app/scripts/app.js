@@ -56,6 +56,22 @@ stellarClient.config(function($httpProvider, $stateProvider, $urlRouterProvider,
       templateUrl: 'states/login.html',
       authenticate: false
     })
+    .state('login_v1', {
+      templateUrl: 'states/login_v1.html',
+      authenticate: false,
+      // There is a bug in angular-ui-router because of which we cannot pass
+      // an array ['username'] here. Instead we need to pass this object.
+      // Check out angular-ui-router.js:
+      //
+      // // Filter parameters before we pass them to event handlers etc.
+      // toParams = filterByKeys(objectKeys(to.params), toParams || {});
+      params: {'username': 0}
+    })
+    .state('login_v2', {
+      templateUrl: 'states/login_v2.html',
+      authenticate: false,
+      params: {'username': 0, 'totpRequired': 0}
+    })
     .state('recovery', {
       url:         '/recovery',
       templateUrl: 'states/recovery.html',
