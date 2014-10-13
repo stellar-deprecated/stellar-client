@@ -3,12 +3,7 @@
 var sc = angular.module('stellarClient');
 
 sc.service('transactionHistory', function($rootScope, $q, StellarNetwork, session, contacts) {
-  // TODO: move history to an object, mapping hash -> transaction
-  // then use an array of hashes to establish order
-  var history = [];
-
-  var remote;
-  var account;
+  var history;
 
   var currentOffset;
   var allTransactionsLoaded;
@@ -18,8 +13,7 @@ sc.service('transactionHistory', function($rootScope, $q, StellarNetwork, sessio
   function init() {
     history = [];
 
-    remote = StellarNetwork.remote;
-    account = remote.account(session.get('address'));
+    var account = StellarNetwork.remote.account(session.get('address'));
     account.on('transaction', processNewTransaction);
 
     currentOffset = 0;
@@ -61,10 +55,7 @@ sc.service('transactionHistory', function($rootScope, $q, StellarNetwork, sessio
    * Request the first page of the transaction history.
    */
   function requestTransactions() {
-    /*jshint camelcase: false */
-    var deferred = $q.defer();
-
-    var txRequest = remote.request_account_tx({
+    var txRequest = StellarNetwork.request('account_tx', {
       'account': session.get('address'),
       'ledger_index_min': -1,
       'ledger_index_max': -1,
@@ -73,13 +64,7 @@ sc.service('transactionHistory', function($rootScope, $q, StellarNetwork, sessio
       'offset': currentOffset
     });
 
-    txRequest.on('success', function(data) {
-      processTransactionSet(data);
-      deferred.resolve();
-    });
-    txRequest.request();
-
-    return deferred.promise;
+    return txRequest.then(processTransactionSet);
   }
 
   /**
@@ -158,7 +143,6 @@ sc.service('transactionHistory', function($rootScope, $q, StellarNetwork, sessio
   }
 
   return {
-    history: history,
     getPage: getPage,
     lastPage: lastPage
   };
