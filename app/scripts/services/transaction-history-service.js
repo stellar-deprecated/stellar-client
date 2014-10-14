@@ -86,16 +86,29 @@ sc.service('TransactionHistory', function($rootScope, $q, StellarNetwork, sessio
       var filteredHistory = filter ? _.filter(history, filter) : history;
 
       if (!allTransactionsLoaded && filteredHistory.length < transactionsNeeded) {
-        return loadNextPage().then(function() {
-          return getPage(pageNumber, filter);
-        });
+        // Request the next page of transactions.
+        return requestAccountTransactions(history.length, Options.TRANSACTIONS_PER_PAGE)
+          .then(function(data) {
+            if (_.any(data.transactions)) {
+              // Add the transactions to the history.
+              history = history.concat(data.transactions);
+            } else {
+              // The next page was empty, so all the transactions have been loaded.
+              allTransactionsLoaded = true;
+            }
+
+            // Continue building the filtered page.
+            return getPage(pageNumber, filter);
+          });
       } else {
         var startIndex = (pageNumber - 1) * Options.TRANSACTIONS_PER_PAGE;
         var endIndex = pageNumber * Options.TRANSACTIONS_PER_PAGE;
 
         if (filteredHistory.length <= startIndex) {
+          // Not enough transactions pass the filter to reach the requested page.
           return $q.reject();
         } else {
+          // Resolve the requested page from the filtered history.
           var transactions = filteredHistory.slice(startIndex, endIndex);
           return $q.when(transactions);
         }
@@ -104,26 +117,18 @@ sc.service('TransactionHistory', function($rootScope, $q, StellarNetwork, sessio
   }
 
   /**
-   * Add the next page of transactions to the transaction history.
+   * Request a set of transactions for the current account.
    *
    * @return {Promise}
    */
-  function loadNextPage() {
+  function requestAccountTransactions(startIndex, count) {
     return StellarNetwork.request('account_tx', {
       'account': session.get('address'),
       'ledger_index_min': -1,
       'ledger_index_max': -1,
       'descending': true,
-      'limit': Options.TRANSACTIONS_PER_PAGE,
-      'offset': history.length
-    })
-    .then(function (data) {
-      data.transactions = data.transactions || [];
-      history = history.concat(data.transactions);
-
-      if (!_.any(data.transactions)) {
-        allTransactionsLoaded = true;
-      }
+      'limit': count,
+      'offset': startIndex,
     });
   }
 
