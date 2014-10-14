@@ -5,6 +5,14 @@ var sc = angular.module('stellarClient');
 /**
  * The PaymentHistory provides paginated access to payment transactions.
  *
+ * ### Emitted Events
+ *
+ * The PaymentHistory object broadcasts a series of events from the rootScope that
+ * you can hook into to drive logic in your controllers:
+ *
+ * - `payment-history:new`: The stellar network has added a payment transaction affecting
+ * the current account to a ledger.
+ *
  * @namespace PaymentHistory
  */
 sc.service('PaymentHistory', function($rootScope, TransactionHistory, session, contacts) {

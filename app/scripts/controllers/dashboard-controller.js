@@ -120,7 +120,7 @@ sc.controller('DashboardCtrl', function($rootScope, $scope, $timeout, $state, se
         $scope.topCurrencies = sortedCurrencies.slice(0, 2);
     }
 
-    $rootScope.$on('payment-history:new', fetchCurrencies);
+    $rootScope.$on('transaction-history:new', fetchCurrencies);
 
     fetchCurrencies();
 });

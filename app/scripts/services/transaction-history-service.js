@@ -5,6 +5,14 @@ var sc = angular.module('stellarClient');
 /**
  * The TransactionHistory provides paginated access to a filtered set of transactions.
  *
+ * ### Emitted Events
+ *
+ * The TransactionHistory object broadcasts a series of events from the rootScope that
+ * you can hook into to drive logic in your controllers:
+ *
+ * - `transaction-history:new`: The stellar network has added a transaction affecting
+ * the current account to a ledger.
+ *
  * @namespace TransactionHistory
  */
 sc.service('TransactionHistory', function($rootScope, $q, StellarNetwork, session) {
@@ -23,10 +31,15 @@ sc.service('TransactionHistory', function($rootScope, $q, StellarNetwork, sessio
     account = StellarNetwork.remote.account(session.get('address'));
     account.on('transaction', function(data) {
       currentOffset++;
-      history.unshift({
+
+      var transaction = {
         tx: data.transaction,
         meta: data.meta
-      });
+      };
+
+      history.unshift(transaction);
+
+      $rootScope.$broadcast('transaction-history:new', transaction);
     });
 
     currentOffset = 0;
