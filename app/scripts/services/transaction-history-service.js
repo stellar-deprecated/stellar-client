@@ -2,8 +2,15 @@
 
 var sc = angular.module('stellarClient');
 
-sc.service('transactionHistory', function($rootScope, $q, StellarNetwork, session, contacts) {
+/**
+ * The TransactionHistory provides paginated access to a filtered set of transactions.
+ *
+ * @namespace TransactionHistory
+ */
+sc.service('TransactionHistory', function($rootScope, $q, StellarNetwork, session) {
   var history;
+
+  var account;
 
   var currentOffset;
   var allTransactionsLoaded;
@@ -13,137 +20,118 @@ sc.service('transactionHistory', function($rootScope, $q, StellarNetwork, sessio
   function init() {
     history = [];
 
-    var account = StellarNetwork.remote.account(session.get('address'));
-    account.on('transaction', processNewTransaction);
+    account = StellarNetwork.remote.account(session.get('address'));
+    account.on('transaction', function(data) {
+      currentOffset++;
+      history.unshift({
+        tx: data.transaction,
+        meta: data.meta
+      });
+    });
 
     currentOffset = 0;
     allTransactionsLoaded = false;
   }
 
-  function getPage(pageNumber) {
+  /**
+   * Subscribe to new transactions that match the given filter.
+   *
+   * @param {callback} callback
+   * @param {function} [filter]
+   */
+  function onTransaction(callback, filter) {
+    ensureInitialized.then(function(data) {
+      account.on('transaction', function(data) {
+        var transaction = {
+          tx: data.transaction,
+          meta: data.meta
+        };
+
+        if(filter(transaction)) {
+          callback(transaction);
+        }
+      });
+    });
+  }
+
+  /**
+   * Get the Nth page of transactions that match the given filter.
+   *
+   * @param {Number} pageNumber
+   * @param {function} [filter]
+   *
+   * @return {Promise.<Array>}
+   */
+  function getPage(pageNumber, filter) {
     return ensureInitialized.then(function() {
       // Always keep one extra page of transactions.
       var transactionsNeeded = (pageNumber + 1) * Options.TRANSACTIONS_PER_PAGE;
+      var filteredHistory = filter ? _.filter(history, filter) : history;
 
-      if (!allTransactionsLoaded && history.length < transactionsNeeded) {
-        return requestTransactions().then(function() {
-          return getPage(pageNumber);
+      if (!allTransactionsLoaded && filteredHistory.length < transactionsNeeded) {
+        return loadNextPage().then(function() {
+          return getPage(pageNumber, filter);
         });
       } else {
         var startIndex = (pageNumber - 1) * Options.TRANSACTIONS_PER_PAGE;
         var endIndex = pageNumber * Options.TRANSACTIONS_PER_PAGE;
 
-        if (history.length <= startIndex) {
+        if (filteredHistory.length <= startIndex) {
           return $q.reject();
         } else {
-          var transactions = history.slice(startIndex, endIndex);
+          var transactions = filteredHistory.slice(startIndex, endIndex);
           return $q.when(transactions);
         }
       }
     });
   }
 
-  function lastPage() {
-    if (allTransactionsLoaded) {
-      return Math.ceil(history.length / Options.TRANSACTIONS_PER_PAGE);
-    } else {
-      return Infinity;
-    }
-  }
-
   /**
-   * Request the first page of the transaction history.
+   * Add the next page of transactions to the transaction history.
+   *
+   * @return {Promise}
    */
-  function requestTransactions() {
-    var txRequest = StellarNetwork.request('account_tx', {
+  function loadNextPage() {
+    return StellarNetwork.request('account_tx', {
       'account': session.get('address'),
       'ledger_index_min': -1,
       'ledger_index_max': -1,
       'descending': true,
       'limit': Options.TRANSACTIONS_PER_PAGE,
       'offset': currentOffset
-    });
+    })
+    .then(function (data) {
+      data.transactions = data.transactions || [];
+      currentOffset += data.transactions.length;
 
-    return txRequest.then(processTransactionSet);
-  }
+      history = history.concat(data.transactions);
 
-  /**
-   * Process a set of transactions.
-   */
-  function processTransactionSet(data) {
-    data.transactions = data.transactions || [];
-
-    currentOffset += data.transactions.length;
-
-    data.transactions.forEach(function (transaction) {
-      processTransaction(transaction.tx, transaction.meta);
-    });
-
-    // Request more transactions until there are no more left.
-    if (!_.any(data.transactions)) {
-      allTransactionsLoaded = true;
-    }
-  }
-
-  /**
-   * Process new transactions as they occur.
-   */
-  function processNewTransaction(data) {
-    /*jshint camelcase: false */
-    currentOffset++;
-
-    var tx = processTransaction(data.transaction, data.meta, true);
-
-    if (tx.tx_result === "tesSUCCESS" && tx.transaction) {
-      $rootScope.$broadcast('$appTxNotification', tx.transaction);
-    }
-
-    $rootScope.$broadcast('transactionHistory.historyUpdated');
-  }
-
-  /**
-   * Clean up a transactions, add it to the history, and add the counterparty and issuer addresses to the contacts list.
-   *
-   * NOTE:  this does not, and should not do an $apply.  It gets expensive doing that on every transaction
-   */
-  function processTransaction(tx, meta, isNew) {
-    /*jshint camelcase: false */
-    var processedTxn = JsonRewriter.processTxn(tx, meta, session.get('address'));
-
-    if (processedTxn) {
-      var transaction = processedTxn.transaction;
-
-      if (processedTxn.tx_type === "Payment" && processedTxn.tx_result === "tesSUCCESS" && transaction) {
-        contacts.fetchContactByAddress(transaction.counterparty);
-
-        if (transaction.amount) {
-          if (tx.Amount.issuer === tx.Destination && tx.Paths) {
-            // When the issuer is set to the counterparty the transaction allows using any trusted issuer.
-            // Find the issuer that was used in the last currency in the path.
-            var lastPath = _.last(tx.Paths[0]);
-            transaction.amount.issuer().parse_json(lastPath.issuer);
-          }
-
-          var issuer = transaction.amount.issuer().to_json();
-          if (issuer) {
-            contacts.fetchContactByAddress(issuer);
-          }
-        }
-
-        if (isNew) {
-          history.unshift(processedTxn);
-        } else {
-          history.push(processedTxn);
-        }
+      if (!_.any(data.transactions)) {
+        allTransactionsLoaded = true;
       }
+    });
+  }
+
+  /**
+   * Get the page number of the last page of transactions that matches the given filter.
+   * Returns Infinity if the last page has not been determined.
+   *
+   * @param {function} [filter]
+   *
+   * @return {Number | Infinity}
+   */
+  function lastPage(filter) {
+    if (allTransactionsLoaded) {
+      var filteredHistory = filter ? _.filter(history, filter) : history;
+      return Math.ceil(filteredHistory.length / Options.TRANSACTIONS_PER_PAGE);
+    } else {
+      return Infinity;
     }
-
-
-    return processedTxn;
   }
 
   return {
     getPage: getPage,
-    lastPage: lastPage
+    lastPage: lastPage,
+    onTransaction: onTransaction
   };
 });

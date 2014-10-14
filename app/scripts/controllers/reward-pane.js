@@ -183,7 +183,7 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
       return promise.resolve();
     }
 
-    turnOffFairyTxListener = $scope.$on('$appTxNotification', function (event, tx) {
+    turnOffFairyTxListener = $scope.$on('payment-history:new', function (event, tx) {
       var fairyContact = contacts.getContactByEmail('StellarFoundation@stellar.org');
       if (fairyContact && tx.counterparty === fairyContact.destination_address) {
         $scope.updateRewards();

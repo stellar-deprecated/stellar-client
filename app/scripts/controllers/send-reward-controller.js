@@ -55,7 +55,7 @@ sc.controller('SendRewardCtrl', function ($rootScope, $scope, $http, StellarNetw
 
   var turnOffTxListener;
   function setupSentTxListener() {
-    turnOffTxListener = $scope.$on('$appTxNotification', function (event, tx) {
+    turnOffTxListener = $scope.$on('payment-history:new', function (event, tx) {
       if (validateTransaction(tx)) {
         requestSentStellarsReward();
       }

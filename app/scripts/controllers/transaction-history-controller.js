@@ -3,25 +3,25 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('TransactionHistoryCtrl', function($scope, transactionHistory) {
+sc.controller('TransactionHistoryCtrl', function($scope, PaymentHistory) {
   $scope.typeIcons = {
     'sent': 'icon icon-send',
     'received': 'icon icon-receive',
     'exchange': 'icon icon-exchange'
   };
 
-  $scope.$on("transactionHistory.historyUpdated", updateTransactionPage);
+  $scope.$on('payment-history:new', updateTransactionPage);
 
   $scope.transactionPage = [];
 
   function updateTransactionPage(){
-    return transactionHistory.getPage($scope.pagingOptions.currentPage)
+    return PaymentHistory.getPage($scope.pagingOptions.currentPage)
       .then(function(page) {
         $scope.transactionPage = page;
       });
   }
 
-  $scope.lastPage = transactionHistory.lastPage;
+  $scope.lastPage = PaymentHistory.lastPage;
 
   $scope.nextPage = function() {
     $scope.pagingOptions.currentPage = Math.min($scope.pagingOptions.currentPage + 1, $scope.lastPage());
