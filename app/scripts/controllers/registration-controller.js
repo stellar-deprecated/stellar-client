@@ -51,6 +51,11 @@ sc.controller('RegistrationCtrl', function(
   $scope.validators = [];
   $scope.noEmailWarning = false;
 
+
+  if(window.analytics) {
+    window.analytics.reset();
+  }
+
   // Checks to see if the supplied username is available.
   // This function is debounced to prevent API calls before the user is finished typing.
   var checkUsername = debounce(2000, function(){
@@ -183,15 +188,20 @@ sc.controller('RegistrationCtrl', function(
           });
       })
       .then(function(wallet){
+
         // Initialize the session with the new wallet.
         session.login(wallet);
+        
+        var inviteCode = session.get('inviteCode');
+        $analytics.eventTrack('Account Created', {inviteCode: inviteCode});
 
-        if(session.get('inviteCode')) {
-          invites.claim(session.get('inviteCode'))
+        if(inviteCode) {
+          invites.claim(inviteCode)
           .success(function (response) {
             $rootScope.$broadcast('invite-claimed');
           });
         }
+
 
         // Take the user to the dashboard.
         $state.go('dashboard');
