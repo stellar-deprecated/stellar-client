@@ -38,5 +38,5 @@ window.Options = {
 
     CAPTCHA_KEY: '6Ldj4PkSAAAAAL-kG23h3yRo0qSnO1BD3lr5zMEK',
 
-    ANGULARTICS_WRITE_KEY: "changeme"
+    ANGULARTICS_WRITE_KEY: "K6D2s0Sjuu"
 };
