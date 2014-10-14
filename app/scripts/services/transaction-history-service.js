@@ -16,22 +16,29 @@ var sc = angular.module('stellarClient');
  * @namespace TransactionHistory
  */
 sc.service('TransactionHistory', function($rootScope, $q, StellarNetwork, session) {
+  // The array of raw transactions sorted most recent first.
   var history;
 
-  var account;
-
-  var currentOffset;
+  // A flag that gets set when the last transaction is encountered.
   var allTransactionsLoaded;
 
+  // The stellar-lib Account object for the current user.
+  var account;
+
+  // The promise that is used to determine when this service is initialized.
   var ensureInitialized = StellarNetwork.ensureConnection().then(init);
 
+  /**
+   * Initialize local variables and subscribe to transaction events.
+   *
+   * @private
+   */
   function init() {
     history = [];
+    allTransactionsLoaded = false;
 
     account = StellarNetwork.remote.account(session.get('address'));
     account.on('transaction', function(data) {
-      currentOffset++;
-
       var transaction = {
         tx: data.transaction,
         meta: data.meta
@@ -41,9 +48,6 @@ sc.service('TransactionHistory', function($rootScope, $q, StellarNetwork, sessio
 
       $rootScope.$broadcast('transaction-history:new', transaction);
     });
-
-    currentOffset = 0;
-    allTransactionsLoaded = false;
   }
 
   /**
@@ -111,12 +115,10 @@ sc.service('TransactionHistory', function($rootScope, $q, StellarNetwork, sessio
       'ledger_index_max': -1,
       'descending': true,
       'limit': Options.TRANSACTIONS_PER_PAGE,
-      'offset': currentOffset
+      'offset': history.length
     })
     .then(function (data) {
       data.transactions = data.transactions || [];
-      currentOffset += data.transactions.length;
-
       history = history.concat(data.transactions);
 
       if (!_.any(data.transactions)) {
