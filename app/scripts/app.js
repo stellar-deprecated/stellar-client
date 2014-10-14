@@ -194,12 +194,17 @@ stellarClient.config(function() {
 
 
 // Analytics
+stellarClient.config(function ($analyticsProvider) {
+  $analyticsProvider.virtualPageviews(false);
+});
+
+
 stellarClient.run(function ($rootScope, session) {
   $rootScope.$on("userLoaded", function() {
     var username                 = session.get("username");
     var privateInfo              = session.get("userPrivateInfo");
     var properties               = {};
-    
+
     properties.username          = username;
     properties.invites           = privateInfo.invites.length;
     properties.inviteCode        = privateInfo.inviteCode;
