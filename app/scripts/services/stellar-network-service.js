@@ -25,6 +25,7 @@ sc.factory('StellarNetwork', function($rootScope, $timeout, $q) {
             self.remote._reserve_base=50*1000000;
             self.remote._reserve_inc=10*1000000;
 
+            self.connected = true;
             $rootScope.connected = true;
             $rootScope.$broadcast('stellar-network:connected');
 
