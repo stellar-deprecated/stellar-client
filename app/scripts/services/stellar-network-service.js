@@ -53,7 +53,7 @@ sc.factory('StellarNetwork', function($rootScope, $timeout, $q) {
       });
     };
 
-    self.init = function () {
+    var init = function () {
         self.remote = new stellar.Remote(Options.server, true);
         self.remote.connect();
         self.remote.on('connected', handleConnect);
@@ -70,7 +70,7 @@ sc.factory('StellarNetwork', function($rootScope, $timeout, $q) {
 
     self.ensureConnection = function() {
         if(self.connected) { 
-            return $q.resolve();
+            return $q.when();
         } else if (self.waitingForConnection) {
             return self.waitingForConnection.promise;
         } else {
@@ -79,7 +79,7 @@ sc.factory('StellarNetwork', function($rootScope, $timeout, $q) {
             if(self.remote) {
                 self.remote.connect();
             } else {
-                self.init();
+                init();
             }
 
             return self.waitingForConnection.promise;
