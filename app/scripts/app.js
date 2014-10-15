@@ -17,7 +17,8 @@ var stellarClient = angular.module('stellarClient', [
   'ui.router',
   'vr.passwordStrength',
   'ngClipboard',
-  'reCAPTCHA'
+  'reCAPTCHA',
+  'ja.qr'
 ]);
 
 /**

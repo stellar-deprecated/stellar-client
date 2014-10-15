@@ -77,8 +77,14 @@ sc.controller('SettingsCtrl', function($scope, $http, $state, session, singleton
       click: toggleTrading,
       on: wallet.get('mainData', 'showTrading', false),
       wrapper: angular.element('#tradingtoggle')
+    },
+    twofa: {
+      NAME: "2fa",
+      click: toggle2FA,
+      on: false,
+      wrapper: angular.element('#2FAtoggle')
     }
-  }
+  };
 
   function toggleWalletSetting(toggle, settingName) {
     toggle.on = !toggle.on;
@@ -96,6 +102,42 @@ sc.controller('SettingsCtrl', function($scope, $http, $state, session, singleton
   function toggleTrading(showTradingToggle) {
     return toggleWalletSetting(showTradingToggle, 'showTrading');
   }
+
+  function toggle2FA(twofaToggle) {
+    if (twofaToggle.on) {
+      // Turn it off
+    } else {
+      $scope.totpKey = StellarWallet.util.generateRandomTotpKey();
+      $scope.totpUri = StellarWallet.util.generateTotpUri($scope.totpKey, {
+        issuer: 'Stellar Development Foundation',
+        accountName: session.get('username')
+      });
+    }
+  }
+
+  $scope.confirmTotp = function() {
+    var wallet = StellarWallet.createFromData(session.get('wallet').walletV2);
+    wallet.setupTotp({
+      totpKey: $scope.totpKey,
+      totpCode: $scope.totpCode,
+      secretKey: session.get('wallet').keychainData.signingKeys.secret
+    }).then(function() {
+      alert('Done!');
+    }).catch(StellarWallet.errors.MissingField, function(e) {
+      // TODO show error in UI
+      alert('Totp code is empty.');
+    }).catch(StellarWallet.errors.InvalidTotpCode, function(e) {
+      // TODO show error in UI
+      alert('Invalid Totp code.');
+    }).catch(StellarWallet.errors.ConnectionError, function(e) {
+      // TODO show error in UI
+      alert('Connection error.');
+    }).catch(StellarWallet.errors.UnknownError, function(e) {
+      // TODO show error in UI
+      alert('Unknown error.');
+          console.log(e);
+    });
+  };
 
   var toggleRequestData = {
     username: session.get('username'),

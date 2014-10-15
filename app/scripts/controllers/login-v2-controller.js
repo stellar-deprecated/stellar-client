@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('stellarClient').controller('LoginV2Ctrl', function($scope, $stateParams, $q, singletonPromise, Wallet) {
+angular.module('stellarClient').controller('LoginV2Ctrl', function($scope, $state, $stateParams, $q, singletonPromise, Wallet, session) {
   $scope.totpRequired = $stateParams.totpRequired;
 
   $scope.attemptLogin = function() {
@@ -33,12 +33,14 @@ angular.module('stellarClient').controller('LoginV2Ctrl', function($scope, $stat
     }
 
     return StellarWallet.getWallet(params).then(function(wallet) {
-      var w = new Wallet({
-        id: id,
-        key: key,
-        keychainData: wallet.keychainData,
-        mainData: wallet.mainData
-      });
+      session.login(new Wallet({
+        version: 2,
+        id: "d3d1944ba4b183173ada93dcb765e8fc23f24990ff9b2ebed8acd21cf6763b92",
+        key: "f2f6ed37f70e0b7c9e93121da259ae08c91a072c2fd5b4bc7567602a00c61cfd",
+        keychainData: wallet.getKeychainData(),
+        mainData: wallet.getMainData(),
+        walletV2: wallet
+      }));
       $state.go('dashboard');
     }).catch(StellarWallet.errors.Forbidden, function() {
       $scope.loginError = "Password or TOTP code incorrect.";
@@ -47,6 +49,9 @@ angular.module('stellarClient').controller('LoginV2Ctrl', function($scope, $stat
     }).catch(StellarWallet.errors.ConnectionError, function() {
       $scope.loginError = "Error connecting wallet server.";
     }).catch(StellarWallet.errors.UnknownError, function() {
+      $scope.loginError = "Unknown error.";
+    }).catch(function(e) {
+      console.error(e);
       $scope.loginError = "Unknown error.";
     });
   });

@@ -10,7 +10,7 @@ sc.service('session', function($rootScope, $http, $timeout, StellarNetwork, Wall
   Session.prototype.get = function(name){ return cache[name]; };
   Session.prototype.put = function(name, value){ 
     cache[name] = value;
-    return value; 
+    return value;
   };
 
 

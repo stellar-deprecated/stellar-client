@@ -11,6 +11,7 @@
     "angular-debounce": "~0.0.3",
     "angular-facebook": "0.2.3",
     "angular-password-strength": "~0.0.4",
+    "angular-qr": "~0.2.0",
     "autofill-event": "~1.0.0",
     "crypto-js": "http://crypto-js.googlecode.com/files/CryptoJS%20v3.1.2.zip",
     "angular-moment": "~0.7.0",

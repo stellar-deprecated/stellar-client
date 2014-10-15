@@ -18,8 +18,21 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
     this.id = options.id;
     this.key = options.key;
 
+    this.version = options.version || 1;
     this.keychainData = options.keychainData || {};
     this.mainData = options.mainData || {};
+
+    if (this.version === 2) {
+      // This is Wallet object from stellar-wallet-js-sdk:
+      // https://github.com/stellar/stellar-wallet-js-sdk#wallet-object
+      this.walletV2 = options.walletV2;
+      if (_.isString(this.mainData)) {
+        this.mainData = JSON.parse(this.mainData);
+      }
+      if (_.isString(this.keychainData)) {
+        this.keychainData = JSON.parse(this.keychainData);
+      }
+    }
 
     // HACK: Remove old contact lists to reduce the wallet size.
     // TODO: Remove this if we need to store contacts in the wallet.
@@ -263,10 +276,17 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
    * @memberOf Wallet
    */
   Wallet.prototype.sync = function(action) {
-    var url = Options.WALLET_SERVER + '/wallets/' + action;
-    var data = this.encrypt();
-
-    return $http.post(url, data);
+    if (this.version == 2) {
+      if (action == 'update') {
+        //
+      } else if (action == 'create') {
+        //
+      }
+    } else {
+      var url = Options.WALLET_SERVER + '/wallets/' + action;
+      var data = this.encrypt();
+      return $http.post(url, data);
+    }
   };
 
   Wallet.prototype.saveLocal = function() {
@@ -336,20 +356,26 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
    * }
    * @memberOf Wallet
    */
-  Wallet.deriveId = function(username, password){
-    var credentials = username.toLowerCase() + password;
-    var salt = sjcl.codec.utf8String.toBits(credentials);
+  Wallet.deriveId = function(username, password) {
+    var deferred = $q.defer();
 
-    var id = sjcl.misc.scrypt(
-      credentials,
-      salt,
-      Wallet.SETTINGS.SCRYPT.N,
-      Wallet.SETTINGS.SCRYPT.r,
-      Wallet.SETTINGS.SCRYPT.p,
-      Wallet.SETTINGS.SCRYPT.SIZE/8
-    );
+    setTimeout(function() {
+      var credentials = username.toLowerCase() + password;
+      var salt = sjcl.codec.utf8String.toBits(credentials);
 
-    return sjcl.codec.hex.fromBits(id);
+      var id = sjcl.misc.scrypt(
+          credentials,
+          salt,
+          Wallet.SETTINGS.SCRYPT.N,
+          Wallet.SETTINGS.SCRYPT.r,
+          Wallet.SETTINGS.SCRYPT.p,
+          Wallet.SETTINGS.SCRYPT.SIZE/8
+      );
+
+      deferred.resolve(sjcl.codec.hex.fromBits(id));
+    }, 0);
+
+    return deferred.promise;
   };
 
   Wallet.deriveKey = function(id, username, password){
