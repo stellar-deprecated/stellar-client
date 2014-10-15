@@ -9,11 +9,11 @@
  * @namespace rpFederation
  */
 
+/*jshint camelcase: false */
+
 var sc = angular.module('stellarClient');
 
-sc.factory('rpFederation', ['$q', '$rootScope', '$http', 'rpStellarTxt',
-        function ($q, $scope, $http, $txt) {
-    var txts = {};
+sc.factory('rpFederation', ['$q', '$rootScope', '$http', 'rpStellarTxt', function ($q, $scope, $http, $txt) {
 
     function checkEmail(email) {
         if (email.indexOf('@') === -1) {
@@ -64,7 +64,7 @@ sc.factory('rpFederation', ['$q', '$rootScope', '$http', 'rpStellarTxt',
                     //   than "user"
                     user: user
                 }
-            }
+            };
             $http.get(txt.federation_url[0], config)
             .success(function (data) {
                 if ("object" === typeof data &&
@@ -79,9 +79,7 @@ sc.factory('rpFederation', ['$q', '$rootScope', '$http', 'rpStellarTxt',
                         result: "error",
                         error: "remote",
                         error_remote: data.error,
-                        error_message: data.error_message
-                            ? "Service error: " + data.error_message
-                            : "Unknown remote service error."
+                        error_message: data.error_message ? "Service error: " + data.error_message : "Unknown remote service error."
                     });
                 } else {
                     federationPromise.reject({
