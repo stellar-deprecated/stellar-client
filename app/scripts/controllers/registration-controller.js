@@ -17,7 +17,8 @@ sc.controller('RegistrationCtrl', function(
   Wallet,
   FlashMessages,
   invites,
-  reCAPTCHA) {
+  reCAPTCHA,
+  stellarApi) {
 
   // Provide a default value to protect against stale config files.
   Options.MAX_WALLET_ATTEMPTS = Options.MAX_WALLET_ATTEMPTS || 3;
@@ -62,7 +63,7 @@ sc.controller('RegistrationCtrl', function(
         $scope.status.usernameAvailable = false;
         return;
       }
-      $http.post(Options.API_SERVER + '/user/validname', {username: $scope.data.username})
+      stellarApi.User.validateUsername($scope.data.username)
       .success(
         function (response) {
           $scope.status.usernameAvailable = true;
