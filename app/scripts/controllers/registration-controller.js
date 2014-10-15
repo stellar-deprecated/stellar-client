@@ -11,6 +11,7 @@ sc.controller('RegistrationCtrl', function(
   $timeout,
   $http,
   $q,
+  $analytics,
   session,
   debounce,
   singletonPromise,
@@ -188,7 +189,7 @@ sc.controller('RegistrationCtrl', function(
           });
       })
       .then(function(wallet){
-
+        window.analytics.alias($scope.data.username);
         // Initialize the session with the new wallet.
         session.login(wallet);
         
