@@ -1,1 +1,11 @@
-<alert type="info" ng-hide="isConnected()">The server has disconnected. Reconnecting...</alert>
+<alert type="info" ng-show="status === 'disconnected'">
+  The server has disconnected.
+  <a ng-click="reconnect()">Reconnect</a>
+</alert>
+<alert type="info" ng-show="status === 'reconnecting'">
+  The server is reconnecting in {{ timeUntilReconnect() | amDurationFormat }}...
+  <a ng-click="reconnect()">Reconnect now</a>
+</alert>
+<alert type="info" ng-show="status === 'connecting'">
+  The server is reconnecting...
+</alert>

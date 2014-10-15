@@ -19,6 +19,18 @@ sc.factory('StellarNetwork', function($rootScope, $timeout, $q) {
         });
     };
 
+    var handleReconnecting = function(timeout) {
+        $timeout(function () {
+            $rootScope.$broadcast('stellar-network:reconnecting', timeout);
+        });
+    };
+
+    var handleConnecting = function() {
+        $timeout(function () {
+            $rootScope.$broadcast('stellar-network:connecting');
+        });
+    };
+
     var handleConnect = function (e) {
         $timeout(function () {
             // TODO: need to figure out why this isn't being set when we connect to the stellard
@@ -46,6 +58,8 @@ sc.factory('StellarNetwork', function($rootScope, $timeout, $q) {
         self.remote.connect();
         self.remote.on('connected', handleConnect);
         self.remote.on('disconnected', handleDisconnect);
+        self.remote.on('reconnecting', handleReconnecting);
+        self.remote.on('connecting', handleConnecting);
         self.remote.on('transaction', handleTransaction);
     };
 
