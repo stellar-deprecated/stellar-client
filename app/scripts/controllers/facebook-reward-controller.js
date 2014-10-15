@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, $q, session, Facebook) {
+sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, $q, $analytics, session, Facebook) {
   $scope.reward = {
     rewardType: 1,
     status: 'incomplete',
@@ -134,7 +134,7 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, $q, ses
 
   $scope.isFacebookReady = function () {
     return Facebook.isReady();
-  }
+  };
 
   /**
   * Facebook login the user, add their Facebook data to their user account, and then
@@ -153,9 +153,14 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, $q, ses
         }
       })
       .then(claimFacebookReward)
+      .then(function() {
+        session.getUser().linkedFacebook = true;
+        session.identifyToAnalytics();
+        $analytics.eventTrack('Facebook Connected');
+      })
       .finally(function () {
         $scope.loading = false;
-      })
+      });
   };
 
   function facebookLogin() {
@@ -227,6 +232,8 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, $q, ses
     } else {
       $scope.reward.updateReward('server_error');
     }
+
+    $analytics.eventTrack('Facebook Failed', {reason: response.code});
   }
 
 /**
