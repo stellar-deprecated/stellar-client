@@ -198,25 +198,3 @@ stellarClient.config(function ($analyticsProvider) {
   $analyticsProvider.virtualPageviews(false);
   $analyticsProvider.firstPageview(false);
 });
-
-
-stellarClient.run(function ($rootScope, session) {
-  $rootScope.$on("userLoaded", function() {
-    var username                 = session.get("username");
-    var privateInfo              = session.get("userPrivateInfo");
-    var properties               = {};
-
-    properties.username          = username;
-    properties.invites           = privateInfo.invites.length;
-    properties.inviteCode        = privateInfo.inviteCode;
-    properties.inviterUsername   = privateInfo.inviterUsername;
-    properties.claimedInviteCode = privateInfo.claimedInviteCode;
-    properties.linkedFacebook    = privateInfo.linkedFacebook;
-
-    if(privateInfo.email) {
-      properties.email = privateInfo.email.address;
-    }
-
-    window.analytics.identify(username, properties);
-  });
-});
