@@ -7,6 +7,9 @@ var sc = angular.module('stellarClient');
 sc.controller('SettingsInflationDestCtrl', function($scope, $q, session, singletonPromise, contacts) {
   $scope.reset = function () {
     $scope.inflationDest = $scope.account.InflationDest;
+    if ($scope.inflationDest) {
+        contacts.fetchContactByAddress($scope.inflationDest);
+    }
     $scope.newInflationDest = '';
     $scope.changing = false;
   };
