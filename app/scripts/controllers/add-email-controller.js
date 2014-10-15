@@ -1,7 +1,7 @@
 var sc = angular.module('stellarClient');
 /* global addEmailForm */
 
-sc.controller('AddEmailCtrl', function ($scope, $rootScope, $http, $state, session) {
+sc.controller('AddEmailCtrl', function ($scope, $rootScope, $http, $state, $analytics, session) {
   $scope.loading = false;
   $scope.errors = [];
 
@@ -38,7 +38,13 @@ sc.controller('AddEmailCtrl', function ($scope, $rootScope, $http, $state, sessi
       // Switch to the verify overlay.
       $scope.rewards[2].status = "unverified";
 
-      return session.getUser().refresh();
+
+
+
+      return session.getUser().refresh().then(function() {
+        session.identifyToAnalytics();
+        $analytics.eventTrack("Email Entered");
+      });
     }
 
     function addEmailError(response) {
