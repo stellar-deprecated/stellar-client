@@ -123,7 +123,7 @@ angular.module('stellarClient').factory('OrderBook', function($q, $rootScope, Tr
     var offers       = this.currentOffers[offerType] || [];
     var currencyPair = this.getCurrencyPair();
 
-    return PriceLevelList.get(offerType, offers, currencyPair)
+    return PriceLevelList.get(offerType, offers, currencyPair);
   };
 
 

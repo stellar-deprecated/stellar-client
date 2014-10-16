@@ -15,6 +15,7 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
    * @class
    */
   var Wallet = function(options){
+    /*jshint camelcase: false */
     this.id = options.id;
     this.key = options.key;
 
@@ -462,6 +463,7 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
    * https://github.com/stellar/stellar-client/issues/576
    */
   function enforceCorrectAddress(wallet) {
+    /*jshint camelcase: false */
     var signingKeys = wallet.keychainData.signingKeys;
     var storedAddress = signingKeys.address;
     var seed = stellar.Seed.from_json(signingKeys.secret);

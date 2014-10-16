@@ -28,6 +28,7 @@ sc.service('contacts', function($q, rpFederation, rpReverseFederation) {
    * it can be cached in local storage and updated as needed.
    */
   function addContact(federatedContact) {
+    /*jshint camelcase: false */
     federatedContact.dateCached = Date.now();
     contactsByAddress[federatedContact.destination_address] = federatedContact;
 
@@ -78,7 +79,7 @@ sc.service('contacts', function($q, rpFederation, rpReverseFederation) {
     if (contact && contact.dateCached > Date.now() - Options.MAX_CONTACT_AGE) {
       deferred.resolve(contact);
     } else {
-      rpReverseFederation.check_address(address)
+      rpReverseFederation.checkAddress(address)
         .then(function (result) {
           if (result) {
             // Add the reverse federation info to the user's wallet.
@@ -131,5 +132,5 @@ sc.service('contacts', function($q, rpFederation, rpReverseFederation) {
     getContactByEmail: getContactByEmail,
     fetchContactByAddress: fetchContactByAddress,
     fetchContactByEmail: fetchContactByEmail
-  }
+  };
 });

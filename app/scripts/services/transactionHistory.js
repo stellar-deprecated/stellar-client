@@ -61,6 +61,7 @@ sc.service('transactionHistory', function($rootScope, $q, StellarNetwork, sessio
    * Request the first page of the transaction history.
    */
   function requestTransactions() {
+    /*jshint camelcase: false */
     var deferred = $q.defer();
 
     var txRequest = remote.request_account_tx({
@@ -103,6 +104,7 @@ sc.service('transactionHistory', function($rootScope, $q, StellarNetwork, sessio
    * Process new transactions as they occur.
    */
   function processNewTransaction(data) {
+    /*jshint camelcase: false */
     currentOffset++;
 
     var tx = processTransaction(data.transaction, data.meta, true);
@@ -120,6 +122,7 @@ sc.service('transactionHistory', function($rootScope, $q, StellarNetwork, sessio
    * NOTE:  this does not, and should not do an $apply.  It gets expensive doing that on every transaction
    */
   function processTransaction(tx, meta, isNew) {
+    /*jshint camelcase: false */
     var processedTxn = JsonRewriter.processTxn(tx, meta, session.get('address'));
 
     if (processedTxn) {

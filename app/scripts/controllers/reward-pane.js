@@ -176,6 +176,8 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
 
   var turnOffFairyTxListener;
   function setupFairyTxListener() {
+    /* jshint camelcase:false */
+
     var promise = $q.defer();
     if (hasCompletedRewards()) {
       return promise.resolve();

@@ -1,4 +1,5 @@
 'use strict';
+/* jshint camelcase:false */
 
 var sc = angular.module('stellarClient');
 /*
@@ -16,9 +17,7 @@ sc.controller('AppCtrl', function($scope, $rootScope, StellarNetwork, session, $
             return session.getUser().getUnsentInvites().length;
         };
         $scope.getInvitesClass = function () {
-            return $scope.getInvitesLeft() > 0 
-                ? 'nav-has-invites'
-                : null;
+            return $scope.getInvitesLeft() > 0 ? 'nav-has-invites': null;
         };
     });
 
@@ -30,7 +29,7 @@ sc.controller('AppCtrl', function($scope, $rootScope, StellarNetwork, session, $
 
     $scope.getLogoLink = function () {
         return session.get('loggedIn') ? '#/' : 'http://www.stellar.org';
-    }
+    };
 
 
     $scope.$on('walletAddressLoaded', function() {
@@ -88,7 +87,7 @@ sc.controller('AppCtrl', function($scope, $rootScope, StellarNetwork, session, $
                 }
             });
         });
-    };
+    }
 
     function handleAccountEntry(data) {
         $rootScope.account = data;
@@ -97,15 +96,15 @@ sc.controller('AppCtrl', function($scope, $rootScope, StellarNetwork, session, $
         // e.g. OwnerCount, additional convenience fields are lower case, e.g.
         // reserve, max_spend.
         // TODO: get this for real
-        var reserve_base = Amount.from_json(""+20000000), //Amount.from_json(""+remote._reserve_base),
-            reserve_inc  = Amount.from_json(""+5000000), //Amount.from_json(""+remote._reserve_inc),
+        var reserve_base = stellar.Amount.from_json(""+20000000), //Amount.from_json(""+remote._reserve_base),
+            reserve_inc  = stellar.Amount.from_json(""+5000000), //Amount.from_json(""+remote._reserve_inc),
             owner_count  = $rootScope.account.OwnerCount || "0";
         $rootScope.account.reserve_base = reserve_base;
         $rootScope.account.reserve = reserve_base.add(reserve_inc.product_human(owner_count));
         $rootScope.account.reserve_to_add_trust = reserve_base.add(reserve_inc.product_human(owner_count+1));
 
         // Maximum amount user can spend
-        var bal = Amount.from_json(data.Balance);
+        var bal = stellar.Amount.from_json(data.Balance);
         $rootScope.balance=data.Balance;
         $rootScope.reserve=$rootScope.account.reserve;
         $rootScope.account.max_spend = bal.subtract($rootScope.account.reserve);

@@ -9,13 +9,14 @@
  * @namespace rpReverseFederation
  */
 
-var module = angular.module('stellarClient');
+/* jshint camelcase:false */
+ 
+var sc = angular.module('stellarClient');
 
-module.factory('rpReverseFederation', function ($q, $http, rpStellarTxt) {
-    var txts = {};
+sc.factory('rpReverseFederation', function ($q, $http, rpStellarTxt) {
     var results = {};
 
-    function check_address(address) {
+    function checkAddress(address) {
 
         var reverseFederationPromise = $q.defer();
 
@@ -60,7 +61,7 @@ module.factory('rpReverseFederation', function ($q, $http, rpStellarTxt) {
                     domain: domain,
                     destination_address: address
                 }
-            }
+            };
             $http.get(txt.reverse_federation_url[0], config)
             .success(function (data) {
                 if ("object" === typeof data &&
@@ -69,14 +70,12 @@ module.factory('rpReverseFederation', function ($q, $http, rpStellarTxt) {
                     data.federation_json.destination_address === address &&
                     data.federation_json.domain === domain) {
                     reverseFederationPromise.resolve(data.federation_json);
-                } else if ("string" === typeof data.error) {
+                } else if ("string" === typeof data.error) { 
                     reverseFederationPromise.reject({
                         result: "error",
                         error: "remote",
                         error_remote: data.error,
-                        error_message: data.error_message
-                            ? "Service error: " + data.error_message
-                            : "Unknown remote service error."
+                        error_message: data.error_message ? "Service error: " + data.error_message : "Unknown remote service error."
                     });
                 } else {
                     reverseFederationPromise.reject({
@@ -97,6 +96,6 @@ module.factory('rpReverseFederation', function ($q, $http, rpStellarTxt) {
     }
 
     return {
-        check_address: check_address
+        checkAddress: checkAddress
     };
 });

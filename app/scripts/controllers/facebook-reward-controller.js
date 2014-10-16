@@ -159,6 +159,7 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, $q, $an
   };
 
   function facebookLogin() {
+    /*jshint camelcase: false */
     var deferred = $q.defer();
 
     Facebook.login(function(response) {
@@ -239,16 +240,8 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, $q, $an
 
 /**
  * Send the facebook auth data to the server to be verified and saved.
- *
- * @param {object} data
- * @param {string} data.username
- * @param {string} data.updateToken
- * @param {string} data.fbID
- * @param {string} data.fbAccessToken
- * @param {function} success callback
- * @param {function} error callback
  */
-  function claimFacebookReward(data) {
+  function claimFacebookReward() {
     var data = {
       username: session.get('username'),
       updateToken: session.get('wallet').keychainData.updateToken

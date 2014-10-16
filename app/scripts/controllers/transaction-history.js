@@ -1,4 +1,5 @@
 'use strict';
+/* global ngGridFlexibleHeightPlugin */
 
 var sc = angular.module('stellarClient');
 

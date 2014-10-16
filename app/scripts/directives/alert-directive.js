@@ -14,9 +14,9 @@ module.directive('alert', function() {
         // Create a default dismiss handler
         attrs.dismissClick = function() {
           element.remove();
-        }
+        };
       }
     },
     templateUrl: 'templates/alert.html'
-  }
+  };
 });

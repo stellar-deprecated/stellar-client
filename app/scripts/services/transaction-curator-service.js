@@ -120,6 +120,7 @@ sc.service('TransactionCurator', function(StellarNetwork, FriendlyOffers) {
    * @private
    */
   function getTxTransaction(tx) {
+    /*jshint camelcase: false */
     return tx.transaction || tx.tx_json || {};
   }
 

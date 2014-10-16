@@ -1,3 +1,5 @@
+var sc = angular.module('stellarClient');
+
 sc.controller('VerifyEmailCtrl', function ($scope, $rootScope, $http, $state, $analytics, session, Wallet) {
   var wallet = session.get('wallet');
   $scope.email = wallet.mainData.email;
@@ -42,14 +44,14 @@ sc.controller('VerifyEmailCtrl', function ($scope, $rootScope, $http, $state, $a
         });
       })
       .error(function(response) {
-        if (response && response.status == 'fail') {
+        if (response && response.status === 'fail') {
           switch (response.code) {
             case 'invalid_update_token':
               // this user's update token is invalid, send to login
               $state.transitionTo('login');
               break;
             case 'invalid':
-              if (response.data && response.data.field == 'recovery_code') {
+              if (response.data && response.data.field === 'recovery_code') {
                 $scope.errors.push('Invalid recovery code.');
               }
               break;

@@ -217,6 +217,8 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
         }
       })
       .catch(function(e) {
+        /* jshint camelcase:false */
+
         if($scope.state === 'sending') {
           $scope.state = 'error';
           $scope.offerError = e.engine_result_message;
