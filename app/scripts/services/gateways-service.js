@@ -132,6 +132,7 @@ sc.service('Gateways', function($q, $analytics, session, StellarNetwork, rpStell
 
     tx.on('success', deferred.resolve);
     tx.on('error', function(result) {
+      /*jshint camelcase: false */
       if(result.engine_result === "tecNO_LINE_REDUNDANT") {
         deferred.resolve();
       } else {
@@ -149,6 +150,8 @@ sc.service('Gateways', function($q, $analytics, session, StellarNetwork, rpStell
    * Returns a promise that always resolves with the provided currency object.
    */
   function checkIssuerAuth(currency) {
+    /*jshint camelcase: false */
+    /*jshint bitwise: false */
     var deferred = $q.defer();
 
     var opts = {account: currency.issuer};
