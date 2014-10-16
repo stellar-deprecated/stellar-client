@@ -183,6 +183,7 @@ sc.service('session', function($rootScope, $http, $timeout, StellarNetwork, Wall
   };
 
   function checkFairyAddress() {
+    /*jshint camelcase: false */
     $http.get(Options.API_SERVER + "/fairy")
     .success(function (response) {
       var federationRecord = response.data.federation_json;
