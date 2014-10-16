@@ -228,6 +228,8 @@ sc.controller('RegistrationCtrl', function(
   }
 
   function showRegistrationErrors(response) {
+    /* jshint camelcase:false */
+
     var usernameErrorMessages = {
       'already_taken': 'The username is taken.',
       'invalid': 'Username must start and end with a letter, and may contain ".", "_", or "-"'
@@ -246,17 +248,17 @@ sc.controller('RegistrationCtrl', function(
         case 'already_taken':
           field = response.data && response.data.field;
           if (field === 'username') {
-            $scope.errors.usernameErrors.push(usernameErrorMessages['already_taken']);
+            $scope.errors.usernameErrors.push(usernameErrorMessages.already_taken);
           } else if (field === 'email') {
-            $scope.errors.emailErrors.push(emailErrorMessages['already_taken']);
+            $scope.errors.emailErrors.push(emailErrorMessages.already_taken);
           }
           break;
         case 'invalid':
           field = response.data && response.data.field;
           if (field === 'username') {
-            $scope.errors.usernameErrors.push(usernameErrorMessages['invalid']);
+            $scope.errors.usernameErrors.push(usernameErrorMessages.invalid);
           } else if (field === 'email') {
-            $scope.errors.emailErrors.push(emailErrorMessages['invalid']);
+            $scope.errors.emailErrors.push(emailErrorMessages.invalid);
           }
           break;
           case 'captcha':
