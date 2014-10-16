@@ -153,11 +153,6 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, $q, $an
         }
       })
       .then(claimFacebookReward)
-      .then(function() {
-        session.getUser().linkedFacebook = true;
-        session.identifyToAnalytics();
-        $analytics.eventTrack('Facebook Connected');
-      })
       .finally(function () {
         $scope.loading = false;
       });
@@ -195,6 +190,12 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, $q, $an
     });
 
     return $http.post(Options.API_SERVER + "/user/add_facebook", data)
+      .success(function(response) {
+        session.getUser().linkedFacebook = true;
+        session.identifyToAnalytics();
+        $analytics.eventTrack('Facebook Connected');
+        return response;
+      })
       .error(function (response) {
         onLinkUserFacebookError(response, data);
       });
