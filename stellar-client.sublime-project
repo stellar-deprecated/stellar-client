@@ -4,7 +4,7 @@
 		{
 			"follow_symlinks": true,
 			"path": ".",
-      "folder_exclude_patterns": [".tmp", ".sass-cache", "dist", "api-docs"]
+      "folder_exclude_patterns": [".tmp", ".sass-cache", "dist", "api-docs", "app/bower_components", "node_modules"]
 		}
 	]
 }

@@ -68,6 +68,9 @@ sc.service('session', function($rootScope, $http, $timeout, StellarNetwork, Wall
     this.put('signingKeys', signingKeys);
     this.put('address', signingKeys.address);
 
+
+    self.identifyToAnalytics();
+    
     // Store a user object for the currently authenticated user
     UserPrivateInfo.load(this.get('username'), this.get('wallet').keychainData.updateToken)
       .then(function (user) {
@@ -75,6 +78,9 @@ sc.service('session', function($rootScope, $http, $timeout, StellarNetwork, Wall
       })
       .then(function () {
         $rootScope.$broadcast('userLoaded');
+      })
+      .then(function () {
+        self.identifyToAnalytics();
       });
 
     // check for the most up to date fairy address
@@ -147,6 +153,33 @@ sc.service('session', function($rootScope, $http, $timeout, StellarNetwork, Wall
 
   Session.prototype.getUser = function () {
     return this.get('userPrivateInfo');
+  };
+
+  Session.prototype.identifyToAnalytics = function() {
+      window.analytics.identify(this.get('username'), this.getAnalyticsTraits());
+  };
+
+  Session.prototype.getAnalyticsTraits = function() {
+    var traits      = {};
+    traits.username = this.get("username");
+    
+    var privateInfo = this.get("userPrivateInfo");
+    
+    if(!_.isEmpty(privateInfo)) {
+      traits.invites           = privateInfo.invites.length;
+      traits.inviteCode        = privateInfo.inviteCode;
+      traits.inviterUsername   = privateInfo.inviterUsername;
+      traits.claimedInviteCode = privateInfo.claimedInviteCode;
+      traits.linkedFacebook    = privateInfo.linkedFacebook;
+
+      if(privateInfo.email) {
+        traits.email = privateInfo.email.address;
+      }
+    }
+
+
+
+    return traits;
   };
 
   function checkFairyAddress() {

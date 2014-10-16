@@ -91,4 +91,8 @@ sc.controller('LoginCtrl', function($rootScope, $scope, $state, $http, $timeout,
       type: 'error'
     });
   }
+
+  if(window.analytics) {
+    window.analytics.reset();
+  }
 });

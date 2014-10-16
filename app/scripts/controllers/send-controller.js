@@ -3,7 +3,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('SendController', function($rootScope, $scope, StellarNetwork) {
+sc.controller('SendController', function($rootScope, $scope, $analytics, StellarNetwork) {
   $scope.send = {};
   // The stellar account we're sending to.
   $scope.send.destination = {};
@@ -126,7 +126,7 @@ sc.controller('SendController', function($rootScope, $scope, StellarNetwork) {
     }
 
     $scope.send.indirect = isPathIndirect(path);
-
+    $scope.trackPaymentEvent("Transaction Created");
     $scope.setState('confirm');
   };
 
@@ -149,6 +149,8 @@ sc.controller('SendController', function($rootScope, $scope, StellarNetwork) {
   };
 
   $scope.sendConfirm = function () {
+    $scope.trackPaymentEvent("Transaction Confirmed");
+
     var destination = $scope.send.destination;
     var amount = $scope.send.amount;
 
@@ -178,12 +180,16 @@ sc.controller('SendController', function($rootScope, $scope, StellarNetwork) {
   };
 
   $scope.onTransactionSuccess = function (res) {
+    $scope.trackPaymentEvent("Stellars Sent");
+
     $scope.$apply(function () {
       $scope.setEngineStatus(res, true);
     });
   };
 
   $scope.onTransactionError = function (res) {
+    $scope.trackPaymentEvent("Transaction Failed");
+
     $scope.$apply(function () {
       if (res.engine_result) {
         $scope.setEngineStatus(res);
@@ -229,6 +235,17 @@ sc.controller('SendController', function($rootScope, $scope, StellarNetwork) {
       //TODO: set an error type and unify our error reporting for the send pane
       $scope.error_message = "An error occurred: " + res.engine_result_message;
     }
+  };
+
+  $scope.trackPaymentEvent = function(eventName) {
+    $analytics.eventTrack(eventName, {
+      amount:      $scope.send.amount.to_human_full(),
+      currency:    $scope.send.currency,
+      destination: $scope.send.destination,
+      federation:  $scope.send.federatedName,
+      indirect:    $scope.send.indirect,
+      sendPath:    $scope.send.path.amount.to_human_full(),
+    });
   };
 
   $scope.reset();
