@@ -1,4 +1,6 @@
-module.directive('tabbedSection', function() {
+var sc = angular.module('stellarClient');
+
+sc.directive('tabbedSection', function() {
   return {
     restrict: 'E',
     transclude: true,
@@ -15,7 +17,7 @@ module.directive('tabbedSection', function() {
 });
 
 
-module.directive('tab', function() {
+sc.directive('tab', function() {
   return {
     restrict: 'E',
     require: '^tabbedSection',

@@ -1,4 +1,6 @@
-module.directive('alert', function() {
+var sc = angular.module('stellarClient');
+
+sc.directive('alert', function() {
   return {
     restrict: 'E',
     transclude: true,

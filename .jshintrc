@@ -30,6 +30,7 @@
         "stellar", 
         "StellarDefaultCurrencyList", 
         "StellarDefaultCurrencyMap",
-        "Util"
+        "Util",
+        "-module"
     ]
 }
