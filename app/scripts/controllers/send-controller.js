@@ -60,7 +60,7 @@ sc.controller('SendController', function($rootScope, $scope, $analytics, Stellar
     }
   });
 
-  $scope.$on('$appTxNotification', function(){
+  $scope.$on('payment-history:new', function(){
     if ($scope.send.state === "unfunded") {
       $scope.setState("form");
     }
