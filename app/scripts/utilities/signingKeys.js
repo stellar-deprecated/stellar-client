@@ -7,6 +7,7 @@
  * @returns {{seed: {string}, address: {string}}}
  */
 var SigningKeys = function(seed){
+  /*jshint camelcase: false */
   if(seed){
     seed = new stellar.Seed().parse_json(seed);
   } else {
