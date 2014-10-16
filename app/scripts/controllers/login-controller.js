@@ -92,7 +92,7 @@ sc.controller('LoginCtrl', function($rootScope, $scope, $state, $http, $timeout,
     });
   }
 
-  if(window.analytics) {
+  if(window.analytics && window.analytics.reset) {
     window.analytics.reset();
   }
 });

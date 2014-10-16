@@ -53,7 +53,7 @@ sc.controller('RegistrationCtrl', function(
   $scope.noEmailWarning = false;
 
 
-  if(window.analytics) {
+  if(window.analytics && window.analytics.reset) {
     window.analytics.reset();
   }
 
