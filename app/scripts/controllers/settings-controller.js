@@ -2,24 +2,23 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('SettingsCtrl', function($scope, $http, $state, session, singletonPromise) {
+sc.controller('SettingsCtrl', function($scope, $http, $state, session) {
   var wallet = session.get('wallet');
-
-  $scope.secretKey = wallet.keychainData.signingKeys.secret;
+  var walletV2 = StellarWallet.createFromData(session.get('wallet').walletV2);
 
   $scope.handleServerError = function (element) {
     return function (error) {
       var message = error.status == 'fail' ? error.message : 'Server error';
       Util.showTooltip(element, message, 'error', 'top');
     }
-  }
+  };
 
   $scope.refreshAndInitialize = function () {
     return session.getUser().refresh()
       .then(function () {
         $scope.$broadcast('settings-refresh');
       })
-  }
+  };
 
   // TODO: move into user object and initialize settings
   function getSettings() {
@@ -28,7 +27,7 @@ sc.controller('SettingsCtrl', function($scope, $http, $state, session, singleton
         username: session.get('username'),
         updateToken: session.get('wallet').keychainData.updateToken
       }
-    }
+    };
     return $http.get(Options.API_SERVER + "/user/settings", data)
     .success(function (response) {
       $scope.toggle.recover.on = response.data.recover;
@@ -81,8 +80,7 @@ sc.controller('SettingsCtrl', function($scope, $http, $state, session, singleton
     twofa: {
       NAME: "2fa",
       click: toggle2FA,
-      on: false,
-      wrapper: angular.element('#2FAtoggle')
+      on: walletV2.isTotpEnabled()
     }
   };
 
@@ -103,41 +101,19 @@ sc.controller('SettingsCtrl', function($scope, $http, $state, session, singleton
     return toggleWalletSetting(showTradingToggle, 'showTrading');
   }
 
-  function toggle2FA(twofaToggle) {
-    if (twofaToggle.on) {
-      // Turn it off
-    } else {
-      $scope.totpKey = StellarWallet.util.generateRandomTotpKey();
-      $scope.totpUri = StellarWallet.util.generateTotpUri($scope.totpKey, {
-        issuer: 'Stellar Development Foundation',
-        accountName: session.get('username')
-      });
+  function toggle2FA(toggle) {
+    if (typeof session.get('wallet').walletV2 === 'undefined') {
+      // TODO not alert
+      alert('You need to migrate your wallet to use 2 Factor Authentication.');
+      return;
     }
+    $scope.$broadcast('settings-totp-clicked', toggle);
   }
 
-  $scope.confirmTotp = function() {
-    var wallet = StellarWallet.createFromData(session.get('wallet').walletV2);
-    wallet.setupTotp({
-      totpKey: $scope.totpKey,
-      totpCode: $scope.totpCode,
-      secretKey: session.get('wallet').keychainData.signingKeys.secret
-    }).then(function() {
-      alert('Done!');
-    }).catch(StellarWallet.errors.MissingField, function(e) {
-      // TODO show error in UI
-      alert('Totp code is empty.');
-    }).catch(StellarWallet.errors.InvalidTotpCode, function(e) {
-      // TODO show error in UI
-      alert('Invalid Totp code.');
-    }).catch(StellarWallet.errors.ConnectionError, function(e) {
-      // TODO show error in UI
-      alert('Connection error.');
-    }).catch(StellarWallet.errors.UnknownError, function(e) {
-      // TODO show error in UI
-      alert('Unknown error.');
-          console.log(e);
-    });
-  };
+  $scope.$on('settings-totp-toggled', function($event, value) {
+    $scope.toggle.twofa.on = value;
+    $event.stopPropagation();
+  });
 
   var toggleRequestData = {
     username: session.get('username'),
@@ -212,67 +188,4 @@ sc.controller('SettingsCtrl', function($scope, $http, $state, session, singleton
     .then(function () {
       $scope.$broadcast('settings-refresh');
     })
-});
-
-sc.controller('SettingsEmailCtrl', function($scope, $http, session, singletonPromise) {
-
-  $scope.$on('settings-refresh', function () {
-    $scope.email = session.getUser().getEmailAddress();
-    $scope.emailVerified = session.getUser().isEmailVerified();
-    $scope.resetEmailState();
-  });
-
-  $scope.resetEmailState = function () {
-    if ($scope.email) {
-      $scope.emailState = 'added';
-    } else {
-      $scope.emailState = 'none';
-    }
-  }
-
-  $scope.getEmailState = function () {
-    return $scope.emailState;
-  }
-
-  $scope.setEmailState = function (state) {
-    $scope.emailState = state;
-  }
-
-  $scope.emailAction = singletonPromise(function () {
-    if ($scope.emailState == 'change') {
-      return changeEmail();
-    } else if ($scope.emailState == 'verify') {
-      return verifyEmail();
-    } else {
-      return;
-    }
-  });
-
-  function verifyEmail () {
-    var verifyToken = $scope.verifyToken;
-    return session.getUser().verifyEmail(verifyToken)
-      .then(function (response) {
-        if (response.data.data && response.data.data.serverRecoveryCode) {
-          return session.get('wallet').storeRecoveryData(verifyToken, response.data.data.serverRecoveryCode);
-        }
-      })
-      .then(function () {
-        return $scope.refreshAndInitialize();
-      })
-      .then(function () {
-        $scope.verifyToken = null;
-      })
-      .catch($scope.handleServerError($('#email-input')));
-  };
-
-  function changeEmail () {
-    return session.getUser().changeEmail($scope.newEmail)
-      .then(function () {
-        return $scope.refreshAndInitialize();
-      })
-      .then(function () {
-        $scope.newEmail = null;
-      })
-      .catch($scope.handleServerError($('#verify-input')));
-  };
 });

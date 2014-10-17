@@ -83,6 +83,11 @@ stellarClient.config(function($httpProvider, $stateProvider, $urlRouterProvider,
       templateUrl: 'states/username_recovery.html',
       authenticate: false
     })
+    .state('lost-totp', {
+      url:         '/lost-2fa-device',
+      templateUrl: 'states/lost_2fa_device.html',
+      authenticate: false
+    })
     .state('register', {
       url:         '/register?inviteCode',
       templateUrl: 'states/register.html',

@@ -1,0 +1,67 @@
+<div ng-if="enabling">
+  <div>
+    To finish adding a 2FA to your account scan a code below (or enter it manually) in your mobile app.
+    Then enter a key and press "Confirm" button to complete a process.
+  </div>
+  <div>
+    <qr text="uri"></qr>
+    <p>
+      <code>{{ key }}</code>
+    </p>
+  </div>
+
+  <div class="form-group">
+    <div class="errors col-sm-offset-3 col-sm-6">
+      <div class="tip">{{ error }}</div>
+    </div>
+  </div>
+
+  <div class="clearfix"></div>
+
+  <form ng-submit="confirmEnableTotp($event)">
+    <div class="row">
+      <div class="icon-col col-xs-1">
+        <span class="icon icon-clock"/>
+      </div>
+      <div class="col-md-5 col-xs-10">
+        <input class="form-control stellar-input" type="number" maxlength="6" ng-model="$parent.$parent.code" />
+        <button type="submit" class="btn btn-default">Confirm</button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div ng-if="disabling">
+  <div>
+    To disable 2FA in your wallet please type down your wallet password and TOTP code.
+  </div>
+
+  <div class="form-group">
+    <div class="errors col-sm-offset-3 col-sm-6">
+      <div class="tip">{{ error }}</div>
+    </div>
+  </div>
+
+  <div class="clearfix"></div>
+
+  <form ng-submit="confirmDisableTotp($event)">
+    <div class="row">
+      <div class="icon-col col-xs-1">
+        <span class="icon icon-key"/>
+      </div>
+      <div class="col-md-5 col-xs-10">
+        <input class="form-control stellar-input" type="password" ng-model="$parent.$parent.password" />
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="icon-col col-xs-1">
+        <span class="icon icon-clock"/>
+      </div>
+      <div class="col-md-5 col-xs-10">
+        <input class="form-control stellar-input" type="number" maxlength="6" ng-model="$parent.$parent.code" />
+        <button type="submit" class="btn btn-default">Disable 2FA</button>
+      </div>
+    </div>
+  </form>
+</div>

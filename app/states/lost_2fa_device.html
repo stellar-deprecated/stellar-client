@@ -1,0 +1,28 @@
+<div class="recovery client-section">
+  <div class="container">
+    <h1 class="title">Lost TOTP device</h1>
+
+    <form role="form" class="form-horizontal" ng-controller="Lost2FADeviceCtrl">
+      <div class="form-group">
+        <div class="errors col-sm-12">
+          <div class="tip col-sm-offset-6 col-sm-3">{{ error }}</div>
+        </div>
+        <label for="username" class="col-sm-3">USERNAME</label>
+        <div class="col-sm-6">
+          <input id="username" type="text" class="form-control" ng-model="username" ng-change="error = null">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="password" class="col-sm-3">Password</label>
+        <div class="col-sm-6">
+          <input id="password" type="text" class="form-control" ng-model="password" ng-change="error = null" autocomplete="off">
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-offset-3 col-sm-6">
+          <button type="submit" class="btn btn-default" ng-click="attemptRecovery()" ng-disabled="recovering">{{recovering ? 'Sending...' : 'Unlock my wallet'}}</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

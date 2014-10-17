@@ -26,6 +26,10 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
       // This is Wallet object from stellar-wallet-js-sdk:
       // https://github.com/stellar/stellar-wallet-js-sdk#wallet-object
       this.walletV2 = options.walletV2;
+      if (_.isPlainObject(this.walletV2)) {
+        // Deserialize object
+        this.walletV2 = StellarWallet.createFromData(this.walletV2);
+      }
       if (_.isString(this.mainData)) {
         this.mainData = JSON.parse(this.mainData);
       }

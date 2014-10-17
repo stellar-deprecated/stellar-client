@@ -15,14 +15,14 @@
       <div class="form-group">
         <label for="password" class="col-sm-3">PASSWORD</label>
         <div class="col-sm-6 input-icon-wrapper">
-          <input id="password" type="password" class="form-control" ng-model="password" ng-disabled="asyncLogin.isLoading()">
+          <input id="password" type="password" class="form-control" ng-model="password" ng-disabled="asyncLogin.isLoading()" ng-change="loginError = null" autocomplete="off" />
           <i class="icon icon-key"></i>
         </div>
       </div>
       <div class="form-group" ng-show="totpRequired">
-        <label for="totp" class="col-sm-3">TOTP</label>
+        <label for="totp" class="col-sm-3">2-FACTOR AUTHENTICATION CODE</label>
         <div class="col-sm-6 input-icon-wrapper">
-          <input id="totp" type="text" class="form-control" maxlenght="6" ng-model="totpCode" ng-disabled="asyncLogin.isLoading()">
+          <input id="totp" type="number" class="form-control" maxlength="6" ng-model="totpCode" ng-disabled="asyncLogin.isLoading()" ng-change="loginError = null" autocomplete="off" />
           <i class="icon icon-key"></i>
         </div>
       </div>
@@ -39,7 +39,7 @@
           <span class="recovery-info"><a href="#/recovery">Forgot password?</a></span>
         </div>
         <div class="col-sm-offset-3 col-sm-6" ng-show="totpRequired">
-          <span class="recovery-info"><a href="#/recovery">Lost your TOTP device?</a></span>
+          <span class="recovery-info"><a href="#/lost-2fa-device">Lost your 2FA device?</a></span>
         </div>
       </div>
     </form>

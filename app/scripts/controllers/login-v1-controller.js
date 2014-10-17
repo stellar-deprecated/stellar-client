@@ -1,6 +1,10 @@
 'use strict';
 
 angular.module('stellarClient').controller('LoginV1Ctrl', function($rootScope, $scope, $http, $state, $stateParams, session, invites, Wallet, singletonPromise) {
+  setTimeout(function() {
+    angular.element('#password')[0].focus();
+  }, 200);
+
   // HACK: Perform AJAX login, but send a POST request to a hidden iframe to
   // coax Chrome into offering to remember the password.
   $scope.attemptLogin = function() {

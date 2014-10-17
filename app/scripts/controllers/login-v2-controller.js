@@ -1,8 +1,14 @@
 'use strict';
 
 angular.module('stellarClient').controller('LoginV2Ctrl', function($scope, $state, $stateParams, $q, singletonPromise, Wallet, session) {
+  setTimeout(function() {
+    angular.element('#password')[0].focus();
+  }, 200);
+
   $scope.totpRequired = $stateParams.totpRequired;
 
+  // HACK: Perform AJAX login, but send a POST request to a hidden iframe to
+  // coax Chrome into offering to remember the password.
   $scope.attemptLogin = function() {
     $scope.asyncLogin();
     return true;
@@ -45,7 +51,7 @@ angular.module('stellarClient').controller('LoginV2Ctrl', function($scope, $stat
     }).catch(StellarWallet.errors.Forbidden, function() {
       $scope.loginError = "Password or TOTP code incorrect.";
     }).catch(StellarWallet.errors.TotpCodeRequired, function() {
-      $scope.loginError = "TOTP code is required to login.";
+      $scope.loginError = "2-Factor-Authentication code is required to login.";
     }).catch(StellarWallet.errors.ConnectionError, function() {
       $scope.loginError = "Error connecting wallet server.";
     }).catch(StellarWallet.errors.UnknownError, function() {
