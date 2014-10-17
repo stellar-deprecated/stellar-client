@@ -48,7 +48,7 @@ sc.directive('disconnectedAlert', function() {
       };
 
       $scope.reconnect = function() {
-        StellarNetwork.remote.force_reconnect();
+        StellarNetwork.forceReconnect();
       };
     },
     templateUrl: 'templates/disconnected-alert.html'

@@ -63,6 +63,14 @@ sc.factory('StellarNetwork', function($rootScope, $timeout, $q) {
         self.remote.on('transaction', handleTransaction);
     };
 
+    self.forceReconnect = function () {
+        if(self.remote) {
+            self.remote.force_reconnect();
+        } else {
+            init();
+        }
+    };
+
     self.shutdown = function () {
         self.remote.disconnect();
         // self.remote = null;
