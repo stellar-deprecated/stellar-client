@@ -87,7 +87,7 @@ sc.service('session', function($rootScope, $http, $timeout, StellarNetwork, Wall
     checkFairyAddress.bind(this)();
     $rootScope.account = {};
     $rootScope.$broadcast('walletAddressLoaded', {account: signingKeys.address, secret: signingKeys.secret});
-    StellarNetwork.init();
+    StellarNetwork.ensureConnection();
 
     // Set loggedIn to be true to signify that it is safe to use the session variables.
     this.put('loggedIn', true);
