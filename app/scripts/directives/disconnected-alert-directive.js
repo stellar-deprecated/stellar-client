@@ -1,4 +1,6 @@
-module.directive('disconnectedAlert', function() {
+var sc = angular.module('stellarClient');
+
+sc.directive('disconnectedAlert', function() {
   return {
     restrict: 'E',
     transclude: true,
