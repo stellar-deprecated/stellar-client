@@ -284,7 +284,7 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
       if (action == 'update') {
         //
       } else if (action == 'create') {
-        //
+        // Done using stellar-wallet-js-sdk in registration-controller.js
       }
     } else {
       var url = Options.WALLET_SERVER + '/wallets/' + action;

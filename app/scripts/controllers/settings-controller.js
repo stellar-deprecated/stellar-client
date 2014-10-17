@@ -4,7 +4,7 @@ var sc = angular.module('stellarClient');
 
 sc.controller('SettingsCtrl', function($scope, $http, $state, session) {
   var wallet = session.get('wallet');
-  var walletV2 = StellarWallet.createFromData(session.get('wallet').walletV2);
+  var walletV2 = session.get('wallet').walletV2;
 
   $scope.handleServerError = function (element) {
     return function (error) {
@@ -102,7 +102,7 @@ sc.controller('SettingsCtrl', function($scope, $http, $state, session) {
   }
 
   function toggle2FA(toggle) {
-    if (typeof session.get('wallet').walletV2 === 'undefined') {
+    if (session.get('wallet').version === 1) {
       // TODO not alert
       alert('You need to migrate your wallet to use 2 Factor Authentication.');
       return;

@@ -19,11 +19,13 @@ angular.module('stellarClient').controller('LoginCtrl', function($rootScope, $sc
       return $q.reject();
     }
 
+    var usernameV2 = $scope.username+'@stellar.org';
+
     return $http.post(Options.WALLET_SERVER + '/v2/wallets/show_login_params', {
-        username: $scope.username
+        username: usernameV2
       }).success(function(response) {
         $state.go('login_v2', {
-          username: $scope.username,
+          username: usernameV2,
           totpRequired: response.totpRequired
         });
       }).error(function(body, status) {

@@ -41,7 +41,7 @@ angular.module('stellarClient').controller('SettingsTotpCtrl', function($scope, 
     wallet.enableTotp({
       totpKey: key,
       totpCode: $scope.code,
-      secretKey: session.get('wallet').keychainData.signingKeys.secret
+      secretKey: session.get('wallet').keychainData.signingKeys.secretKey
     }).then(function() {
       $scope.enabling = false;
       $scope.code = null;
@@ -80,7 +80,7 @@ angular.module('stellarClient').controller('SettingsTotpCtrl', function($scope, 
     StellarWallet.getWallet(params).then(function() {
       return wallet.disableTotp({
         totpCode: $scope.code,
-        secretKey: session.get('wallet').keychainData.signingKeys.secret
+        secretKey: session.get('wallet').keychainData.signingKeys.secretKey
       });
     }).then(function() {
       $scope.disabling = false;

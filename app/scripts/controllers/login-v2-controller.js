@@ -41,15 +41,15 @@ angular.module('stellarClient').controller('LoginV2Ctrl', function($scope, $stat
     return StellarWallet.getWallet(params).then(function(wallet) {
       session.login(new Wallet({
         version: 2,
-        id: "d3d1944ba4b183173ada93dcb765e8fc23f24990ff9b2ebed8acd21cf6763b92",
-        key: "f2f6ed37f70e0b7c9e93121da259ae08c91a072c2fd5b4bc7567602a00c61cfd",
+        id: wallet.getWalletId(),
+        key: wallet.getWalletKey(),
         keychainData: wallet.getKeychainData(),
         mainData: wallet.getMainData(),
         walletV2: wallet
       }));
       $state.go('dashboard');
     }).catch(StellarWallet.errors.Forbidden, function() {
-      $scope.loginError = "Password or TOTP code incorrect.";
+      $scope.loginError = "Password or 2-Factor-Authentication code is incorrect.";
     }).catch(StellarWallet.errors.TotpCodeRequired, function() {
       $scope.loginError = "2-Factor-Authentication code is required to login.";
     }).catch(StellarWallet.errors.ConnectionError, function() {
