@@ -253,6 +253,10 @@ sc.controller('SendFormController', function($rootScope, $scope, $timeout, $q, S
     $scope.send.findpath = StellarNetwork.remote.path_find($rootScope.account.Account, $scope.send.destination.address, $scope.send.amount);
     $scope.send.findpath.on('update', function (result) {
       $scope.$apply(function () {
+        var invalidForm = _.isEmpty($scope.send.destination) || !$scope.send.amount;
+        if (!invalidForm) {
+          return deferred.reject();
+        }
         if (result.alternatives) {
           processNewPaths(result);
         }
