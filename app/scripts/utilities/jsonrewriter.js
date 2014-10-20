@@ -1,6 +1,7 @@
 // Standalone version of: https://github.com/ripple/ripple-client/blob/7cbe63d/src/js/util/jsonrewriter.js
 /* jshint camelcase:false */
 /* jshint bitwise:false */
+/* jshint laxbreak:true */
 
 /**
  * Ripple trading default currency pairs.

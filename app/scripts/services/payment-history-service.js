@@ -1,5 +1,7 @@
 'use strict';
 
+/* global JsonRewriter */
+
 var sc = angular.module('stellarClient');
 
 /**
@@ -50,6 +52,7 @@ sc.service('PaymentHistory', function($rootScope, TransactionHistory, session, c
     contacts.fetchContactByAddress(transaction.counterparty);
 
     if (transaction.amount) {
+      /* jshint camelcase:false */
       var tx = paymentTransaction.tx;
 
       if (tx.Amount.issuer === tx.Destination && tx.Paths) {

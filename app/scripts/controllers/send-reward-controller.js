@@ -1,6 +1,7 @@
 'use strict';
 
 /* jshint camelcase:false */
+/* global JsonRewriter */
 
 var sc = angular.module('stellarClient');
 

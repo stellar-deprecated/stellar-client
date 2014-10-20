@@ -2,7 +2,7 @@
 // generated on 2014-04-24 using generator-gulp-webapp 0.0.8
 
 var gulp          = require('gulp');
-var child_process = require('child_process')
+var child_process = require('child_process');
 var exec          = child_process.exec;
 var mergeStream   = require('merge-stream');
 var git           = require('git-rev');

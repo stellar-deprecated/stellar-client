@@ -66,6 +66,7 @@ sc.factory('StellarNetwork', function($rootScope, $timeout, $q) {
 
     self.forceReconnect = function () {
         if(self.remote) {
+            /* jshint camelcase:false */
             self.remote.force_reconnect();
         } else {
             init();
