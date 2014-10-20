@@ -1,28 +1,32 @@
-<div class="recovery client-section">
+<div class="recovery client-section" ng-controller="Lost2FADeviceCtrl">
   <div class="container">
     <h1 class="title">Lost TOTP device</h1>
 
-    <form role="form" class="form-horizontal" ng-controller="Lost2FADeviceCtrl">
+    <form ng-if="!sent" role="form" class="form-horizontal" ng-submit="sendRequest($event)">
       <div class="form-group">
         <div class="errors col-sm-12">
           <div class="tip col-sm-offset-6 col-sm-3">{{ error }}</div>
         </div>
-        <label for="username" class="col-sm-3">USERNAME</label>
+        <label for="username" class="col-sm-3">Username</label>
         <div class="col-sm-6">
-          <input id="username" type="text" class="form-control" ng-model="username" ng-change="error = null">
+          <input id="username" type="text" class="form-control" ng-model="$parent.username" ng-disabled="asyncRequest.isLoading()" ng-change="error = null">
         </div>
       </div>
       <div class="form-group">
         <label for="password" class="col-sm-3">Password</label>
         <div class="col-sm-6">
-          <input id="password" type="text" class="form-control" ng-model="password" ng-change="error = null" autocomplete="off">
+          <input id="password" type="password" class="form-control" ng-model="$parent.password" ng-disabled="asyncRequest.isLoading()" ng-change="error = null" autocomplete="off">
         </div>
       </div>
       <div class="form-group">
         <div class="col-sm-offset-3 col-sm-6">
-          <button type="submit" class="btn btn-default" ng-click="attemptRecovery()" ng-disabled="recovering">{{recovering ? 'Sending...' : 'Unlock my wallet'}}</button>
+          <button type="submit" class="btn btn-default" ng-disabled="asyncRequest.isLoading()">{{asyncRequest.isLoading() ? 'Sending...' : 'Send Request'}}</button>
         </div>
       </div>
     </form>
+
+    <div ng-if="sent">
+      We've received your removal request. You should receive an email confirmation soon.
+    </div>
   </div>
 </div>
