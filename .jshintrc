@@ -23,7 +23,6 @@
         "angular", 
         "BigNumber",
         "iso4217",
-        "JsonRewriter",
         "Modernizr", 
         "Options", 
         "sjcl", 

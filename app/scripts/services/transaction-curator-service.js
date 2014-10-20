@@ -1,5 +1,6 @@
-var sc = angular.module('stellarClient');
+/* global JsonRewriter */
 
+var sc = angular.module('stellarClient');
 
 /**
  * The TransactionCurator service performs transformations and introspections
