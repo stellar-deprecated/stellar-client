@@ -42,5 +42,7 @@ window.Options = {
 
     ANGULARTICS_WRITE_KEY: "K6D2s0Sjuu",
 
-    DEFAULT_AJAX_TIMEOUT: 10000 // 10 seconds
+    DEFAULT_AJAX_TIMEOUT: 10000, // 10 seconds
+
+    SIFT_SCIENCE_ACCOUNT: '5c25600a01'
 };

@@ -172,7 +172,7 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, $q, $an
         onFacebookLoginError(response);
         deferred.reject(response);
       }
-    }, {scope: 'user_photos', auth_type: 'reauthenticate'});
+    }, {scope: 'user_photos,email', auth_type: 'reauthenticate'});
 
     return deferred.promise;
   }

@@ -55,6 +55,9 @@ sc.service('session', function($rootScope, $http, $timeout, StellarNetwork, Wall
 
     this.put('wallet', wallet);
 
+    // Wait until the username is know to start sift science analytics.
+    loadSiftScript(wallet.mainData.username);
+
     if (this.isPersistent()) {
       wallet.saveLocal();
     } else {
