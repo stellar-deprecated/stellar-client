@@ -9,6 +9,11 @@ sc.controller('AddGatewayCtrl', function($scope, $q, session, singletonPromise, 
     $scope.openManageCurrencies();
     $scope.fromActionLink = true;
 
+    // If user got here from a weblink, scroll to the `add gateway` section for them
+    setTimeout(function() {
+      $('html, body').animate({scrollTop: $('#action-add-gateway-scroll-point').offset().top - 20}, 400);
+    }, 0);
+
     $scope.gatewaySearch = params.domain;
     $scope.loadCurrencies();
   });
@@ -25,13 +30,6 @@ sc.controller('AddGatewayCtrl', function($scope, $q, session, singletonPromise, 
 
     $scope.searchStatus = 'loading';
     $scope.lastGatewaySearch = $scope.gatewaySearch;
-
-    // If user got here from a weblink, scroll to the `add gateway` section for them
-    if ($scope.fromActionLink) {
-      setTimeout(function() {
-        $('html, body').animate({scrollTop: $('#action-add-gateway-scroll-point').offset().top - 20}, 400);
-      }, 0);
-    }
 
     if($scope.gateways[$scope.gatewaySearch]) {
       $scope.searchStatus = 'already_added';
