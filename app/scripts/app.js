@@ -197,6 +197,6 @@ stellarClient.config(function() {
 
 // Analytics
 stellarClient.config(function ($analyticsProvider) {
-  $analyticsProvider.virtualPageviews(false);
-  $analyticsProvider.firstPageview(false);
+  $analyticsProvider.virtualPageviews(true);
+  $analyticsProvider.firstPageview(true);
 });

@@ -238,10 +238,13 @@ sc.controller('SendController', function($rootScope, $scope, $analytics, Stellar
   };
 
   $scope.trackPaymentEvent = function(eventName) {
+    var destination = _.cloneDeep($scope.send.destination);
+    destination.destinationTagPresent = !!destination.destinationTag;
+
     $analytics.eventTrack(eventName, {
       amount:      $scope.send.amount.to_human_full(),
       currency:    $scope.send.currency,
-      destination: $scope.send.destination,
+      destination: destination,
       federation:  $scope.send.federatedName,
       indirect:    $scope.send.indirect,
       sendPath:    $scope.send.path.amount.to_human_full(),
