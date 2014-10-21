@@ -24,7 +24,11 @@
             <div ng-show="searchStatus == 'already_added'">{{ lastGatewaySearch }} was already added</div>
         </div>
 
+        <a id="action-add-gateway-scroll-point"></a>
         <div class="gateway-currencies" ng-show="searchStatus == 'found'">
+            <alert type="info" ng-show="fromActionLink" ng-hide="searchStatus == 'already_added'" dismissible="true">
+                You just clicked on a link that automatically lets you add a gateway. Complete this action by clicking "Trust {{foundGateway.domain}}" if you want to trust this gateway. Find out more <a href="https://www.stellar.org/learn/#Gateways_trust_and_credit">about trust</a>.
+            </alert>
             <h3 class="title">Supported currencies for {{ foundGateway.domain }}:</h3>
             <ul class="currencies-list">
                 <li ng-repeat="currency in foundGateway.currencies" class="currency-box">
