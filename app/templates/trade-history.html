@@ -1,0 +1,32 @@
+<div ng-controller="TradeHistoryCtrl" class="col-md-12">
+    <p ng-show="getFirstPage.isLoading()" class="order-status">Loading...</p>
+    <div ng-hide="getFirstPage.isLoading()">
+        <p ng-hide="trades.length" class="order-status">You currently have no trades. Make some by submitting a new trade order.</p>
+        <div ng-show="trades.length">
+            <table class="trade-history-table">
+                <thead>
+                    <tr>
+                        <th>Order Type</th>
+                        <th>Pair</th>
+                        <th>Amount</th>
+                        <th>Price</th>
+                        <th>Total Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="trade in trades" ng-controller="OfferRowCtrl">
+                        <td>{{ trade.operation }}</td>
+                        <td>{{ trade.baseAmount.currency }}/{{ trade.counterAmount.currency }}</td>
+                        <td>{{ trade.baseAmount.value | roundAmount:trade.baseAmount.currency }} {{ trade.baseAmount.currency }}</td>
+                        <td>{{ trade.price.value | roundedAmount:precision }} {{ trade.price.currency }}</td>
+                        <td>{{ trade.counterAmount.value | roundAmount:trade.counterAmount.currency }} {{ trade.counterAmount.currency }}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="tx-paging" ng-show="lastPage() > 1">
+                <button ng-click="previousPage()" class="btn btn-default previous-page" ng-class="{disabled: currentPage == 1}">Previous</button>
+                <button ng-click="nextPage()" class="btn btn-default next-page" ng-class="{disabled: currentPage == lastPage()}">Next</button>
+            </div>
+        </div>
+    </div>
+</div>
