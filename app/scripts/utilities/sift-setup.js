@@ -4,7 +4,7 @@ var _sift = _sift || [];
 function loadSiftScript(userId) {
   _user_id = userId;
 
-  _sift.push(['_setAccount', '5c25600a01']);
+  _sift.push(['_setAccount', Options.SIFT_SCIENCE_ACCOUNT]);
   _sift.push(['_setUserId', _user_id]);
   _sift.push(['_trackPageview']);
 
@@ -14,4 +14,4 @@ function loadSiftScript(userId) {
   e.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'cdn.siftscience.com/s.js';
   var s = document.getElementsByTagName('script')[0];
   s.parentNode.insertBefore(e, s);
-};
+}
