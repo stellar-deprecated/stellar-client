@@ -137,10 +137,12 @@ stellarClient.run(function($rootScope, $timeout, StellarNetwork, ActionLink){
   });
 
   $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
-    StellarNetwork.ensureConnection().then(function() {
-      // HACK: Timeout required to allow templates' controllers initialize and start listening.
-      $timeout(ActionLink.process, 0);
-    });
+    if(toState.authenticate) {
+      StellarNetwork.ensureConnection().then(function() {
+        // HACK: Timeout required to allow templates' controllers initialize and start listening.
+        $timeout(ActionLink.process, 0);
+      });
+    }
   });
 });
 
