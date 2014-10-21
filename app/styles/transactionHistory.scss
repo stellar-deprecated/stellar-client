@@ -85,19 +85,18 @@
         }
       }
     }
+  }
+}
 
+.tx-paging {
+  margin-top: 20px;
+
+  button {
+    width: auto;
   }
 
-  .tx-paging {
-    margin-top: 20px;
-
-    button {
-      width: auto;
-    }
-
-    .next-page {
-      float: right;
-    }
+  .next-page {
+    float: right;
   }
 }
 
