@@ -52,8 +52,7 @@ angular.module('stellarClient').controller('SettingsTotpCtrl', function($scope, 
         secretKey: session.get('wallet').keychainData.signingKeys.secret
       });
     }).then(function() {
-      $scope.enabling = false;
-      $scope.code = null;
+      $scope.reset();
       $scope.$emit('settings-totp-toggled', true);
       if (session.isPersistent()) {
         session.get('wallet').saveLocal(); // We need to rewrite wallet object because isTotpEnabled var changed
@@ -93,9 +92,7 @@ angular.module('stellarClient').controller('SettingsTotpCtrl', function($scope, 
         secretKey: session.get('wallet').keychainData.signingKeys.secret
       });
     }).then(function() {
-      $scope.disabling = false;
-      $scope.code = null;
-      $scope.password = null;
+      $scope.reset();
       $scope.$emit('settings-totp-toggled', false);
       if (session.isPersistent()) {
         session.get('wallet').saveLocal(); // We need to rewrite wallet object because isTotpEnabled var changed
