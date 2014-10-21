@@ -39,7 +39,6 @@
     "gulp-util": "^3.0.0",
     "gulp-protractor": "^0.0.11",
     "ink-docstrap": "^0.4.12",
-    "jsdoc": "^3.3.0-alpha9",
     "jshint-stylish": "^0.1.5",
     "karma": "^0.12.16",
     "karma-mocha": "^0.1.4",

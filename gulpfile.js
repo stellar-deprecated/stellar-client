@@ -32,7 +32,7 @@ gulp.task('build', function(done) {
   runSequence('clean', ['html', 'images', 'fonts'], done);
 });
 gulp.task('dist',    ['build']);
-gulp.task('scripts', ['scripts:lint', 'scripts:templateCache', 'scripts:unminified', 'scripts:docs']);
+gulp.task('scripts', ['scripts:lint', 'scripts:templateCache', 'scripts:unminified']);
 
 
 //component tasks
@@ -91,7 +91,9 @@ gulp.task('scripts:templateCache', function() {
     return mergeStream(templates, states);
 });
 
-gulp.task('scripts:docs', $.shell.task(['./node_modules/.bin/jsdoc -c ./jsdoc.conf.json'], {ignoreErrors:true}));
+// assumes that jsdoc is installed globally, because it tends to break the build when npm installing
+// it on linux
+gulp.task('scripts:docs', $.shell.task(['jsdoc -c ./jsdoc.conf.json'], {ignoreErrors:true}));
 
 gulp.task('html', ['config', 'styles', 'scripts', 'flash'], function (done) {
     git.long(function (revision) {
