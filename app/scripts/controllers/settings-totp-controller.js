@@ -38,10 +38,19 @@ angular.module('stellarClient').controller('SettingsTotpCtrl', function($scope, 
     $event.preventDefault();
     $scope.error = null;
 
-    wallet.enableTotp({
-      totpKey: key,
-      totpCode: $scope.code,
-      secretKey: session.get('wallet').keychainData.signingKeys.secret
+    var params = {
+      server: Options.WALLET_SERVER+'/v2',
+      username: wallet.getUsername(),
+      password: $scope.password,
+      totpCode: $scope.code
+    };
+
+    StellarWallet.getWallet(params).then(function() {
+      return wallet.enableTotp({
+        totpKey: key,
+        totpCode: $scope.code,
+        secretKey: session.get('wallet').keychainData.signingKeys.secret
+      });
     }).then(function() {
       $scope.enabling = false;
       $scope.code = null;
@@ -49,10 +58,11 @@ angular.module('stellarClient').controller('SettingsTotpCtrl', function($scope, 
       if (session.isPersistent()) {
         session.get('wallet').saveLocal(); // We need to rewrite wallet object because isTotpEnabled var changed
       }
-    }).catch(StellarWallet.errors.MissingField, function() {
-      $scope.error = 'Please enter a code.';
-    }).catch(StellarWallet.errors.InvalidTotpCode, function() {
-      $scope.error = 'Invalid code.';
+    }).catch(StellarWallet.errors.Forbidden,
+             StellarWallet.errors.TotpCodeRequired,
+             StellarWallet.errors.InvalidTotpCode,
+             StellarWallet.errors.MissingField, function() {
+      $scope.error = "Password or TOTP code incorrect.";
     }).catch(StellarWallet.errors.ConnectionError, function() {
       $scope.error = 'Connection error. Please try again.';
     }).catch(StellarWallet.errors.UnknownError, function() {
