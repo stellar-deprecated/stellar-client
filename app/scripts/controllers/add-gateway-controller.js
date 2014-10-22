@@ -11,7 +11,7 @@ sc.controller('AddGatewayCtrl', function($scope, $q, session, singletonPromise, 
 
     // If user got here from a weblink, scroll to the `add gateway` section for them
     setTimeout(function() {
-      $('html, body').animate({scrollTop: $('#action-add-gateway-scroll-point').offset().top - 20}, 400);
+      $('html, body').animate({scrollTop: $('.gateway-form').offset().top}, 400);
     }, 0);
 
     $scope.gatewaySearch = params.domain;
