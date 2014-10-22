@@ -13,7 +13,7 @@ var sc = angular.module('stellarClient');
  * - `trade-history:new`: The stellar network has added a transaction affecting
  * an offer placed by the current account.
  *
- * @namespace PaymentHistory
+ * @namespace TradeHistory
  */
 sc.service('TradeHistory', function($rootScope, TransactionHistory, Trading, session) {
   TransactionHistory.onTransaction(function(transaction) {
