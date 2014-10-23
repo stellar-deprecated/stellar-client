@@ -315,22 +315,23 @@ select.form-control {
 
 .user-form {
   padding-bottom: 80px;
+
   .form-group {
     .errors {
       height: auto;
     }
   }
+
   @media (max-width: $phone-width) {
     h1 {
       margin: 0;
     }
 
     .form-group {
-      .errors {
-      }
       label {
         line-height: 2em;
       }
+
       button {
         margin: 15px 0;
       }
@@ -338,5 +339,3 @@ select.form-control {
     
   }
 }
-
-
