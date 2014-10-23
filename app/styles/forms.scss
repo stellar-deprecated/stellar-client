@@ -311,3 +311,30 @@ select.form-control {
   }
 }
 
+// for registration and login forms
+
+.user-form {
+  padding-bottom: 80px;
+
+  .form-group {
+    .errors {
+      height: auto;
+    }
+  }
+
+  @media (max-width: $phone-width) {
+    h1 {
+      margin: 0;
+    }
+
+    .form-group {
+      label {
+        line-height: 2em;
+      }
+
+      button {
+        margin: 15px 0;
+      }
+    }   
+  }
+}

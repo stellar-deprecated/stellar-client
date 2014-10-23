@@ -1,5 +1,4 @@
 .login {
-  padding-bottom: 80px;
 
   .input-icon-wrapper {
 
@@ -54,23 +53,5 @@
         color: $error;
       }
     }
-  }
-
-  @media (max-width: $phone-width) {
-    h1 {
-      margin: 0;
-    }
-
-    .form-group {
-      .errors {
-      }
-      label {
-        line-height: 2em;
-      }
-      button {
-        margin: 15px 0;
-      }
-    }
-    
   }
 }
