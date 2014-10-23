@@ -60,5 +60,9 @@ sc.controller('AddGatewayCtrl', function($scope, $q, session, singletonPromise, 
     $scope.resetSearch();
   };
 
+  $scope.actionLinkAlertActive = function() {
+    return $scope.fromActionLink && $scope.searchStatus !== 'already_added';
+  };
+
   $scope.resetSearch();
 });
