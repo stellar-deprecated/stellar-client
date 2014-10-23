@@ -5,7 +5,6 @@ $input-border-color: #cccccc;
 $input-border-focus-color: #66afe9;
 
 .registration {
-  padding-bottom: 80px;
   .terms .tip {
     margin-bottom: 10px;
 
@@ -29,89 +28,5 @@ $input-border-focus-color: #66afe9;
 
   .form-group.terms {
     margin-bottom: 0;
-  }
-}
-
-.login {
-  padding-bottom: 80px;
-
-  .input-icon-wrapper {
-
-    .icon {
-      margin-right:15px;
-      color: #D8D8D8;
-      margin-right: 15px;
-    }
-
-    .icon-user {
-      font-size: 16px;
-      padding: 10px 12px;
-      color: #C8C8C8
-    }
-
-    .icon-key {
-      font-size: 10px;
-      padding: 16px 12px;
-    }
-  }
-
-  .form-group {
-    .warning {
-      padding: 15px 20px;
-      background-color: #FFEBE6;
-      border: 1px solid #FFD5E0;
-      border-radius: 2px;
-      position: relative;
-      color: #242321;
-
-      &:before {
-        border-style: solid;
-        border-color: #FFD5E0 transparent;
-        border-width: 0 6px 8px 6px;
-        top: -9px;
-        content: "";
-        position: absolute;
-        left: 20px;
-      }
-
-      &:after {
-        border-style: solid;
-        border-color: #FFEBE6 transparent;
-        border-width: 0 6px 8px 6px;
-        top: -8px;
-        content: "";
-        position: absolute;
-        left: 20px;
-      }
-
-      .warning-title {
-        color: $error;
-      }
-    }
-  }
-}
-
-.user-form {
-  .form-group {
-    .errors {
-      height: auto;
-    }
-  }
-  @media (max-width: $phone-width) {
-    h1 {
-      margin: 0;
-    }
-
-    .form-group {
-      .errors {
-      }
-      label {
-        line-height: 2em;
-      }
-      button {
-        margin: 15px 0;
-      }
-    }
-    
   }
 }
