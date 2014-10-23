@@ -12,6 +12,7 @@ angular.module('stellarClient').controller('RegistrationCtrl', function(
   session,
   debounce,
   singletonPromise,
+  usernameProof,
   Wallet,
   FlashMessages,
   invites,
@@ -156,7 +157,6 @@ angular.module('stellarClient').controller('RegistrationCtrl', function(
   }
 
   function generateSigningKeys(data) {
-    //data.signingKeys = new SigningKeys();
     data.signingKeys = StellarWallet.util.generateKeyPair();
     return $q.when(data);
   }
@@ -234,7 +234,7 @@ angular.module('stellarClient').controller('RegistrationCtrl', function(
       server: Options.server
     };
 
-    // TODO nameclaim!
+    var proof = usernameProof(data.signingKeys, data.username);
 
     // TODO 3 attempts in case of connection errors
     StellarWallet.createWallet({
@@ -243,7 +243,8 @@ angular.module('stellarClient').controller('RegistrationCtrl', function(
       password: data.password,
       publicKey: data.signingKeys.publicKey,
       keychainData: JSON.stringify(keychainData),
-      mainData: JSON.stringify(mainData)
+      mainData: JSON.stringify(mainData),
+      usernameProof: proof
     }).then(function(wallet) {
       data.wallet = new Wallet({
         version: 2,

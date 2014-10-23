@@ -73,6 +73,11 @@ stellarClient.config(function($httpProvider, $stateProvider, $urlRouterProvider,
       authenticate: false,
       params: {'username': 0, 'totpRequired': 0}
     })
+    .state('recovery_v2', {
+      url:         '/recovery-v2',
+      templateUrl: 'states/recovery_v2.html',
+      authenticate: false
+    })
     .state('recovery', {
       url:         '/recovery',
       templateUrl: 'states/recovery.html',

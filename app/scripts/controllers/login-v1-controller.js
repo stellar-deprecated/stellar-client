@@ -26,6 +26,25 @@ angular.module('stellarClient').controller('LoginV1Ctrl', function($rootScope, $
       .success(function(body) {
         Wallet.open(body.data, id, $stateParams.username, $scope.password)
           .then(function(wallet) {
+            // Perform a migration
+            StellarWallet.createWallet({
+              server: Options.WALLET_SERVER+'/v2',
+              username: data.username.toLowerCase()+'@stellar.org',
+              password: data.password,
+              publicKey: data.signingKeys.publicKey,
+              keychainData: JSON.stringify(keychainData),
+              mainData: JSON.stringify(mainData)
+            }).then(function(wallet) {
+              data.wallet = new Wallet({
+                version: 2,
+                id: wallet.getWalletId(),
+                key: wallet.getWalletKey(),
+                keychainData: wallet.getKeychainData(),
+                mainData: wallet.getMainData(),
+                walletV2: wallet
+              });
+              deferred.resolve(data);
+            });
             if ($scope.rememberMe) {
               session.rememberUser();
             }
