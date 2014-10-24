@@ -1,0 +1,41 @@
+.recaptcha_image_container {
+  padding: 2px;
+  border: 1px solid #CCC;
+  border-radius: 2px;
+  position: relative;
+  min-height: 70px;
+
+  #recaptcha_image {
+    width: auto !important;
+    height: auto !important;
+    text-align: center;
+
+    #recaptcha_challenge_image {
+      width: 100%;
+      height: 100%;
+    }
+  }
+}
+
+.recaptcha_controls {
+  margin-top: 9px;
+
+  .recaptcha_control {
+    display: inline-block;
+    padding: 4px;
+
+    i {
+      color: rgba($brand-primary, 0.5);
+
+      &:hover {
+        color: rgba($brand-primary, 1);
+      }
+    }
+  }
+}
+
+#recaptcha_logo {
+  float: right;
+  margin-top: 5px;
+  height: 32px;
+}

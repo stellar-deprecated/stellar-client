@@ -42,7 +42,8 @@ stellarClient.config(function($httpProvider, $stateProvider, $urlRouterProvider,
 
   reCAPTCHAProvider.setPublicKey(Options.CAPTCHA_KEY);
   reCAPTCHAProvider.setOptions({
-    theme: 'clean'
+    theme: 'custom',
+    custom_theme_widget: 'recaptcha_widget'
   });
 
   if(Options.REPORT_ERRORS !== true) {
