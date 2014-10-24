@@ -35,7 +35,7 @@ sc.controller('NavCtrl', function($scope, session) {
   };
 
   $scope.showTradingLink = function() {
-    return wallet && wallet.get('mainData', 'showTrading', false);
+    return wallet && wallet.get('mainData', 'showTrading', true);
   };
 
   $scope.showInvitesLink = function() {
