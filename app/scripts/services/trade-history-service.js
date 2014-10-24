@@ -111,7 +111,10 @@ sc.service('TradeHistory', function($rootScope, TransactionHistory, Trading, ses
       }
     });
 
-    return Trading.offer.toFriendlyOffer(offer);
+    var trade = Trading.offer.toFriendlyOffer(offer);
+    trade.date = stellar.utils.toTimestamp(transaction.tx.date);
+
+    return trade;
   }
 
   var processTradeOnce = _.memoize(processTrade, function(transaction) {
