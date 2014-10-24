@@ -14,7 +14,7 @@
         <tbody>
             <tr ng-repeat="offer in myOffers" ng-controller="OfferRowCtrl">
                 <td>{{ offer.operation }}</td>
-                <td>{{ offer.baseAmount.currency }}/{{ offer.counterAmount.currency }}</td>
+                <td>{{ offer.counterAmount.currency }}/{{ offer.baseAmount.currency }}</td>
                 <td>{{ offer.baseAmount.value | roundAmount:offer.baseAmount.currency }} {{ offer.baseAmount.currency }}</td>
                 <td>{{ offer.price.value | roundedAmount:precision }} {{ offer.price.currency }}</td>
                 <td>{{ offer.counterAmount.value | roundAmount:offer.counterAmount.currency }} {{ offer.counterAmount.currency }}</td>
