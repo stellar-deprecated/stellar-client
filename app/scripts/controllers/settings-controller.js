@@ -76,7 +76,7 @@ sc.controller('SettingsCtrl', function($scope, $http, $state, session, singleton
     trading: {
       NAME: "trading",
       click: toggleTrading,
-      on: wallet.get('mainData', 'showTrading', false),
+      on: wallet.get('mainData', 'showTrading', true),
       wrapper: angular.element('#tradingtoggle')
     }
   };
