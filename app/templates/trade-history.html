@@ -11,6 +11,7 @@
                         <th>Amount</th>
                         <th>Price</th>
                         <th>Total Value</th>
+                        <th>Date</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -20,6 +21,7 @@
                         <td>{{ trade.baseAmount.value | roundAmount:trade.baseAmount.currency }} {{ trade.baseAmount.currency }}</td>
                         <td>{{ trade.price.value | roundedAmount:precision }} {{ trade.price.currency }}</td>
                         <td>{{ trade.counterAmount.value | roundAmount:trade.counterAmount.currency }} {{ trade.counterAmount.currency }}</td>
+                        <td><span am-time-ago="trade.date"></span></td>
                     </tr>
                 </tbody>
             </table>
