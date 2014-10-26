@@ -236,7 +236,6 @@ angular.module('stellarClient').controller('RegistrationCtrl', function(
 
     var proof = usernameProof(data.signingKeys, data.username);
 
-    // TODO 3 attempts in case of connection errors
     StellarWallet.createWallet({
       server: Options.WALLET_SERVER+'/v2',
       username: data.username.toLowerCase()+'@stellar.org',
@@ -255,8 +254,12 @@ angular.module('stellarClient').controller('RegistrationCtrl', function(
         walletV2: wallet
       });
       deferred.resolve(data);
+    }).catch(StellarWallet.errors.ConnectionError, function(e) {
+      $scope.errors.usernameErrors.push('Connection error. Please try again later.');
+    }).catch(function(e) {
+      $scope.errors.usernameErrors.push('Unknown error. Please try again later.');
+      throw e;
     });
-    // TODO handle createWallet errors
 
     return deferred.promise;
   }
