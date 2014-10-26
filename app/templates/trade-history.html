@@ -17,7 +17,7 @@
                 <tbody>
                     <tr ng-repeat="trade in trades" ng-controller="OfferRowCtrl">
                         <td>{{ trade.operation }}</td>
-                        <td>{{ trade.counterAmount.currency }}/{{ trade.baseAmount.currency }}</td>
+                        <td>{{ trade.baseAmount.currency }}/{{ trade.counterAmount.currency }}</td>
                         <td>{{ trade.baseAmount.value | roundAmount:trade.baseAmount.currency }} {{ trade.baseAmount.currency }}</td>
                         <td>{{ trade.price.value | roundedAmount:precision }} {{ trade.price.currency }}</td>
                         <td>{{ trade.counterAmount.value | roundAmount:trade.counterAmount.currency }} {{ trade.counterAmount.currency }}</td>
