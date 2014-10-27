@@ -1,5 +1,6 @@
 'use strict';
 /* global SigningKeys */
+/* jshint camelcase: false */
 
 var sc = angular.module('stellarClient');
 
@@ -29,7 +30,8 @@ sc.controller('RegistrationCtrl', function(
     email:                '',
     password:             '',
     passwordConfirmation: '',
-    recap:                ''
+    recap:                '',
+    secret:               ''
   };
 
   session.put('inviteCode', $stateParams.inviteCode);
@@ -38,7 +40,8 @@ sc.controller('RegistrationCtrl', function(
     usernameAvailable:    null,
     emailAvailable:       null,
     passwordValid:        null,
-    passwordConfirmValid: null
+    passwordConfirmValid: null,
+    secretValid:          null
   };
 
   $scope.errors = {
@@ -46,12 +49,13 @@ sc.controller('RegistrationCtrl', function(
     emailErrors:           [],
     passwordErrors:        [],
     passwordConfirmErrors: [],
-    captchaErrors:         []
+    captchaErrors:         [],
+    secretErrors:          []
   };
 
   $scope.validators = [];
   $scope.noEmailWarning = false;
-
+  $scope.showSecretInput = false;
 
   if(window.analytics && window.analytics.reset) {
     window.analytics.reset();
@@ -126,6 +130,43 @@ sc.controller('RegistrationCtrl', function(
     }
   };
 
+  $scope.checkSecret = function() {
+    $scope.errors.secretErrors = [];
+    $scope.status.secretValid = null;
+
+    if($scope.data.secret !== '') {
+      $scope.status.secretValid = checkSecret();
+    }
+  };
+
+  function checkSecret() {
+    var seed = stellar.Base.decode_check(stellar.Base.VER_SEED, $scope.data.secret);
+    return !!seed;
+  }
+
+  $scope.secretClass = function() {
+    if($scope.status.secretValid === null) {
+      return 'glyphicon-none';
+    } else {
+      return $scope.status.secretValid ? 'glyphicon-ok' : 'glyphicon-remove';
+    }
+  };
+
+  $scope.toggleSecretInput = function() {
+    if(!$scope.data.secret) {
+      $scope.generateSecret();
+    }
+
+    $scope.showSecretInput = !$scope.showSecretInput;
+  };
+
+  $scope.generateSecret = function() {
+    var signingKeys = new SigningKeys();
+    $scope.data.secret = signingKeys.secret;
+    $scope.errors.secretErrors = [];
+    $scope.status.secretValid = true;
+  };
+
   // Validate the input before submitting the registration form.
   // This generates messages that help the user resolve their errors.
   function validateInput() {
@@ -142,6 +183,12 @@ sc.controller('RegistrationCtrl', function(
     else if($scope.status.usernameAvailable === false){
       validInput = false;
       $scope.errors.usernameErrors.push('This username is taken.');
+    }
+
+    if($scope.data.secret && $scope.status.secretValid === false){
+      validInput = false;
+      $scope.showSecretInput = true;
+      $scope.errors.secretErrors.push('Invalid secret key.');
     }
 
     // if(!registration.email.value && $scope.noEmailWarning == false) {
@@ -181,7 +228,7 @@ sc.controller('RegistrationCtrl', function(
   $scope.attemptRegistration = singletonPromise(function() {
     return validateInput()
       .then(function() {
-        var signingKeys = new SigningKeys();
+        var signingKeys = new SigningKeys($scope.data.secret);
 
         return submitRegistration(signingKeys)
           .then(function(response) {
