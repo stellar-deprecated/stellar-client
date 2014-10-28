@@ -57,7 +57,7 @@ gulp develop
 
 ## Public Roadmap
 
-We've created a [public roadmap](https://trello.com/b/Clb1VMP5/platform-roadmap) so that you can see what work is planned, what is in progress, and when features have been released.
+We've created a [public roadmap](https://trello.com/b/Clb1VMP5/platform-roadmap) so that you can see what work is planned, what is in progress, and when features have been released.  You can see previews of designs, give feedback, and up-vote roadmap items.
 
 [![](https://trello.com/b/Clb1VMP5.png)](https://trello.com/b/Clb1VMP5/platform-roadmap)  
 
