@@ -241,7 +241,10 @@ sc.controller('RegistrationCtrl', function(
         session.login(wallet);
         
         var inviteCode = session.get('inviteCode');
-        $analytics.eventTrack('Account Created', {inviteCode: inviteCode});
+        $analytics.eventTrack('Account Created', {
+          inviteCode: inviteCode,
+          type: inviteCode ? 'Invited' : 'Organic'
+        });
 
         if(inviteCode) {
           invites.claim(inviteCode)
