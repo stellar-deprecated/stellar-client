@@ -322,6 +322,11 @@ select.form-control {
     }
   }
 
+  .input-icon-wrapper .icon-key {
+    font-size: 10px;
+    padding: 16px 12px;
+  }
+
   @media (max-width: $phone-width) {
     h1 {
       margin: 0;
