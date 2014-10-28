@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('stellarClient').controller('RecoveryV2Ctrl', function($scope, $q, $http, singletonPromise, debounce) {
+angular.module('stellarClient').controller('RecoveryV2Ctrl', function($scope, $state, $q, $http, singletonPromise, debounce) {
   $scope.username = null;
   $scope.totpRequired = false;
   $scope.recoveryCode = null;
@@ -38,7 +38,12 @@ angular.module('stellarClient').controller('RecoveryV2Ctrl', function($scope, $q
       .then(validate)
       .then(recover)
       .then(function (params) {
-        $state.go('change_password_v2');
+        $state.go('change_password_v2', {
+          username: params.username,
+          walletId: params.walletId,
+          walletKey: params.walletKey,
+          totpRequired: $scope.totpRequired
+        });
       });
   });
 
@@ -77,7 +82,9 @@ angular.module('stellarClient').controller('RecoveryV2Ctrl', function($scope, $q
     }
 
     StellarWallet.recover(data).then(function(data) {
-      console.log(data);
+      params.walletId = data.walletId;
+      params.walletKey = data.walletKey;
+      deferred.resolve(params);
     }).catch(StellarWallet.errors.Forbidden, function() {
       $scope.usernameError = "Invalid username or recovery code.";
       deferred.reject();

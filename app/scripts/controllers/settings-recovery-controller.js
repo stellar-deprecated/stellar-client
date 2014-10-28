@@ -45,6 +45,7 @@ angular.module('stellarClient').controller('SettingsRecoveryCtrl', function($sco
   $scope.confirmEnableRecovery = function($event) {
     $event.preventDefault();
     if ($scope.code === recoveryCode) {
+      recoveryCode = null;
       $scope.enabling = false;
       $scope.$emit('settings-recovery-toggled', true);
     } else {

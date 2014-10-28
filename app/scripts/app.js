@@ -113,9 +113,9 @@ stellarClient.config(function($httpProvider, $stateProvider, $urlRouterProvider,
       authenticate: true
     })
     .state('change_password_v2', {
-      url:         '/change_password_v2',
       templateUrl: 'states/change_password_v2.html',
-      authenticate: true
+      authenticate: false,
+      params: {'username': 0, 'walletId': 0, 'walletKey': 0, 'totpRequired': false}
     })
     .state('settings', {
       url:         '/settings',
