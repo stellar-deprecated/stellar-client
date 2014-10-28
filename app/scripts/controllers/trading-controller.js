@@ -30,11 +30,11 @@ sc.controller('TradingCtrl', function($scope, $q, Trading, Gateways, singletonPr
                       baseCurrencyGateway !== counterCurrencyGateway;
 
     if (twoGateways) {
-      return currencyPair.counterCurrency.currency + ' (' + counterCurrencyGateway + ')' + ' / ' +
-             currencyPair.baseCurrency.currency    + ' (' + baseCurrencyGateway    + ')';
+      return currencyPair.baseCurrency.currency    + ' (' + baseCurrencyGateway    + ')' + ' / ' +
+             currencyPair.counterCurrency.currency + ' (' + counterCurrencyGateway + ')';
     } else {
-      return currencyPair.counterCurrency.currency + '/' +
-             currencyPair.baseCurrency.currency    + ' ' +
+      return currencyPair.baseCurrency.currency    + '/' +
+             currencyPair.counterCurrency.currency + ' ' +
              '(' + (baseCurrencyGateway || counterCurrencyGateway) + ')';
     }
   };

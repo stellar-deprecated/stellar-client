@@ -9,7 +9,7 @@
             <table class="order-book-table table" ng-show="currentBids.length">
                 <thead>
                     <tr>
-                        <th>Price ({{ currentOrderBook.counterCurrency.currency }}/{{ currentOrderBook.baseCurrency.currency }})</th>
+                        <th>Price ({{ currentOrderBook.baseCurrency.currency }}/{{ currentOrderBook.counterCurrency.currency }})</th>
                         <th>Amount ({{ currentOrderBook.baseCurrency.currency }})</th>
                         <th>Depth ({{ currentOrderBook.baseCurrency.currency }})</th>
                     </tr>
@@ -29,7 +29,7 @@
             <table class="order-book-table table" ng-show="currentAsks.length">
                 <thead>
                     <tr>
-                        <th>Price ({{ currentOrderBook.counterCurrency.currency }}/{{ currentOrderBook.baseCurrency.currency }})</th>
+                        <th>Price ({{ currentOrderBook.baseCurrency.currency }}/{{ currentOrderBook.counterCurrency.currency }})</th>
                         <th>Amount ({{ currentOrderBook.baseCurrency.currency }})</th>
                         <th>Depth ({{ currentOrderBook.baseCurrency.currency }})</th>
                     </tr>
