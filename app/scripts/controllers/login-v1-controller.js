@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('stellarClient').controller('LoginV1Ctrl', function($rootScope, $scope, $http, $state, $stateParams, session, invites, Wallet, singletonPromise) {
+angular.module('stellarClient').controller('LoginV1Ctrl', function($rootScope, $scope, $http, $state, $stateParams, session, invites, Wallet, singletonPromise, usernameProof) {
   setTimeout(function() {
     angular.element('#password')[0].focus();
   }, 200);
@@ -26,14 +26,20 @@ angular.module('stellarClient').controller('LoginV1Ctrl', function($rootScope, $
       .success(function(body) {
         Wallet.open(body.data, id, $stateParams.username, $scope.password)
           .then(function(wallet) {
+            var proof = usernameProof(wallet.keychainData.signingKeys, $stateParams.username);
+
+            // Make sure keychainData is the same after migration and after registration
+            // (TOTP uses base64 secretKey)
+
             // Perform a migration
             StellarWallet.createWallet({
               server: Options.WALLET_SERVER+'/v2',
-              username: data.username.toLowerCase()+'@stellar.org',
-              password: data.password,
-              publicKey: data.signingKeys.publicKey,
-              keychainData: JSON.stringify(keychainData),
-              mainData: JSON.stringify(mainData)
+              username: $stateParams.username.toLowerCase()+'@stellar.org',
+              password: $scope.password,
+              publicKey: wallet.signingKeys.publicKey,
+              keychainData: JSON.stringify(wallet.keychainData),
+              mainData: JSON.stringify(wallet.mainData),
+              usernameProof: proof
             }).then(function(wallet) {
               data.wallet = new Wallet({
                 version: 2,

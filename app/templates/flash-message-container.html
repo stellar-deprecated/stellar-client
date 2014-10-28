@@ -1,8 +1,8 @@
 <div class="flash-message-container container" ng-show="messages.length">
     <div ng-repeat="message in messages" class="flash-message" ng-class="message.type">
-        <i class="icon icon-close" ng-click="dismissMessage($index)"></i>
+        <i class="icon icon-close" ng-click="dismissMessage($index)" ng-show="message.showCloseIcon"></i>
         <div class="flash-body">
-          <span class="flash-title">{{ message.title }}</span>
+          <span ng-if="message.title" class="flash-title">{{ message.title }}</span>
           <span ng-if="message.info" class="flash-info">{{ message.info }}</span>
           <div ng-if="message.template" class="flash-template" ng-include="message.template"></div>
         </div>

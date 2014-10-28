@@ -1,10 +1,33 @@
 'use strict';
 
-angular.module('stellarClient').controller('RecoveryV2Ctrl', function($scope, $q, $http, singletonPromise) {
+angular.module('stellarClient').controller('RecoveryV2Ctrl', function($scope, $q, $http, singletonPromise, debounce) {
   $scope.username = null;
+  $scope.totpRequired = false;
   $scope.recoveryCode = null;
   $scope.recoveryError = null;
   $scope.usernameError = null;
+
+  $scope.checkTotpRequired = debounce(1000, function() {
+    $scope.usernameError = null;
+
+    if (_.isEmpty($scope.username)) {
+      return;
+    }
+
+    $scope.usernameClass = 'glyphicon-refresh spin';
+    var username = $scope.username + '@stellar.org';
+
+    $http.post(Options.WALLET_SERVER + '/v2/wallets/show_login_params', {
+      username: username
+    }).success(function(response) {
+      $scope.totpRequired = response.totpRequired;
+    }).error(function(body, status) {
+      $scope.usernameError = "Invalid username.";
+    }).finally(function() {
+      $scope.usernameClass = 'glyphicon-none';
+    });
+  });
+
   $scope.attemptRecovery = singletonPromise(function() {
     var params = {
       username: $scope.username,
@@ -13,8 +36,10 @@ angular.module('stellarClient').controller('RecoveryV2Ctrl', function($scope, $q
 
     return $q.when(params)
       .then(validate)
-      .then(checkIfTotpEnabled)
-      .then(recover);
+      .then(recover)
+      .then(function (params) {
+        $state.go('change_password_v2');
+      });
   });
 
   function validate(params) {
@@ -38,33 +63,21 @@ angular.module('stellarClient').controller('RecoveryV2Ctrl', function($scope, $q
     return params;
   }
 
-  function checkIfTotpEnabled(params) {
-    var deferred = $q.defer();
-
-    $http.post(Options.WALLET_SERVER + '/v2/wallets/show_login_params', {
-      username: params.username
-    }).success(function(response) {
-       params.totpRequired = response.totpRequired;
-       deferred.resolve(params);
-    }).error(function(body, status) {
-       $scope.usernameError = "Invalid username or recovery code.";
-       deferred.reject();
-    });
-
-    return deferred.promise;
-  }
-
   function recover(params) {
     var deferred = $q.defer();
 
-    StellarWallet.recover({
+    var data = {
       server: Options.WALLET_SERVER+'/v2',
       username: params.username,
       recoveryKey: params.recoveryCode
-    }).then(function(data) {
-      console.log(data.walletId);
-      console.log(data.walletKey);
-      deferred.resolve(params);
+    };
+
+    if ($scope.totpRequired) {
+      data.totpCode = $scope.totpCode;
+    }
+
+    StellarWallet.recover(data).then(function(data) {
+      console.log(data);
     }).catch(StellarWallet.errors.Forbidden, function() {
       $scope.usernameError = "Invalid username or recovery code.";
       deferred.reject();

@@ -9,7 +9,10 @@
         </div>
         <label for="username" class="col-sm-3">USERNAME</label>
         <div class="col-sm-6">
-          <input id="username" type="text" class="form-control" ng-model="username" ng-change="usernameError = null">
+          <input id="username" type="text" class="form-control" ng-model="username" ng-change="checkTotpRequired()">
+        </div>
+        <div class="col-sm-3 info">
+          <i class="username-status status glyphicon" ng-class="usernameClass"></i>
         </div>
       </div>
       <div class="form-group">
@@ -19,6 +22,12 @@
         <label for="recovery-code" class="col-sm-3">RECOVERY CODE</label>
         <div class="col-sm-6">
           <input id="recovery-code" type="text" class="form-control" ng-model="recoveryCode" ng-change="recoveryError = null" autocomplete="off">
+        </div>
+      </div>
+      <div class="form-group" ng-show="totpRequired">
+        <label for="totp" class="col-sm-3">2-FACTOR AUTHENTICATION CODE</label>
+        <div class="col-sm-6 input-icon-wrapper">
+          <input id="totp" type="number" class="form-control" maxlength="6" ng-model="totpCode" autocomplete="off" />
         </div>
       </div>
       <div class="form-group">

@@ -49,7 +49,7 @@ angular.module('stellarClient').controller('LoginV2Ctrl', function($scope, $stat
       }));
       $state.go('dashboard');
     }).catch(StellarWallet.errors.Forbidden, function() {
-      $scope.loginError = "Password or 2-Factor-Authentication code is incorrect.";
+      $scope.loginError = "Login credentials are incorrect.";
     }).catch(StellarWallet.errors.TotpCodeRequired, function() {
       $scope.loginError = "2-Factor-Authentication code is required to login.";
     }).catch(StellarWallet.errors.ConnectionError, function() {

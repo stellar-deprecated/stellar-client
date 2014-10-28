@@ -112,10 +112,16 @@ stellarClient.config(function($httpProvider, $stateProvider, $urlRouterProvider,
       templateUrl: 'states/change_password.html',
       authenticate: true
     })
+    .state('change_password_v2', {
+      url:         '/change_password_v2',
+      templateUrl: 'states/change_password_v2.html',
+      authenticate: true
+    })
     .state('settings', {
       url:         '/settings',
       templateUrl: 'states/settings.html',
-      authenticate: true
+      authenticate: true,
+      params: {'migrated-wallet-recovery': false}
     })
     .state('invites', {
       url:         '/invites',

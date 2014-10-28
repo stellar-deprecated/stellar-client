@@ -2,7 +2,15 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('SettingsCtrl', function($scope, $http, $state, session) {
+sc.controller('SettingsCtrl', function($scope, $http, $state, $stateParams, session, FlashMessages) {
+  if ($stateParams['migrated-wallet-recovery']) {
+    FlashMessages.add({
+      id: 'migrated-wallet-recovery-step-1',
+      info: 'Step 1: Click on "reset" to reset your recovery code.',
+      showCloseIcon: false
+    });
+  }
+
   var wallet = session.get('wallet');
   var walletV2 = session.get('wallet').walletV2;
 
@@ -46,10 +54,8 @@ sc.controller('SettingsCtrl', function($scope, $http, $state, session) {
     error: null,
     recover: {
       NAME: "recover",
-      API_ENDPOINT: "/user/setrecover",
-      click: switchToggle,
-      on: false,
-      wrapper: angular.element('#recovertoggle')
+      click: toggleRecovery,
+      on: false
     },
     email: {
       NAME: "email",
@@ -103,15 +109,24 @@ sc.controller('SettingsCtrl', function($scope, $http, $state, session) {
 
   function toggle2FA(toggle) {
     if (session.get('wallet').version === 1) {
-      // TODO not alert
+      // Actually this will never happen as wallets are migrated to V2 during login.
       alert('You need to migrate your wallet to use 2 Factor Authentication.');
       return;
     }
     $scope.$broadcast('settings-totp-clicked', toggle);
   }
 
+  function toggleRecovery(toggle) {
+    $scope.$broadcast('settings-recovery-clicked', toggle);
+  }
+
   $scope.$on('settings-totp-toggled', function($event, value) {
     $scope.toggle.twofa.on = value;
+    $event.stopPropagation();
+  });
+
+  $scope.$on('settings-recovery-toggled', function($event, value) {
+    $scope.toggle.recover.on = value;
     $event.stopPropagation();
   });
 
@@ -152,10 +167,6 @@ sc.controller('SettingsCtrl', function($scope, $http, $state, session) {
         showError(toggle.wrapper, "Server error.");
       }
     });
-  }
-
-  function updatePassword(password) {
-    // TODO
   }
 
   function showError(wrapper, title) {

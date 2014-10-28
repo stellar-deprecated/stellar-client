@@ -55,7 +55,7 @@ angular.module('stellarClient').controller('SettingsTotpCtrl', function($scope, 
       $scope.reset();
       $scope.$emit('settings-totp-toggled', true);
       if (session.isPersistent()) {
-        session.get('wallet').saveLocal(); // We need to rewrite wallet object because isTotpEnabled var changed
+        session.get('wallet').saveLocal(); // We need to rewrite wallet object because isTotpEnabled and lockVersion has changed
       }
     }).catch(StellarWallet.errors.Forbidden,
              StellarWallet.errors.TotpCodeRequired,
@@ -95,7 +95,7 @@ angular.module('stellarClient').controller('SettingsTotpCtrl', function($scope, 
       $scope.reset();
       $scope.$emit('settings-totp-toggled', false);
       if (session.isPersistent()) {
-        session.get('wallet').saveLocal(); // We need to rewrite wallet object because isTotpEnabled var changed
+        session.get('wallet').saveLocal(); // We need to rewrite wallet object because isTotpEnabled and lockVersion has changed
       }
     }).catch(StellarWallet.errors.Forbidden,
              StellarWallet.errors.TotpCodeRequired,

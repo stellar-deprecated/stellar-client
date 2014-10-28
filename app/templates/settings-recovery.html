@@ -1,0 +1,20 @@
+<div ng-if="enabling">
+  <div>
+    We've just sent a new code to your email. Enter your code below: ({{ recoveryCode }})
+  </div>
+  <div class="form-group">
+    <div class="errors col-sm-offset-3 col-sm-6">
+      <div class="tip">{{ error }}</div>
+    </div>
+  </div>
+  <form ng-submit="confirmEnableRecovery($event)">
+    <div class="row">
+      <div class="col-md-5 col-xs-10">
+        <input class="form-control stellar-input" type="text" placeholder="Enter your recovery code" ng-model="$parent.$parent.code" />
+      </div>
+      <div class="icon-col col-xs-1">
+        <button type="submit" class="btn btn-default">Submit</button>
+      </div>
+    </div>
+  </form>
+</div>
