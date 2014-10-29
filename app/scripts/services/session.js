@@ -1,4 +1,5 @@
 'use strict';
+/* global loadSiftScript */
 
 var sc = angular.module('stellarClient');
 
