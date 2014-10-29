@@ -27,6 +27,8 @@ angular.module('stellarClient').controller('ChangePasswordV2Ctrl', function($sco
   // Validate the input before submitting the registration form.
   // This generates messages that help the user resolve their errors.
   function validateInput() {
+    $scope.errors.usernameErrors = [];
+
     var validInput = true;
 
     $scope.validators.forEach(function(validator){
@@ -48,15 +50,18 @@ angular.module('stellarClient').controller('ChangePasswordV2Ctrl', function($sco
       return;
     }
 
-    StellarWallet.getWallet({
+    var params = {
       server: Options.WALLET_SERVER+'/v2',
       username: $stateParams.username,
-      walletId: $stateParams.walletId,
-      walletKey: $stateParams.walletKey,
-      totpCode: $scope.data.totpCode
-    }).then(function(wallet) {
+      masterKey: $stateParams.masterKey
+    };
+
+    if ($scope.totpRequired) {
+      params.totpCode = $scope.data.totpCode;
+    }
+
+    StellarWallet.getWallet(params).then(function(wallet) {
       var keychainData = JSON.parse(wallet.getKeychainData());
-      console.log(keychainData);
       return wallet.changePassword({
         newPassword: $scope.data.password,
         secretKey: keychainData.signingKeys.secretKey
@@ -71,7 +76,7 @@ angular.module('stellarClient').controller('ChangePasswordV2Ctrl', function($sco
       $scope.errors.usernameErrors.push('Forbidden. Are you sure 2FA code is correct?');
     }).catch(StellarWallet.errors.ConnectionError, function(e) {
       $scope.errors.usernameErrors.push('Error connecting wallet server. Please try again later.');
-    }).catch(StellarWallet.errors.UnknownError, function(e) {
+    }).catch(function(e) {
       $scope.errors.usernameErrors.push('Unknown error. Please try again later.');
     }).finally(function() {
       $scope.loading = false;

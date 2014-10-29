@@ -25,29 +25,32 @@ angular.module('stellarClient').controller('SettingsRecoveryCtrl', function($sco
   }
 
   var recoveryCode = null;
-  $scope.recoveryCode = null;
+  $scope.recoveryCode = null; // Temp
 
   function enableRecovery() {
     $scope.enabling = true;
-    wallet.enableRecovery({
-      secretKey: session.get('wallet').keychainData.signingKeys.secretKey
-    }).then(function(code) {
-      recoveryCode = code;
-      $scope.recoveryCode = code; // Temp
-      if (session.isPersistent()) {
-        session.get('wallet').saveLocal(); // We need to rewrite wallet object because lockVersion has changed
-      }
-    }).finally(function() {
-      $scope.$apply();
-    }); // TODO handle errors
+    recoveryCode = StellarWallet.util.generateRandomRecoveryCode();
+    $scope.recoveryCode = recoveryCode; // temp
   }
 
   $scope.confirmEnableRecovery = function($event) {
     $event.preventDefault();
     if ($scope.code === recoveryCode) {
-      recoveryCode = null;
-      $scope.enabling = false;
-      $scope.$emit('settings-recovery-toggled', true);
+      wallet.enableRecovery({
+        secretKey: session.get('wallet').keychainData.signingKeys.secretKey,
+        recoveryCode: $scope.code
+      }).then(function() {
+        recoveryCode = null;
+        $scope.code = null;
+        $scope.recoveryCode = null; // Temp
+        $scope.enabling = false;
+        $scope.$emit('settings-recovery-toggled', true);
+        if (session.isPersistent()) {
+          session.get('wallet').saveLocal(); // We need to rewrite wallet object because lockVersion has changed
+        }
+      }).finally(function() {
+        $scope.$apply();
+      }); // TODO handle errors
     } else {
       $scope.error = 'Incorrect recovery code. Please try again.';
     }

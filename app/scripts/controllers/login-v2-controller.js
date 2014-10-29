@@ -53,12 +53,11 @@ angular.module('stellarClient').controller('LoginV2Ctrl', function($scope, $stat
     }).catch(StellarWallet.errors.TotpCodeRequired, function() {
       $scope.loginError = "2-Factor-Authentication code is required to login.";
     }).catch(StellarWallet.errors.ConnectionError, function() {
-      $scope.loginError = "Error connecting wallet server.";
-    }).catch(StellarWallet.errors.UnknownError, function() {
-      $scope.loginError = "Unknown error.";
+      $scope.loginError = "Error connecting wallet server. Please try again later.";
     }).catch(function(e) {
-      console.error(e);
       $scope.loginError = "Unknown error.";
+    }).finally(function() {
+      $scope.$apply();
     });
   });
 });

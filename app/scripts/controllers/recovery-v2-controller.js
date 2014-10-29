@@ -40,8 +40,7 @@ angular.module('stellarClient').controller('RecoveryV2Ctrl', function($scope, $s
       .then(function (params) {
         $state.go('change_password_v2', {
           username: params.username,
-          walletId: params.walletId,
-          walletKey: params.walletKey,
+          masterKey: params.masterKey,
           totpRequired: $scope.totpRequired
         });
       });
@@ -74,20 +73,27 @@ angular.module('stellarClient').controller('RecoveryV2Ctrl', function($scope, $s
     var data = {
       server: Options.WALLET_SERVER+'/v2',
       username: params.username,
-      recoveryKey: params.recoveryCode
+      recoveryCode: params.recoveryCode
     };
 
     if ($scope.totpRequired) {
       data.totpCode = $scope.totpCode;
     }
 
-    StellarWallet.recover(data).then(function(data) {
-      params.walletId = data.walletId;
-      params.walletKey = data.walletKey;
+    StellarWallet.recover(data).then(function(masterKey) {
+      params.masterKey = masterKey;
       deferred.resolve(params);
     }).catch(StellarWallet.errors.Forbidden, function() {
       $scope.usernameError = "Invalid username or recovery code.";
       deferred.reject();
+    }).catch(StellarWallet.errors.ConnectionError, function() {
+      $scope.usernameError = "Error connecting wallet server. Please try again later.";
+      deferred.reject();
+    }).catch(function(e) {
+      $scope.usernameError = "Unknown error. Please try again later.";
+      deferred.reject();
+    }).finally(function() {
+      $scope.$apply();
     });
 
     return deferred.promise;

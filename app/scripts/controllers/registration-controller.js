@@ -254,11 +254,27 @@ angular.module('stellarClient').controller('RegistrationCtrl', function(
         walletV2: wallet
       });
       deferred.resolve(data);
-    }).catch(StellarWallet.errors.ConnectionError, function(e) {
-      $scope.errors.usernameErrors.push('Connection error. Please try again later.');
     }).catch(function(e) {
-      $scope.errors.usernameErrors.push('Unknown error. Please try again later.');
+      if (e.name === 'ConnectionError') {
+        $scope.errors.usernameErrors.push('Connection error. Please try again later.');
+      } else {
+        $scope.errors.usernameErrors.push('Unknown error. Please try again later.');
+      }
+
+      // In case of a failed registration you need to reload the captcha because each challenge can be checked just once
+      reCAPTCHA.reload();
+
+      // Release username
+      $http.post(Options.API_SERVER + "/failedRegistration", {
+        username: $scope.data.username,
+        updateToken: keychainData.updateToken,
+        email: $scope.data.email
+      });
+
+      deferred.reject();
       throw e;
+    }).finally(function() {
+      $scope.$apply();
     });
 
     return deferred.promise;

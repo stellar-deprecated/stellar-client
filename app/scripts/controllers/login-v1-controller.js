@@ -18,53 +18,19 @@ angular.module('stellarClient').controller('LoginV1Ctrl', function($rootScope, $
       return $q.reject("Password cannot be blank");
     }
     return Wallet.deriveId($stateParams.username, $scope.password)
-      .then(performLogin);
+      .then(performLogin)
+      .then(migrateWallet)
+      .then(login)
+      .then(claimInvite)
+      .then(function() {
+        $state.go('dashboard');
+      });
   });
 
   function performLogin(id) {
     return $http.post(Options.WALLET_SERVER + '/wallets/show', {id: id})
       .success(function(body) {
-        Wallet.open(body.data, id, $stateParams.username, $scope.password)
-          .then(function(wallet) {
-            var proof = usernameProof(wallet.keychainData.signingKeys, $stateParams.username);
-
-            // Make sure keychainData is the same after migration and after registration
-            // (TOTP uses base64 secretKey)
-
-            // Perform a migration
-            StellarWallet.createWallet({
-              server: Options.WALLET_SERVER+'/v2',
-              username: $stateParams.username.toLowerCase()+'@stellar.org',
-              password: $scope.password,
-              publicKey: wallet.signingKeys.publicKey,
-              keychainData: JSON.stringify(wallet.keychainData),
-              mainData: JSON.stringify(wallet.mainData),
-              usernameProof: proof
-            }).then(function(wallet) {
-              data.wallet = new Wallet({
-                version: 2,
-                id: wallet.getWalletId(),
-                key: wallet.getWalletKey(),
-                keychainData: wallet.getKeychainData(),
-                mainData: wallet.getMainData(),
-                walletV2: wallet
-              });
-              deferred.resolve(data);
-            });
-            if ($scope.rememberMe) {
-              session.rememberUser();
-            }
-            session.login(wallet);
-
-            if(session.get('inviteCode')) {
-              invites.claim(session.get('inviteCode'))
-                .success(function (response) {
-                  $rootScope.$broadcast('invite-claimed');
-                });
-            }
-
-            $state.go('dashboard');
-          });
+        return Wallet.open(body.data, id, $stateParams.username, $scope.password);
       })
       .error(function(body, status) {
         switch(status) {
@@ -78,5 +44,78 @@ angular.module('stellarClient').controller('LoginV1Ctrl', function($rootScope, $
             $scope.loginError = 'An error occurred.';
         }
       });
+  }
+
+  function migrateWallet(wallet) {
+    var deferred = $q.defer();
+
+    var proof = usernameProof(wallet.keychainData.signingKeys, $stateParams.username);
+
+    // Migrate signingKeys
+    var seed = new stellar.Seed().parse_json(wallet.keychainData.signingKeys.secret);
+    var keyPair = seed.get_key();
+    var address = keyPair.get_address();
+
+    var publicKey = nacl.util.encodeBase64(keyPair._pubkey);
+    var secretKey = nacl.util.encodeBase64(keyPair._secret);
+
+    var signingKeys = {
+      address: address.to_json(),
+      secret: seed.to_json(),
+      secretKey: secretKey,
+      publicKey: publicKey
+    };
+
+    wallet.keychainData.signingKeys = signingKeys;
+
+    // Perform a migration
+    StellarWallet.createWallet({
+      server: Options.WALLET_SERVER+'/v2',
+      username: $stateParams.username.toLowerCase()+'@stellar.org',
+      password: $scope.password,
+      publicKey: signingKeys.publicKey,
+      keychainData: JSON.stringify(wallet.keychainData),
+      mainData: JSON.stringify(wallet.mainData),
+      usernameProof: proof
+    }).then(function(wallet) {
+      var w = new Wallet({
+        version: 2,
+        id: wallet.getWalletId(),
+        key: wallet.getWalletKey(),
+        keychainData: wallet.getKeychainData(),
+        mainData: wallet.getMainData(),
+        walletV2: wallet
+      });
+      deferred.resolve(w);
+    }).catch(function(e) {
+      if (e.name === 'ConnectionError') {
+        $scope.loginError = 'Connection error. Please try again later.';
+      } else {
+        $scope.loginError = 'Unknown error. Please try again later.';
+      }
+
+      deferred.reject();
+      throw e;
+    }).finally(function() {
+      $scope.$apply();
+    });
+
+    return deferred.promise;
+  }
+
+  function login(wallet) {
+    if ($scope.rememberMe) {
+      session.rememberUser();
+    }
+    session.login(wallet);
+  }
+
+  function claimInvite() {
+    if(session.get('inviteCode')) {
+      invites.claim(session.get('inviteCode'))
+        .success(function (response) {
+          $rootScope.$broadcast('invite-claimed');
+        });
+    }
   }
 });

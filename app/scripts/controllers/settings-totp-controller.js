@@ -64,7 +64,7 @@ angular.module('stellarClient').controller('SettingsTotpCtrl', function($scope, 
       $scope.error = "Password or TOTP code incorrect.";
     }).catch(StellarWallet.errors.ConnectionError, function() {
       $scope.error = 'Connection error. Please try again.';
-    }).catch(StellarWallet.errors.UnknownError, function() {
+    }).catch(function(e) {
       $scope.error = 'Unknown error. Please try again.';
     }).finally(function() {
       $scope.$apply();
@@ -104,7 +104,7 @@ angular.module('stellarClient').controller('SettingsTotpCtrl', function($scope, 
       $scope.error = "Password or TOTP code incorrect.";
     }).catch(StellarWallet.errors.ConnectionError, function() {
       $scope.error = 'Connection error. Please try again.';
-    }).catch(StellarWallet.errors.UnknownError, function() {
+    }).catch(function(e) {
       $scope.error = 'Unknown error. Please try again.';
     }).finally(function() {
       $scope.$apply();
