@@ -117,3 +117,20 @@
         color: $brand-primary;
     }
 }
+
+.settings-totp {
+    .totp-instructions {
+        margin: 15px 0 15px 25px;
+    }
+
+    .clearfix {
+        height: auto;
+    }
+}
+
+.totp-qr {
+    margin-left: 30px;
+    code {
+        font-size: 21px;
+    }
+}
