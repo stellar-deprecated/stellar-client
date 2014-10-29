@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('stellarClient').controller('LoginV1Ctrl', function($rootScope, $scope, $http, $state, $stateParams, session, invites, Wallet, singletonPromise, usernameProof) {
+angular.module('stellarClient').controller('LoginV1Ctrl', function($rootScope, $scope, $http, $state, $stateParams, $q, session, invites, Wallet, singletonPromise, usernameProof) {
   setTimeout(function() {
     angular.element('#password')[0].focus();
   }, 200);
@@ -28,9 +28,11 @@ angular.module('stellarClient').controller('LoginV1Ctrl', function($rootScope, $
   });
 
   function performLogin(id) {
-    return $http.post(Options.WALLET_SERVER + '/wallets/show', {id: id})
+    var deferred = $q.defer();
+
+    $http.post(Options.WALLET_SERVER + '/wallets/show', {id: id})
       .success(function(body) {
-        return Wallet.open(body.data, id, $stateParams.username, $scope.password);
+        deferred.resolve(Wallet.open(body.data, id, $stateParams.username, $scope.password));
       })
       .error(function(body, status) {
         switch(status) {
@@ -43,13 +45,14 @@ angular.module('stellarClient').controller('LoginV1Ctrl', function($rootScope, $
           default:
             $scope.loginError = 'An error occurred.';
         }
+        deferred.reject();
       });
+
+    return deferred.promise;
   }
 
   function migrateWallet(wallet) {
     var deferred = $q.defer();
-
-    var proof = usernameProof(wallet.keychainData.signingKeys, $stateParams.username);
 
     // Migrate signingKeys
     var seed = new stellar.Seed().parse_json(wallet.keychainData.signingKeys.secret);
@@ -67,6 +70,8 @@ angular.module('stellarClient').controller('LoginV1Ctrl', function($rootScope, $
     };
 
     wallet.keychainData.signingKeys = signingKeys;
+
+    var proof = usernameProof(wallet.keychainData.signingKeys, $stateParams.username);
 
     // Perform a migration
     StellarWallet.createWallet({
