@@ -101,6 +101,7 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
     $scope.formData.baseAmount = null;
     $scope.formData.unitPrice = null;
     $scope.formData.counterAmount = null;
+    $scope.formData.truePrice = null;
 
     $scope.formIsValid = false;
     $scope.formErrorMessage = '';
@@ -127,6 +128,12 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
     // Short circuit on first validation failure
     // formIsValid is true if the form is BOTH filled AND valid
     $scope.formIsValid = validateCurrencies() && validateTradeAmount(baseAmount) && validateTradeAmount(counterAmount);
+
+    // Price is optional and when it is not filled out, we want to display what the calculated price is
+    // in the info line (where it says: Buy 2 BTC for 160000 STR at 80000 STR/BTC)
+    if ($scope.formIsValid) {
+      calculateTrueTradePrice();
+    }
   }
 
   function validateCurrencies() {
@@ -191,6 +198,11 @@ sc.controller('TradingFormCtrl', function($scope, session, singletonPromise, Fla
     }
 
     return false;
+  }
+
+  // Expects valid prices. Should only be run after validation says that prices are valid
+  function calculateTrueTradePrice() {
+    $scope.formData.truePrice = new BigNumber($scope.formData.counterAmount).dividedBy($scope.formData.baseAmount).toString();
   }
 
   $scope.createOffer = singletonPromise(function(e) {
