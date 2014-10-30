@@ -260,7 +260,7 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, $q, $an
 
     return $http.post(Options.API_SERVER + "/claim/facebook", data)
       .success(function (response) {
-        $scope.rewards[1].status = response.message;
+        $scope.reward.status = response.message;
         $scope.updateRewards();
       })
       .error(onClaimFacebookRewardError);
