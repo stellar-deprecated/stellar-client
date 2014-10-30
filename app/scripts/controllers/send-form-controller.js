@@ -45,13 +45,24 @@ sc.controller('SendFormController', function($rootScope, $scope, Payment, deboun
   $scope.$on('payment:paths', function(event, paths) {
     resetPaths();
     $scope.send.paths = paths;
-    $scope.send.pathStatus = paths.length ? 'paths-loaded' : 'paths-empty';
+    $scope.send.pathStatus = 'paths-loaded';
   });
 
-  $scope.$on('payment:insufficient-str', function(event, minimumAmount) {
+  $scope.$on('payment:paths-empty', function(event) {
     resetPaths();
-    $scope.send.fundStatus = 'insufficient-str';
-    $scope.send.str_deficiency = minimumAmount;
+    $scope.send.pathStatus = 'paths-empty';
+  });
+
+  $scope.$on('payment:destination-unfunded', function(event, minimumAmount) {
+    resetPaths();
+    $scope.send.pathStatus = 'destination-unfunded';
+    $scope.send.minimumAmount = minimumAmount;
+  });
+
+  $scope.$on('payment:insufficient-reserve', function(event, reserve) {
+    resetPaths();
+    $scope.send.pathStatus = 'insufficient-reserve';
+    $scope.send.reserve = reserve;
   });
 
   $scope.$on('payment:paths-reset', function(event) {

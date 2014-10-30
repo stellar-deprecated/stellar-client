@@ -141,11 +141,11 @@ sc.service('Payment', function($rootScope, $q, StellarNetwork, Destination, Canc
     if(!Payment.isValid()) { return; }
 
     // Determine if the amount is enough to fund the destination.
-    var finalBalance = amount.add(destination.balance);
-    if (finalBalance.compareTo($rootScope.account.reserve_base) < 0) {
+    var finalDestBalance = amount.add(destination.balance);
+    if (finalDestBalance.compareTo($rootScope.account.reserve_base) < 0) {
       var minimumAmount = $rootScope.account.reserve_base.subtract(destination.balance);
 
-      $rootScope.$broadcast('payment:insufficient-str', minimumAmount);
+      $rootScope.$broadcast('payment:destination-unfunded', minimumAmount);
       return;
     }
 
@@ -173,7 +173,7 @@ sc.service('Payment', function($rootScope, $q, StellarNetwork, Destination, Canc
 
     // If there is a native STR path broadcast it immediately.
     var initialPaths = processPaths([]);
-    if(_.any(initialPaths.length)) {
+    if(_.any(initialPaths)) {
       broadcastPaths(initialPaths);
     } else {
       $rootScope.$broadcast('payment:paths-loading');
@@ -186,7 +186,21 @@ sc.service('Payment', function($rootScope, $q, StellarNetwork, Destination, Canc
    * @param {Array.<Path>} paths
    */
   function broadcastPaths(paths) {
-    $rootScope.$broadcast('payment:paths', paths);
+    if(_.any(paths)) {
+      // Broadcast paths.
+      $rootScope.$broadcast('payment:paths', paths);
+    } else {
+
+      // No paths because of account reserve.
+      var finalReserve = $rootScope.account.max_spend.subtract(amount);
+      if (finalReserve.is_negative()) {
+        $rootScope.$broadcast('payment:insufficient-reserve', $rootScope.account.reserve);
+        return;
+      }
+
+      // No paths.
+      $rootScope.$broadcast('payment:paths-empty');
+    }
   }
 
   /**
