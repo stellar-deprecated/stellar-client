@@ -53,6 +53,8 @@ angular.module('stellarClient').controller('LoginV1Ctrl', function($rootScope, $
   }
 
   function migrateWallet(wallet) {
+    /* jshint camelcase:false */
+    
     var deferred = $q.defer();
 
     // Migrate signingKeys

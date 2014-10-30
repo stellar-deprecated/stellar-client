@@ -12,20 +12,20 @@ angular.module('stellarClient').controller('SettingsEmailCtrl', function($scope,
     } else {
       $scope.emailState = 'none';
     }
-  }
+  };
 
   $scope.getEmailState = function () {
     return $scope.emailState;
-  }
+  };
 
   $scope.setEmailState = function (state) {
     $scope.emailState = state;
-  }
+  };
 
   $scope.emailAction = singletonPromise(function () {
-    if ($scope.emailState == 'change') {
+    if ($scope.emailState === 'change') {
       return changeEmail();
-    } else if ($scope.emailState == 'verify') {
+    } else if ($scope.emailState === 'verify') {
       return verifyEmail();
     } else {
       return;
@@ -47,7 +47,7 @@ angular.module('stellarClient').controller('SettingsEmailCtrl', function($scope,
           $scope.verifyToken = null;
         })
         .catch($scope.handleServerError($('#email-input')));
-  };
+  }
 
   function changeEmail () {
     return session.getUser().changeEmail($scope.newEmail)
@@ -58,5 +58,5 @@ angular.module('stellarClient').controller('SettingsEmailCtrl', function($scope,
           $scope.newEmail = null;
         })
         .catch($scope.handleServerError($('#verify-input')));
-  };
+  }
 });

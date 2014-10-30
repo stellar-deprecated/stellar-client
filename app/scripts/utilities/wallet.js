@@ -281,10 +281,10 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
    * @memberOf Wallet
    */
   Wallet.prototype.sync = function(action) {
-    if (this.version == 2) {
-      if (action == 'update') {
+    if (this.version === 2) {
+      if (action === 'update') {
         //
-      } else if (action == 'create') {
+      } else if (action === 'create') {
         // Done using stellar-wallet-js-sdk in registration-controller.js
       }
     } else {

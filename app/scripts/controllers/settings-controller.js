@@ -109,7 +109,7 @@ angular.module('stellarClient').controller('SettingsCtrl', function($scope, $htt
   function toggle2FA(toggle) {
     if (session.get('wallet').version === 1) {
       // Actually this will never happen as wallets are migrated to V2 during login.
-      alert('You need to migrate your wallet to use 2 Factor Authentication.');
+      console.log('You need to migrate your wallet to use 2 Factor Authentication.');
       return;
     }
     $scope.$broadcast('settings-totp-clicked', toggle);

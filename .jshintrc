@@ -25,10 +25,12 @@
         "iso4217",
         "Modernizr", 
         "Options", 
-        "sjcl", 
+        "sjcl",
+        "nacl",
         "stellar", 
         "StellarDefaultCurrencyList", 
         "StellarDefaultCurrencyMap",
+        "StellarWallet",
         "Util",
         "-module"
     ]
