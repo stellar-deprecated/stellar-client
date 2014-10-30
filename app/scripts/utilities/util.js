@@ -68,3 +68,23 @@ Util.tryGet = function(rootObject, propertyChain) {
     return _.has(currentObject, property) ? currentObject[property] : undefined;
   }, rootObject);
 };
+
+Util.removeUrlParams = function (address) {
+  address = address || '';
+  var parts = address.split('?');
+  return parts[0] || '';
+};
+
+Util.parseUrlParams = function (address) {
+  address = address || '';
+  var parts = address.split('?');
+  var params = (parts[1] || '').split('&');
+  var values = {};
+
+  params.forEach(function(param) {
+    var paramParts = param.split('=');
+    values[paramParts[0]] = paramParts[1];
+  });
+
+  return values;
+};
