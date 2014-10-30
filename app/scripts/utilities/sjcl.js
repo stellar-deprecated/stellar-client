@@ -1,1 +1,2 @@
-var sjcl = stellar.sjcl;
+/* exported sjcl */
+window.sjcl = stellar.sjcl;

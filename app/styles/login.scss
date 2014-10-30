@@ -1,5 +1,4 @@
 .login {
-  padding-bottom: 80px;
 
   .input-icon-wrapper {
 
@@ -13,11 +12,6 @@
       font-size: 16px;
       padding: 10px 12px;
       color: #C8C8C8
-    }
-
-    .icon-key {
-      font-size: 10px;
-      padding: 16px 12px;
     }
   }
 
@@ -54,23 +48,5 @@
         color: $error;
       }
     }
-  }
-
-  @media (max-width: $phone-width) {
-    h1 {
-      margin: 0;
-    }
-
-    .form-group {
-      .errors {
-      }
-      label {
-        line-height: 2em;
-      }
-      button {
-        margin: 15px 0;
-      }
-    }
-    
   }
 }

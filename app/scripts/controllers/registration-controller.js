@@ -1,5 +1,6 @@
 'use strict';
 /* global SigningKeys */
+/* jshint camelcase: false */
 
 angular.module('stellarClient').controller('RegistrationCtrl', function(
   $rootScope,
@@ -9,6 +10,7 @@ angular.module('stellarClient').controller('RegistrationCtrl', function(
   $timeout,
   $http,
   $q,
+  $analytics,
   session,
   debounce,
   singletonPromise,
@@ -16,7 +18,8 @@ angular.module('stellarClient').controller('RegistrationCtrl', function(
   Wallet,
   FlashMessages,
   invites,
-  reCAPTCHA) {
+  reCAPTCHA,
+  stellarApi) {
 
   // Provide a default value to protect against stale config files.
   Options.MAX_WALLET_ATTEMPTS = Options.MAX_WALLET_ATTEMPTS || 3;
@@ -25,7 +28,8 @@ angular.module('stellarClient').controller('RegistrationCtrl', function(
     username:             '',
     password:             '',
     passwordConfirmation: '',
-    recap:                ''
+    recap:                '',
+    secret:               ''
   };
 
   session.put('inviteCode', $stateParams.inviteCode);
@@ -33,18 +37,25 @@ angular.module('stellarClient').controller('RegistrationCtrl', function(
   $scope.status = {
     usernameAvailable:    null,
     passwordValid:        null,
-    passwordConfirmValid: null
+    passwordConfirmValid: null,
+    secretValid:          null
   };
 
   $scope.errors = {
     usernameErrors:        [],
     passwordErrors:        [],
     passwordConfirmErrors: [],
-    captchaErrors:         []
+    captchaErrors:         [],
+    secretErrors:          []
   };
 
   // Don't remove, validator's are injected from other controllers
   $scope.validators = [];
+  $scope.showSecretInput = false;
+
+  if(window.analytics && window.analytics.reset) {
+    window.analytics.reset();
+  }
 
   // Checks to see if the supplied username is available.
   // This function is debounced to prevent API calls before the user is finished typing.
@@ -58,12 +69,12 @@ angular.module('stellarClient').controller('RegistrationCtrl', function(
         $scope.status.usernameAvailable = false;
         return;
       }
-      $http.post(Options.API_SERVER + '/user/validname', {username: $scope.data.username})
-      .success(
+      stellarApi.User.validateUsername($scope.data.username)
+        .success(
         function (response) {
           $scope.status.usernameAvailable = true;
         })
-      .error(
+        .error(
         function (response){
           switch(response && response.code) {
             case 'already_taken':
@@ -82,12 +93,12 @@ angular.module('stellarClient').controller('RegistrationCtrl', function(
     if (username.length < 3 || username.length > 20) {
       return "Username must be between 3 and 20 characters";
     }
-     if(!username.match(/^[a-zA-Z0-9].*[a-zA-Z0-9]$/)) {
-         return "Must start and end with a letter or number.";
-     }
+    if(!username.match(/^[a-zA-Z0-9].*[a-zA-Z0-9]$/)) {
+      return "Must start and end with a letter or number.";
+    }
     if (!username.match(/^[a-zA-Z0-9]+([._-]+[a-zA-Z0-9]+)*$/)) {
       //return "Must start and end with a letter, and may contain \".\", \"_\", or \"-\"";
-        return "Only letters numbers or ._-";
+      return "Only letters numbers or ._-";
     }
     return null;
   }
@@ -114,8 +125,46 @@ angular.module('stellarClient').controller('RegistrationCtrl', function(
     }
   };
 
+  $scope.checkSecret = function() {
+    $scope.errors.secretErrors = [];
+    $scope.status.secretValid = null;
+
+    if($scope.data.secret !== '') {
+      $scope.status.secretValid = checkSecret();
+    }
+  };
+
+  function checkSecret() {
+    var seed = stellar.Base.decode_check(stellar.Base.VER_SEED, $scope.data.secret);
+    return !!seed;
+  }
+
+  $scope.secretClass = function() {
+    if($scope.status.secretValid === null) {
+      return 'glyphicon-none';
+    } else {
+      return $scope.status.secretValid ? 'glyphicon-ok' : 'glyphicon-remove';
+    }
+  };
+
+  $scope.toggleSecretInput = function() {
+    if(!$scope.data.secret) {
+      $scope.generateSecret();
+    }
+
+    $scope.showSecretInput = !$scope.showSecretInput;
+  };
+
+  $scope.generateSecret = function() {
+    var signingKeys = new SigningKeys();
+    $scope.data.secret = signingKeys.secret;
+    $scope.errors.secretErrors = [];
+    $scope.status.secretValid = true;
+  };
+
+
   $scope.attemptRegistration = singletonPromise(function() {
-    return $q.when($scope.data)
+  return $q.when($scope.data)
       .then(validateInput)
       .then(generateSigningKeys)
       .then(submitRegistration)
@@ -145,6 +194,12 @@ angular.module('stellarClient').controller('RegistrationCtrl', function(
       $scope.errors.usernameErrors.push('This username is taken.');
     }
 
+    if($scope.data.secret && $scope.status.secretValid === false){
+      validInput = false;
+      $scope.showSecretInput = true;
+      $scope.errors.secretErrors.push('Invalid secret key.');
+    }
+
     $scope.validators.forEach(function(validator){
       validInput = validator() && validInput;
     });
@@ -157,7 +212,7 @@ angular.module('stellarClient').controller('RegistrationCtrl', function(
   }
 
   function generateSigningKeys(data) {
-    data.signingKeys = StellarWallet.util.generateKeyPair();
+    data.signingKeys = StellarWallet.util.generateKeyPair($scope.data.secret);
     return $q.when(data);
   }
 
@@ -186,6 +241,8 @@ angular.module('stellarClient').controller('RegistrationCtrl', function(
   }
 
   function showRegistrationErrors(response) {
+    /* jshint camelcase:false */
+
     var usernameErrorMessages = {
       'already_taken': 'The username is taken.',
       'invalid': 'Username must start and end with a letter, and may contain ".", "_", or "-"'
@@ -200,18 +257,18 @@ angular.module('stellarClient').controller('RegistrationCtrl', function(
         case 'already_taken':
           field = response.data && response.data.field;
           if (field === 'username') {
-            $scope.errors.usernameErrors.push(usernameErrorMessages['already_taken']);
+            $scope.errors.usernameErrors.push(usernameErrorMessages.already_taken);
           }
           break;
         case 'invalid':
           field = response.data && response.data.field;
           if (field === 'username') {
-            $scope.errors.usernameErrors.push(usernameErrorMessages['invalid']);
+            $scope.errors.usernameErrors.push(usernameErrorMessages.invalid);
           }
           break;
         case 'captcha':
-            $scope.errors.captchaErrors.push("Captcha incorrect. Do you wonder if you are a robot?");
-            break;
+          $scope.errors.captchaErrors.push("Captcha incorrect. Do you wonder if you are a robot?");
+          break;
         default:
           // TODO: generic error
       }
@@ -281,14 +338,21 @@ angular.module('stellarClient').controller('RegistrationCtrl', function(
   }
 
   function login(data) {
+    window.analytics.alias($scope.data.username);
     // Initialize the session with the new wallet.
     session.login(data.wallet);
     return $q.when(data);
   }
 
   function claimInvite(data) {
-    if(session.get('inviteCode')) {
-      invites.claim(session.get('inviteCode'))
+    var inviteCode = session.get('inviteCode');
+    $analytics.eventTrack('Account Created', {
+      inviteCode: inviteCode,
+      type: inviteCode ? 'Invited' : 'Organic'
+    });
+
+    if(inviteCode) {
+      invites.claim(inviteCode)
         .success(function (response) {
           $rootScope.$broadcast('invite-claimed');
         });

@@ -1,4 +1,4 @@
-<div class="registration client-section">
+<div class="registration client-section user-form">
     <div class="container">
         <h1 class="title">Create Your Account</h1>
 
@@ -19,21 +19,46 @@
                     </div>
                 </div>
                 <div class="col-sm-3 info">
-                    <i class="username-status status glyphicon" ng-class="usernameClass()"></i>
+                    <i id="username-status" class="status glyphicon" ng-class="usernameClass()"></i>
                     <span class="tip">Make it memorable.</span>
                 </div>
             </div>
 
             <div class="password-container" ng-include="'templates/password.html'"></div>
 
+            <div class="form-group" ng-show="showSecretInput">
+                <div class="errors col-sm-offset-3 col-sm-6">
+                    <div class="tip">{{ errors.secretErrors.join('\n') }}</div>
+                </div>
+            </div>
+            <div class="form-group" ng-show="showSecretInput">
+                <label for="secret" class="col-sm-3">SECRET</label>
+                <div class="col-sm-6">
+                    <div class="input-icon-wrapper">
+                        <input id="secret" type="text" class="form-control" ng-class="{'input-error': errors.secretErrors.length}" ng-model="data.secret" ng-change="checkSecret()">
+                        <i class="icon icon-key"></i>
+                    </div>
+                </div>
+                <div class="col-sm-3 info">
+                    <i id="secret-status" class="status glyphicon" ng-class="secretClass()"></i>
+                    <span class="tip"><a ng-click="generateSecret()">Generate random secret</a></span>
+                </div>
+            </div>
+            <div class="form-group toggle-secret-input">
+                <span class="tip col-sm-offset-3 col-sm-6">
+                    <a ng-click="toggleSecretInput()">
+                        {{ showSecretInput ? 'Hide' : 'Edit' }} secret key
+                    </a>
+                </span>
+            </div>
+
             <div class="form-group">
                 <div class="errors col-sm-offset-3 col-sm-6">
                     <div class="tip">{{ errors.captchaErrors.join('\n') }}</div>
                 </div>
             </div>
-            <div class="col-sm-offset-3 col-sm-6">
-                <div re-captcha tabindex="3" ng-model="data.recap"></div>
-            </div>
+
+            <div ng-include="'templates/recaptcha.html'"></div>
 
             <div class="form-group terms">
                 <div class="col-sm-offset-3 col-sm-6 tip">

@@ -1,4 +1,7 @@
 // Standalone version of: https://github.com/ripple/ripple-client/blob/7cbe63d/src/js/util/jsonrewriter.js
+/* jshint camelcase:false */
+/* jshint bitwise:false */
+/* jshint laxbreak:true */
 
 /**
  * Ripple trading default currency pairs.
@@ -42,7 +45,7 @@ var getPrice = function(effect, referenceDate){
   var price;
 
   _.find(pairs, function(pair){
-    if (pair.name == g.currency().to_human() + '/' + p.currency().to_human()) {
+    if (pair.name === g.currency().to_human() + '/' + p.currency().to_human()) {
       price = p.ratio_human(g, {reference_date: referenceDate});
     }
   });
@@ -64,9 +67,9 @@ var isRippling = function(effects){
     effects
     && effects.length
     && 2 === effects.length
-    && 'trust_change_balance' == effects[0].type
-    && 'trust_change_balance' == effects[1].type
-    && effects[0].currency == effects[1].currency
+    && 'trust_change_balance' === effects[0].type
+    && 'trust_change_balance' === effects[1].type
+    && effects[0].currency === effects[1].currency
     && !effects[0].amount.compareTo(effects[1].amount.negate())
     ) {
     return true;
@@ -78,14 +81,14 @@ var isRippling = function(effects){
  *
  * @namespace
  */
-JsonRewriter = {
+var JsonRewriter = {
   /**
    * Filter affected nodes by type.
    *
    * If affectedNodes is not a valid set of nodes, returns an empty array.
    */
   filterAnodes: function (affectedNodes, type) {
-    if (!affectedNodes) return [];
+    if (!affectedNodes) { return []; }
 
     return affectedNodes.filter(function (an) {
       an = an.CreatedNode ? an.CreatedNode :
@@ -144,10 +147,12 @@ JsonRewriter = {
     var result = {};
 
     ["CreatedNode", "ModifiedNode", "DeletedNode"].forEach(function (x) {
-      if (an[x]) result.diffType = x;
+      if (an[x]) {
+        result.diffType = x;
+      }
     });
 
-    if (!result.diffType) return null;
+    if (!result.diffType) { return null; }
 
     an = an[result.diffType];
 
@@ -208,7 +213,7 @@ JsonRewriter = {
       if ('tesSUCCESS' === meta.TransactionResult) {
         switch (tx.TransactionType) {
           case 'Payment':
-            var amount = stellar.Amount.from_json(tx.Amount);
+            var amount = stellar.Amount.from_json(meta.DeliveredAmount || tx.Amount);
 
             if (tx.Account === account) {
               if (tx.Destination === account) {
@@ -249,8 +254,9 @@ JsonRewriter = {
 
           case 'AccountSet':
             // Ignore empty accountset transactions. (Used to sync sequence numbers)
-            if (meta.AffectedNodes.length === 1 && _.size(meta.AffectedNodes[0].ModifiedNode.PreviousFields) === 2)
+            if (meta.AffectedNodes.length === 1 && _.size(meta.AffectedNodes[0].ModifiedNode.PreviousFields) === 2) {
               break;
+            }
 
             transaction.type = 'accountset';
             break;
@@ -295,9 +301,10 @@ JsonRewriter = {
             }
 
             // Updated STR Balance
-            if (tx.Fee != node.fieldsPrev.Balance - node.fields.Balance) {
-              if (feeEff)
+            if (tx.Fee !== node.fieldsPrev.Balance - node.fields.Balance) {
+              if (feeEff) {
                 balance = balance.subtract(feeEff.amount);
+              }
 
               effect.type = "balance_change";
               effect.amount = balance.subtract(node.fieldsPrev.Balance);
@@ -392,8 +399,9 @@ JsonRewriter = {
                 effect.type = "trust_change_no_ripple";
               }
 
-              if (effect.type)
+              if (effect.type) {
                 effect.flags = node.fields.Flags;
+              }
             }
           }
 
@@ -449,8 +457,9 @@ JsonRewriter = {
                 : 'offer_cancelled';
 
               // For funded offers we use "fieldsPrev".
-              if (effect.type === 'offer_funded')
+              if (effect.type === 'offer_funded') {
                 fieldSet = node.fieldsPrev;
+              }
 
               // We don't count cancelling an offer as a side effect if it's
               // already the primary effect of the transaction.
@@ -498,13 +507,17 @@ JsonRewriter = {
             effect.deleted = true;
           }
 
-          if (!obj.effects) obj.effects = [];
+          if (!obj.effects) {
+            obj.effects = [];
+          }
           obj.effects.push(effect);
         }
 
         // Fee effect
         if (feeEff) {
-          if (!obj.effects) obj.effects = [];
+          if (!obj.effects) {
+            obj.effects = [];
+          }
           obj.effects.push(feeEff);
         }
       });
@@ -515,8 +528,9 @@ JsonRewriter = {
       obj.transaction.balance = stellar.Amount.from_json(obj.accountRoot.Balance);
     }
 
-    if ($.isEmptyObject(obj))
+    if ($.isEmptyObject(obj)) {
       return;
+    }
 
     // If the transaction didn't wind up cancelling an offer
     if (tx.TransactionType === 'OfferCancel' && obj.transaction &&

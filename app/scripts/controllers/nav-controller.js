@@ -10,22 +10,32 @@ sc.controller('NavCtrl', function($scope, session) {
   var wallet = null;
   var user = null;
 
-  $scope.$on('walletAddressLoaded', function() {
+  function init() {
     $scope.loggedIn = true;
     $scope.username = session.get('username');
     wallet = session.get('wallet');
-  });
+  }
 
-  $scope.$on('userLoaded', function() {
-    user = session.getUser();
-  });
+  if(session.get('loggedIn')) {
+    init();
+  } else {
+    $scope.$on('walletAddressLoaded', init);
+  }
+
+  user = session.getUser();
+
+  if(!user) {
+    $scope.$on('userLoaded', function() {
+      user = session.getUser();
+    });
+  }
 
   $scope.getLogoLink = function () {
     return $scope.loggedIn ? '#/' : 'http://www.stellar.org';
   };
 
   $scope.showTradingLink = function() {
-    return wallet && wallet.get('mainData', 'showTrading', false);
+    return wallet && wallet.get('mainData', 'showTrading', true);
   };
 
   $scope.showInvitesLink = function() {

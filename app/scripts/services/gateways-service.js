@@ -1,6 +1,6 @@
 var sc = angular.module('stellarClient');
 
-sc.service('Gateways', function($q, session, StellarNetwork, rpStellarTxt) {
+sc.service('Gateways', function($q, $analytics, session, StellarNetwork, rpStellarTxt) {
 
   /** @namespace */
   var Gateways = {};
@@ -34,7 +34,10 @@ sc.service('Gateways', function($q, session, StellarNetwork, rpStellarTxt) {
     walletGateways()[gateway.domain]        = _.cloneDeep(gateway);
     walletGateways()[gateway.domain].status = "adding";
     return Gateways.syncTrustlines(gateway.domain).then(function() {
+      gateway = walletGateways()[gateway.domain];
+
       if(gateway.status === "added") {
+        track(gateway, 'Gateway Added');
         return gateway;
       } else {
         return $q.reject(new Error("Failed to add " + gateway.domain));
@@ -46,6 +49,7 @@ sc.service('Gateways', function($q, session, StellarNetwork, rpStellarTxt) {
     gateway.status = "removing";
     return Gateways.syncTrustlines(gateway.domain).then(function() {
       if(!_.has(walletGateways(), gateway.domain)) {
+        track(gateway, 'Gateway Removed');
         return gateway;
       } else {
         return $q.reject(new Error("Failed to remove " + gateway.domain));
@@ -128,6 +132,7 @@ sc.service('Gateways', function($q, session, StellarNetwork, rpStellarTxt) {
 
     tx.on('success', deferred.resolve);
     tx.on('error', function(result) {
+      /*jshint camelcase: false */
       if(result.engine_result === "tecNO_LINE_REDUNDANT") {
         deferred.resolve();
       } else {
@@ -145,10 +150,12 @@ sc.service('Gateways', function($q, session, StellarNetwork, rpStellarTxt) {
    * Returns a promise that always resolves with the provided currency object.
    */
   function checkIssuerAuth(currency) {
+    /*jshint camelcase: false */
+    /*jshint bitwise: false */
     var deferred = $q.defer();
 
     var opts = {account: currency.issuer};
-    var accountLinesRequest = StellarNetwork.remote.request_account_info(opts, function(err, result) {
+    StellarNetwork.remote.request_account_info(opts, function(err, result) {
       if (result) {
         currency.requireAuth = !!(result.account_data.Flags & stellar.Transaction.flags.AccountSet.RequireAuth);
       }
@@ -157,6 +164,17 @@ sc.service('Gateways', function($q, session, StellarNetwork, rpStellarTxt) {
     });
 
     return deferred.promise;
+  }
+
+  function track(gateway, event) {
+    var currencies = _.map(gateway.currencies, function(c) {
+      return _.pick(c, ['currency', 'issuer']);
+    });
+    
+    $analytics.eventTrack(event, {
+      currency: currencies,
+      name:     gateway.domain
+    });
   }
 
   return Gateways;

@@ -5,9 +5,7 @@ $input-border-color: #cccccc;
 $input-border-focus-color: #66afe9;
 
 .registration {
-  padding-bottom: 80px;
   .terms .tip {
-    margin-top: 20px;
     margin-bottom: 10px;
 
     a {
@@ -30,5 +28,12 @@ $input-border-focus-color: #66afe9;
 
   .form-group.terms {
     margin-bottom: 0;
+  }
+
+  .toggle-secret-input .tip {
+    color: $brand-primary;
+    font-size: 11px;
+    padding-top: 5px;
+    text-align: right;
   }
 }

@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, $q, session, Facebook) {
+sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, $q, $analytics, session, Facebook) {
   $scope.reward = {
     rewardType: 1,
     status: 'incomplete',
@@ -84,6 +84,22 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, $q, ses
             $scope.reward.status = 'incomplete';
           };
           break;
+        case 'facebook_error':
+          $scope.reward.error = {};
+          $scope.reward.error.info = "An error occurred while getting your Facebook information.";
+          $scope.reward.error.action = function () {
+            $scope.reward.error = null;
+            $scope.reward.status = 'incomplete';
+          };
+          break;
+        case 'reward_already_queued':
+          $scope.reward.error = {};
+          $scope.reward.error.info = "You've already claimed this reward.";
+          $scope.reward.error.action = function () {
+            $scope.reward.error = null;
+            $scope.reward.status = 'incomplete';
+          };
+          break;
         case 'server_error':
           $scope.reward.error = {};
           $scope.reward.error.info = "Server error.";
@@ -118,7 +134,7 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, $q, ses
 
   $scope.isFacebookReady = function () {
     return Facebook.isReady();
-  }
+  };
 
   /**
   * Facebook login the user, add their Facebook data to their user account, and then
@@ -139,10 +155,11 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, $q, ses
       .then(claimFacebookReward)
       .finally(function () {
         $scope.loading = false;
-      })
+      });
   };
 
   function facebookLogin() {
+    /*jshint camelcase: false */
     var deferred = $q.defer();
 
     Facebook.login(function(response) {
@@ -155,7 +172,7 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, $q, ses
         onFacebookLoginError(response);
         deferred.reject(response);
       }
-    }, {scope: 'user_photos', auth_type: 'reauthenticate'});
+    }, {scope: 'user_photos,email', auth_type: 'reauthenticate'});
 
     return deferred.promise;
   }
@@ -174,6 +191,12 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, $q, ses
     });
 
     return $http.post(Options.API_SERVER + "/user/add_facebook", data)
+      .success(function(response) {
+        session.getUser().linkedFacebook = true;
+        session.identifyToAnalytics();
+        $analytics.eventTrack('Facebook Connected');
+        return response;
+      })
       .error(function (response) {
         onLinkUserFacebookError(response, data);
       });
@@ -201,6 +224,9 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, $q, ses
         case 'bad_token':
           $scope.reward.updateReward('already_linked');
           break;
+        case 'facebook_error':
+          $scope.reward.updateReward('facebook_error');
+          break;
         default:
           $scope.reward.updateReward('server_error');
           break;
@@ -208,20 +234,14 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, $q, ses
     } else {
       $scope.reward.updateReward('server_error');
     }
+
+    $analytics.eventTrack('Facebook Failed', {reason: response.code});
   }
 
 /**
  * Send the facebook auth data to the server to be verified and saved.
- *
- * @param {object} data
- * @param {string} data.username
- * @param {string} data.updateToken
- * @param {string} data.fbID
- * @param {string} data.fbAccessToken
- * @param {function} success callback
- * @param {function} error callback
  */
-  function claimFacebookReward(data) {
+  function claimFacebookReward() {
     var data = {
       username: session.get('username'),
       updateToken: session.get('wallet').keychainData.updateToken
@@ -248,8 +268,8 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, $q, ses
           $scope.reward.updateReward('fake');
           break;
         case 'reward_already_queued':
-        case 'reward_limit_reached':
-          /* falls through */
+          $scope.reward.updateReward('reward_already_queued');
+          break;
         default:
           $scope.reward.updateReward('server_error');
       }

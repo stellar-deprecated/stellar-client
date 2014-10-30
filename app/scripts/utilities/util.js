@@ -59,7 +59,7 @@ Util.ensureEntropy = function() {
   if(!isEnough()) {
     throw "Unable to seed sjcl entropy pool";
   }
-}
+};
 
 Util.tryGet = function(rootObject, propertyChain) {
   var propertyNames = propertyChain.split('.');

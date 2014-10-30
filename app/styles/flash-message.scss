@@ -146,6 +146,10 @@
 
 .alert {
   border-bottom-width: 3px;
+
+  a {
+    text-decoration: underline;
+  }
 }
 
 .alert-dismissable .close {

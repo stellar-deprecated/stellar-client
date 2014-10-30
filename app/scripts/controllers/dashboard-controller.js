@@ -74,7 +74,7 @@ sc.controller('DashboardCtrl', function($rootScope, $scope, $timeout, $state, se
     var cleanupTimer = null;
 
     // Show a notification when new transactions are received.
-    $scope.$on('$appTxNotification', function(event, tx){
+    $scope.$on('payment-history:new', function(event, tx){
         if (tx.type === 'received' || tx.type === 'sent') {
             $scope.showTransaction = true;
             $scope.newTransaction = tx;
@@ -134,7 +134,7 @@ sc.controller('DashboardCtrl', function($rootScope, $scope, $timeout, $state, se
         $scope.topCurrencies = sortedCurrencies.slice(0, 2);
     }
 
-    $rootScope.$on('$appTxNotification', fetchCurrencies);
+    $rootScope.$on('transaction-history:new', fetchCurrencies);
 
     fetchCurrencies();
 });

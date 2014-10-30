@@ -1,0 +1,43 @@
+ <div re-captcha ng-model="data.recap" id="recaptcha_widget" style="display:none">
+
+    <div class="form-group">
+        <label for="recaptcha_image" class="col-sm-3">CAPTCHA</label>
+        <div class="col-sm-6">
+            <div class="recaptcha_image_container">
+                <div id="recaptcha_image"></div>
+                <div class="recaptcha_only_if_incorrect_sol" style="color:red">Incorrect please try again</div>
+            </div>
+            <img id="recaptcha_logo" alt="" src="https://www.google.com/recaptcha/api/img/clean/logo.png">
+            <div class="recaptcha_controls">
+                <div class="recaptcha_control">
+                    <a href="javascript:Recaptcha.reload()" title="Get a new challenge" tabindex="-1">
+                        <i class="glyphicon glyphicon-refresh"></i>
+                    </a>
+                </div>
+                <div class="recaptcha_control recaptcha_only_if_image">
+                    <a href="javascript:Recaptcha.switch_type('audio')" title="Get an audio challenge" tabindex="-1">
+                        <i class="glyphicon glyphicon-volume-up"></i>
+                    </a>
+                </div>
+                <div class="recaptcha_control recaptcha_only_if_audio">
+                    <a href="javascript:Recaptcha.switch_type('image')" title="Get a visual challenge" tabindex="-1">
+                        <i class="glyphicon glyphicon-picture"></i>
+                    </a>
+                </div>
+                <div class="recaptcha_control">
+                    <a href="javascript:Recaptcha.showhelp()" title="Help" tabindex="-1">
+                        <i class="glyphicon glyphicon-question-sign"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="recaptcha_image" class="col-sm-3">CONFIRM CAPTCHA</label>
+        <div class="col-sm-6">
+            <input type="text" class="form-control" id="recaptcha_response_field" name="recaptcha_response_field" />
+        </div>
+    </div>
+
+ </div>

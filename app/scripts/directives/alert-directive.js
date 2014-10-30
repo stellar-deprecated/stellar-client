@@ -1,4 +1,6 @@
-module.directive('alert', function() {
+var sc = angular.module('stellarClient');
+
+sc.directive('alert', function() {
   return {
     restrict: 'E',
     transclude: true,
@@ -14,9 +16,9 @@ module.directive('alert', function() {
         // Create a default dismiss handler
         attrs.dismissClick = function() {
           element.remove();
-        }
+        };
       }
     },
     templateUrl: 'templates/alert.html'
-  }
+  };
 });

@@ -30,6 +30,7 @@ sc.service('Balances', function($rootScope, $q, StellarNetwork, session) {
     var accountInfo = StellarNetwork.request('account_info', { 'account': session.get('address') });
     return $q.all([accountLines, accountInfo])
       .then(function(results) {
+        /*jshint camelcase: false */
         var creditBalances = _.map(results[0].lines, StellarNetwork.amount.decodeFromAccountLine);
         var STRBalance = StellarNetwork.amount.decode(results[1].account_data.Balance);
 
@@ -93,6 +94,7 @@ sc.service('Balances', function($rootScope, $q, StellarNetwork, session) {
   }
 
   function hasValidIssuer(currency) {
+    /*jshint camelcase: false */
     var isStellar      = currency.currency === 'STR';
     var isValidAddress = stellar.UInt160.is_valid(currency.issuer);
 

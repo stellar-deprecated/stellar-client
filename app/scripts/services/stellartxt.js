@@ -38,6 +38,7 @@ sc.factory('rpStellarTxt', ['$q', '$rootScope',
                     $.ajax({
                         url: url,
                         dataType: 'text',
+                        timeout: Options.DEFAULT_AJAX_TIMEOUT || 10000,
                         success: function (data) {
                             $scope.$apply(function() {
                                 var sections = parse(data);

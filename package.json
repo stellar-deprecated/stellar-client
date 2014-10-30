@@ -7,6 +7,7 @@
     "bower": "1.3.6",
     "connect": "^2.14.4",
     "connect-livereload": "^0.4.0",
+    "ghooks": "^0.2.2",
     "git-rev": "^0.2.1",
     "glob": "^4.0.6",
     "gulp": "^3.6.0",
@@ -20,7 +21,7 @@
     "gulp-flatten": "^0.0.2",
     "gulp-iconfont": "^0.1.0",
     "gulp-iconfont-css": "0.0.9",
-    "gulp-imagemin": "^1.0.1",
+    "gulp-imagemin": "1.0.1",
     "gulp-jshint": "^1.5.3",
     "gulp-livereload": "^1.2.0",
     "gulp-load-plugins": "^0.5.0",
@@ -39,13 +40,13 @@
     "gulp-util": "^3.0.0",
     "gulp-protractor": "^0.0.11",
     "ink-docstrap": "^0.4.12",
-    "jsdoc": "^3.3.0-alpha9",
     "jshint-stylish": "^0.1.5",
     "karma": "^0.12.16",
     "karma-mocha": "^0.1.4",
     "karma-phantomjs-launcher": "^0.1.4",
     "karma-sinon-chai": "^0.2.0",
     "lodash": "^2.4.1",
+    "map-stream": "^0.1.0",
     "merge-stream": "^0.1.1",
     "mocha": "^1.20.1",
     "ng-annotate": "^0.9.11",
@@ -64,5 +65,10 @@
   },
   "scripts": {
     "test": "gulp test"
+  },
+  "config": {
+    "ghooks": {
+      "pre-commit": "gulp hooks:lint"
+    }
   }
 }

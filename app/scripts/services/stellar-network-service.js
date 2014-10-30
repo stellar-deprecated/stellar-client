@@ -19,12 +19,26 @@ sc.factory('StellarNetwork', function($rootScope, $timeout, $q) {
         });
     };
 
+    var handleReconnecting = function(timeout) {
+        $timeout(function () {
+            $rootScope.$broadcast('stellar-network:reconnecting', timeout);
+        });
+    };
+
+    var handleConnecting = function() {
+        $timeout(function () {
+            $rootScope.$broadcast('stellar-network:connecting');
+        });
+    };
+
     var handleConnect = function (e) {
         $timeout(function () {
+            /*jshint camelcase: false */
             // TODO: need to figure out why this isn't being set when we connect to the stellard
             self.remote._reserve_base=50*1000000;
             self.remote._reserve_inc=10*1000000;
 
+            self.connected = true;
             $rootScope.connected = true;
             $rootScope.$broadcast('stellar-network:connected');
 
@@ -40,12 +54,23 @@ sc.factory('StellarNetwork', function($rootScope, $timeout, $q) {
       });
     };
 
-    self.init = function () {
+    var init = function () {
         self.remote = new stellar.Remote(Options.server, true);
         self.remote.connect();
         self.remote.on('connected', handleConnect);
         self.remote.on('disconnected', handleDisconnect);
+        self.remote.on('reconnecting', handleReconnecting);
+        self.remote.on('connecting', handleConnecting);
         self.remote.on('transaction', handleTransaction);
+    };
+
+    self.forceReconnect = function () {
+        if(self.remote) {
+            /* jshint camelcase:false */
+            self.remote.force_reconnect();
+        } else {
+            init();
+        }
     };
 
     self.shutdown = function () {
@@ -55,7 +80,7 @@ sc.factory('StellarNetwork', function($rootScope, $timeout, $q) {
 
     self.ensureConnection = function() {
         if(self.connected) { 
-            return $q.resolve();
+            return $q.when();
         } else if (self.waitingForConnection) {
             return self.waitingForConnection.promise;
         } else {
@@ -64,7 +89,7 @@ sc.factory('StellarNetwork', function($rootScope, $timeout, $q) {
             if(self.remote) {
                 self.remote.connect();
             } else {
-                self.init();
+                init();
             }
 
             return self.waitingForConnection.promise;
@@ -199,11 +224,11 @@ sc.factory('StellarNetwork', function($rootScope, $timeout, $q) {
     self.currency.decode = function(nativeCurrency) {
       var currencyType = typeof nativeCurrency;
   
-      switch(amountType) {
+      switch(currencyType) {
         case "string":
           return { currency: "STR" };
         case "object":
-          return nativeAmount;
+          return nativeCurrency;
         default:
           throw new Error("invalid currency type " + currencyType + ": expected a string, or object");
       }

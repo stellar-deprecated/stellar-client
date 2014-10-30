@@ -7,15 +7,22 @@ sc.controller('AddGatewayCtrl', function($scope, $q, session, singletonPromise, 
   // Populate the add gateway form with parameters from the add-gateway action.
   $scope.$on('action-add-gateway', function(event, params){
     $scope.openManageCurrencies();
+    $scope.fromActionLink = true;
+
+    // If user got here from a weblink, scroll to the `add gateway` section for them
+    setTimeout(function() {
+      $('html, body').animate({scrollTop: $('.gateway-form').offset().top}, 400);
+    }, 0);
 
     $scope.gatewaySearch = params.domain;
     $scope.loadCurrencies();
   });
 
   $scope.resetSearch = function() {
-    $scope.gatewaySearch = '';
-    $scope.searchStatus  = '';
-    $scope.foundGateway  = null;
+    $scope.gatewaySearch  = '';
+    $scope.searchStatus   = '';
+    $scope.foundGateway   = null;
+    $scope.fromActionLink = false;
   };
 
   $scope.loadCurrencies = singletonPromise(function (){
@@ -51,6 +58,10 @@ sc.controller('AddGatewayCtrl', function($scope, $q, session, singletonPromise, 
     });
     
     $scope.resetSearch();
+  };
+
+  $scope.actionLinkAlertActive = function() {
+    return $scope.fromActionLink && $scope.searchStatus !== 'already_added';
   };
 
   $scope.resetSearch();

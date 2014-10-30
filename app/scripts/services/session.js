@@ -1,4 +1,5 @@
 'use strict';
+/* global loadSiftScript */
 
 var sc = angular.module('stellarClient');
 
@@ -55,6 +56,9 @@ sc.service('session', function($rootScope, $http, $timeout, StellarNetwork, Wall
 
     this.put('wallet', wallet);
 
+    // Wait until the username is know to start sift science analytics.
+    loadSiftScript(wallet.mainData.username);
+
     if (this.isPersistent()) {
       wallet.saveLocal();
     } else {
@@ -68,6 +72,9 @@ sc.service('session', function($rootScope, $http, $timeout, StellarNetwork, Wall
     this.put('signingKeys', signingKeys);
     this.put('address', signingKeys.address);
 
+
+    self.identifyToAnalytics();
+    
     // Store a user object for the currently authenticated user
     UserPrivateInfo.load(this.get('username'), this.get('wallet').keychainData.updateToken)
       .then(function (user) {
@@ -75,13 +82,16 @@ sc.service('session', function($rootScope, $http, $timeout, StellarNetwork, Wall
       })
       .then(function () {
         $rootScope.$broadcast('userLoaded');
+      })
+      .then(function () {
+        self.identifyToAnalytics();
       });
 
     // check for the most up to date fairy address
     checkFairyAddress.bind(this)();
     $rootScope.account = {};
     $rootScope.$broadcast('walletAddressLoaded', {account: signingKeys.address, secret: signingKeys.secret});
-    StellarNetwork.init();
+    StellarNetwork.ensureConnection();
 
     // Set loggedIn to be true to signify that it is safe to use the session variables.
     this.put('loggedIn', true);
@@ -149,7 +159,35 @@ sc.service('session', function($rootScope, $http, $timeout, StellarNetwork, Wall
     return this.get('userPrivateInfo');
   };
 
+  Session.prototype.identifyToAnalytics = function() {
+      window.analytics.identify(this.get('username'), this.getAnalyticsTraits());
+  };
+
+  Session.prototype.getAnalyticsTraits = function() {
+    var traits      = {};
+    traits.username = this.get("username");
+    
+    var privateInfo = this.get("userPrivateInfo");
+    
+    if(!_.isEmpty(privateInfo)) {
+      traits.invites           = privateInfo.invites.length;
+      traits.inviteCode        = privateInfo.inviteCode;
+      traits.inviterUsername   = privateInfo.inviterUsername;
+      traits.claimedInviteCode = privateInfo.claimedInviteCode;
+      traits.linkedFacebook    = privateInfo.linkedFacebook;
+
+      if(privateInfo.email) {
+        traits.email = privateInfo.email.address;
+      }
+    }
+
+
+
+    return traits;
+  };
+
   function checkFairyAddress() {
+    /*jshint camelcase: false */
     $http.get(Options.API_SERVER + "/fairy")
     .success(function (response) {
       var federationRecord = response.data.federation_json;

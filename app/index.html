@@ -36,6 +36,11 @@
           window.location = "/unsupported.html";
         }
     </script>
+
+    <script type="text/javascript">
+      window.analytics=window.analytics||[],window.analytics.methods=["identify","group","track","page","pageview","alias","ready","on","once","off","trackLink","trackForm","trackClick","trackSubmit"],window.analytics.factory=function(t){return function(){var a=Array.prototype.slice.call(arguments);return a.unshift(t),window.analytics.push(a),window.analytics}};for(var i=0;i<window.analytics.methods.length;i++){var key=window.analytics.methods[i];window.analytics[key]=window.analytics.factory(key)}window.analytics.load=function(t){if(!document.getElementById("analytics-js")){var a=document.createElement("script");a.type="text/javascript",a.id="analytics-js",a.async=!0,a.src=("https:"===document.location.protocol?"https://":"http://")+"cdn.segment.io/analytics.js/v1/"+t+"/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(a,n)}},window.analytics.SNIPPET_VERSION="2.0.9",
+      window.analytics.load(Options.ANGULARTICS_WRITE_KEY);
+    </script>
 </head>
 <body ng-controller="AppCtrl">
 <div class="app-wrapper">
@@ -72,18 +77,6 @@
     </div>
 </div>
 
-
-<script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-    ga('create', 'UA-53373928-1', 'auto');
-    ga('send', 'pageview');
-
-</script>
-
 <!-- build:js scripts/stellar.js -->
 <script src="bower_components/stellar-lib/build/stellar-lib.js"></script>
 <!-- endbuild -->
@@ -114,6 +107,8 @@
 <script src="bower_components/angular-re-captcha/angular-re-captcha.js"></script>
 <script src="bower_components/stellar-wallet-js-sdk/build/stellar-wallet.js"></script>
 <script src="bower_components/tweetnacl/nacl-fast.min.js"></script>
+<script src="bower_components/angulartics/src/angulartics.js"></script>
+<script src="bower_components/angulartics/src/angulartics-segmentio.js"></script>
 <script src="scripts/utilities/sjcl.js"></script>
 <script src="scripts/libraries/sjcl-scrypt.js"></script>
 <!-- endbuild -->
@@ -160,7 +155,7 @@
 <script src="scripts/controllers/change-password-v2-controller.js"></script>
 <script src="scripts/controllers/dashboard-controller.js"></script>
 <script src="scripts/controllers/settings-controller.js"></script>
-<script src="scripts/controllers/transaction-history.js"></script>
+<script src="scripts/controllers/transaction-history-controller.js"></script>
 <script src="scripts/controllers/add-email-controller.js"></script>
 <script src="scripts/controllers/verify-email-controller.js"></script>
 <script src="scripts/controllers/receive-pane-controller.js"></script>
@@ -194,11 +189,17 @@
 <script src="scripts/controllers/order-book-summary-controller.js"></script>
 <script src="scripts/controllers/trading-balance-controller.js"></script>
 <script src="scripts/controllers/favorite-trades-controller.js"></script>
+<script src="scripts/controllers/trade-history-controller.js"></script>
 
 <script src="scripts/directives/directives.js"></script>
 <script src="scripts/directives/alert-directive.js"></script>
 <script src="scripts/directives/flash-message-directive.js"></script>
 <script src="scripts/directives/tabbed-section.js"></script>
+<script src="scripts/directives/disconnected-alert-directive.js"></script>
+
+<script src="scripts/modules/stellar-api/stellar-api.js"></script>
+<script src="scripts/modules/stellar-api/http.js"></script>
+<script src="scripts/modules/stellar-api/user.js"></script>
 
 <script src="scripts/utilities/wallet.js"></script>
 <script src="scripts/utilities/signingKeys.js"></script>
@@ -208,6 +209,8 @@
 <script src="scripts/utilities/jsonrewriter.js"></script>
 <script src="scripts/utilities/userprivateinfo.js"></script>
 <script src="scripts/utilities/order-book.js"></script>
+<script src="scripts/utilities/price-level-list.js"></script>
+<script src="scripts/utilities/sift-setup.js"></script>
 
 <script src="scripts/services/session.js"></script>
 <script src="scripts/services/stellar-network-service.js"></script>
@@ -216,7 +219,8 @@
 <script src="scripts/services/reverseFederation.js"></script>
 <script src="scripts/services/tutorial.js"></script>
 <script src="scripts/services/flash_messages.js"></script>
-<script src="scripts/services/transactionHistory.js"></script>
+<script src="scripts/services/transaction-history-service.js"></script>
+<script src="scripts/services/payment-history-service.js"></script>
 <script src="scripts/services/contacts.js"></script>
 <script src="scripts/services/invites.js"></script>
 <script src="scripts/services/bad_passwords.js"></script>
@@ -230,6 +234,7 @@
 <script src="scripts/services/friendly-offers-service.js"></script>
 <script src="scripts/services/balances-service.js"></script>
 <script src="scripts/services/username-proof.js"></script>
+<script src="scripts/services/trade-history-service.js"></script>
 
 <!-- endbuild -->
 </body>

@@ -11,3 +11,4 @@ stellar-client.sublime-workspace
 .DS_Store
 *.rdb
 api-docs/
+.npm/

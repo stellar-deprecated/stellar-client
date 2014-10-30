@@ -1,5 +1,7 @@
 'use strict';
 
+/* global StellarWallet */
+
 angular.module('stellarClient').controller('ChangePasswordV2Ctrl', function($scope, $state, $stateParams, FlashMessages) {
   $scope.totpRequired = $stateParams.totpRequired;
 

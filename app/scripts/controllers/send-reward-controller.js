@@ -1,5 +1,8 @@
 'use strict';
 
+/* jshint camelcase:false */
+/* global JsonRewriter */
+
 var sc = angular.module('stellarClient');
 
 sc.controller('SendRewardCtrl', function ($rootScope, $scope, $http, StellarNetwork, session, TutorialHelper) {
@@ -9,19 +12,20 @@ sc.controller('SendRewardCtrl', function ($rootScope, $scope, $http, StellarNetw
     innerTitle: 'Learn to send stellars',
     getCopy: function() {
       switch ($scope.reward.status) {
-        case 'needs_fbauth':
-        case 'sending':
-        case 'sent':
-          // User needs to fb auth before they can get their stellars (when they're done, still show this message)
-          return {
-            title: 'Sent!',
-            subtitle: 'Log in with Facebook to receive stellars'
-          };
-        default:
-          return {
-            title: 'Send stellars!',
-            subtitle: 'Learn to send'
-          };
+      case 'needs_fbauth':
+      case 'sending':
+      case 'sent':
+        // User needs to fb auth before they can get their stellars (when they're done, still show this message)
+        return {
+          title: 'Sent!',
+          subtitle: 'Log in with Facebook to receive stellars'
+        };
+
+      default:
+        return {
+          title: 'Send stellars!',
+          subtitle: 'Learn to send'
+        };
       }
     },
     updateReward: function (status) {
@@ -52,7 +56,7 @@ sc.controller('SendRewardCtrl', function ($rootScope, $scope, $http, StellarNetw
 
   var turnOffTxListener;
   function setupSentTxListener() {
-    turnOffTxListener = $scope.$on('$appTxNotification', function (event, tx) {
+    turnOffTxListener = $scope.$on('payment-history:new', function (event, tx) {
       if (validateTransaction(tx)) {
         requestSentStellarsReward();
       }
@@ -68,8 +72,6 @@ sc.controller('SendRewardCtrl', function ($rootScope, $scope, $http, StellarNetw
 
   // checks if the user has any "sent" transactions, requests send reward if so
   function checkSentTransactions() {
-    var sendRewardRequested = false;
-
     var remote = StellarNetwork.remote;
     var account = session.get('address');
     var params = {
@@ -103,8 +105,7 @@ sc.controller('SendRewardCtrl', function ($rootScope, $scope, $http, StellarNetw
           }
         });
       })
-      .on('error', function () {
-      })
+      .on('error', function () {})
       .request();
   }
 

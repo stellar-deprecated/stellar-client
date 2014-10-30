@@ -33,7 +33,7 @@ sc.service('whileValid', function($q) {
   };
 
   ValidatedPromise.prototype.getPromise = function() {
-    return promiseChain;
+    return this.promiseChain;
   };
 
   return function(validator) {

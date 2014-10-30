@@ -32,6 +32,7 @@ sc.service('TradingOps', function(session, StellarNetwork, TransactionCurator) {
       account: account
     }).then(function(response) {
         var normalizedOffers = response.offers.map(function (nativeOffer) {
+          /*jshint camelcase: false */
           return {
             account:   account,
             sequence:  nativeOffer.seq,

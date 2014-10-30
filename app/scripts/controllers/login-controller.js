@@ -68,4 +68,8 @@ angular.module('stellarClient').controller('LoginCtrl', function($rootScope, $sc
       type: 'error'
     });
   }
+
+  if(window.analytics && window.analytics.reset) {
+    window.analytics.reset();
+  }
 });

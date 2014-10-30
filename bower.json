@@ -6,7 +6,7 @@
     "modernizr": "~2.6.2",
     "jquery": "~1.11.0",
     "angular": "~1.2.17",
-    "angular-route": "*",
+    "angular-route": "~1.2.26",
     "angular-ui-router": "~0.2.10",
     "angular-debounce": "~0.0.3",
     "angular-facebook": "0.2.3",
@@ -21,12 +21,13 @@
     "ng-grid": "deckar01/ng-grid",
     "angular-cookie": "~4.0.2",
     "ng-clip": "*",
-    "stellar-lib": "0.9.6",
     "stellar-wallet-js-sdk": "git+https://github.com/stellar/stellar-wallet-js-sdk.git#master",
+    "tweetnacl": "^0.11.2",
+    "stellar-lib": "0.10.0",
     "zeroclipboard": "*",
     "bignumber.js": "~1.4.1",
     "angular-re-captcha": "0.0.3",
-    "tweetnacl": "^0.11.2"
+    "angulartics": "~0.17.0"
   },
   "devDependencies": {},
   "resolutions": {

@@ -2,7 +2,7 @@
 // generated on 2014-04-24 using generator-gulp-webapp 0.0.8
 
 var gulp          = require('gulp');
-var child_process = require('child_process')
+var child_process = require('child_process');
 var exec          = child_process.exec;
 var mergeStream   = require('merge-stream');
 var git           = require('git-rev');
@@ -13,6 +13,7 @@ var runSequence   = require('run-sequence');
 var path          = require('path');
 var protractor    = require("gulp-protractor").protractor;
 var glob          = require('glob');
+var map           = require('map-stream');
 
 var runningServer = null;
 
@@ -32,7 +33,7 @@ gulp.task('build', function(done) {
   runSequence('clean', ['html', 'images', 'fonts'], done);
 });
 gulp.task('dist',    ['build']);
-gulp.task('scripts', ['scripts:lint', 'scripts:templateCache', 'scripts:unminified', 'scripts:docs']);
+gulp.task('scripts', ['scripts:lint', 'scripts:templateCache', 'scripts:unminified']);
 
 
 //component tasks
@@ -48,12 +49,35 @@ gulp.task('styles', ['iconfont'], function () {
         .pipe($.size());
 });
 
+var lintErrorReporter = function () {
+  return map(function (file, cb) {
+    if (!file.jshint.success) {
+      process.exit(1);
+    }
+    cb(null, file);
+  });
+};
 
-gulp.task('scripts:lint', function () {
+function lintReport() {
     return gulp.src(paths.js)
         .pipe($.jshint())
         .pipe($.jshint.reporter($.jshintStylish))
         .pipe($.size());
+}
+
+gulp.task('scripts:lint', function () {
+    var report = lintReport();
+
+    if(process.env.WERROR === true) {
+        report = report.pipe(lintErrorReporter());
+    }
+
+    return report;
+});
+
+gulp.task('hooks:lint', function () {
+    // Force the process to exit with errors.
+    return lintReport().pipe(lintErrorReporter());
 });
 
 gulp.task('scripts:unminified', ['scripts:templateCache'], function () {
@@ -91,7 +115,9 @@ gulp.task('scripts:templateCache', function() {
     return mergeStream(templates, states);
 });
 
-gulp.task('scripts:docs', $.shell.task(['./node_modules/.bin/jsdoc -c ./jsdoc.conf.json'], {ignoreErrors:true}));
+// assumes that jsdoc is installed globally, because it tends to break the build when npm installing
+// it on linux
+gulp.task('scripts:docs', $.shell.task(['jsdoc -c ./jsdoc.conf.json'], {ignoreErrors:true}));
 
 gulp.task('html', ['config', 'styles', 'scripts', 'flash'], function (done) {
     git.long(function (revision) {

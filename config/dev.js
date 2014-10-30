@@ -38,5 +38,11 @@ window.Options = {
 
     MAX_CONTACT_AGE: 24 * 60 * 60 * 1000, // One day in milliseconds.
 
-    CAPTCHA_KEY: '6LdSLvoSAAAAAHMyFDqGHGBDQhXdjnCwmhmV71nL'
+    CAPTCHA_KEY: '6LdSLvoSAAAAAHMyFDqGHGBDQhXdjnCwmhmV71nL',
+
+    ANGULARTICS_WRITE_KEY: "K6D2s0Sjuu",
+
+    DEFAULT_AJAX_TIMEOUT: 10000, // 10 seconds
+
+    SIFT_SCIENCE_ACCOUNT: '5c25600a01'
 };

@@ -65,6 +65,16 @@
  * @property {string} price              - an amount, priced in the counter currency, per unit of the base currency
  * @property {string} amount             - the quantity available at the specified price
  * @property {string} totalValue         - the totalValue, i.e. price * amount
+ * @property {string} depth              - the cumulative sum of amounts in the PriceLevelList
+ */
+
+/**
+ * A PriceLevelList is an ordered list of PriceLevels. PriceLevels are only created
+ * as items inside a PriceLevelList so that PriceLevels can have a depth value
+ * relative to it's position and siblings in the list.
+ *
+ * @typedef {array} PriceLevelList
+ * @memberOf Trading
  */
 
 /**

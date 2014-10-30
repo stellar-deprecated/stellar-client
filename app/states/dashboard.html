@@ -1,6 +1,7 @@
 <div class="dashboard" ng-class="tutorials.get('dashboard')" ng-controller="DashboardCtrl">
     <div class="controls-container client-section">
         <div class="container">
+            <disconnected-alert></disconnected-alert>
             <div class="row controls">
                 <div class="dash-balance-container col-sm-6 col-sm-push-3">
                     <div class="single-balance-container" ng-hide="currencies.length">

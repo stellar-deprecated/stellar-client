@@ -1,5 +1,6 @@
 'use strict';
 /* exported STELLAR_CLIENT_REVISION */
+/* jslint camelcase: false */
 var STELLAR_CLIENT_REVISION = '_GIT_REVISION_GOES_HERE_';
 
 
@@ -18,7 +19,10 @@ var stellarClient = angular.module('stellarClient', [
   'vr.passwordStrength',
   'ngClipboard',
   'reCAPTCHA',
-  'ja.qr'
+  'ja.qr',
+  'angulartics',
+  'angulartics.segment.io',
+  'stellarApi'
 ]);
 
 /**
@@ -40,7 +44,8 @@ stellarClient.config(function($httpProvider, $stateProvider, $urlRouterProvider,
 
   reCAPTCHAProvider.setPublicKey(Options.CAPTCHA_KEY);
   reCAPTCHAProvider.setOptions({
-    theme: 'clean'
+    theme: 'custom',
+    custom_theme_widget: 'recaptcha_widget'
   });
 
   if(Options.REPORT_ERRORS !== true) {
@@ -160,15 +165,19 @@ stellarClient.run(function($location, $state, ipCookie){
 });
 
 stellarClient.run(function($rootScope, $timeout, StellarNetwork, ActionLink){
+  ActionLink.recognize();
+
   $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){
     ActionLink.recognize();
   });
 
   $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
-    StellarNetwork.ensureConnection().then(function() {
-      // HACK: Timeout required to allow templates' controllers initialize and start listening.
-      $timeout(ActionLink.process, 0);
-    });
+    if(toState.authenticate) {
+      StellarNetwork.ensureConnection().then(function() {
+        // HACK: Timeout required to allow templates' controllers initialize and start listening.
+        $timeout(ActionLink.process, 0);
+      });
+    }
   });
 });
 
@@ -201,15 +210,7 @@ stellarClient.run(function($rootScope, $state, $timeout, ipCookie, session, Flas
       }
 
       if(wallet) {
-        // Login with the local wallet and continue to the requested state.
-        event.preventDefault();
-
-        // HACK: The controllers in ng-included templates have not initialized yet.
-        //       Apply a $timeout so they have time to listen for login events.
-        $timeout(function() {
-          session.login(wallet);
-          $state.transitionTo(toState);
-        }, 0);
+        session.login(wallet);
       } else if(toState.authenticate) {
         // Redirect authenticated routes to login if we are unable to login from local.
         event.preventDefault();
@@ -226,4 +227,11 @@ stellarClient.run(function($rootScope, $state, $timeout, ipCookie, session, Flas
 stellarClient.config(function() {
   // Configure BigNumber to never return exponential notation
   BigNumber.config({ EXPONENTIAL_AT : 1e+9 });
+});
+
+
+// Analytics
+stellarClient.config(function ($analyticsProvider) {
+  $analyticsProvider.virtualPageviews(true);
+  $analyticsProvider.firstPageview(true);
 });

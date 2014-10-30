@@ -1,6 +1,3 @@
-/* export StellarDefaultCurrencyMap */
-/* export StellarDefaultCurrencyList */
-
 /**
  * Stellar default external currency list.
  *
@@ -14,7 +11,7 @@
  * @constant
  * @memberOf Data
  */
-var StellarDefaultCurrencyList =
+window.StellarDefaultCurrencyList =
 [
     {value: 'STR', name: 'STR - Stellars', order: 4, maxDecimalPlaces: 0},
     {value: 'USD', name: 'USD - US Dollar', order: 3, maxDecimalPlaces: 2},
@@ -41,4 +38,4 @@ var StellarDefaultCurrencyList =
 ];
 
 
-var StellarDefaultCurrencyMap = _.indexBy(StellarDefaultCurrencyList, 'value');
+window.StellarDefaultCurrencyMap = _.indexBy(StellarDefaultCurrencyList, 'value');
