@@ -195,16 +195,16 @@
                     </div>
                 </div>
 
-              <div class="row">
-                <div class="settings-label col-md-3 col-xs-6">2-FACTOR AUTHENTICATION</div>
-                <div class="settings-control col-md-9 col-xs-6">
-                  <div class="icon-col">
-                    <span class="icon icon-lock"/>
-                  </div>
-                  <span id="2FAtoggle" class="error-block" data-toggle="tooltip" data-placement="right" data-template='<div class="tooltip error-tip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>' st-toggle ctrl="toggle.twofa"></span>
-                  <div ng-controller="SettingsTotpCtrl" ng-include="'templates/settings-totp.html'"></div>
+                <div class="row">
+                    <div class="settings-label col-md-3 col-sm-6 col-xs-12">2-FACTOR AUTHENTICATION</div>
+                    <div class="settings-control col-md-9 col-sm-6 col-xs-12">
+                        <div class="icon-col">
+                            <span class="icon icon-lock"/>
+                        </div>
+                        <span id="2FAtoggle" class="error-block" data-toggle="tooltip" data-placement="right" data-template='<div class="tooltip error-tip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>' st-toggle ctrl="toggle.twofa"></span>
+                        <div ng-controller="SettingsTotpCtrl" class="settings-totp" ng-include="'templates/settings-totp.html'"></div>
+                    </div>
                 </div>
-              </div>
 
                 <!-- TODO change password
                 <div class="row">
