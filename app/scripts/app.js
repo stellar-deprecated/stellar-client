@@ -1,5 +1,6 @@
 'use strict';
 /* exported STELLAR_CLIENT_REVISION */
+/* jslint camelcase: false */
 var STELLAR_CLIENT_REVISION = '_GIT_REVISION_GOES_HERE_';
 
 

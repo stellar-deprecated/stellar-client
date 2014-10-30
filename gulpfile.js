@@ -13,6 +13,7 @@ var runSequence   = require('run-sequence');
 var path          = require('path');
 var protractor    = require("gulp-protractor").protractor;
 var glob          = require('glob');
+var map           = require('map-stream');
 
 var runningServer = null;
 
@@ -48,12 +49,35 @@ gulp.task('styles', ['iconfont'], function () {
         .pipe($.size());
 });
 
+var lintErrorReporter = function () {
+  return map(function (file, cb) {
+    if (!file.jshint.success) {
+      process.exit(1);
+    }
+    cb(null, file);
+  });
+};
 
-gulp.task('scripts:lint', function () {
+function lintReport() {
     return gulp.src(paths.js)
         .pipe($.jshint())
         .pipe($.jshint.reporter($.jshintStylish))
         .pipe($.size());
+}
+
+gulp.task('scripts:lint', function () {
+    var report = lintReport();
+
+    if(process.env.WERROR === true) {
+        report = report.pipe(lintErrorReporter());
+    }
+
+    return report;
+});
+
+gulp.task('hooks:lint', function () {
+    // Force the process to exit with errors.
+    return lintReport().pipe(lintErrorReporter());
 });
 
 gulp.task('scripts:unminified', ['scripts:templateCache'], function () {
