@@ -66,7 +66,13 @@ function lintReport() {
 }
 
 gulp.task('scripts:lint', function () {
-    return lintReport();
+    var report = lintReport();
+
+    if(process.env.WERROR === true) {
+        report = report.pipe(lintErrorReporter());
+    }
+
+    return report;
 });
 
 gulp.task('hooks:lint', function () {
