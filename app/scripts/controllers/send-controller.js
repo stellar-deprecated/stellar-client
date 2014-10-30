@@ -7,8 +7,6 @@ sc.controller('SendController', function($rootScope, $scope, $analytics, Stellar
   $scope.send = {};
   // The stellar account we're sending to.
   $scope.send.destination = {};
-  // Federation name we're sending to
-  $scope.send.federatedName = null;
   // The amount we're sending. An Amount object
   $scope.send.amount = null;
   // The state the send pane is in - form, confirm, or sending
@@ -29,9 +27,6 @@ sc.controller('SendController', function($rootScope, $scope, $analytics, Stellar
   $scope.send.indirect = false;
   // Holds the state of our sending transaction
   $scope.send.result = null;
-
-  // true if we should show the destination tag box, false otherwise
-  $scope.send.showDestinationTag = false;
 
   $scope.setState = function (state) {
     if (!$rootScope.connected) {
@@ -70,26 +65,8 @@ sc.controller('SendController', function($rootScope, $scope, $analytics, Stellar
     $scope.reset();
   });
 
-  /**
-  * showPaths returns true if all required dependencies are met to send a payment (resolved address,
-  * destination tag requirement met, path found, etc).
-  */
-  $scope.showPaths = function () {
-    var destTagRequirementMet = !$scope.send.destination.requireDestinationTag ||
-                  !!$scope.send.destination.destinationTag;
-
-    var sendRequirementMet = $scope.send.amount &&
-                 $scope.send.currency &&
-                 $scope.send.paths.length &&
-                 !_.isEmpty($scope.send.destination);
-
-    return destTagRequirementMet && sendRequirementMet;
-  };
-
   $scope.resetDestinationDependencies = function () {
-    $scope.send.showDestinationTag = false;
     $scope.send.destination = {};
-    $scope.send.federatedName = null;
     $scope.send.currencyChoices = _.pluck(StellarDefaultCurrencyList, 'value');
   };
 
@@ -245,7 +222,7 @@ sc.controller('SendController', function($rootScope, $scope, $analytics, Stellar
       amount:      $scope.send.amount.to_human_full(),
       currency:    $scope.send.currency,
       destination: destination,
-      federation:  $scope.send.federatedName,
+      federation:  $scope.send.destination.federatedName,
       indirect:    $scope.send.indirect,
       sendPath:    $scope.send.path.amount.to_human_full(),
     });
