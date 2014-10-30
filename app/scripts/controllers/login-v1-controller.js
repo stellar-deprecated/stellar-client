@@ -21,6 +21,7 @@ angular.module('stellarClient').controller('LoginV1Ctrl', function($rootScope, $
       .then(performLogin)
       .then(migrateWallet)
       .then(login)
+      .then(updateApiRecover)
       .then(claimInvite)
       .then(function() {
         $state.go('dashboard');
@@ -113,6 +114,15 @@ angular.module('stellarClient').controller('LoginV1Ctrl', function($rootScope, $
       session.rememberUser();
     }
     session.login(wallet);
+  }
+
+  function updateApiRecover() {
+    // Recovery code is no longer valid.
+    $http.post(Options.API_SERVER + "/user/setrecover", {
+      username: session.get('username'),
+      updateToken: session.get('wallet').keychainData.updateToken,
+      recover: false
+    });
   }
 
   function claimInvite() {
