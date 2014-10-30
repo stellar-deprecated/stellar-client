@@ -59,7 +59,7 @@ sc.controller('RegistrationCtrl', function(
 
   // Checks to see if the supplied username is available.
   // This function is debounced to prevent API calls before the user is finished typing.
-  var checkUsername = debounce(2000, function(){
+  var checkUsername = debounce(function(){
     if ($scope.data.username === '') {
       $scope.status.usernameAvailable = null;
     } else {
@@ -87,7 +87,7 @@ sc.controller('RegistrationCtrl', function(
           }
         });
     }
-  });
+  }, 2000);
 
   function getUsernameError(username) {
     if (username.length < 3 || username.length > 20) {
