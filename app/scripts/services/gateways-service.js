@@ -128,7 +128,12 @@ sc.service('Gateways', function($q, $analytics, session, StellarNetwork, rpStell
 
     var tx = StellarNetwork.remote.transaction();
     tx.trustSet(session.get('address'), limit);
-    tx.setFlags('NoRipple');
+
+    if (value === '0') {
+      tx.setFlags('ClearNoRipple');
+    } else {
+      tx.setFlags('NoRipple');
+    }
 
     tx.on('success', deferred.resolve);
     tx.on('error', function(result) {
