@@ -37,6 +37,11 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
       if (_.isString(this.keychainData)) {
         this.keychainData = JSON.parse(this.keychainData);
       }
+
+      // Update lock version
+      this.walletV2.updateLockVersion({
+        secretKey: this.keychainData.signingKeys.secretKey
+      });
     }
 
     // HACK: Remove old contact lists to reduce the wallet size.

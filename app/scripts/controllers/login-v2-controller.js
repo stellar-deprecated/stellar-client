@@ -39,6 +39,10 @@ angular.module('stellarClient').controller('LoginV2Ctrl', function($scope, $stat
     }
 
     return StellarWallet.getWallet(params).then(function(wallet) {
+      if ($scope.rememberMe) {
+        session.rememberUser();
+      }
+
       session.login(new Wallet({
         version: 2,
         id: wallet.getWalletId(),

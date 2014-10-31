@@ -27,6 +27,13 @@
         </div>
       </div>
       <div class="form-group">
+        <div class="col-sm-offset-3 col-sm-6">
+          <input type="checkbox" id="remember-me" name="remember-me" ng-model="rememberMe" ng-disabled="asyncLogin.isLoading()" />
+          <label for="remember-me" class="remember-me"> Remember me</label>
+          <div class="warning" ng-show="rememberMe"><span class="warning-title">WARNING</span> This saves your password on your local disk, meaning an attacker with access to your files could steal your wallet.</div>
+        </div>
+      </div>
+      <div class="form-group">
         <div class="errors col-sm-12"></div>
       </div>
       <div class="form-group">
