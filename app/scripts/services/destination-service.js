@@ -1,6 +1,7 @@
 'use strict';
 /* jshint camelcase: false */
 /* jslint bitwise:true */
+/* global URI */
 
 var sc = angular.module('stellarClient');
 
@@ -18,14 +19,15 @@ sc.service('Destination', function($rootScope, $q, StellarNetwork, contacts) {
     var fixedDestinationTag = false;
 
     // parse the dt parameter if it has one
-    var params = Util.parseUrlParams(recipient);
+    var destinationUri = new URI(recipient);
+    var params = destinationUri.query(true);
     if (params.dt) {
       destinationTag = Number(params.dt);
       fixedDestinationTag = true;
     }
 
     // parse the raw address/federation name
-    recipient = Util.removeUrlParams(recipient);
+    recipient = destinationUri.path();
 
     var destinationPromise;
 
