@@ -93,6 +93,11 @@ stellarClient.config(function($httpProvider, $stateProvider, $urlRouterProvider,
     .state('settings', {
       url:         '/settings',
       templateUrl: 'states/settings.html',
+      resolve: {
+        userLoaded: function(session) {
+          return session.waitForUserToLoad();
+        }
+      },
       authenticate: true
     })
     .state('invites', {

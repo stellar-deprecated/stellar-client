@@ -5,7 +5,7 @@ var sc = angular.module('stellarClient');
 
 var cache = {};
 
-sc.service('session', function($rootScope, $http, $timeout, StellarNetwork, Wallet, contacts, UserPrivateInfo) {
+sc.service('session', function($rootScope, $http, $timeout, $q, StellarNetwork, Wallet, contacts, UserPrivateInfo) {
   var Session = function() {};
 
   Session.prototype.get = function(name){ return cache[name]; };
@@ -48,6 +48,11 @@ sc.service('session', function($rootScope, $http, $timeout, StellarNetwork, Wall
     }
   };
 
+  var userLoadedPromise = $q.defer();
+  Session.prototype.waitForUserToLoad = function() {
+    return userLoadedPromise.promise;
+  };
+
   Session.prototype.login = function(wallet) {
     var self = this;
     try {
@@ -82,6 +87,7 @@ sc.service('session', function($rootScope, $http, $timeout, StellarNetwork, Wall
       })
       .then(function () {
         $rootScope.$broadcast('userLoaded');
+        userLoadedPromise.resolve();
       })
       .then(function () {
         self.identifyToAnalytics();
