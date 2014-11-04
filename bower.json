@@ -8,7 +8,7 @@
     "angular": "~1.2.17",
     "angular-route": "~1.2.26",
     "angular-ui-router": "~0.2.10",
-    "angular-debounce": "~0.0.3",
+    "ng-debounce": "~0.1.5",
     "angular-facebook": "0.2.3",
     "angular-password-strength": "~0.0.4",
     "autofill-event": "~1.0.0",
@@ -24,7 +24,8 @@
     "zeroclipboard": "*",
     "bignumber.js": "~1.4.1",
     "angular-re-captcha": "0.0.3",
-    "angulartics": "~0.17.0"
+    "angulartics": "~0.17.0",
+    "URIjs": "~1.14.1"
   },
   "devDependencies": {},
   "resolutions": {

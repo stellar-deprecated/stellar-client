@@ -13,7 +13,7 @@ var stellarClient = angular.module('stellarClient', [
   'ngGrid',
   'ngRaven',
   'ngRoute',
-  'rt.debounce',
+  'debounce',
   'singletonPromise',
   'ui.router',
   'vr.passwordStrength',

@@ -8,10 +8,10 @@
             </div>
             <div class="col-md-4 tip">Stellar name or address.</div>
         </div>
-        <div class="form-group send-destination" ng-show="send.showDestinationTag">
+        <div class="form-group send-destination" ng-show="showDestinationTag()">
             <label for="destinationTag" class="col-md-2">DESTINATION TAG</label>
             <div class="col-md-6">
-                <input name="destinationTag" ng-model="send.destination.destinationTag" type="number" class="form-control"/>
+                <input name="destinationTag" ng-model="sendFormModel.destinationTag" type="number" class="form-control"/>
             </div>
             <div class="col-md-4 tip">
             Recipient requires a destination tag to be specified for the transaction. If you don't know the
@@ -39,27 +39,25 @@
         </div>
         <div class="row">
             <div class="col-md-offset-3 col-md-4 send-form-status-container">
-                <p ng-show="send.fundStatus == 'insufficient-str'" class="send-form-status">
+                <p ng-show="send.pathStatus == 'insufficient-reserve'" class="send-form-status">
+                    You need a minimum balance of {{ send.reserve | rpamount }} Stellars to send. <a href="https://www.stellar.org/faq/#_Why_is_there_a_minimum_balance" target="_blank" >More information</a>
+                </p>
+                <p ng-show="send.pathStatus == 'destination-unfunded'" class="send-form-status">
                     Destination account is unfunded; send at least
-                    {{send.str_deficiency | rpamount}} STR to fund it.
+                    {{send.minimumAmount | rpamount}} STR to fund it.
                     <a href="https://www.stellar.org/faq/#_Why_is_there_a_minimum_balance" target="_blank" >More information</a>
                 </p>
-                <p ng-show="account.max_spend.to_number() < send.amount * 1000000" class="send-form-status">
-                    You need a minimum balance of 20 Stellars to send. <a href="https://www.stellar.org/faq/#_Why_is_there_a_minimum_balance" target="_blank" >More information</a>
-                </p>
-                <p ng-show="send.pathStatus == 'checking'" class="send-form-status">Checking</p>
-                <p ng-show="send.pathStatus == 'fed-check'" class="send-form-status">Analyzing address</p>
-                <p ng-show="send.pathStatus == 'pending'" class="send-form-status">Calculating paths</p>
-
-                <p ng-show="send.pathStatus == 'no-path'" class="send-form-status">
+                <p ng-show="send.pathStatus == 'checking-destination'" class="send-form-status">Finding account...</p>
+                <p ng-show="send.pathStatus == 'paths-loading'" class="send-form-status">Finding paths...</p>
+                <p ng-show="send.pathStatus == 'paths-empty'" class="send-form-status">
                     Unable to find a path to send {{send.amount.to_human()}} {{send.amount._currency.to_human()}} to
-                    {{send.federatedName || send.destination.address}}.
+                    {{send.destination.federatedName || send.destination.address}}.
                 </p>
-                <p ng-show="send.pathStatus == 'error'" class="send-form-status">Error while calculating path</p>
+                <p ng-show="send.pathStatus == 'error'" class="send-form-status">Error while calculating path.</p>
             </div>
         </div>
-        <p ng-show="showPaths()">You can send {{send.amount | amountToHuman }} {{send.amount._currency.to_human()}} using:</p>
-        <div class="row" ng-show="showPaths()">
+        <p ng-show="send.pathStatus == 'paths-loaded'">You can send {{send.amount | amountToHuman }} {{send.amount._currency.to_human()}} using:</p>
+        <div class="row" ng-show="send.pathStatus == 'paths-loaded'">
             <ul class="currencies-list">
                 <li ng-repeat="path in send.paths track by path.issuer_currency" class="currency-box">
                     <h5>{{ path.amount | amountToHuman }}</h5>
