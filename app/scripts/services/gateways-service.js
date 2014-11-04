@@ -122,13 +122,25 @@ sc.service('Gateways', function($q, $analytics, session, StellarNetwork, rpStell
   }
 
 
+  /**
+   * Issues a TrustSet transaction
+   *
+   * @param  {Currency} currency the currency to trust
+   * @param  {string} value     the value to set the trustline at
+   * @return {Promise}          resolved if the transaction succeeds
+   */
   function trustCurrency(currency, value) {
     var deferred = $q.defer();
     var limit    = _.extend({value: value}, currency);
 
     var tx = StellarNetwork.remote.transaction();
     tx.trustSet(session.get('address'), limit);
-    tx.setFlags('NoRipple');
+
+    if (value === '0') {
+      tx.setFlags('ClearNoRipple');
+    } else {
+      tx.setFlags('NoRipple');
+    }
 
     tx.on('success', deferred.resolve);
     tx.on('error', function(result) {
