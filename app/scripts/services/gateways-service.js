@@ -122,6 +122,13 @@ sc.service('Gateways', function($q, $analytics, session, StellarNetwork, rpStell
   }
 
 
+  /**
+   * Issues a TrustSet transaction
+   *
+   * @param  {Currency} currency the currency to trust
+   * @param  {string} value     the value to set the trustline at
+   * @return {Promise}          resolved if the transaction succeeds
+   */
   function trustCurrency(currency, value) {
     var deferred = $q.defer();
     var limit    = _.extend({value: value}, currency);
