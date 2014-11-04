@@ -86,9 +86,9 @@ sc.controller('VerifyEmailCtrl', function ($scope, $rootScope, $http, $state, $a
       if (response.data && response.data.field === 'recovery_code') {
         $scope.errors.push('Invalid recovery code.');
       }
-      return $q.reject();
     }
-    
+
+    return $q.reject();
   }
 
   $scope.clear = function() {
