@@ -16,7 +16,8 @@ sc.controller('VerifyEmailCtrl', function ($scope, $rootScope, $http, $state, $a
     $scope.errors = [];
 
     getServerRecoveryCode($scope.emailActivationCode)
-      .then(function (serverRecoveryCode) {
+      .then(function (response) {
+        var serverRecoveryCode = response.data.serverRecoveryCode;
         return wallet.storeRecoveryData($scope.emailActivationCode, serverRecoveryCode)
           .catch(function (response) {
             failedServerResponse(response);
