@@ -1,4 +1,5 @@
-angular.module('stellarClient').controller('SettingsEmailCtrl', function($scope, $http, $q, session, singletonPromise) {
+angular.module('stellarClient').controller('SettingsEmailCtrl', function($scope, $http, $state, $q, session, singletonPromise) {
+  var wallet = session.get('wallet');
 
   $scope.$on('settings-refresh', function () {
     $scope.email = session.getUser().getEmailAddress();
@@ -27,43 +28,78 @@ angular.module('stellarClient').controller('SettingsEmailCtrl', function($scope,
     if ($scope.emailState === 'change') {
       return changeEmail();
     } else if ($scope.emailState === 'verify') {
-      return verifyEmail();
+      return getServerRecoveryCode($scope.verifyToken)
+        .then(enableRecovery)
+        .then(verifyEmail)
+        .catch(StellarWallet.errors.ConnectionError, function(e) {
+          Util.showTooltip($('#verify-input'), 'Error connecting wallet server.', 'error', 'top');
+        })
+        .catch($scope.$parent.handleServerError($('#verify-input')))
+        .finally(function() {
+          $scope.$apply();
+        });
     }
   });
 
+  function getServerRecoveryCode(userRecoveryCode) {
+    var data = {
+      userRecoveryCode: userRecoveryCode,
+      username:         session.get('username'),
+      updateToken:      wallet.keychainData.updateToken
+    };
+
+    return $http.post(Options.API_SERVER + '/user/getServerRecoveryCode', data)
+      .success(function (response) {
+        return response.serverRecoveryCode;
+      })
+      .error(failedServerResponse);
+  }
+
+  function enableRecovery(response) {
+    var userPartBytes = bs58.decode($scope.verifyToken);
+    var serverPartBytes = bs58.decode(response.data.serverRecoveryCode);
+    var fullRecoveryCodeBytes = userPartBytes.concat(serverPartBytes);
+    var fullRecoveryCode = bs58.encode(fullRecoveryCodeBytes);
+
+    return wallet.walletV2.enableRecovery({
+      recoveryCode: fullRecoveryCode,
+      secretKey: wallet.keychainData.signingKeys.secretKey
+    });
+  }
+
   function verifyEmail () {
-    var verifyToken = $scope.verifyToken;
-    return session.getUser().verifyEmail(verifyToken)
-      .then(function (response) {
-        if (response.data.data && response.data.data.serverRecoveryCode) {
-          var userPartBytes = bs58.decode(verifyToken);
-          var serverPartBytes = bs58.decode(response.data.data.serverRecoveryCode);
-          var fullRecoveryCodeBytes = userPartBytes.concat(serverPartBytes);
-          return bs58.encode(fullRecoveryCodeBytes);
-        } else {
-          return $q.reject();
-        }
-      })
-      .then(function(fullRecoveryCode) {
-        var wallet = session.get('wallet');
-        return wallet.walletV2.enableRecovery({
-          recoveryCode: fullRecoveryCode,
-          secretKey: wallet.keychainData.signingKeys.secretKey
-        });
-      })
+    return session.getUser().verifyEmail($scope.verifyToken)
       .then(function () {
         return $scope.$parent.refreshAndInitialize();
       })
       .then(function () {
         $scope.verifyToken = null;
-      })
-      .catch(StellarWallet.errors.ConnectionError, function(e) {
-        Util.showTooltip($('#verify-input'), 'Error connecting wallet server.', 'error', 'top');
-      })
-      .catch($scope.$parent.handleServerError($('#verify-input')))
-      .finally(function() {
-        $scope.$apply();
       });
+  }
+
+  function failedServerResponse(response) {
+    if (!response){
+      Util.showTooltip($('#verify-input'), 'Server error', 'error', 'top');
+      return $q.reject();
+    }
+
+    if (response.status !== 'fail'){
+      Util.showTooltip($('#verify-input'), 'Unexpected status: ' + response.status, 'error', 'top');
+      return $q.reject();
+    }
+
+    switch (response.code) {
+      case 'invalid_update_token':
+        // this user's update token is invalid, send to login
+        $state.transitionTo('login');
+        break;
+      case 'invalid':
+        if (response.data && response.data.field === 'recovery_code') {
+          Util.showTooltip($('#verify-input'), 'Invalid recovery code.', 'error', 'top');
+        }
+    }
+
+    return $q.reject();
   }
 
   function changeEmail () {
