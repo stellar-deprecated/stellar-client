@@ -20,7 +20,8 @@
     "jquery": true,
     "predef": [
         "_", 
-        "angular", 
+        "angular",
+        "bs58",
         "BigNumber",
         "iso4217",
         "Modernizr", 

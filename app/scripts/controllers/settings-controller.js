@@ -14,7 +14,7 @@ angular.module('stellarClient').controller('SettingsCtrl', function($scope, $htt
 
   $scope.handleServerError = function (element) {
     return function (error) {
-      var message = error.status === 'fail' ? error.message : 'Server error';
+      var message = error.data.status === 'fail' ? error.data.message : 'Server error';
       Util.showTooltip(element, message, 'error', 'top');
     };
   };

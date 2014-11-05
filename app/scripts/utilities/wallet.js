@@ -226,35 +226,6 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
     return this;
   };
 
-  Wallet.prototype.storeRecoveryData = function (userRecoveryCode, serverRecoveryCode) {
-    var recoveryId = Wallet.deriveId(userRecoveryCode, serverRecoveryCode);
-    var recoveryKey = Wallet.deriveKey(recoveryId, userRecoveryCode, serverRecoveryCode);
-
-    var data = this.createRecoveryData(recoveryId, recoveryKey);
-
-    return $http.post(Options.WALLET_SERVER + '/wallets/create_recovery_data', data);
-  };
-
-  /**
-   * Encrypts the wallet's id and key into the recoveryData and sets its the recoveryId.
-   *
-   * @param {string} recoveryId
-   * @param {string} recoveryKey
-   * @memberOf Wallet
-   */
-  Wallet.prototype.createRecoveryData = function(recoveryId, recoveryKey){
-    var rawRecoveryKey = sjcl.codec.hex.toBits(recoveryKey);
-    var recoveryData = Wallet.encryptData({id: this.id, key: this.key}, rawRecoveryKey);
-
-    return {
-      id: this.id,
-      authToken: this.keychainData.authToken,
-      recoveryId: recoveryId,
-      recoveryData: recoveryData,
-      recoveryDataHash: sjcl.codec.hex.fromBits(sjcl.hash.sha1.hash(recoveryData))
-    };
-  };
-
   /**
    * Encrypts the wallet data into a generic object.
    *

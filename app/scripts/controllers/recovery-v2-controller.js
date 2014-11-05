@@ -36,6 +36,7 @@ angular.module('stellarClient').controller('RecoveryV2Ctrl', function($scope, $s
 
     return $q.when(params)
       .then(validate)
+      .then(getServerRecoveryCode)
       .then(recover)
       .then(function (params) {
         $state.go('change_password_v2', {
@@ -61,19 +62,63 @@ angular.module('stellarClient').controller('RecoveryV2Ctrl', function($scope, $s
       return $q.reject();
     }
 
-    // Append suffix
-    params.username = params.username+'@stellar.org';
-
     return params;
+  }
+
+  function getServerRecoveryCode(params) {
+    var deferred = $q.defer();
+
+    var data = {
+      username: params.username,
+      userRecoveryCode: params.recoveryCode
+    };
+
+    $http.post(Options.API_SERVER + '/user/recover', data)
+      .success(function(body) {
+        if (body.data && body.data.serverRecoveryCode) {
+          params.serverRecoveryCode = body.data.serverRecoveryCode;
+          deferred.resolve(params);
+        } else {
+          $scope.recoveryError = 'An error occurred.';
+          deferred.reject();
+        }
+      })
+      .error(function(body, status) {
+        switch(status) {
+          case 400:
+            if (body.code === 'invalid') {
+              $scope.recoveryError = 'Invalid username or recovery code.';
+            } else if (body.code === 'disabled') {
+              $scope.recoveryError = 'Recovery has been disabled for this account.';
+            }
+            break;
+          case 0:
+            $scope.recoveryError = 'Unable to contact the server.';
+            break;
+          default:
+            $scope.recoveryError = 'An error occurred.';
+        }
+        deferred.reject();
+      });
+
+    return deferred.promise;
   }
 
   function recover(params) {
     var deferred = $q.defer();
 
+    // Append domain
+    params.username += '@stellar.org';
+
+    var userPartBytes = bs58.decode(params.recoveryCode);
+    var serverPartBytes = bs58.decode(params.serverRecoveryCode);
+    var fullRecoveryCodeBytes = userPartBytes.concat(serverPartBytes);
+    var fullRecoveryCode = bs58.encode(fullRecoveryCodeBytes);
+
     var data = {
       server: Options.WALLET_SERVER+'/v2',
       username: params.username,
-      recoveryCode: params.recoveryCode
+      recoveryCode: fullRecoveryCode
     };
 
     if ($scope.totpRequired) {
