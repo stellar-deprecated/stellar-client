@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('stellarClient').controller('SettingsRecoveryCtrl', function($scope, $http, session, stellarApi, UserPrivateInfo, FlashMessages) {
+angular.module('stellarClient').controller('SettingsRecoveryCtrl', function($scope, $http, session, stellarApi, UserPrivateInfo, FlashMessages, ipCookie) {
   var wallet = session.get('wallet');
   var params = {
     username: session.get('username'),
@@ -57,6 +57,14 @@ angular.module('stellarClient').controller('SettingsRecoveryCtrl', function($sco
         stellarApi.User.getNewRecoveryCode(params)
           .then(function(response) {
             if (response.data.status === 'success') {
+              FlashMessages.dismissById('migrated-wallet-recovery-step-1');
+
+              FlashMessages.add({
+                id: 'migrated-wallet-recovery-step-2',
+                info: 'Step 2: We\'ve just sent a new code to your email. Enter your code below.',
+                showCloseIcon: false
+              });
+
               $scope.resetting = true;
               userRecoveryCode = response.data.userRecoveryCode;
               serverRecoveryCode = response.data.serverRecoveryCode;
@@ -103,6 +111,8 @@ angular.module('stellarClient').controller('SettingsRecoveryCtrl', function($sco
     }).then(function() {
       $scope.code = null;
       $scope.resetting = false;
+      FlashMessages.dismissById('migrated-wallet-recovery-step-2');
+      ipCookie.remove('needs_recovery_code_reset');
       FlashMessages.add({
         title: 'Success',
         info: 'Your recovery token has been reset!'

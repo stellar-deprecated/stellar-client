@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('stellarClient').controller('LoginV1Ctrl', function($rootScope, $scope, $http, $state, $stateParams, $q, session, invites, Wallet, singletonPromise, usernameProof) {
+angular.module('stellarClient').controller('LoginV1Ctrl', function($rootScope, $scope, $http, $state, $stateParams, $q, session, invites, Wallet, singletonPromise, usernameProof, ipCookie) {
   setTimeout(function() {
     angular.element('#password')[0].focus();
   }, 200);
@@ -24,6 +24,7 @@ angular.module('stellarClient').controller('LoginV1Ctrl', function($rootScope, $
       .then(updateApiRecover)
       .then(claimInvite)
       .then(function() {
+        ipCookie("needs_recovery_code_reset", "true", {expires: new Date('01 Jan 2030 00:00:00 GMT')});
         $state.go('dashboard');
       });
   });
