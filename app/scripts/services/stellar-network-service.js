@@ -130,6 +130,22 @@ sc.factory('StellarNetwork', function($rootScope, $timeout, $q) {
         return deferred.promise;
     };
 
+    self.getAccount = function(address) {
+        var deferred = $q.defer();
+
+        var account = self.remote.account(address);
+        account.entry(function (err, data) {
+            if (err) {
+                deferred.reject(err);
+            } else {
+                /* jshint camelcase:false */
+                deferred.resolve(data.account_data);
+            }
+        });
+
+        return deferred.promise;
+    };
+
 
     /** @namespace  StellarNetwork.amount */
     self.amount = {};

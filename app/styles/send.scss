@@ -70,7 +70,7 @@
       }
     }
 
-     @media (min-width: $phone-width) {
+     @media (min-width: $mobile-width) {
         .send-amount {
           input[type="number"],
           input[type="text"],
