@@ -76,6 +76,7 @@ angular.module('stellarClient').controller('LoginV1Ctrl', function($rootScope, $
     wallet.keychainData.signingKeys = signingKeys;
 
     var proof = usernameProof(wallet.keychainData.signingKeys, $stateParams.username);
+    proof.migrated = true; // This is a migrated wallet
 
     // Perform a migration
     StellarWallet.createWallet({
