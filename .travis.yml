@@ -1,0 +1,13 @@
+language: node_js
+node_js:
+  - "0.10"
+before_install:
+  - mkdir .npm
+  - "export DISPLAY=:99.0"
+  - "sh -e /etc/init.d/xvfb start"
+install:
+  - npm install
+  - npm install -g bower
+  - bower install
+notifications:
+  slack: stellarfoundation:xOJMGp50Rwbq6w59y7HB7pXS
