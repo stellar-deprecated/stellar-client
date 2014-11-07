@@ -36,6 +36,7 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
     'sending': 'icon icon-clock',
     'sent': 'icon icon-tick',
     'unverified': 'icon icon-clock',
+    'updated_too_recently': 'icon icon-clock',
     'ineligible': 'icon icon-lock' // TODO: Use yield sign icon.
   };
 
@@ -109,7 +110,8 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
       'ready': 1,
       'sending': 1,
       'sent': 2,
-      'ineligible': 2
+      'ineligible': 2,
+      'updated_too_recently': 2,
     };
 
     $scope.sortedRewards.sort(function (a, b) {
