@@ -106,11 +106,6 @@ sc.service('Payment', function($rootScope, $q, StellarNetwork, Destination, Canc
     var amountString = (value || 0) + ' ' + currency;
     amount = new stellar.Amount.from_human(amountString);
 
-    if (!amount.is_native()) {
-      // Use any issuer the destination trusts.
-      amount.set_issuer(destination.address);
-    }
-
     updatePaths();
 
     return $q.when(amount);
@@ -147,6 +142,11 @@ sc.service('Payment', function($rootScope, $q, StellarNetwork, Destination, Canc
 
       $rootScope.$broadcast('payment:destination-unfunded', minimumAmount);
       return;
+    }
+
+    if (!amount.is_native()) {
+      // Use any issuer the destination trusts.
+      amount.set_issuer(destination.address);
     }
 
     // Subscribe to path updates.
