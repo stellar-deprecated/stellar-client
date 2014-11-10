@@ -4,6 +4,10 @@
     <flash-messages></flash-messages>
     <h1 class="title">Unlock Wallet</h1>
 
+    <div>
+      <a href="#" ng-click="goBack($event);">&laquo; back</a>
+    </div>
+
     <iframe name="chrome-password-manager-fix" src="about:blank" style="display:none;"></iframe>
     <form role="form" class="form-horizontal" ng-controller="LoginV2Ctrl" ng-submit="attemptLogin()"
           action="chrome-password-manager-fix.html" method="post" target="chrome-password-manager-fix">

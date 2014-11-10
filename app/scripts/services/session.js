@@ -54,6 +54,12 @@ sc.service('session', function($rootScope, $http, $timeout, StellarNetwork, Wall
       sessionStorage.displayReloadMessage = "display";
     } catch (e) {}
 
+    // User has persisted old wallet. Logout so he can migrate to new version.
+    if (wallet.version !== 2) {
+      this.logout();
+      return;
+    }
+
     this.put('wallet', wallet);
 
     // Wait until the username is know to start sift science analytics.

@@ -2,6 +2,7 @@
 
 angular.module('stellarClient').controller('SettingsCtrl', function($scope, $http, $state, $stateParams, session, FlashMessages) {
   if ($stateParams['migrated-wallet-recovery']) {
+    $scope.migratedWalletRecovery = true;
     FlashMessages.add({
       id: 'migrated-wallet-recovery-step-1',
       info: 'Step 1: Click on "reset" to reset your recovery code.',
@@ -47,6 +48,9 @@ angular.module('stellarClient').controller('SettingsCtrl', function($scope, $htt
         // TODO retry
       });
   }
+
+  // We need to reload settings in SettingsRecoveryCtrl
+  $scope.getSettings = getSettings;
 
   $scope.toggle = {
     disableToggles: false,

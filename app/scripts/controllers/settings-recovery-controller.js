@@ -57,13 +57,14 @@ angular.module('stellarClient').controller('SettingsRecoveryCtrl', function($sco
         stellarApi.User.getNewRecoveryCode(params)
           .then(function(response) {
             if (response.data.status === 'success') {
-              FlashMessages.dismissById('migrated-wallet-recovery-step-1');
-
-              FlashMessages.add({
-                id: 'migrated-wallet-recovery-step-2',
-                info: 'Step 2: We\'ve just sent a new code to your email. Enter your code below.',
-                showCloseIcon: false
-              });
+              if ($scope.$parent.migratedWalletRecovery) {
+                FlashMessages.dismissById('migrated-wallet-recovery-step-1');
+                FlashMessages.add({
+                  id: 'migrated-wallet-recovery-step-2',
+                  info: 'Step 2: We\'ve just sent a new code to your email. Enter your code below.',
+                  showCloseIcon: false
+                });
+              }
 
               $scope.resetting = true;
               userRecoveryCode = response.data.userRecoveryCode;
@@ -104,19 +105,33 @@ angular.module('stellarClient').controller('SettingsRecoveryCtrl', function($sco
     wallet.walletV2.enableRecovery({
       recoveryCode: fullRecoveryCode,
       secretKey: wallet.keychainData.signingKeys.secretKey
-    }).then(function() {
+    })
+    .then(function() {
       return stellarApi.User.finishChangeRecoveryToken(_.extend(params, {
         userRecoveryCode: $scope.code
       }));
-    }).then(function() {
+    })
+    // We need to reload settings because `recover` setting is set to `false` if there is no recovery code.
+    .then($scope.$parent.getSettings)
+    .then(function() {
       $scope.code = null;
       $scope.resetting = false;
-      FlashMessages.dismissById('migrated-wallet-recovery-step-2');
-      ipCookie.remove('needs_recovery_code_reset');
+
+      if ($scope.$parent.migratedWalletRecovery) {
+        FlashMessages.dismissById('migrated-wallet-recovery-step-2');
+        ipCookie.remove('needs_recovery_code_reset');
+      }
+
+      var messageInfo = 'Your recovery token has been reset! ';
+      if (!$scope.$parent.toggle.recover.on) {
+        // Remind a user to switch toggle to ON position
+        messageInfo += 'However to be able to recover your wallet make sure you have turned on Recovery Token in your account settings.';
+      }
       FlashMessages.add({
         title: 'Success',
-        info: 'Your recovery token has been reset!'
+        info: messageInfo
       });
+
       if (session.isPersistent()) {
         session.get('wallet').saveLocal(); // We need to rewrite wallet object because lockVersion has changed
       }
