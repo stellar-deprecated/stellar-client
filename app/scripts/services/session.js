@@ -48,14 +48,14 @@ sc.service('session', function($rootScope, $http, $timeout, StellarNetwork, Wall
     }
   };
 
-  Session.prototype.login = function(wallet) {
+  Session.prototype.login = function(wallet, logoutOnLegacyWallet) {
     var self = this;
     try {
       sessionStorage.displayReloadMessage = "display";
     } catch (e) {}
 
     // User has persisted old wallet. Logout so he can migrate to new version.
-    if (wallet.version !== 2) {
+    if (logoutOnLegacyWallet && wallet.version !== 2) {
       this.logout();
       return;
     }

@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('ChangePasswordCtrl', function($scope, $state, $timeout, $http, session, debounce, Wallet) {
+sc.controller('ChangePasswordCtrl', function($scope, $state, $timeout, $http, session, debounce, Wallet, FlashMessages) {
   $scope.data = {
     username:             session.get('username'),
     password:             '',
@@ -50,28 +50,35 @@ sc.controller('ChangePasswordCtrl', function($scope, $state, $timeout, $http, se
       return;
     }
 
-    var newId = Wallet.deriveId($scope.data.username.toLowerCase(), $scope.data.password);
-    var newKey = Wallet.deriveKey(newId, $scope.data.username.toLowerCase(), $scope.data.password);
+    var newIdPromise = Wallet.deriveId($scope.data.username.toLowerCase(), $scope.data.password);
 
-    newWallet = new Wallet({
-      id: newId,
-      key: newKey,
-      keychainData: oldWallet.keychainData,
-      mainData: oldWallet.mainData
-    });
-
-    // Upload the new wallet to the server.
-    newWallet.sync('create')
+    newIdPromise
+      .then(function(newId) {
+        var newKey = Wallet.deriveKey(newId, $scope.data.username.toLowerCase(), $scope.data.password);
+        newWallet = new Wallet({
+          id: newId,
+          key: newKey,
+          keychainData: oldWallet.keychainData,
+          mainData: oldWallet.mainData
+        });
+      })
+      .then(function() {
+        // Upload the new wallet to the server.
+        return newWallet.sync('create');
+      })
       .then(function(){
         return replaceWallet(oldWallet, newWallet);
       })
       .then(function(){
         return copyRecoveryData(oldWallet, newWallet);
       })
-      .finally(function(){
+      .then(function(){
         session.logout();
-        session.login(newWallet);
-        $state.go('dashboard');
+        FlashMessages.add({
+          title: 'Password changed!',
+          info: 'You wallet password has been changed. You can login now.'
+        });
+        $state.go('login');
       });
   };
 

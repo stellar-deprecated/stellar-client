@@ -227,6 +227,26 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
   };
 
   /**
+   * Encrypts the wallet's id and key into the recoveryData and sets its the recoveryId.
+   *
+   * @param {string} recoveryId
+   * @param {string} recoveryKey
+   * @memberOf Wallet
+   */
+  Wallet.prototype.createRecoveryData = function(recoveryId, recoveryKey){
+    var rawRecoveryKey = sjcl.codec.hex.toBits(recoveryKey);
+    var recoveryData = Wallet.encryptData({id: this.id, key: this.key}, rawRecoveryKey);
+
+    return {
+      id: this.id,
+      authToken: this.keychainData.authToken,
+      recoveryId: recoveryId,
+      recoveryData: recoveryData,
+      recoveryDataHash: sjcl.codec.hex.fromBits(sjcl.hash.sha1.hash(recoveryData))
+    };
+  };
+
+  /**
    * Encrypts the wallet data into a generic object.
    *
    * @returns {object}
@@ -268,6 +288,7 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
         // Done using stellar-wallet-js-sdk in registration-controller.js
       }
     } else {
+      // Still used in V1 recovery/change_password
       var url = Options.WALLET_SERVER + '/wallets/' + action;
       var data = this.encrypt();
       return $http.post(url, data);
