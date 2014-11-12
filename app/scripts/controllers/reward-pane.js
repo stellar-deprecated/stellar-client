@@ -37,7 +37,8 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
     'sent': 'icon icon-tick',
     'unverified': 'icon icon-clock',
     'updated_too_recently': 'icon icon-clock',
-    'ineligible': 'icon icon-lock' // TODO: Use yield sign icon.
+    'ineligible': 'icon icon-lock', // TODO: Use yield sign icon.
+    'fb_email_unverified': 'icon icon-clock',
   };
 
   /**
@@ -111,7 +112,8 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
       'sending': 1,
       'sent': 2,
       'ineligible': 2,
-      'updated_too_recently': 2,
+      'updated_too_recently': 0,
+      'fb_email_unverified': 0,
     };
 
     $scope.sortedRewards.sort(function (a, b) {
