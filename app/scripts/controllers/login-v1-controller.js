@@ -25,6 +25,7 @@ angular.module('stellarClient').controller('LoginV1Ctrl', function($rootScope, $
     return Wallet.deriveId($stateParams.username, $scope.password)
       .then(performLogin)
       .then(migrateWallet)
+      .then(markMigrated)
       .then(login)
       .then(updateApiRecover)
       .then(claimInvite)
@@ -34,8 +35,11 @@ angular.module('stellarClient').controller('LoginV1Ctrl', function($rootScope, $
       });
   });
 
+  var oldWalletId;
   function performLogin(id) {
     var deferred = $q.defer();
+
+    oldWalletId = id;
 
     $http.post(Options.WALLET_SERVER + '/wallets/show', {id: id})
       .success(function(body) {
@@ -113,6 +117,22 @@ angular.module('stellarClient').controller('LoginV1Ctrl', function($rootScope, $
       throw e;
     }).finally(function() {
       $scope.$apply();
+    });
+
+    return deferred.promise;
+  }
+
+  function markMigrated(wallet) {
+    var deferred = $q.defer();
+
+    // Mark migrated
+    $http.post(Options.WALLET_SERVER + "/wallets/mark_migrated", {
+      id: oldWalletId,
+      authToken: wallet.keychainData.authToken
+    }).success(function(response) {
+      deferred.resolve(wallet);
+    }).error(function(response) {
+      deferred.reject();
     });
 
     return deferred.promise;
