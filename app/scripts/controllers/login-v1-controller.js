@@ -132,6 +132,12 @@ angular.module('stellarClient').controller('LoginV1Ctrl', function($rootScope, $
     }).success(function(response) {
       deferred.resolve(wallet);
     }).error(function(response) {
+      Raven.captureMessage('Error response from /wallets/mark_migrated', {
+        extra: {
+          id: oldWalletId,
+          response: response
+        }
+      });
       deferred.reject();
     });
 
