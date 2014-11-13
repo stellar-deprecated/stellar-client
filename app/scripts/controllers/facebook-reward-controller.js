@@ -11,7 +11,7 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, $q, $an
     claimFacebookReward(params.code)
       .finally(function () {
       // Open the facebook reward pane.
-        $scope.toggleReward($scope.reward.rewardType);
+        $scope.selectedReward = $scope.reward.rewardType;
       });
   });
 
