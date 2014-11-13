@@ -28,106 +28,6 @@
         -->
 
         <div class="client-section">
-            <div class="settings-section">
-                <div class="title">
-                    <div class="icon-col">
-                        <span class="glyphicon glyphicon-credit-card"/>
-                    </div>
-                    <span>Account</span>
-                </div>
-                <div class="row">
-                    <div class="settings-label col-md-3 col-xs-6">RECOVERY TOKEN</div>
-                    <div class="settings-control col-md-9 col-xs-6">
-                        <div class="icon-col">
-                            <span class="icon icon-key"/>
-                        </div>
-                        <span id="recovertoggle" class="error-block" data-toggle="tooltip" data-placement="right" data-template='<div class="tooltip error-tip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>' st-toggle ctrl="toggle.recover"></span><br />
-                        <div ng-controller="SettingsRecoveryCtrl" ng-include="'templates/settings-recovery.html'"></div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="settings-label col-md-3 col-xs-6">SEND EMAILS</div>
-                    <div class="settings-control col-md-9 col-xs-6">
-                        <div class="icon-col">
-                            <span class="icon icon-email"/>
-                        </div>
-                        <span id="emailtoggle" class="error-block" data-toggle="tooltip" data-placement="right" data-template='<div class="tooltip error-tip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>' st-toggle ctrl="toggle.email"></span>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="settings-label col-md-3 col-xs-6">FEDERATION</div>
-                    <div class="settings-control col-md-9 col-xs-6">
-                        <div class="icon-col">
-                            <span class="icon icon-user"/>
-                        </div>
-                        <span id="federatetoggle" class="error-block" data-toggle="tooltip" data-placement="right" data-template='<div class="tooltip error-tip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>' st-toggle ctrl="toggle.federate"></span>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="settings-label col-md-3 col-xs-6">SHOW REWARDS</div>
-                    <div class="settings-control col-md-9 col-xs-6">
-                        <div class="icon-col">
-                            <span class="icon icon-lock"/>
-                        </div>
-                        <span id="rewardtoggle" class="error-block" data-toggle="tooltip" data-placement="right" data-template='<div class="tooltip error-tip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>' st-toggle ctrl="toggle.rewards"></span>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="settings-label col-md-3 col-xs-6">SHOW TRADING</div>
-                    <div class="settings-control col-md-9 col-xs-6">
-                        <div class="icon-col">
-                            <span class="icon icon-exchange"/>
-                        </div>
-                        <span id="tradingtoggle" class="error-block" data-toggle="tooltip" data-placement="right" data-template='<div class="tooltip error-tip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>' st-toggle ctrl="toggle.trading"></span>
-                    </div>
-                </div>
-                <div class="row" ng-controller="SettingsInflationDestCtrl">
-                    <div class="settings-label col-md-3 col-xs-6">INFLATION DESTINATION</div>
-                    <div class="settings-control col-md-9 col-xs-6">
-                        <div class="row">
-                            <div class="icon-col col-xs-1">
-                                <span class="icon icon-heart"/>
-                            </div>
-                            <div ng-hide="canPayFee()" class="col-xs-10">
-                                Your account must be funded before setting the inflation destination.
-                            </div>
-                            <div ng-show="canPayFee()">
-                                <div ng-hide="changing">
-                                    <!-- User hasn't added an inflaition dest yet -->
-                                    <div class="col-xs-10" ng-hide="inflationDest">
-                                        <a href="" ng-click="change()">Add an inflation destination</a>
-                                    </div>
-                                    <!-- Show current inflation dest -->
-                                    <div class="col-xs-10" ng-show="inflationDest">
-                                        <div>
-                                            <span class="change-inflation-dest-control">{{ inflationDest | addressToUsername }}</span>
-                                        </div>
-                                        <div class="secondary-action">
-                                            <a href="" ng-click="change()">Change inflation destination</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- Input layout (for add/change inflation dest) -->
-                                <div class="col-xs-10" ng-show="changing">
-                                    <div class="row">
-                                        <div class="col-md-5 col-xs-12">
-                                            <input id="inflation-dest-input" data-toggle="tooltip" placeholder="Inflation Destination" type="text" class="form-control" ng-model="newInflationDest"></input>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-4 col-xs-12 col-md-push-1">
-                                            <button class="btn btn-default stellar-button settings-confirm-button" ng-click="update()">{{ update.isLoading() ? "Loading..." : "Set" }}</button>
-                                        </div>
-                                        <div class="settings-cancel-button col-md-1 col-xs-1 col-md-pull-4">
-                                            <a href="" ng-click="reset()">Cancel</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
             <div class="settings-section">
                 <div class="title">
@@ -135,6 +35,17 @@
                         <span class="icon icon-lock"/>
                     </div>
                     <span>Security</span>
+                </div>
+
+                <div class="row">
+                    <div class="settings-label col-md-3 col-xs-6">RECOVERY TOKEN</div>
+                    <div class="settings-control col-md-9 col-xs-6">
+                        <div class="icon-col">
+                            <span class="icon icon-key"/>
+                        </div>
+                        <span id="recovertoggle" class="error-block" data-toggle="tooltip" data-placement="right" data-template='<div class="tooltip error-tip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>' st-toggle ctrl="toggle.recover"></span><br />
+                        <div class="reset-recovery" ng-controller="SettingsRecoveryCtrl" ng-include="'templates/settings-recovery.html'"></div>
+                    </div>
                 </div>
 
                 <div class="row" ng-controller="SettingsEmailCtrl">
@@ -300,6 +211,97 @@
                     <button class="btn btn-default ng-binding col-sm-6 col-md-offset-4" ng-click="saveSettings()" type="submit">Save</button>
                 </div>
                 -->
+            </div>
+
+            <div class="settings-section">
+                <div class="title">
+                    <div class="icon-col">
+                        <span class="glyphicon glyphicon-credit-card"/>
+                    </div>
+                    <span>Account</span>
+                </div>
+                <div class="row">
+                    <div class="settings-label col-md-3 col-xs-6">SEND EMAILS</div>
+                    <div class="settings-control col-md-9 col-xs-6">
+                        <div class="icon-col">
+                            <span class="icon icon-email"/>
+                        </div>
+                        <span id="emailtoggle" class="error-block" data-toggle="tooltip" data-placement="right" data-template='<div class="tooltip error-tip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>' st-toggle ctrl="toggle.email"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="settings-label col-md-3 col-xs-6">FEDERATION</div>
+                    <div class="settings-control col-md-9 col-xs-6">
+                        <div class="icon-col">
+                            <span class="icon icon-user"/>
+                        </div>
+                        <span id="federatetoggle" class="error-block" data-toggle="tooltip" data-placement="right" data-template='<div class="tooltip error-tip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>' st-toggle ctrl="toggle.federate"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="settings-label col-md-3 col-xs-6">SHOW REWARDS</div>
+                    <div class="settings-control col-md-9 col-xs-6">
+                        <div class="icon-col">
+                            <span class="icon icon-lock"/>
+                        </div>
+                        <span id="rewardtoggle" class="error-block" data-toggle="tooltip" data-placement="right" data-template='<div class="tooltip error-tip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>' st-toggle ctrl="toggle.rewards"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="settings-label col-md-3 col-xs-6">SHOW TRADING</div>
+                    <div class="settings-control col-md-9 col-xs-6">
+                        <div class="icon-col">
+                            <span class="icon icon-exchange"/>
+                        </div>
+                        <span id="tradingtoggle" class="error-block" data-toggle="tooltip" data-placement="right" data-template='<div class="tooltip error-tip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>' st-toggle ctrl="toggle.trading"></span>
+                    </div>
+                </div>
+                <div class="row" ng-controller="SettingsInflationDestCtrl">
+                    <div class="settings-label col-md-3 col-xs-6">INFLATION DESTINATION</div>
+                    <div class="settings-control col-md-9 col-xs-6">
+                        <div class="row">
+                            <div class="icon-col col-xs-1">
+                                <span class="icon icon-heart"/>
+                            </div>
+                            <div ng-hide="canPayFee()" class="col-xs-10">
+                                Your account must be funded before setting the inflation destination.
+                            </div>
+                            <div ng-show="canPayFee()">
+                                <div ng-hide="changing">
+                                    <!-- User hasn't added an inflaition dest yet -->
+                                    <div class="col-xs-10" ng-hide="inflationDest">
+                                        <a href="" ng-click="change()">Add an inflation destination</a>
+                                    </div>
+                                    <!-- Show current inflation dest -->
+                                    <div class="col-xs-10" ng-show="inflationDest">
+                                        <div>
+                                            <span class="change-inflation-dest-control">{{ inflationDest | addressToUsername }}</span>
+                                        </div>
+                                        <div class="secondary-action">
+                                            <a href="" ng-click="change()">Change inflation destination</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Input layout (for add/change inflation dest) -->
+                                <div class="col-xs-10" ng-show="changing">
+                                    <div class="row">
+                                        <div class="col-md-5 col-xs-12">
+                                            <input id="inflation-dest-input" data-toggle="tooltip" placeholder="Inflation Destination" type="text" class="form-control" ng-model="newInflationDest"></input>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4 col-xs-12 col-md-push-1">
+                                            <button class="btn btn-default stellar-button settings-confirm-button" ng-click="update()">{{ update.isLoading() ? "Loading..." : "Set" }}</button>
+                                        </div>
+                                        <div class="settings-cancel-button col-md-1 col-xs-1 col-md-pull-4">
+                                            <a href="" ng-click="reset()">Cancel</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
