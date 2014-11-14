@@ -28,16 +28,21 @@ angular.module('stellarClient').controller('SettingsEmailCtrl', function($scope,
     if ($scope.emailState === 'change') {
       return changeEmail();
     } else if ($scope.emailState === 'verify') {
-      return getServerRecoveryCode($scope.verifyToken)
-        .then(enableRecovery)
-        .then(verifyEmail)
-        .catch(StellarWallet.errors.ConnectionError, function(e) {
-          Util.showTooltip($('#verify-input'), 'Error connecting wallet server.', 'error', 'top');
-        })
-        .catch($scope.$parent.handleServerError($('#verify-input')))
-        .finally(function() {
-          $scope.$apply();
-        });
+      if ($scope.$parent.hasRecovery) {
+        return verifyEmail()
+          .catch($scope.handleServerError($('#verify-input')));
+      } else {
+        return getServerRecoveryCode($scope.verifyToken)
+          .then(enableRecovery)
+          .then(verifyEmail)
+          .catch(StellarWallet.errors.ConnectionError, function(e) {
+            Util.showTooltip($('#verify-input'), 'Error connecting wallet server.', 'error', 'top');
+          })
+          .catch($scope.$parent.handleServerError($('#verify-input')))
+          .finally(function() {
+            $scope.$apply();
+          });
+      }
     }
   });
 
