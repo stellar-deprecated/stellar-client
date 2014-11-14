@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('stellarClient').controller('LoginV1Ctrl', function($rootScope, $scope, $http, $state, $stateParams, $q, session, invites, Wallet, singletonPromise, usernameProof, ipCookie) {
+angular.module('stellarClient').controller('LoginV1Ctrl', function($rootScope, $scope, $http, $state, $stateParams, $q, session, invites, Wallet, singletonPromise, usernameProof) {
   setTimeout(function() {
     angular.element('#password')[0].focus();
   }, 200);
@@ -30,7 +30,35 @@ angular.module('stellarClient').controller('LoginV1Ctrl', function($rootScope, $
       .then(updateApiRecover)
       .then(claimInvite)
       .then(function() {
-        ipCookie("needs_recovery_code_reset", "true", {expires: new Date('01 Jan 2030 00:00:00 GMT')});
+        var deferred = $q.defer();
+
+        // Store needsRecoveryCodeReset flag in the wallet but only if migrated user has recovery
+        var data = {
+          params: {
+            username: session.get('username'),
+            updateToken: session.get('wallet').keychainData.updateToken
+          }
+        };
+        $http.get(Options.API_SERVER + "/user/settings", data)
+          .success(function (response) {
+            if (response.data.hasRecovery) {
+              var wallet = session.get('wallet');
+              wallet.mainData.needsRecoveryCodeReset = true;
+              session.syncWallet('update')
+                .then(function() {
+                  deferred.resolve();
+                });
+            } else {
+              deferred.resolve();
+            }
+          })
+          .error(function (response) {
+            deferred.resolve();
+          });
+
+        return deferred.promise;
+      })
+      .then(function() {
         $state.go('dashboard');
       });
   });

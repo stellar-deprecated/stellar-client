@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('stellarClient').controller('SettingsRecoveryCtrl', function($scope, $state, $http, $q, session, stellarApi, UserPrivateInfo, FlashMessages, ipCookie) {
+angular.module('stellarClient').controller('SettingsRecoveryCtrl', function($scope, $state, $http, $q, session, stellarApi, UserPrivateInfo, FlashMessages) {
   var wallet = session.get('wallet');
   var params = {
     username: session.get('username'),
@@ -35,6 +35,15 @@ angular.module('stellarClient').controller('SettingsRecoveryCtrl', function($sco
   });
 
   function toggleRecovery(value) {
+    if (value === true && !$scope.$parent.hasRecovery) {
+      FlashMessages.add({
+        title: 'Cannot enable recovery',
+        info: 'Please verify you email first.',
+        type: 'error'
+      });
+      return;
+    }
+
     $http.post(Options.API_SERVER+'/user/setrecover', _.extend(params, {
       recover: value
     })).success(function () {
@@ -109,13 +118,20 @@ angular.module('stellarClient').controller('SettingsRecoveryCtrl', function($sco
     // We need to reload settings because `recover` setting is set to `false` if there is no recovery code.
     .then($scope.$parent.getSettings)
     .then(function() {
-      $scope.code = null;
-      $scope.resetting = false;
-
       if ($scope.$parent.migratedWalletRecovery) {
         FlashMessages.dismissById('migrated-wallet-recovery-step-2');
-        ipCookie.remove('needs_recovery_code_reset');
       }
+
+      // Remove needsRecoveryCodeReset flag
+      var wallet = session.get('wallet');
+      if (wallet.mainData.needsRecoveryCodeReset) {
+        delete wallet.mainData.needsRecoveryCodeReset;
+        return session.syncWallet('update');
+      }
+    })
+    .then(function() {
+      $scope.code = null;
+      $scope.resetting = false;
 
       var messageInfo = 'Your recovery token has been reset! ';
       if (!$scope.$parent.toggle.recover.on) {

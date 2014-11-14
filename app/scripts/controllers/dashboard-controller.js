@@ -2,10 +2,8 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('DashboardCtrl', function($rootScope, $scope, $timeout, $state, session, TutorialHelper, StellarNetwork, contacts, FlashMessages, ipCookie) {
-    var needsRecoveryCodeReset = ipCookie("needs_recovery_code_reset");
-
-    if (needsRecoveryCodeReset) {
+sc.controller('DashboardCtrl', function($rootScope, $scope, $timeout, $state, session, TutorialHelper, StellarNetwork, contacts, FlashMessages) {
+    if (session.get('wallet').mainData.needsRecoveryCodeReset) {
       FlashMessages.add({
         id: 'migrated-wallet-recovery',
         type: 'error',
