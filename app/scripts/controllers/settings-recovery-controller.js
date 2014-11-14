@@ -35,7 +35,7 @@ angular.module('stellarClient').controller('SettingsRecoveryCtrl', function($sco
   });
 
   function toggleRecovery(value) {
-    if (value === true && !$scope.$parent.hasRecovery) {
+    if (value === true && !session.getUser().isEmailVerified()) {
       FlashMessages.add({
         title: 'Cannot enable recovery',
         info: 'Please verify you email first.',
