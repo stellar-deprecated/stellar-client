@@ -35,7 +35,7 @@ angular.module('stellarClient').controller('SettingsRecoveryCtrl', function($sco
   });
 
   function toggleRecovery(value) {
-    if (value === true && !$scope.$parent.hasRecovery) {
+    if (value === true && !$scope.hasRecovery) {
       FlashMessages.add({
         title: 'Cannot enable recovery',
         info: 'Please verify you email first.',
@@ -64,7 +64,7 @@ angular.module('stellarClient').controller('SettingsRecoveryCtrl', function($sco
     stellarApi.User.changeRecoveryToken(params)
      .success(function(response) {
         if (response.status === 'success') {
-          if ($scope.$parent.migratedWalletRecovery) {
+          if ($scope.migratedWalletRecovery) {
             FlashMessages.dismissById('migrated-wallet-recovery-step-1');
             FlashMessages.add({
               id: 'migrated-wallet-recovery-step-2',
@@ -116,9 +116,9 @@ angular.module('stellarClient').controller('SettingsRecoveryCtrl', function($sco
       }));
     })
     // We need to reload settings because `recover` setting is set to `false` if there is no recovery code.
-    .then($scope.$parent.getSettings)
+    .then($scope.getSettings)
     .then(function() {
-      if ($scope.$parent.migratedWalletRecovery) {
+      if ($scope.migratedWalletRecovery) {
         FlashMessages.dismissById('migrated-wallet-recovery-step-2');
       }
 
@@ -134,7 +134,7 @@ angular.module('stellarClient').controller('SettingsRecoveryCtrl', function($sco
       $scope.resetting = false;
 
       var messageInfo = 'Your recovery token has been reset! ';
-      if (!$scope.$parent.toggle.recover.on) {
+      if (!$scope.toggle.recover.on) {
         // Remind a user to switch toggle to ON position
         messageInfo += 'However to be able to recover your wallet make sure you have turned on Recovery Token in your account settings.';
       }
