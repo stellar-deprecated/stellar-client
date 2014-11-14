@@ -197,7 +197,7 @@ gulp.task('ensure_config', function() {
     }
 });
 
-_(['dev', 'stg', 'prd']).each(function(env) {
+_(['dev', 'dev-testnet', 'stg', 'prd']).each(function(env) {
     gulp.task('config-' + env, function() {
         process.env.NODE_ENV = env;
         gulp.start('config');
