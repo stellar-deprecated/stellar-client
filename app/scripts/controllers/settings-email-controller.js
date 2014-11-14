@@ -72,6 +72,8 @@ angular.module('stellarClient').controller('SettingsEmailCtrl', function($scope,
       .then(function () {
         return $scope.$parent.refreshAndInitialize();
       })
+      // We need to reload settings because `recover` setting is set to `false` if there is no recovery code.
+      .then($scope.$parent.getSettings)
       .then(function () {
         $scope.verifyToken = null;
       });

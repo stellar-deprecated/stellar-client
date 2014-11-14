@@ -42,7 +42,7 @@
                             <span class="icon icon-key"/>
                         </div>
                         <span id="recovertoggle" class="error-block" data-toggle="tooltip" data-placement="right" data-template='<div class="tooltip error-tip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>' st-toggle ctrl="toggle.recover"></span><br />
-                        <div ng-controller="SettingsRecoveryCtrl" ng-include="'templates/settings-recovery.html'"></div>
+                        <div ng-if="hasRecovery" ng-controller="SettingsRecoveryCtrl" ng-include="'templates/settings-recovery.html'"></div>
                     </div>
                 </div>
                 <div class="row">

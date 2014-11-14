@@ -40,6 +40,7 @@ angular.module('stellarClient').controller('SettingsCtrl', function($scope, $htt
 
     return $http.get(Options.API_SERVER + "/user/settings", data)
       .success(function (response) {
+        $scope.hasRecovery = response.data.hasRecovery;
         $scope.toggle.recover.on = response.data.recover;
         $scope.toggle.federate.on = response.data.federate;
         $scope.toggle.email.on = response.data.email;

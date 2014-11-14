@@ -1,13 +1,12 @@
 'use strict';
 
-angular.module('stellarClient').controller('SettingsRecoveryCtrl', function($scope, $http, session, stellarApi, UserPrivateInfo, FlashMessages, ipCookie) {
+angular.module('stellarClient').controller('SettingsRecoveryCtrl', function($scope, $state, $http, $q, session, stellarApi, UserPrivateInfo, FlashMessages, ipCookie) {
   var wallet = session.get('wallet');
   var params = {
     username: session.get('username'),
     updateToken: wallet.keychainData.updateToken
   };
 
-  var userRecoveryCode = null;
   var serverRecoveryCode = null;
 
   $scope.reset = function () {
@@ -16,11 +15,12 @@ angular.module('stellarClient').controller('SettingsRecoveryCtrl', function($sco
     $scope.sendingRecoveryCode = false;
     $scope.code = null;
 
+    // We check whether user is in process of changing recovery code. If so,
+    // we show a form to finish the process.
     stellarApi.User.getNewRecoveryCode(params)
       .then(function(response) {
         if (response.data.status === 'success') {
           $scope.resetting = true;
-          userRecoveryCode = response.data.userRecoveryCode;
           serverRecoveryCode = response.data.serverRecoveryCode;
         } else {
           $scope.resetting = false;
@@ -53,24 +53,20 @@ angular.module('stellarClient').controller('SettingsRecoveryCtrl', function($sco
     $scope.sendingRecoveryCode = true;
 
     stellarApi.User.changeRecoveryToken(params)
-     .success(function() {
-        stellarApi.User.getNewRecoveryCode(params)
-          .then(function(response) {
-            if (response.data.status === 'success') {
-              if ($scope.$parent.migratedWalletRecovery) {
-                FlashMessages.dismissById('migrated-wallet-recovery-step-1');
-                FlashMessages.add({
-                  id: 'migrated-wallet-recovery-step-2',
-                  info: 'Step 2: We\'ve just sent a new code to your email. Enter your code below.',
-                  showCloseIcon: false
-                });
-              }
+     .success(function(response) {
+        if (response.status === 'success') {
+          if ($scope.$parent.migratedWalletRecovery) {
+            FlashMessages.dismissById('migrated-wallet-recovery-step-1');
+            FlashMessages.add({
+              id: 'migrated-wallet-recovery-step-2',
+              info: 'Step 2: We\'ve just sent a new code to your email. Enter your code below.',
+              showCloseIcon: false
+            });
+          }
 
-              $scope.resetting = true;
-              userRecoveryCode = response.data.userRecoveryCode;
-              serverRecoveryCode = response.data.serverRecoveryCode;
-            }
-          });
+          $scope.resetting = true;
+          serverRecoveryCode = response.serverRecoveryCode;
+        }
      }).error(function (response){
         $scope.resetting = false;
         if (response.code === 'no_email') {
@@ -92,19 +88,18 @@ angular.module('stellarClient').controller('SettingsRecoveryCtrl', function($sco
 
   $scope.confirmResetRecovery = function($event) {
     $event.preventDefault();
+    $scope.error = null;
 
-    if ($scope.code !== userRecoveryCode) {
-      $scope.error = 'Incorrect recovery code. Please try again.';
-      return;
-    }
-
-    var userPartBytes = bs58.decode($scope.code);
-    var serverPartBytes = bs58.decode(serverRecoveryCode);
-    var fullRecoveryCodeBytes = userPartBytes.concat(serverPartBytes);
-    var fullRecoveryCode = bs58.encode(fullRecoveryCodeBytes);
-    wallet.walletV2.enableRecovery({
-      recoveryCode: fullRecoveryCode,
-      secretKey: wallet.keychainData.signingKeys.secretKey
+    getServerRecoveryCode($scope.code)
+    .then(function() {
+      var userPartBytes = bs58.decode($scope.code);
+      var serverPartBytes = bs58.decode(serverRecoveryCode);
+      var fullRecoveryCodeBytes = userPartBytes.concat(serverPartBytes);
+      var fullRecoveryCode = bs58.encode(fullRecoveryCodeBytes);
+      return wallet.walletV2.enableRecovery({
+        recoveryCode: fullRecoveryCode,
+        secretKey: wallet.keychainData.signingKeys.secretKey
+      });
     })
     .then(function() {
       return stellarApi.User.finishChangeRecoveryToken(_.extend(params, {
@@ -138,7 +133,9 @@ angular.module('stellarClient').controller('SettingsRecoveryCtrl', function($sco
     }).catch(StellarWallet.errors.ConnectionError, function(e) {
       $scope.error = 'Connection error. Please try again.';
     }).catch(function(e) {
-      $scope.error = 'Unknown error. Please try again.';
+      if (!$scope.error) {
+        $scope.error = 'Unknown error. Please try again.';
+      }
       // TODO add logging
     }).finally(function() {
       $scope.$apply();
@@ -155,4 +152,46 @@ angular.module('stellarClient').controller('SettingsRecoveryCtrl', function($sco
         $scope.error = 'Cannot cancel changing recovery code now. Please try again.';
       });
   };
+
+  function getServerRecoveryCode(userRecoveryCode) {
+    var deferred = $q.defer();
+
+    var data = {
+      userRecoveryCode: userRecoveryCode,
+      username:         session.get('username'),
+      updateToken:      wallet.keychainData.updateToken
+    };
+
+    stellarApi.User.getServerRecoveryCode(data)
+      .success(function (response) {
+        return deferred.resolve();
+      })
+      .error(function(response) {
+        if (!response){
+          $scope.error = "Server error";
+          return deferred.reject();
+        }
+
+        if (response.status !== 'fail'){
+          $scope.error = 'Unexpected status: ' + response.status;
+          return deferred.reject();
+        }
+
+        switch (response.code) {
+          case 'invalid_update_token':
+            // this user's update token is invalid, send to login
+            $state.transitionTo('login');
+            break;
+          case 'invalid':
+            if (response.data && response.data.field === 'recovery_code') {
+              //$scope.error = 'Invalid recovery code.';
+              $scope.error = 'Invalid recovery code.';
+            }
+        }
+
+        return deferred.reject();
+      });
+
+    return deferred.promise;
+  }
 });

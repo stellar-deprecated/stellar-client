@@ -11,6 +11,10 @@ api.service('User', function(http) {
     return http.get('/user/getNewRecoveryCode', {params: {username: params.username, updateToken: params.updateToken}});
   };
 
+  User.getServerRecoveryCode = function(params) {
+    return http.post('/user/getServerRecoveryCode', {username: params.username, updateToken: params.updateToken, userRecoveryCode: params.userRecoveryCode});
+  };
+
   User.cancelChangingRecoveryCode = function(params) {
     return http.post('/user/cancelChangingRecoveryToken', {username: params.username, updateToken: params.updateToken});
   };
