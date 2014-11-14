@@ -13,6 +13,8 @@ angular.module('stellarClient').controller('SettingsCtrl', function($scope, $htt
   var wallet = session.get('wallet');
   var walletV2 = session.get('wallet').walletV2;
 
+  $scope.secretKey = wallet.keychainData.signingKeys.secret;
+
   $scope.handleServerError = function (element) {
     return function (error) {
       var message = error.data.status === 'fail' ? error.data.message : 'Server error';
