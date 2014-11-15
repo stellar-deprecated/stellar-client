@@ -230,6 +230,21 @@ sc.service('TradeHistory', function($rootScope, TransactionHistory, Trading, ses
       }
     });
 
+    // Consolidate multiple changes of the same currency.
+    balanceChanges = _(balanceChanges)
+      .groupBy(function(balanceChange) {
+        return [balanceChange.currency, balanceChange.issuer];
+      })
+      .map(function(currencyChanges) {
+        var currencyChange = _.pick(currencyChanges[0], ['currency', 'issuer']);
+        currencyChange.value = currencyChanges.reduce(function(totalValue, nextChange) {
+          return totalValue.plus(nextChange.value);
+        }, new BigNumber(0));
+
+        return currencyChange;
+      })
+      .value();
+
     return balanceChanges;
   }
 
