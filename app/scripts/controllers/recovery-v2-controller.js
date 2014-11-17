@@ -7,7 +7,7 @@ angular.module('stellarClient').controller('RecoveryV2Ctrl', function($scope, $s
   $scope.recoveryError = null;
   $scope.usernameError = null;
 
-  $scope.checkTotpRequired = debounce(1000, function() {
+  $scope.checkTotpRequired = debounce(function() {
     $scope.usernameError = null;
 
     if (_.isEmpty($scope.username)) {
@@ -26,7 +26,7 @@ angular.module('stellarClient').controller('RecoveryV2Ctrl', function($scope, $s
     }).finally(function() {
       $scope.usernameClass = 'glyphicon-none';
     });
-  });
+  }, 1000);
 
   $scope.attemptRecovery = singletonPromise(function() {
     var params = {
