@@ -61,7 +61,8 @@ sc.controller('VerifyEmailCtrl', function ($scope, $rootScope, $http, $state, $a
     var data = {
       token: $scope.emailActivationCode,
       username: session.get('username'),
-      updateToken: wallet.keychainData.updateToken
+      updateToken: wallet.keychainData.updateToken,
+      recoveryCode: $scope.emailActivationCode
     };
 
     return $http.post(Options.API_SERVER + '/user/verifyEmail', data)
