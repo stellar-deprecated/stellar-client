@@ -1,5 +1,7 @@
 # Stellar Client
 
+[![Build Status](https://travis-ci.org/stellar/stellar-client.svg)](https://travis-ci.org/stellar/stellar-client)
+
 The Stellar client is an AngularJS application that allows users to interact with the Stellar network from their browser.
 This client allows users to register for an account, generate a wallet containing cryptographic keys, and submit transactions to the Stellar network.
 

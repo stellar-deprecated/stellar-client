@@ -8,7 +8,7 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, $q, $an
     status: 'incomplete',
     innerTitle: 'Receive stellars',
     getCopy: function() {
-      switch ($scope.rewards.status) {
+      switch ($scope.reward.status) {
         case 'sent':
           return {
             title: 'You connected your Facebook!',
@@ -29,6 +29,11 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, $q, $an
           return {
             title: "Your Facebook account is not eligible.",
             subtitle: "Please check back for other ways to participate soon."
+          };
+        case 'updated_too_recently':
+          return {
+            title: "Your Facebook was updated too recently.",
+            subtitle: "Please try again in a couple of days"
           };
         case 'fake':
           // TODO: their account is fake
@@ -58,6 +63,12 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, $q, $an
           $scope.reward.error = {};
           $scope.reward.error.info = "Our spam detection checks say your Facebook account isn't eligible. If you are a legitimate user, we apologize and are improving our detection algorithms. And we will release new ways to grab stellars soon, so please check back.";
           $scope.reward.error.panel = "Sorry, your Facebook account isn't eligible.";
+          $scope.reward.error.action = null;
+          break;
+        case 'updated_too_recently':
+          $scope.reward.error = {};
+          $scope.reward.error.info = "As part of our ongoing efforts to prevent fraud, we temporarily deny facebook accounts that have been updated too recently.  Please try again in a couple of days.";
+          $scope.reward.error.panel = "Sorry, your Facebook account was updated too recently";
           $scope.reward.error.action = null;
           break;
         case 'already_taken':
@@ -263,6 +274,9 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, $q, $an
           break;
         case 'ineligible':
           $scope.reward.updateReward('ineligible');
+          break;
+        case 'updated_too_recently':
+          $scope.reward.updateReward('updated_too_recently');
           break;
         case 'fake_account':
           $scope.reward.updateReward('fake');

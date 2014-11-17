@@ -9,7 +9,7 @@
     </div>
 
     <div ng-hide="reward.error">
-        <div class="content" ng-class="{active: reward.status == 'incomplete' || reward.status == 'pending' || reward.status == 'unverified' || reward.status == 'ineligible'}">
+        <div class="content" ng-class="{active: reward.status == 'incomplete' || reward.status == 'pending' || reward.status == 'unverified' || reward.status == 'ineligible' || reward.status == 'updated_too_recently'}">
             <div ng-include="reward.template"></div>
         </div>
 

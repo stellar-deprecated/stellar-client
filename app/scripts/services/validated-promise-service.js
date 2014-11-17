@@ -6,7 +6,7 @@ var sc = angular.module('stellarClient');
  * Creates a promise chain that runs a validator before each
  * function to determine if the chain should continue or reject.
  */
-sc.service('whileValid', function($q) {
+sc.service('ValidatedPromise', function($q) {
   var ValidatedPromise = function(validator) {
     this.validator = validator;
     this.promiseChain = $q.when();
@@ -23,7 +23,15 @@ sc.service('whileValid', function($q) {
   };
 
   ValidatedPromise.prototype.catch = function(err) {
-    this.promiseChain = this.promiseChain.catch(err);
+    this.promiseChain = this.promiseChain
+      .catch(function(result) {
+        return $q.when(this.validator())
+          .then(function() {
+            return $q.reject(result);
+          })
+          .catch(err);
+      }.bind(this));
+
     return this;
   };
 
@@ -36,7 +44,5 @@ sc.service('whileValid', function($q) {
     return this.promiseChain;
   };
 
-  return function(validator) {
-    return new ValidatedPromise(validator);
-  };
+  return ValidatedPromise;
 });
