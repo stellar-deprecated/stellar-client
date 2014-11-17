@@ -79,19 +79,26 @@ sc.service('session', function($rootScope, $http, $timeout, $q, StellarNetwork, 
 
 
     self.identifyToAnalytics();
-    
-    // Store a user object for the currently authenticated user
-    UserPrivateInfo.load(this.get('username'), this.get('wallet').keychainData.updateToken)
-      .then(function (user) {
-        self.put('userPrivateInfo', user);
-      })
-      .then(function () {
-        $rootScope.$broadcast('userLoaded');
-        userLoadedPromise.resolve();
-      })
-      .then(function () {
-        self.identifyToAnalytics();
-      });
+
+    var loadUserPrivateInfo = function() {
+      // Store a user object for the currently authenticated user
+      UserPrivateInfo.load(self.get('username'), self.get('wallet').keychainData.updateToken)
+        .then(function (user) {
+          self.put('userPrivateInfo', user);
+        })
+        .then(function () {
+          $rootScope.$broadcast('userLoaded');
+          userLoadedPromise.resolve();
+        })
+        .then(function () {
+          self.identifyToAnalytics();
+        })
+        .catch(function() {
+          $timeout(loadUserPrivateInfo, 2000);
+        });
+    };
+
+    loadUserPrivateInfo();
 
     // check for the most up to date fairy address
     checkFairyAddress.bind(this)();
