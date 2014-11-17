@@ -6,8 +6,11 @@ angular.module('stellarClient').controller('SettingsCtrl', function($scope, $htt
     FlashMessages.add({
       id: 'migrated-wallet-recovery-step-1',
       info: 'Step 1: Click on "reset" to reset your recovery code.',
+      type: 'error',
       showCloseIcon: false
     });
+  } else {
+    $scope.migratedWalletRecovery = false;
   }
 
   var wallet = session.get('wallet');

@@ -3,7 +3,10 @@
 angular.module('stellarClient').controller('SettingsTotpCtrl', function($scope, session) {
   var wallet = session.get('wallet').walletV2;
 
-  $scope.reset = function () {
+  $scope.reset = function ($event) {
+    if ($event) {
+      $event.preventDefault();
+    }
     $scope.error = null;
     $scope.enabling = false;
     $scope.code = null;

@@ -3,7 +3,11 @@
 </div>
 
 <div ng-if="!resetting && !sendingRecoveryCode">
-  <a href="#" ng-click="$parent.resetRecovery($event)">reset</a>
+  <span ng-if="hasRecovery">Recovery code generated.</span>
+  <a href="#" ng-click="$parent.resetRecovery($event)">
+    <span ng-if="!hasRecovery">generate</span>
+    <span ng-if="hasRecovery">reset</span>
+  </a>
 </div>
 
 <div ng-if="resetting">

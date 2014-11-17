@@ -35,13 +35,22 @@ angular.module('stellarClient').controller('SettingsRecoveryCtrl', function($sco
   });
 
   function toggleRecovery(value) {
-    if (value === true && !$scope.hasRecovery) {
-      FlashMessages.add({
-        title: 'Cannot enable recovery',
-        info: 'Please verify you email first.',
-        type: 'error'
-      });
-      return;
+    if (value === true) {
+      if (!session.getUser().isEmailVerified()) {
+        FlashMessages.add({
+          title: 'Cannot enable recovery',
+          info: 'Please verify you email first.',
+          type: 'error'
+        });
+        return;
+      } else if (!$scope.hasRecovery) {
+        FlashMessages.add({
+          title: 'Cannot enable recovery',
+          info: 'Please generate recovery code first by clicking "generate".',
+          type: 'error'
+        });
+        return;
+      }
     }
 
     $http.post(Options.API_SERVER+'/user/setrecover', _.extend(params, {

@@ -27,7 +27,7 @@ angular.module('stellarClient').controller('SettingsEmailCtrl', function($scope,
     if ($scope.emailState === 'change') {
       return changeEmail();
     } else if ($scope.emailState === 'verify') {
-      return verifyEmail().catch($scope.$parent.handleServerError($('#verify-input')));
+      return verifyEmail().catch($scope.handleServerError($('#verify-input')));
     }
   });
 
@@ -35,10 +35,8 @@ angular.module('stellarClient').controller('SettingsEmailCtrl', function($scope,
   function verifyEmail () {
     return session.getUser().verifyEmail($scope.verifyToken)
         .then(function () {
-          return $scope.$parent.refreshAndInitialize();
+          return $scope.refreshAndInitialize();
         })
-      // We need to reload settings because `recover` setting is set to `false` if there is no recovery code.
-        .then($scope.$parent.getSettings)
         .then(function () {
           $scope.verifyToken = null;
         });
@@ -48,11 +46,11 @@ angular.module('stellarClient').controller('SettingsEmailCtrl', function($scope,
   function changeEmail () {
     return session.getUser().changeEmail($scope.newEmail)
         .then(function () {
-          return $scope.$parent.refreshAndInitialize();
+          return $scope.refreshAndInitialize();
         })
         .then(function () {
           $scope.newEmail = null;
         })
-        .catch($scope.$parent.handleServerError($('#email-input')));
+        .catch($scope.handleServerError($('#email-input')));
   }
 });
