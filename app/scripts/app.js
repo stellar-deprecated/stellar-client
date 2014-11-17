@@ -19,6 +19,7 @@ var stellarClient = angular.module('stellarClient', [
   'vr.passwordStrength',
   'ngClipboard',
   'reCAPTCHA',
+  'ja.qr',
   'angulartics',
   'angulartics.segment.io',
   'stellarApi'
@@ -61,6 +62,27 @@ stellarClient.config(function($httpProvider, $stateProvider, $urlRouterProvider,
       templateUrl: 'states/login.html',
       authenticate: false
     })
+    .state('login_v1', {
+      templateUrl: 'states/login_v1.html',
+      authenticate: false,
+      // There is a bug in angular-ui-router because of which we cannot pass
+      // an array ['username'] here. Instead we need to pass this object.
+      // Check out angular-ui-router.js:
+      //
+      // // Filter parameters before we pass them to event handlers etc.
+      // toParams = filterByKeys(objectKeys(to.params), toParams || {});
+      params: {'username': 0}
+    })
+    .state('login_v2', {
+      templateUrl: 'states/login_v2.html',
+      authenticate: false,
+      params: {'username': 0, 'totpRequired': 0}
+    })
+    .state('recovery_v2', {
+      url:         '/recovery-v2',
+      templateUrl: 'states/recovery_v2.html',
+      authenticate: false
+    })
     .state('recovery', {
       url:         '/recovery',
       templateUrl: 'states/recovery.html',
@@ -69,6 +91,11 @@ stellarClient.config(function($httpProvider, $stateProvider, $urlRouterProvider,
     .state('username-recovery', {
       url:         '/username-recovery',
       templateUrl: 'states/username_recovery.html',
+      authenticate: false
+    })
+    .state('lost-totp', {
+      url:         '/lost-2fa-device',
+      templateUrl: 'states/lost_2fa_device.html',
       authenticate: false
     })
     .state('register', {
@@ -90,10 +117,16 @@ stellarClient.config(function($httpProvider, $stateProvider, $urlRouterProvider,
       templateUrl: 'states/change_password.html',
       authenticate: true
     })
+    .state('change_password_v2', {
+      templateUrl: 'states/change_password_v2.html',
+      authenticate: false,
+      params: {'username': 0, 'masterKey': 0, 'totpRequired': false}
+    })
     .state('settings', {
       url:         '/settings',
       templateUrl: 'states/settings.html',
-      authenticate: true
+      authenticate: true,
+      params: {'migrated-wallet-recovery': false}
     })
     .state('invites', {
       url:         '/invites',

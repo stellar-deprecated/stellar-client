@@ -1,0 +1,88 @@
+<div ng-if="enabling">
+  <p class="totp-instructions">
+    To finish adding a 2FA to your account scan a code below (or enter it manually) in your mobile app.
+    Then enter your password, a key and press "Confirm" button to complete a process.</p>
+  <div class="totp-qr">
+    <qr text="uri"></qr>
+    <p>
+      <code>{{ key }}</code>
+    </p>
+  </div>
+
+  <div class="form-group row">
+    <div class="errors col-sm-offset-1 col-sm-6">
+      <div class="tip">{{ error }}</div>
+    </div>
+  </div>
+
+  <form ng-submit="confirmEnableTotp($event)">
+    <div class="row">
+      <div class="icon-col col-xs-1">
+        <span class="icon icon-key"/>
+      </div>
+      <div class="col-md-5 col-xs-10">
+        <input class="form-control" type="password" placeholder="password" ng-model="$parent.$parent.password" />
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="icon-col col-xs-1">
+        <span class="icon icon-clock"/>
+      </div>
+      <div class="col-md-5 col-xs-10">
+        <input class="form-control" type="text" maxlength="6" placeholder="2FA token" ng-model="$parent.$parent.code" />
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-4 col-xs-12 col-md-push-1">
+        <button type="submit" class="btn btn-default btn-primary">Activate 2FA</button>
+      </div>
+      <div class="settings-cancel-button col-md-1 col-xs-1 col-md-pull-4">
+        <a href="#" ng-click="reset($event)">Cancel</a>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div ng-if="disabling">
+  <p class="totp-instructions">
+    To disable 2FA in your wallet please type down your wallet password and TOTP code.
+  </p>
+
+  <div class="form-group row">
+    <div class="errors col-sm-offset-1 col-sm-6">
+      <div class="tip">{{ error }}</div>
+    </div>
+  </div>
+
+
+  <form ng-submit="confirmDisableTotp($event)">
+    <div class="row">
+      <div class="icon-col col-xs-1">
+        <span class="icon icon-key"/>
+      </div>
+      <div class="col-md-5 col-xs-10">
+        <input class="form-control" type="password" placeholder="password" ng-model="$parent.$parent.password" />
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="icon-col col-xs-1">
+        <span class="icon icon-clock"/>
+      </div>
+      <div class="col-md-5 col-xs-10">
+        <input class="form-control" type="text" maxlength="6" placeholder="2FA token" ng-model="$parent.$parent.code" />
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-4 col-xs-12 col-md-push-1">
+        <button type="submit" class="btn btn-default btn-primary">Disable 2FA</button>
+      </div>
+      <div class="settings-cancel-button col-md-1 col-xs-1 col-md-pull-4">
+        <a href="#" ng-click="reset($event)">Cancel</a>
+      </div>
+    </div>
+  </form>
+</div>

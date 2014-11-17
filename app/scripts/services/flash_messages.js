@@ -13,6 +13,10 @@ sc.factory('FlashMessages', function($rootScope) {
   };
 
   result.add = function(message) {
+    var defaults = {
+      showCloseIcon: true
+    };
+    message = _.extend(defaults, message);
     $rootScope.$broadcast('flashMessage', message);
   };
 

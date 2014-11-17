@@ -70,11 +70,7 @@ sc.controller('RecoveryCtrl', function($scope, $state, $http, $timeout, session,
   }
 
   function deriveRecoveryId(){
-    //TODO: actually make Wallet.deriveId Promiseable
-    //HACK: use timeout to turn an expensive synchronous operation into a promise
-    return  $timeout(function() {
-      return Wallet.deriveId($scope.userRecoveryCode, $scope.serverRecoveryCode);
-    }, 0);
+    return Wallet.deriveId($scope.userRecoveryCode, $scope.serverRecoveryCode);
   }
 
   function recoverWallet(recoveryId){
@@ -85,7 +81,7 @@ sc.controller('RecoveryCtrl', function($scope, $state, $http, $timeout, session,
         if (body.data) {
           var wallet = Wallet.recover(body.data, recoveryId, $scope.userRecoveryCode, $scope.serverRecoveryCode);
 
-          session.login(wallet);
+          session.login(wallet, false);
           $state.go('change_password');
         } else {
           $scope.recoveryError = 'An error occurred.';

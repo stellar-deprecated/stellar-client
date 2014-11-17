@@ -1,11 +1,7 @@
 'use strict';
 
-var sc = angular.module('stellarClient');
-
-sc.controller('LoginCtrl', function($rootScope, $scope, $state, $http, $timeout, $q, session, singletonPromise, Wallet, FlashMessages, invites) {
+angular.module('stellarClient').controller('LoginCtrl', function($rootScope, $scope, $state, $http, $timeout, $q, session, singletonPromise, FlashMessages) {
   $scope.username   = null;
-  $scope.password   = null;
-  $scope.rememberMe = false;
   $scope.loginError = null;
 
   // HACK: Perform AJAX login, but send a POST request to a hidden iframe to
@@ -17,10 +13,33 @@ sc.controller('LoginCtrl', function($rootScope, $scope, $state, $http, $timeout,
 
   $scope.asyncLogin = singletonPromise(function() {
     $scope.loginError = null;
-    if (!$scope.username || !$scope.password) {
-      return $q.reject("Username or password cannot be blank");
+
+    if (!$scope.username) {
+      $scope.loginError = "Username and password cannot be blank.";
+      return $q.reject();
     }
-    return deriveId().then(performLogin);
+
+    var usernameV2 = $scope.username+'@stellar.org';
+
+    return $http.post(Options.WALLET_SERVER + '/v2/wallets/show_login_params', {
+        username: usernameV2
+      }).success(function(response) {
+        $state.go('login_v2', {
+          username: usernameV2,
+          totpRequired: response.totpRequired
+        });
+      }).error(function(body, status) {
+        switch(status) {
+          case 404:
+            $state.go('login_v1', {username: $scope.username});
+            break;
+          case 0:
+            $scope.loginError = 'Unable to contact the server.';
+            break;
+          default:
+            $scope.loginError = 'An error occurred.';
+        }
+      });
   });
 
   if (location.search.match('idle')) {
@@ -37,48 +56,6 @@ sc.controller('LoginCtrl', function($rootScope, $scope, $state, $http, $timeout,
       info: 'Your username has been emailed to you; please check your inbox.',
       type: 'info'
     });
-  }
-
-  function deriveId() {
-    //TODO: actually make Wallet.deriveId Promiseable
-    //HACK: use timeout to turn an expensive synchronous operation into a promise
-    return  $timeout(function() {
-              return Wallet.deriveId($scope.username, $scope.password);
-            }, 25);
-  }
-
-  function performLogin(id) {
-    return $http.post(Options.WALLET_SERVER + '/wallets/show', {id: id})
-      .success(function(body) {
-        Wallet.open(body.data, id, $scope.username, $scope.password)
-          .then(function(wallet) {
-            if ($scope.rememberMe) {
-              session.rememberUser();
-            }
-            session.login(wallet);
-
-            if(session.get('inviteCode')) {
-              invites.claim(session.get('inviteCode'))
-              .success(function (response) {
-                $rootScope.$broadcast('invite-claimed');
-              });
-            }
-
-            $state.go('dashboard');
-          });
-      })
-      .error(function(body, status) {
-        switch(status) {
-          case 404:
-            $scope.loginError = 'Invalid username or password.';
-            break;
-          case 0:
-            $scope.loginError = 'Unable to contact the server.';
-            break;
-          default:
-            $scope.loginError = 'An error occurred.';
-        }
-      });
   }
 
   if (sessionStorage.displayReloadMessage === "display") {

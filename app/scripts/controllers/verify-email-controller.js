@@ -2,6 +2,7 @@ var sc = angular.module('stellarClient');
 
 sc.controller('VerifyEmailCtrl', function ($scope, $rootScope, $http, $state, $analytics, $q, session, Wallet) {
   var wallet = session.get('wallet');
+
   $scope.email = wallet.mainData.email;
   $scope.loading = false;
   $scope.errors = [];
@@ -16,23 +17,17 @@ sc.controller('VerifyEmailCtrl', function ($scope, $rootScope, $http, $state, $a
     $scope.errors = [];
 
     getServerRecoveryCode($scope.emailActivationCode)
-      .then(function (response) {
-        var serverRecoveryCode = response.data.serverRecoveryCode;
-        return wallet.storeRecoveryData($scope.emailActivationCode, serverRecoveryCode)
-          .catch(function (response) {
-            failedServerResponse(response);
-
-            return $q.reject();
-          });
-      })
-      .then(function () {
-        return verifyEmail();
-      })
+      .then(enableRecovery)
+      .then(verifyEmail)
       .then(function () {
          $scope.updateRewards();
       })
+      .catch(StellarWallet.errors.ConnectionError, function(e) {
+        $scope.errors.push('Error connecting wallet server.');
+      })
       .finally(function(){
         $scope.loading = false;
+        $scope.$apply();
       });
   };
 
@@ -50,11 +45,24 @@ sc.controller('VerifyEmailCtrl', function ($scope, $rootScope, $http, $state, $a
       .error(failedServerResponse);
   }
 
+  function enableRecovery(response) {
+    var userPartBytes = bs58.decode($scope.emailActivationCode);
+    var serverPartBytes = bs58.decode(response.data.serverRecoveryCode);
+    var fullRecoveryCodeBytes = userPartBytes.concat(serverPartBytes);
+    var fullRecoveryCode = bs58.encode(fullRecoveryCodeBytes);
+
+    return wallet.walletV2.enableRecovery({
+      recoveryCode: fullRecoveryCode,
+      secretKey: wallet.keychainData.signingKeys.secretKey
+    });
+  }
+
   function verifyEmail() {
     var data = {
       token: $scope.emailActivationCode,
       username: session.get('username'),
-      updateToken: wallet.keychainData.updateToken
+      updateToken: wallet.keychainData.updateToken,
+      recoveryCode: $scope.emailActivationCode
     };
 
     return $http.post(Options.API_SERVER + '/user/verifyEmail', data)

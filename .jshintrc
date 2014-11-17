@@ -20,15 +20,19 @@
     "jquery": true,
     "predef": [
         "_", 
-        "angular", 
+        "angular",
+        "bs58",
         "BigNumber",
         "iso4217",
         "Modernizr", 
         "Options", 
-        "sjcl", 
-        "stellar", 
+        "sjcl",
+        "nacl",
+        "Raven",
+        "stellar",
         "StellarDefaultCurrencyList", 
         "StellarDefaultCurrencyMap",
+        "StellarWallet",
         "Util",
         "-module"
     ]
