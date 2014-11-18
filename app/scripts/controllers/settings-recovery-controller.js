@@ -151,10 +151,6 @@ angular.module('stellarClient').controller('SettingsRecoveryCtrl', function($sco
           title: 'Success',
           info: messageInfo
         });
-
-        if (session.isPersistent()) {
-          session.get('wallet').saveLocal(); // We need to rewrite wallet object because lockVersion has changed
-        }
       }).catch(function(e) {
         if (e === 'invalid_recovery_code') {
           $scope.error = 'Invalid recovery code.';
