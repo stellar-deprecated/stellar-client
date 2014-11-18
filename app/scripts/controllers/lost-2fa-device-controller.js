@@ -26,8 +26,6 @@ angular.module('stellarClient').controller('Lost2FADeviceCtrl', function($scope,
       $scope.error = 'Problems connecting wallet server. Please try again later.';
     }).catch(function(e) {
       $scope.error = 'Unknown error. Please try again later.';
-    }).finally(function() {
-      $scope.$apply();
     });
   });
 });
