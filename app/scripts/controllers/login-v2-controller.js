@@ -43,6 +43,7 @@ angular.module('stellarClient').controller('LoginV2Ctrl', function($scope, $stat
       });
     }
 
+    // We don't have to run $scope.$apply because it's wrapped in singletonPromise
     return StellarWallet.getWallet(params).then(function(wallet) {
       if ($scope.rememberMe) {
         session.rememberUser();
@@ -65,8 +66,6 @@ angular.module('stellarClient').controller('LoginV2Ctrl', function($scope, $stat
       $scope.loginError = "Error connecting wallet server. Please try again later.";
     }).catch(function(e) {
       $scope.loginError = "Unknown error.";
-    }).finally(function() {
-      $scope.$apply();
     });
   });
 });

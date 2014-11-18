@@ -43,7 +43,7 @@ angular.module('stellarClient').controller('SettingsRecoveryCtrl', function($sco
           type: 'error'
         });
         return;
-      } else if (!$scope.hasRecovery) {
+      } else if (!$scope.hasRecovery || session.get('wallet').mainData.needsRecoveryCodeReset) {
         FlashMessages.add({
           title: 'Cannot enable recovery',
           info: 'Please generate recovery code first by clicking "generate".',
@@ -109,62 +109,64 @@ angular.module('stellarClient').controller('SettingsRecoveryCtrl', function($sco
     $scope.error = null;
 
     getServerRecoveryCode($scope.code)
-    .then(function() {
-      var userPartBytes = bs58.decode($scope.code);
-      var serverPartBytes = bs58.decode(serverRecoveryCode);
-      var fullRecoveryCodeBytes = userPartBytes.concat(serverPartBytes);
-      var fullRecoveryCode = bs58.encode(fullRecoveryCodeBytes);
-      return wallet.walletV2.enableRecovery({
-        recoveryCode: fullRecoveryCode,
-        secretKey: wallet.keychainData.signingKeys.secretKey
+      .then(function() {
+        var userPartBytes = bs58.decode($scope.code);
+        var serverPartBytes = bs58.decode(serverRecoveryCode);
+        var fullRecoveryCodeBytes = userPartBytes.concat(serverPartBytes);
+        var fullRecoveryCode = bs58.encode(fullRecoveryCodeBytes);
+        return wallet.walletV2.enableRecovery({
+          recoveryCode: fullRecoveryCode,
+          secretKey: wallet.keychainData.signingKeys.secretKey
+        });
+      })
+      .then(function() {
+        return stellarApi.User.finishChangeRecoveryToken(_.extend(params, {
+          userRecoveryCode: $scope.code
+        }));
+      })
+      // We need to reload settings because `recover` setting is set to `false` if there is no recovery code.
+      .then($scope.getSettings)
+      .then(function() {
+        if ($scope.migratedWalletRecovery) {
+          FlashMessages.dismissById('migrated-wallet-recovery-step-2');
+        }
+
+        // Remove needsRecoveryCodeReset flag
+        var wallet = session.get('wallet');
+        if (wallet.mainData.needsRecoveryCodeReset) {
+          delete wallet.mainData.needsRecoveryCodeReset;
+          return session.syncWallet('update');
+        }
+      })
+      .then(function() {
+        $scope.code = null;
+        $scope.resetting = false;
+
+        var messageInfo = 'Your recovery token has been reset! ';
+        if (!$scope.toggle.recover.on) {
+          // Remind a user to switch toggle to ON position
+          messageInfo += 'However to be able to recover your wallet make sure you have turned on Recovery Token in your account settings.';
+        }
+        FlashMessages.add({
+          title: 'Success',
+          info: messageInfo
+        });
+
+        if (session.isPersistent()) {
+          session.get('wallet').saveLocal(); // We need to rewrite wallet object because lockVersion has changed
+        }
+      }).catch(function(e) {
+        if (e === 'invalid_recovery_code') {
+          $scope.error = 'Invalid recovery code.';
+        } else if (e === 'server_error') {
+          $scope.error = 'Server error.';
+        } else if (e.name === 'ConnectionError') {
+          $scope.error = 'Connection Error. Please try again.';
+        } else {
+          $scope.error = 'Unknown error. Please try again.';
+          // TODO add logging
+        }
       });
-    })
-    .then(function() {
-      return stellarApi.User.finishChangeRecoveryToken(_.extend(params, {
-        userRecoveryCode: $scope.code
-      }));
-    })
-    // We need to reload settings because `recover` setting is set to `false` if there is no recovery code.
-    .then($scope.getSettings)
-    .then(function() {
-      if ($scope.migratedWalletRecovery) {
-        FlashMessages.dismissById('migrated-wallet-recovery-step-2');
-      }
-
-      // Remove needsRecoveryCodeReset flag
-      var wallet = session.get('wallet');
-      if (wallet.mainData.needsRecoveryCodeReset) {
-        delete wallet.mainData.needsRecoveryCodeReset;
-        return session.syncWallet('update');
-      }
-    })
-    .then(function() {
-      $scope.code = null;
-      $scope.resetting = false;
-
-      var messageInfo = 'Your recovery token has been reset! ';
-      if (!$scope.toggle.recover.on) {
-        // Remind a user to switch toggle to ON position
-        messageInfo += 'However to be able to recover your wallet make sure you have turned on Recovery Token in your account settings.';
-      }
-      FlashMessages.add({
-        title: 'Success',
-        info: messageInfo
-      });
-
-      if (session.isPersistent()) {
-        session.get('wallet').saveLocal(); // We need to rewrite wallet object because lockVersion has changed
-      }
-    }).catch(StellarWallet.errors.ConnectionError, function(e) {
-      $scope.error = 'Connection error. Please try again.';
-    }).catch(function(e) {
-      if (!$scope.error) {
-        $scope.error = 'Unknown error. Please try again.';
-      }
-      // TODO add logging
-    }).finally(function() {
-      $scope.$apply();
-    });
   };
 
   $scope.cancelResetRecovery = function($event) {
@@ -188,33 +190,26 @@ angular.module('stellarClient').controller('SettingsRecoveryCtrl', function($sco
     };
 
     stellarApi.User.getServerRecoveryCode(data)
-      .success(function (response) {
-        return deferred.resolve();
+      .success(function () {
+        deferred.resolve();
       })
-      .error(function(response) {
-        if (!response){
-          $scope.error = "Server error";
-          return deferred.reject();
+      .error(function(body) {
+        var error;
+        if (!body) {
+          error = "server_error";
+        } else {
+          switch (body.code) {
+            case 'invalid_update_token':
+              // this user's update token is invalid, send to login
+              $state.transitionTo('login');
+              break;
+            case 'invalid':
+              if (body.data && body.data.field === 'recovery_code') {
+                error = 'invalid_recovery_code';
+              }
+          }
         }
-
-        if (response.status !== 'fail'){
-          $scope.error = 'Unexpected status: ' + response.status;
-          return deferred.reject();
-        }
-
-        switch (response.code) {
-          case 'invalid_update_token':
-            // this user's update token is invalid, send to login
-            $state.transitionTo('login');
-            break;
-          case 'invalid':
-            if (response.data && response.data.field === 'recovery_code') {
-              //$scope.error = 'Invalid recovery code.';
-              $scope.error = 'Invalid recovery code.';
-            }
-        }
-
-        return deferred.reject();
+        deferred.reject(error);
       });
 
     return deferred.promise;

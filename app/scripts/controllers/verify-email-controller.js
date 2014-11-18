@@ -1,6 +1,6 @@
 var sc = angular.module('stellarClient');
 
-sc.controller('VerifyEmailCtrl', function ($scope, $rootScope, $http, $state, $analytics, $q, session, Wallet) {
+sc.controller('VerifyEmailCtrl', function ($scope, $rootScope, $http, $state, $analytics, $q, session, stellarApi) {
   var wallet = session.get('wallet');
 
   $scope.email = wallet.mainData.email;
@@ -22,32 +22,63 @@ sc.controller('VerifyEmailCtrl', function ($scope, $rootScope, $http, $state, $a
       .then(function () {
          $scope.updateRewards();
       })
-      .catch(StellarWallet.errors.ConnectionError, function(e) {
-        $scope.errors.push('Error connecting wallet server.');
+      .catch(function(e) {
+        var error;
+        if (e === 'invalid_recovery_code') {
+          error = 'Invalid recovery code.';
+        } else if (e === 'server_error') {
+          error = 'Server error.';
+        } else if (e.name === 'ConnectionError') {
+          error = 'Connection Error. Please try again.';
+        } else {
+          error = 'Unknown error. Please try again.';
+          // TODO add logging
+        }
+        $scope.errors.push(error);
       })
       .finally(function(){
         $scope.loading = false;
-        $scope.$apply();
       });
   };
 
   function getServerRecoveryCode(userRecoveryCode) {
+    var deferred = $q.defer();
+
     var data = {
       userRecoveryCode: userRecoveryCode,
       username:         session.get('username'),
       updateToken:      wallet.keychainData.updateToken
     };
 
-    return $http.post(Options.API_SERVER + '/user/getServerRecoveryCode', data)
+    stellarApi.User.getServerRecoveryCode(data)
       .success(function (response) {
-        return response.serverRecoveryCode;
+        deferred.resolve(response);
       })
-      .error(failedServerResponse);
+      .error(function(body) {
+        var error;
+        if (!body) {
+          error = "server_error";
+        } else {
+          switch (body.code) {
+            case 'invalid_update_token':
+              // this user's update token is invalid, send to login
+              $state.transitionTo('login');
+              break;
+            case 'invalid':
+              if (body.data && body.data.field === 'recovery_code') {
+                error = 'invalid_recovery_code';
+              }
+          }
+        }
+        deferred.reject(error);
+      });
+
+    return deferred.promise;
   }
 
   function enableRecovery(response) {
     var userPartBytes = bs58.decode($scope.emailActivationCode);
-    var serverPartBytes = bs58.decode(response.data.serverRecoveryCode);
+    var serverPartBytes = bs58.decode(response.serverRecoveryCode);
     var fullRecoveryCodeBytes = userPartBytes.concat(serverPartBytes);
     var fullRecoveryCode = bs58.encode(fullRecoveryCodeBytes);
 
@@ -76,13 +107,13 @@ sc.controller('VerifyEmailCtrl', function ($scope, $rootScope, $http, $state, $a
   }
 
   function failedServerResponse(response) {
-    if (!response){ 
-      $scope.errors.push('Server error'); 
+    if (!response){
+      $scope.errors.push('Server error');
       return $q.reject();
     }
 
-    if (response.status !== 'fail'){ 
-      $scope.errors.push('Unexpected status: ' + response.status); 
+    if (response.status !== 'fail'){
+      $scope.errors.push('Unexpected status: ' + response.status);
       return $q.reject();
     }
 
