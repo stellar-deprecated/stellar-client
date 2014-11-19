@@ -33,7 +33,7 @@ angular.module('stellarClient').controller('LoginV2Ctrl', function($scope, $stat
 
     var params = {
       server: Options.WALLET_SERVER+'/v2',
-      username: $stateParams.username,
+      username: $stateParams.username.toLowerCase(),
       password: $scope.password
     };
 
