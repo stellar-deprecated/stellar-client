@@ -79,6 +79,11 @@ angular.module('stellarClient').controller('ChangePasswordV2Ctrl', function($sco
     }).catch(StellarWallet.errors.ConnectionError, function(e) {
       $scope.errors.usernameErrors.push('Error connecting wallet server. Please try again later.');
     }).catch(function(e) {
+      Raven.captureMessage('StellarWallet.getWallet/StellarWallet.changePassword unknown error', {
+        extra: {
+          error: e
+        }
+      });
       $scope.errors.usernameErrors.push('Unknown error. Please try again later.');
     }).finally(function() {
       $scope.loading = false;

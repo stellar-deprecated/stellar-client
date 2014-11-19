@@ -135,6 +135,11 @@ angular.module('stellarClient').controller('RecoveryV2Ctrl', function($scope, $s
       $scope.usernameError = "Error connecting wallet server. Please try again later.";
       deferred.reject();
     }).catch(function(e) {
+      Raven.captureMessage('StellarWallet.recover unknown error', {
+        extra: {
+          error: e
+        }
+      });
       $scope.usernameError = "Unknown error. Please try again later.";
       deferred.reject();
     }).finally(function() {
