@@ -65,6 +65,11 @@ angular.module('stellarClient').controller('LoginV2Ctrl', function($scope, $stat
     }).catch(StellarWallet.errors.ConnectionError, function() {
       $scope.loginError = "Error connecting wallet server. Please try again later.";
     }).catch(function(e) {
+      Raven.captureMessage('StellarWallet.getWallet unknown error', {
+        extra: {
+          error: e
+        }
+      });
       $scope.loginError = "Unknown error.";
     });
   });

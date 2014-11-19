@@ -25,6 +25,11 @@ angular.module('stellarClient').controller('Lost2FADeviceCtrl', function($scope,
     }).catch(StellarWallet.errors.ConnectionError, function() {
       $scope.error = 'Problems connecting wallet server. Please try again later.';
     }).catch(function(e) {
+      Raven.captureMessage('StellarWallet.lostTotpDevice unknown error', {
+        extra: {
+          error: e
+        }
+      });
       $scope.error = 'Unknown error. Please try again later.';
     });
   });

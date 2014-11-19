@@ -312,9 +312,16 @@ angular.module('stellarClient').controller('RegistrationCtrl', function(
       });
       deferred.resolve(data);
     }).catch(function(e) {
-      if (e.name === 'ConnectionError') {
+      if (e.name === 'UsernameAlreadyTaken') {
+        $scope.errors.usernameErrors.push('Username already taken.');
+      } else if (e.name === 'ConnectionError') {
         $scope.errors.usernameErrors.push('Connection error. Please try again later.');
       } else {
+        Raven.captureMessage('StellarWallet.createWallet unknown error', {
+          extra: {
+            error: e
+          }
+        });
         $scope.errors.usernameErrors.push('Unknown error. Please try again later.');
       }
 

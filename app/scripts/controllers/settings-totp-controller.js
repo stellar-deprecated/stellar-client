@@ -65,6 +65,11 @@ angular.module('stellarClient').controller('SettingsTotpCtrl', function($scope, 
     }).catch(StellarWallet.errors.ConnectionError, function() {
       $scope.error = 'Connection error. Please try again.';
     }).catch(function(e) {
+      Raven.captureMessage('confirmEnableTotp unknown error', {
+        extra: {
+          error: e
+        }
+      });
       $scope.error = 'Unknown error. Please try again.';
     }).finally(function() {
       $scope.$apply();
@@ -102,6 +107,11 @@ angular.module('stellarClient').controller('SettingsTotpCtrl', function($scope, 
     }).catch(StellarWallet.errors.ConnectionError, function() {
       $scope.error = 'Connection error. Please try again.';
     }).catch(function(e) {
+      Raven.captureMessage('confirmDisableTotp unknown error', {
+        extra: {
+          error: e
+        }
+      });
       $scope.error = 'Unknown error. Please try again.';
     }).finally(function() {
       $scope.$apply();

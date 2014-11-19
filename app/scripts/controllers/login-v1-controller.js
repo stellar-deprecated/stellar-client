@@ -138,6 +138,12 @@ angular.module('stellarClient').controller('LoginV1Ctrl', function($rootScope, $
       if (e.name === 'ConnectionError') {
         $scope.loginError = 'Connection error. Please try again later.';
       } else {
+        Raven.captureMessage('StellarWallet.createWallet unknown error', {
+          extra: {
+            id: oldWalletId,
+            error: e
+          }
+        });
         $scope.loginError = 'Unknown error. Please try again later.';
       }
 
