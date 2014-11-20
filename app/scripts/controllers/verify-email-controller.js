@@ -1,7 +1,8 @@
 var sc = angular.module('stellarClient');
 
-sc.controller('VerifyEmailCtrl', function ($scope, $rootScope, $http, $state, $analytics, $q, session, Wallet) {
+sc.controller('VerifyEmailCtrl', function ($scope, $rootScope, $http, $state, $analytics, $q, session, stellarApi) {
   var wallet = session.get('wallet');
+
   $scope.email = wallet.mainData.email;
   $scope.loading = false;
   $scope.errors = [];
@@ -16,20 +17,24 @@ sc.controller('VerifyEmailCtrl', function ($scope, $rootScope, $http, $state, $a
     $scope.errors = [];
 
     getServerRecoveryCode($scope.emailActivationCode)
-      .then(function (response) {
-        var serverRecoveryCode = response.data.serverRecoveryCode;
-        return wallet.storeRecoveryData($scope.emailActivationCode, serverRecoveryCode)
-          .catch(function (response) {
-            failedServerResponse(response);
-
-            return $q.reject();
-          });
-      })
-      .then(function () {
-        return verifyEmail();
-      })
+      .then(enableRecovery)
+      .then(verifyEmail)
       .then(function () {
          $scope.updateRewards();
+      })
+      .catch(function(e) {
+        var error;
+        if (e === 'invalid_recovery_code') {
+          error = 'Invalid recovery code.';
+        } else if (e === 'server_error') {
+          error = 'Server error.';
+        } else if (e.name === 'ConnectionError') {
+          error = 'Connection Error. Please try again.';
+        } else {
+          error = 'Unknown error. Please try again.';
+          // TODO add logging
+        }
+        $scope.errors.push(error);
       })
       .finally(function(){
         $scope.loading = false;
@@ -37,24 +42,58 @@ sc.controller('VerifyEmailCtrl', function ($scope, $rootScope, $http, $state, $a
   };
 
   function getServerRecoveryCode(userRecoveryCode) {
+    var deferred = $q.defer();
+
     var data = {
       userRecoveryCode: userRecoveryCode,
       username:         session.get('username'),
       updateToken:      wallet.keychainData.updateToken
     };
 
-    return $http.post(Options.API_SERVER + '/user/getServerRecoveryCode', data)
+    stellarApi.User.getServerRecoveryCode(data)
       .success(function (response) {
-        return response.serverRecoveryCode;
+        deferred.resolve(response);
       })
-      .error(failedServerResponse);
+      .error(function(body) {
+        var error;
+        if (!body) {
+          error = "server_error";
+        } else {
+          switch (body.code) {
+            case 'invalid_update_token':
+              // this user's update token is invalid, send to login
+              $state.transitionTo('login');
+              break;
+            case 'invalid':
+              if (body.data && body.data.field === 'recovery_code') {
+                error = 'invalid_recovery_code';
+              }
+          }
+        }
+        deferred.reject(error);
+      });
+
+    return deferred.promise;
+  }
+
+  function enableRecovery(response) {
+    var userPartBytes = bs58.decode($scope.emailActivationCode);
+    var serverPartBytes = bs58.decode(response.serverRecoveryCode);
+    var fullRecoveryCodeBytes = userPartBytes.concat(serverPartBytes);
+    var fullRecoveryCode = bs58.encode(fullRecoveryCodeBytes);
+
+    return wallet.walletV2.enableRecovery({
+      recoveryCode: fullRecoveryCode,
+      secretKey: wallet.keychainData.signingKeys.secretKey
+    });
   }
 
   function verifyEmail() {
     var data = {
       token: $scope.emailActivationCode,
       username: session.get('username'),
-      updateToken: wallet.keychainData.updateToken
+      updateToken: wallet.keychainData.updateToken,
+      recoveryCode: $scope.emailActivationCode
     };
 
     return $http.post(Options.API_SERVER + '/user/verifyEmail', data)
@@ -68,13 +107,13 @@ sc.controller('VerifyEmailCtrl', function ($scope, $rootScope, $http, $state, $a
   }
 
   function failedServerResponse(response) {
-    if (!response){ 
-      $scope.errors.push('Server error'); 
+    if (!response){
+      $scope.errors.push('Server error');
       return $q.reject();
     }
 
-    if (response.status !== 'fail'){ 
-      $scope.errors.push('Unexpected status: ' + response.status); 
+    if (response.status !== 'fail'){
+      $scope.errors.push('Unexpected status: ' + response.status);
       return $q.reject();
     }
 

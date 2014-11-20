@@ -2,9 +2,7 @@
 /* global SigningKeys */
 /* jshint camelcase: false */
 
-var sc = angular.module('stellarClient');
-
-sc.controller('RegistrationCtrl', function(
+angular.module('stellarClient').controller('RegistrationCtrl', function(
   $rootScope,
   $scope,
   $state,
@@ -16,6 +14,7 @@ sc.controller('RegistrationCtrl', function(
   session,
   debounce,
   singletonPromise,
+  usernameProof,
   Wallet,
   FlashMessages,
   invites,
@@ -27,7 +26,6 @@ sc.controller('RegistrationCtrl', function(
 
   $scope.data = {
     username:             '',
-    email:                '',
     password:             '',
     passwordConfirmation: '',
     recap:                '',
@@ -38,7 +36,6 @@ sc.controller('RegistrationCtrl', function(
 
   $scope.status = {
     usernameAvailable:    null,
-    emailAvailable:       null,
     passwordValid:        null,
     passwordConfirmValid: null,
     secretValid:          null
@@ -46,15 +43,14 @@ sc.controller('RegistrationCtrl', function(
 
   $scope.errors = {
     usernameErrors:        [],
-    emailErrors:           [],
     passwordErrors:        [],
     passwordConfirmErrors: [],
     captchaErrors:         [],
     secretErrors:          []
   };
 
+  // Don't remove, validator's are injected from other controllers
   $scope.validators = [];
-  $scope.noEmailWarning = false;
   $scope.showSecretInput = false;
 
   if(window.analytics && window.analytics.reset) {
@@ -74,11 +70,11 @@ sc.controller('RegistrationCtrl', function(
         return;
       }
       stellarApi.User.validateUsername($scope.data.username)
-      .success(
+        .success(
         function (response) {
           $scope.status.usernameAvailable = true;
         })
-      .error(
+        .error(
         function (response){
           switch(response && response.code) {
             case 'already_taken':
@@ -97,13 +93,12 @@ sc.controller('RegistrationCtrl', function(
     if (username.length < 3 || username.length > 20) {
       return "Username must be between 3 and 20 characters";
     }
-     if(!username.match(/^[a-zA-Z0-9].*[a-zA-Z0-9]$/))
-     {
-         return "Must start and end with a letter or number.";
-     }
+    if(!username.match(/^[a-zA-Z0-9].*[a-zA-Z0-9]$/)) {
+      return "Must start and end with a letter or number.";
+    }
     if (!username.match(/^[a-zA-Z0-9]+([._-]+[a-zA-Z0-9]+)*$/)) {
       //return "Must start and end with a letter, and may contain \".\", \"_\", or \"-\"";
-        return "Only letters numbers or ._-";
+      return "Only letters numbers or ._-";
     }
     return null;
   }
@@ -111,7 +106,7 @@ sc.controller('RegistrationCtrl', function(
   // The following functions validate user input on the fly.
   // This will clear error messages once the input is valid.
 
-  $scope.checkUsername = function(){
+  $scope.checkUsername = function() {
     $scope.errors.usernameErrors = [];
     $scope.status.usernameAvailable = null;
 
@@ -122,7 +117,7 @@ sc.controller('RegistrationCtrl', function(
 
   // The following functions calculate the classes to be applied to the form.
 
-  $scope.usernameClass = function(){
+  $scope.usernameClass = function() {
     if($scope.status.usernameAvailable === null){
       return $scope.data.username !== '' ? 'glyphicon-refresh spin' : 'glyphicon-none';
     } else {
@@ -167,20 +162,34 @@ sc.controller('RegistrationCtrl', function(
     $scope.status.secretValid = true;
   };
 
+
+  $scope.attemptRegistration = singletonPromise(function() {
+  return $q.when($scope.data)
+      .then(validateInput)
+      .then(generateSigningKeys)
+      .then(submitRegistration)
+      .then(createWallet)
+      .then(login)
+      .then(claimInvite)
+      .then(function() {
+        // Take the user to the dashboard.
+        $state.go('dashboard');
+      });
+  });
+
   // Validate the input before submitting the registration form.
   // This generates messages that help the user resolve their errors.
-  function validateInput() {
+  function validateInput(data) {
     // Remove any previous error messages.
-    $scope.errors.usernameErrors        = [];
-    $scope.errors.emailErrors           = [];
+    $scope.errors.usernameErrors = [];
+    $scope.errors.captchaErrors = [];
 
     var validInput = true;
 
-    if(!$scope.data.username){
+    if (!data.username) {
       validInput = false;
       $scope.errors.usernameErrors.push('The username field is required.');
-    }
-    else if($scope.status.usernameAvailable === false){
+    } else if ($scope.status.usernameAvailable === false) {
       validInput = false;
       $scope.errors.usernameErrors.push('This username is taken.');
     }
@@ -191,105 +200,55 @@ sc.controller('RegistrationCtrl', function(
       $scope.errors.secretErrors.push('Invalid secret key.');
     }
 
-    // if(!registration.email.value && $scope.noEmailWarning == false) {
-    //   validInput = false;
-    //   $scope.noEmailWarning = true;
-
-    //   // Scroll up to the poptip.
-    //   $timeout(function() {
-    //     $('html, body').animate({scrollTop: $('.poptip').offset().top - 15}, 400);
-    //   }, 20);
-    // } else if(registration.email.value && !$scope.data.email) {
-    //   validInput = false;
-    //   $scope.errors.emailErrors.push('Invalid email address.');
-    // }
-
     $scope.validators.forEach(function(validator){
       validInput = validator() && validInput;
     });
 
-    if(validInput){
-      return $q.when();
+    if (validInput) {
+      return $q.when(data);
     } else {
       return $q.reject();
     }
   }
 
-  $scope.addEmail = function(){
-    $scope.noEmailWarning = false;
-    $('#email').focus();
-  };
+  function generateSigningKeys(data) {
+    data.signingKeys = StellarWallet.util.generateKeyPair($scope.data.secret);
+    return $q.when(data);
+  }
 
-  $scope.ignoreEmail = function(){
-    $scope.noEmailWarning = null;
-    $scope.attemptRegistration();
-  };
+  function submitRegistration(data) {
+    var deferred = $q.defer();
 
-  $scope.attemptRegistration = singletonPromise(function() {
-    return validateInput()
-      .then(function() {
-        var signingKeys = new SigningKeys($scope.data.secret);
-
-        return submitRegistration(signingKeys)
-          .then(function(response) {
-            return createWallet(response, signingKeys);
-          });
-      })
-      .then(function(wallet){
-        window.analytics.alias($scope.data.username);
-        // Initialize the session with the new wallet.
-        session.login(wallet);
-        
-        var inviteCode = session.get('inviteCode');
-        $analytics.eventTrack('Account Created', {
-          inviteCode: inviteCode,
-          type: inviteCode ? 'Invited' : 'Organic'
-        });
-
-        if(inviteCode) {
-          invites.claim(inviteCode)
-          .success(function (response) {
-            $rootScope.$broadcast('invite-claimed');
-          });
-        }
-
-
-        // Take the user to the dashboard.
-        $state.go('dashboard');
-      });
-  });
-
-  function submitRegistration(signingKeys) {
-
-      $scope.errors.captchaErrors=[];
-
-          // In case of a failed validation you need to reload the captcha because each challenge can be checked just once
-
-    var data = {
-      username: $scope.data.username,
-      // email: $scope.data.email,
-      address: signingKeys.address,
-      recap: $scope.data.recap
+    var params = {
+      username: data.username,
+      address: data.signingKeys.address,
+      recap: data.recap
     };
 
     // Submit the registration data to the server.
-    return $http.post(Options.API_SERVER + '/user/register', data)
-      .error(showRegistrationErrors);
+    $http.post(Options.API_SERVER + '/user/register', params)
+      .success(function(response) {
+        data.authToken = response.data.authToken;
+        data.updateToken = response.data.updateToken;
+        deferred.resolve(data);
+      })
+      .error(function(response) {
+        showRegistrationErrors(response);
+        deferred.reject();
+      });
+
+    return deferred.promise;
   }
+
+  var usernameErrorMessages = {
+    'already_taken': 'The username is taken.',
+    'invalid': 'Username must start and end with a letter, and may contain ".", "_", or "-"'
+  };
 
   function showRegistrationErrors(response) {
     /* jshint camelcase:false */
 
-    var usernameErrorMessages = {
-      'already_taken': 'The username is taken.',
-      'invalid': 'Username must start and end with a letter, and may contain ".", "_", or "-"'
-    };
-
-    var emailErrorMessages = {
-      'already_taken': 'The email is taken.',
-      'invalid': 'The email is invalid.'
-    };
-
+    // In case of a failed registration you need to reload the captcha because each challenge can be checked just once
     reCAPTCHA.reload();
 
     if (response && response.status === "fail") {
@@ -299,21 +258,17 @@ sc.controller('RegistrationCtrl', function(
           field = response.data && response.data.field;
           if (field === 'username') {
             $scope.errors.usernameErrors.push(usernameErrorMessages.already_taken);
-          } else if (field === 'email') {
-            $scope.errors.emailErrors.push(emailErrorMessages.already_taken);
           }
           break;
         case 'invalid':
           field = response.data && response.data.field;
           if (field === 'username') {
             $scope.errors.usernameErrors.push(usernameErrorMessages.invalid);
-          } else if (field === 'email') {
-            $scope.errors.emailErrors.push(emailErrorMessages.invalid);
           }
           break;
-          case 'captcha':
-              $scope.errors.captchaErrors.push("Captcha incorrect. Do you wonder if you are a robot?");
-              break;
+        case 'captcha':
+          $scope.errors.captchaErrors.push("Captcha incorrect. Do you wonder if you are a robot?");
+          break;
         default:
           // TODO: generic error
       }
@@ -322,69 +277,95 @@ sc.controller('RegistrationCtrl', function(
     }
   }
 
-  function createWallet(response, signingKeys) {
-    var id = Wallet.deriveId($scope.data.username.toLowerCase(), $scope.data.password);
-    var key = Wallet.deriveKey(id, $scope.data.username.toLowerCase(), $scope.data.password);
+  function createWallet(data) {
+    var deferred = $q.defer();
 
-    var wallet = new Wallet({
-      id: id,
-      key: key,
-      keychainData: {
-        authToken: response.data.data.authToken,
-        updateToken: response.data.data.updateToken,
-        signingKeys: signingKeys
-      },
-      mainData: {
-        username: $scope.data.username,
-        email: $scope.data.email,
-        server: Options.server
+    var keychainData = {
+      authToken: data.authToken,
+      updateToken: data.updateToken,
+      signingKeys: data.signingKeys
+    };
+
+    var mainData = {
+      username: data.username,
+      server: Options.server
+    };
+
+    var proof = usernameProof(data.signingKeys, data.username);
+
+    StellarWallet.createWallet({
+      server: Options.WALLET_SERVER+'/v2',
+      username: data.username.toLowerCase()+'@stellar.org',
+      password: data.password,
+      publicKey: data.signingKeys.publicKey,
+      keychainData: JSON.stringify(keychainData),
+      mainData: JSON.stringify(mainData),
+      usernameProof: proof
+    }).then(function(wallet) {
+      data.wallet = new Wallet({
+        version: 2,
+        id: wallet.getWalletId(),
+        key: wallet.getWalletKey(),
+        keychainData: wallet.getKeychainData(),
+        mainData: wallet.getMainData(),
+        walletV2: wallet
+      });
+      deferred.resolve(data);
+    }).catch(function(e) {
+      if (e.name === 'UsernameAlreadyTaken') {
+        $scope.errors.usernameErrors.push(usernameErrorMessages.already_taken);
+      } else if (e.name === 'InvalidUsername') {
+        $scope.errors.usernameErrors.push(usernameErrorMessages.invalid);
+      } else if (e.name === 'ConnectionError') {
+        $scope.errors.usernameErrors.push('Connection error. Please try again later.');
+      } else {
+        Raven.captureMessage('StellarWallet.createWallet unknown error', {
+          extra: {
+            error: e
+          }
+        });
+        $scope.errors.usernameErrors.push('Unknown error. Please try again later.');
       }
+
+      // In case of a failed registration you need to reload the captcha because each challenge can be checked just once
+      reCAPTCHA.reload();
+
+      // Release username
+      $http.post(Options.API_SERVER + "/failedRegistration", {
+        username: $scope.data.username,
+        updateToken: keychainData.updateToken,
+        email: $scope.data.email
+      });
+
+      deferred.reject();
+      throw e;
+    }).finally(function() {
+      $scope.$apply();
     });
 
-    return tryWalletUpload(wallet)
-      .then(function() {
-        return wallet;
-      });
+    return deferred.promise;
   }
 
-  function tryWalletUpload(wallet, attempts) {
-    attempts = attempts || 0;
+  function login(data) {
+    window.analytics.alias($scope.data.username);
+    // Initialize the session with the new wallet.
+    session.login(data.wallet);
+    return $q.when(data);
+  }
 
-    // Upload the new wallet to the server.
-    return wallet.sync('create').catch(function(err) {
-      if (attempts >= Options.MAX_WALLET_ATTEMPTS) {
-        FlashMessages.add({
-          title: 'Registration Error',
-          info: 'There was an error during registration. Please contact us at hello@stellar.org if the problem persists.',
-          type: 'error'
-        });
-
-        $http.post(Options.API_SERVER + "/failedRegistration", {
-          username: $scope.data.username,
-          updateToken: wallet.keychainData.updateToken,
-          email: $scope.data.email
-        });
-
-        return $q.reject();
-      }
-
-      if (attempts === 0) {
-        FlashMessages.add({
-          title: 'The first attempt to save your wallet failed.',
-          info: 'Retrying...',
-          type: 'error'
-        });
-      }
-
-      attempts++;
-
-      // Wait one more second on each attempt.
-      var waitTime = attempts * 1000;
-
-      return $timeout(function() {}, waitTime)
-        .then(function() {
-          return tryWalletUpload(wallet, attempts);
-        });
+  function claimInvite(data) {
+    var inviteCode = session.get('inviteCode');
+    $analytics.eventTrack('Account Created', {
+      inviteCode: inviteCode,
+      type: inviteCode ? 'Invited' : 'Organic'
     });
+
+    if(inviteCode) {
+      invites.claim(inviteCode)
+        .success(function (response) {
+          $rootScope.$broadcast('invite-claimed');
+        });
+    }
+    return $q.when(data);
   }
 });

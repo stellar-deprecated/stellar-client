@@ -1,0 +1,57 @@
+<div class="login client-section user-form">
+  <div class="container">
+
+    <flash-messages></flash-messages>
+    <h1 class="title">Unlock Wallet <span class="login-back"><a href="#" ng-click="goBack($event);">&laquo; back</a></span></h1>
+
+
+    <iframe name="chrome-password-manager-fix" src="about:blank" style="display:none;"></iframe>
+    <form role="form" class="form-horizontal" ng-controller="LoginV2Ctrl" ng-submit="attemptLogin()"
+          action="chrome-password-manager-fix.html" method="post" target="chrome-password-manager-fix">
+      <div class="form-group">
+        <div class="errors col-sm-offset-3 col-sm-6">
+          <div class="tip">{{ loginError }}</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="password" class="col-sm-3">PASSWORD</label>
+        <div class="col-sm-6 input-icon-wrapper">
+          <input id="password" type="password" class="form-control" ng-model="password" ng-disabled="asyncLogin.isLoading()" ng-change="loginError = null" autocomplete="off" />
+          <i class="icon icon-key"></i>
+        </div>
+      </div>
+      <div class="form-group" ng-show="totpRequired">
+        <label for="totp" class="col-sm-3">2-FACTOR AUTHENTICATION CODE</label>
+        <div class="col-sm-6 input-icon-wrapper">
+          <input id="totp" type="text" class="form-control" maxlength="6" ng-model="totpCode" ng-disabled="asyncLogin.isLoading()" ng-change="loginError = null" autocomplete="off" />
+          <i class="icon icon-key"></i>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-offset-3 col-sm-6">
+          <input type="checkbox" id="remember-me" name="remember-me" ng-model="rememberMe" ng-disabled="asyncLogin.isLoading()" />
+          <label for="remember-me" class="remember-me"> Remember me</label>
+          <div class="warning" ng-show="rememberMe"><span class="warning-title">WARNING</span> This saves your password on your local disk, meaning an attacker with access to your files could steal your wallet.</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="errors col-sm-12"></div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-offset-3 col-sm-6">
+          <button type="submit" class="btn btn-default" ng-disabled="asyncLogin.isLoading()">{{asyncLogin.isLoading() ? 'Unlocking...' : 'Unlock'}}</button>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-offset-3 col-sm-6">
+          <span class="recovery-info"><a href="#/recovery-v2">Forgot password?</a></span>
+        </div>
+        <div class="col-sm-offset-3 col-sm-6" ng-show="totpRequired">
+          <span class="recovery-info"><a href="#/lost-2fa-device">Lost your 2FA device?</a></span>
+        </div>
+      </div>
+    </form>
+
+    <div class="news" ng-include="'templates/news.html'"></div>
+  </div>
+</div>

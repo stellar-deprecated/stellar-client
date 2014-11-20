@@ -19,8 +19,30 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
     this.id = options.id;
     this.key = options.key;
 
+    this.version = options.version || 1;
     this.keychainData = options.keychainData || {};
     this.mainData = options.mainData || {};
+
+    if (this.version === 2) {
+      // This is Wallet object from stellar-wallet-js-sdk:
+      // https://github.com/stellar/stellar-wallet-js-sdk#wallet-object
+      this.walletV2 = options.walletV2;
+      if (_.isPlainObject(this.walletV2)) {
+        // Deserialize object
+        this.walletV2 = StellarWallet.createFromData(this.walletV2);
+      }
+      if (_.isString(this.mainData)) {
+        this.mainData = JSON.parse(this.mainData);
+      }
+      if (_.isString(this.keychainData)) {
+        this.keychainData = JSON.parse(this.keychainData);
+      }
+
+      // Update lock version
+      this.walletV2.updateLockVersion({
+        secretKey: this.keychainData.signingKeys.secretKey
+      });
+    }
 
     // HACK: Remove old contact lists to reduce the wallet size.
     // TODO: Remove this if we need to store contacts in the wallet.
@@ -204,15 +226,6 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
     return this;
   };
 
-  Wallet.prototype.storeRecoveryData = function (userRecoveryCode, serverRecoveryCode) {
-    var recoveryId = Wallet.deriveId(userRecoveryCode, serverRecoveryCode);
-    var recoveryKey = Wallet.deriveKey(recoveryId, userRecoveryCode, serverRecoveryCode);
-
-    var data = this.createRecoveryData(recoveryId, recoveryKey);
-
-    return $http.post(Options.WALLET_SERVER + '/wallets/create_recovery_data', data);
-  };
-
   /**
    * Encrypts the wallet's id and key into the recoveryData and sets its the recoveryId.
    *
@@ -264,10 +277,22 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
    * @memberOf Wallet
    */
   Wallet.prototype.sync = function(action) {
-    var url = Options.WALLET_SERVER + '/wallets/' + action;
-    var data = this.encrypt();
-
-    return $http.post(url, data);
+    if (this.version === 2) {
+      if (action === 'update') {
+        // Only main data is updated
+        return this.walletV2.updateMainData({
+          mainData: JSON.stringify(this.mainData),
+          secretKey: this.keychainData.signingKeys.secretKey
+        });
+      } else if (action === 'create') {
+        // Done using stellar-wallet-js-sdk in registration-controller.js
+      }
+    } else {
+      // Still used in V1 recovery/change_password
+      var url = Options.WALLET_SERVER + '/wallets/' + action;
+      var data = this.encrypt();
+      return $http.post(url, data);
+    }
   };
 
   Wallet.prototype.saveLocal = function() {
@@ -337,20 +362,26 @@ angular.module('stellarClient').factory('Wallet', function($q, $http, ipCookie) 
    * }
    * @memberOf Wallet
    */
-  Wallet.deriveId = function(username, password){
-    var credentials = username.toLowerCase() + password;
-    var salt = sjcl.codec.utf8String.toBits(credentials);
+  Wallet.deriveId = function(username, password) {
+    var deferred = $q.defer();
 
-    var id = sjcl.misc.scrypt(
-      credentials,
-      salt,
-      Wallet.SETTINGS.SCRYPT.N,
-      Wallet.SETTINGS.SCRYPT.r,
-      Wallet.SETTINGS.SCRYPT.p,
-      Wallet.SETTINGS.SCRYPT.SIZE/8
-    );
+    setTimeout(function() {
+      var credentials = username.toLowerCase() + password;
+      var salt = sjcl.codec.utf8String.toBits(credentials);
 
-    return sjcl.codec.hex.fromBits(id);
+      var id = sjcl.misc.scrypt(
+          credentials,
+          salt,
+          Wallet.SETTINGS.SCRYPT.N,
+          Wallet.SETTINGS.SCRYPT.r,
+          Wallet.SETTINGS.SCRYPT.p,
+          Wallet.SETTINGS.SCRYPT.SIZE/8
+      );
+
+      deferred.resolve(sjcl.codec.hex.fromBits(id));
+    }, 0);
+
+    return deferred.promise;
   };
 
   Wallet.deriveKey = function(id, username, password){

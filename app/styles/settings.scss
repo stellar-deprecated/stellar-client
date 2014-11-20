@@ -1,3 +1,10 @@
+.settings {
+    .flash-message-container {
+        padding: 25px 0 0 0;
+        width: 100%;
+    }
+}
+
 .settings > .settings-section {
     padding-top:30px;
     padding-bottom:30px;
@@ -116,4 +123,25 @@
     &:hover {
         color: $brand-primary;
     }
+}
+
+.settings-totp {
+    .totp-instructions {
+        margin: 15px 0 15px 25px;
+    }
+
+    .clearfix {
+        height: auto;
+    }
+}
+
+.totp-qr {
+    margin-left: 30px;
+    code {
+        font-size: 21px;
+    }
+}
+
+.reset-recovery {
+    padding: 10px 0 0 25px;
 }

@@ -1,0 +1,37 @@
+<div ng-if="sendingRecoveryCode">
+  <i id="username-status" class="status glyphicon glyphicon-refresh spin"></i> Sending recovery code to your email...
+</div>
+
+<div ng-if="!resetting && !sendingRecoveryCode">
+  <span ng-if="hasRecovery">Recovery code generated.</span>
+  <a href="#" ng-click="$parent.resetRecovery($event)">
+    <span ng-if="!hasRecovery">generate</span>
+    <span ng-if="hasRecovery">reset</span>
+  </a>
+</div>
+
+<div ng-if="resetting">
+  <div>
+    We've sent a code to your email. Enter your code below:
+  </div>
+  <div class="form-group">
+    <div class="errors col-sm-offset-3 col-sm-6">
+      <div class="tip">{{ error }}</div>
+    </div>
+  </div>
+  <form ng-submit="confirmResetRecovery($event)">
+    <div class="row">
+      <div class="col-md-5 col-xs-12">
+        <input class="form-control stellar-input" type="text" placeholder="Enter your recovery code" ng-model="$parent.$parent.code" />
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4 col-xs-12 col-md-push-1">
+        <button type="submit" class="btn btn-default">Submit</button>
+      </div>
+      <div class="settings-cancel-button col-md-1 col-xs-1 col-md-pull-4">
+        <a href="#" ng-click="cancelResetRecovery($event)">Cancel</a>
+      </div>
+    </div>
+  </form>
+</div>

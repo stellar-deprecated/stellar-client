@@ -3,12 +3,29 @@
 var sc = angular.module('stellarClient');
 
 sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, $q, $analytics, session, Facebook) {
+
+  $scope.$on('action-verify-facebook-email', function(event, params){
+    if($scope.reward.status === 'sent') { return; }
+
+    // Claim the facebook reward with the confirmation code.
+    claimFacebookReward(params.code)
+      .finally(function () {
+      // Open the facebook reward pane.
+        $scope.selectedReward = $scope.reward.rewardType;
+      });
+  });
+
   $scope.reward = {
     rewardType: 1,
     status: 'incomplete',
     innerTitle: 'Receive stellars',
     getCopy: function() {
       switch ($scope.reward.status) {
+        case 'fb_email_unverified':
+          return {
+            title: 'You connected your Facebook!',
+            subtitle: 'Check the email linked to your facebook account to claim your stellars.'
+          };
         case 'sent':
           return {
             title: 'You connected your Facebook!',
@@ -69,6 +86,11 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, $q, $an
           $scope.reward.error = {};
           $scope.reward.error.info = "As part of our ongoing efforts to prevent fraud, we temporarily deny facebook accounts that have been updated too recently.  Please try again in a couple of days.";
           $scope.reward.error.panel = "Sorry, your Facebook account was updated too recently";
+          $scope.reward.error.action = null;
+          break;
+        case 'invalid_fb_email_token':
+          $scope.reward.error = {};
+          $scope.reward.error.info = "The email verification token is invalid";
           $scope.reward.error.action = null;
           break;
         case 'already_taken':
@@ -163,7 +185,12 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, $q, $an
           return linkUserFacebook(data);
         }
       })
-      .then(claimFacebookReward)
+      .then(function() {
+        return claimFacebookReward();
+      })
+      .then(function () {
+        $scope.updateRewards();
+      })
       .finally(function () {
         $scope.loading = false;
       });
@@ -252,15 +279,16 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, $q, $an
 /**
  * Send the facebook auth data to the server to be verified and saved.
  */
-  function claimFacebookReward() {
+  function claimFacebookReward(code) {
     var data = {
       username: session.get('username'),
-      updateToken: session.get('wallet').keychainData.updateToken
+      updateToken: session.get('wallet').keychainData.updateToken,
+      verificationToken: code
     };
 
     return $http.post(Options.API_SERVER + "/claim/facebook", data)
       .success(function (response) {
-        $scope.rewards[1].status = response.message;
+        $scope.reward.status = response.message;
         $scope.updateRewards();
       })
       .error(onClaimFacebookRewardError);
@@ -277,6 +305,12 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, $q, $an
           break;
         case 'updated_too_recently':
           $scope.reward.updateReward('updated_too_recently');
+          break;
+        case 'fb_email_unverified':
+          $scope.reward.updateReward('fb_email_unverified');
+          break;
+        case 'invalid_fb_email_token':
+          $scope.reward.updateReward('invalid_fb_email_token');
           break;
         case 'fake_account':
           $scope.reward.updateReward('fake');

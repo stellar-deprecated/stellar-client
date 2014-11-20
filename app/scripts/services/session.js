@@ -11,7 +11,7 @@ sc.service('session', function($rootScope, $http, $timeout, $q, StellarNetwork, 
   Session.prototype.get = function(name){ return cache[name]; };
   Session.prototype.put = function(name, value){ 
     cache[name] = value;
-    return value; 
+    return value;
   };
 
 
@@ -53,11 +53,17 @@ sc.service('session', function($rootScope, $http, $timeout, $q, StellarNetwork, 
     return userLoadedPromise.promise;
   };
 
-  Session.prototype.login = function(wallet) {
+  Session.prototype.login = function(wallet, logoutOnLegacyWallet) {
     var self = this;
     try {
       sessionStorage.displayReloadMessage = "display";
     } catch (e) {}
+
+    // User has persisted old wallet. Logout so he can migrate to new version.
+    if (logoutOnLegacyWallet && wallet.version !== 2) {
+      this.logout();
+      return;
+    }
 
     this.put('wallet', wallet);
 

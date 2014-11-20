@@ -1,15 +1,26 @@
 'use strict';
 
-var sc = angular.module('stellarClient');
+angular.module('stellarClient').controller('SettingsCtrl', function($scope, $http, $state, $stateParams, session, FlashMessages) {
+  if ($stateParams['migrated-wallet-recovery']) {
+    $scope.migratedWalletRecovery = true;
+    FlashMessages.add({
+      id: 'migrated-wallet-recovery-step-1',
+      info: 'Step 1: Click on "reset" to reset your recovery code.',
+      type: 'error',
+      showCloseIcon: false
+    });
+  } else {
+    $scope.migratedWalletRecovery = false;
+  }
 
-sc.controller('SettingsCtrl', function($scope, $http, $state, session, singletonPromise) {
   var wallet = session.get('wallet');
+  var walletV2 = session.get('wallet').walletV2;
 
   $scope.secretKey = wallet.keychainData.signingKeys.secret;
 
   $scope.handleServerError = function (element) {
     return function (error) {
-      var message = error.status === 'fail' ? error.message : 'Server error';
+      var message = error.data.status === 'fail' ? error.data.message : 'Server error';
       Util.showTooltip(element, message, 'error', 'top');
     };
   };
@@ -32,6 +43,7 @@ sc.controller('SettingsCtrl', function($scope, $http, $state, session, singleton
 
     return $http.get(Options.API_SERVER + "/user/settings", data)
       .success(function (response) {
+        $scope.hasRecovery = response.data.hasRecovery;
         $scope.toggle.recover.on = response.data.recover;
         $scope.toggle.federate.on = response.data.federate;
         $scope.toggle.email.on = response.data.email;
@@ -43,15 +55,16 @@ sc.controller('SettingsCtrl', function($scope, $http, $state, session, singleton
       });
   }
 
+  // We need to reload settings in SettingsRecoveryCtrl
+  $scope.getSettings = getSettings;
+
   $scope.toggle = {
     disableToggles: false,
     error: null,
     recover: {
       NAME: "recover",
-      API_ENDPOINT: "/user/setrecover",
-      click: switchToggle,
-      on: false,
-      wrapper: angular.element('#recovertoggle')
+      click: toggleRecovery,
+      on: false
     },
     email: {
       NAME: "email",
@@ -78,6 +91,11 @@ sc.controller('SettingsCtrl', function($scope, $http, $state, session, singleton
       click: toggleTrading,
       on: wallet.get('mainData', 'showTrading', true),
       wrapper: angular.element('#tradingtoggle')
+    },
+    twofa: {
+      NAME: "2fa",
+      click: toggle2FA,
+      on: walletV2.isTotpEnabled()
     }
   };
 
@@ -97,6 +115,29 @@ sc.controller('SettingsCtrl', function($scope, $http, $state, session, singleton
   function toggleTrading(showTradingToggle) {
     return toggleWalletSetting(showTradingToggle, 'showTrading');
   }
+
+  function toggle2FA(toggle) {
+    if (session.get('wallet').version === 1) {
+      // Actually this will never happen as wallets are migrated to V2 during login.
+      console.log('You need to migrate your wallet to use 2 Factor Authentication.');
+      return;
+    }
+    $scope.$broadcast('settings-totp-clicked', toggle);
+  }
+
+  function toggleRecovery(toggle) {
+    $scope.$broadcast('settings-recovery-clicked', toggle);
+  }
+
+  $scope.$on('settings-totp-toggled', function($event, value) {
+    $scope.toggle.twofa.on = value;
+    $event.stopPropagation();
+  });
+
+  $scope.$on('settings-recovery-toggled', function($event, value) {
+    $scope.toggle.recover.on = value;
+    $event.stopPropagation();
+  });
 
   var toggleRequestData = {
     username: session.get('username'),
@@ -166,65 +207,4 @@ sc.controller('SettingsCtrl', function($scope, $http, $state, session, singleton
   getSettings().then(function () {
     $scope.$broadcast('settings-refresh');
   });
-});
-
-sc.controller('SettingsEmailCtrl', function($scope, $http, session, singletonPromise) {
-
-  $scope.$on('settings-refresh', function () {
-    $scope.email = session.getUser().getEmailAddress();
-    $scope.emailVerified = session.getUser().isEmailVerified();
-    $scope.resetEmailState();
-  });
-
-  $scope.resetEmailState = function () {
-    if ($scope.email) {
-      $scope.emailState = 'added';
-    } else {
-      $scope.emailState = 'none';
-    }
-  };
-
-  $scope.getEmailState = function () {
-    return $scope.emailState;
-  };
-
-  $scope.setEmailState = function (state) {
-    $scope.emailState = state;
-  };
-
-  $scope.emailAction = singletonPromise(function () {
-    if ($scope.emailState === 'change') {
-      return changeEmail();
-    } else if ($scope.emailState === 'verify') {
-      return verifyEmail();
-    }
-  });
-
-  function verifyEmail () {
-    var verifyToken = $scope.verifyToken;
-    return session.getUser().verifyEmail(verifyToken)
-      .then(function (response) {
-        if (response.data.data && response.data.data.serverRecoveryCode) {
-          return session.get('wallet').storeRecoveryData(verifyToken, response.data.data.serverRecoveryCode);
-        }
-      })
-      .then(function () {
-        return $scope.refreshAndInitialize();
-      })
-      .then(function () {
-        $scope.verifyToken = null;
-      })
-      .catch($scope.handleServerError($('#email-input')));
-  }
-
-  function changeEmail () {
-    return session.getUser().changeEmail($scope.newEmail)
-      .then(function () {
-        return $scope.refreshAndInitialize();
-      })
-      .then(function () {
-        $scope.newEmail = null;
-      })
-      .catch($scope.handleServerError($('#verify-input')));
-  }
 });

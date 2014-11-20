@@ -201,7 +201,7 @@ sc.service('TradeHistory', function($rootScope, TransactionHistory, Trading, ses
 
         case 'AccountRoot':
           // Handle changes in STR balance.
-          if(node.FinalFields.Account === address) {
+          if(node.FinalFields && node.FinalFields.Account === address) {
             value = new BigNumber(node.FinalFields.Balance).minus(node.PreviousFields.Balance).dividedBy(1000000);
             balanceChange = {
               currency: 'STR',
@@ -229,6 +229,21 @@ sc.service('TradeHistory', function($rootScope, TransactionHistory, Trading, ses
         balanceChanges.push(balanceChange);
       }
     });
+
+    // Consolidate multiple changes of the same currency.
+    balanceChanges = _(balanceChanges)
+      .groupBy(function(balanceChange) {
+        return [balanceChange.currency, balanceChange.issuer];
+      })
+      .map(function(currencyChanges) {
+        var currencyChange = _.pick(currencyChanges[0], ['currency', 'issuer']);
+        currencyChange.value = currencyChanges.reduce(function(totalValue, nextChange) {
+          return totalValue.plus(nextChange.value);
+        }, new BigNumber(0));
+
+        return currencyChange;
+      })
+      .value();
 
     return balanceChanges;
   }

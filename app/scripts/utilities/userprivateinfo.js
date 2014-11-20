@@ -95,12 +95,7 @@ angular.module('stellarClient').factory('UserPrivateInfo', function($http, $q, $
             updateToken: this.updateToken,
             email: email
         };
-        // If we've verified a recovery token, hit changeEmail, else hit email
-        if (this.isEmailVerified()) {
-            return $http.post(Options.API_SERVER + "/user/changeEmail", data);
-        } else {
-            return $http.post(Options.API_SERVER + "/user/email", data);
-        }
+        return $http.post(Options.API_SERVER + "/user/changeEmail", data);
     };
 
     /**
