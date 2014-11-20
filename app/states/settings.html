@@ -302,6 +302,56 @@
                         </div>
                     </div>
                 </div>
+                <div class="row" ng-controller="TransferBalanceCtrl">
+                    <div class="settings-label col-md-3 col-xs-6">TRANSFER BALANCE</div>
+                    <div class="settings-control col-md-9 col-xs-6">
+                        <div class="row">
+                            <div class="icon-col col-xs-1">
+                                <span class="glyphicon glyphicon-trash"/>
+                            </div>
+                            <div ng-show="accountEmpty()" class="col-xs-10">
+                                Your account is empty.
+                            </div>
+                            <div ng-hide="accountEmpty()">
+                                <div ng-show="state === 'closed'">
+                                    <div class="col-xs-10">
+                                        <a href="" ng-click="openForm()">Transfer balance to another account</a>
+                                    </div>
+                                </div>
+                                <div class="col-xs-10" ng-show="state === 'open'">
+                                    <div class="row">
+                                        <div class="col-md-5 col-xs-12">
+                                            <input id="account-merge-input" data-toggle="tooltip" placeholder="Destination Account" type="text" class="form-control" ng-model="transferDestination"></input>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4 col-xs-12 col-md-push-1">
+                                            <button class="btn btn-default stellar-button settings-confirm-button" ng-click="confirmTransfer()">Transfer Balance</button>
+                                        </div>
+                                        <div class="settings-cancel-button col-md-1 col-xs-1 col-md-pull-4">
+                                            <a href="" ng-click="reset()">Cancel</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-10" ng-show="state === 'confirm'">
+                                    <div class="row">
+                                        <div class="col-md-5 col-xs-12">
+                                            Are you sure you want to transfer your balance to {{ transferDestination }}?
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4 col-xs-12 col-md-push-1">
+                                            <button class="btn btn-default stellar-button settings-confirm-button" ng-click="transferBalance()">{{ transferBalance.isLoading() ? "Loading..." : "Confirm" }}</button>
+                                        </div>
+                                        <div class="settings-cancel-button col-md-1 col-xs-1 col-md-pull-4">
+                                            <a href="" ng-click="reset()">Cancel</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
