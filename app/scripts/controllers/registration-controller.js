@@ -240,13 +240,13 @@ angular.module('stellarClient').controller('RegistrationCtrl', function(
     return deferred.promise;
   }
 
+  var usernameErrorMessages = {
+    'already_taken': 'The username is taken.',
+    'invalid': 'Username must start and end with a letter, and may contain ".", "_", or "-"'
+  };
+
   function showRegistrationErrors(response) {
     /* jshint camelcase:false */
-
-    var usernameErrorMessages = {
-      'already_taken': 'The username is taken.',
-      'invalid': 'Username must start and end with a letter, and may contain ".", "_", or "-"'
-    };
 
     // In case of a failed registration you need to reload the captcha because each challenge can be checked just once
     reCAPTCHA.reload();
@@ -313,7 +313,9 @@ angular.module('stellarClient').controller('RegistrationCtrl', function(
       deferred.resolve(data);
     }).catch(function(e) {
       if (e.name === 'UsernameAlreadyTaken') {
-        $scope.errors.usernameErrors.push('Username already taken.');
+        $scope.errors.usernameErrors.push(usernameErrorMessages.already_taken);
+      } else if (e.name === 'InvalidUsername') {
+        $scope.errors.usernameErrors.push(usernameErrorMessages.invalid);
       } else if (e.name === 'ConnectionError') {
         $scope.errors.usernameErrors.push('Connection error. Please try again later.');
       } else {
