@@ -126,12 +126,7 @@ stellarClient.config(function($httpProvider, $stateProvider, $urlRouterProvider,
       url:         '/settings',
       templateUrl: 'states/settings.html',
       authenticate: true,
-      params: {'migrated-wallet-recovery': false},
-      resolve: {
-        userLoaded: function(session) {
-          return session.waitForUserToLoad();
-        }
-      }
+      params: {'migrated-wallet-recovery': false}
     })
     .state('invites', {
       url:         '/invites',
@@ -187,6 +182,10 @@ stellarClient.run(function($rootScope, $timeout, StellarNetwork, ActionLink){
 });
 
 stellarClient.run(function($rootScope, $state, $timeout, ipCookie, session, FlashMessages){
+  $rootScope.loadUserPrivateData = function() {
+    session.loadUserPrivateData();
+  };
+
   $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){
 
     if(toState.name === 'logout' && session.get('loggedIn')) {

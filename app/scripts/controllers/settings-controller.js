@@ -1,22 +1,48 @@
 'use strict';
 
-angular.module('stellarClient').controller('SettingsCtrl', function($scope, $http, $state, $stateParams, session, FlashMessages) {
-  if ($stateParams['migrated-wallet-recovery']) {
-    $scope.migratedWalletRecovery = true;
-    FlashMessages.add({
-      id: 'migrated-wallet-recovery-step-1',
-      info: 'Step 1: Click on "reset" to reset your recovery code.',
-      type: 'error',
-      showCloseIcon: false
-    });
-  } else {
-    $scope.migratedWalletRecovery = false;
-  }
-
+angular.module('stellarClient').controller('SettingsCtrl', function($scope, $http, $q, $state, $timeout, $stateParams, session, FlashMessages) {
   var wallet = session.get('wallet');
   var walletV2 = session.get('wallet').walletV2;
 
   $scope.secretKey = wallet.keychainData.signingKeys.secret;
+
+  $scope.state = 'loading';
+  $scope.loadSettings = function() {
+    $scope.state = 'loading';
+    var timeoutPromise = $q.defer();
+    $timeout(function () {
+      timeoutPromise.resolve();
+    }, 2000);
+
+    // We're waiting for 3 promises to resolve:
+    // * timeoutPromise - prevents from flickering when data is loaded too fast,
+    // * getSettings - waiting for settings,
+    // * session.loadUserPrivateData - waiting for loading user data to session to be able to call session.getUser()
+    $q.all([timeoutPromise.promise, getSettings(), session.loadUserPrivateData()])
+      .then(function () {
+        $scope.$broadcast('settings-refresh');
+        $scope.state = 'loaded';
+
+        if ($stateParams['migrated-wallet-recovery']) {
+          $scope.migratedWalletRecovery = true;
+          FlashMessages.dismissById('migrated-wallet-recovery-step-1');
+          FlashMessages.add({
+            id: 'migrated-wallet-recovery-step-1',
+            info: 'Step 1: Click on "reset" to reset your recovery code.',
+            type: 'error',
+            showCloseIcon: false
+          });
+        } else {
+          $scope.migratedWalletRecovery = false;
+        }
+      }).catch(function() {
+        timeoutPromise.promise.then(function() {
+          $scope.state = 'fail';
+        });
+      });
+  };
+
+  $scope.loadSettings();
 
   $scope.handleServerError = function (element) {
     return function (error) {
@@ -51,7 +77,6 @@ angular.module('stellarClient').controller('SettingsCtrl', function($scope, $htt
       .error(function (response) {
         $scope.toggle.error = "Server error";
         $scope.toggle.disableToggles = true;
-        // TODO retry
       });
   }
 
@@ -202,9 +227,5 @@ angular.module('stellarClient').controller('SettingsCtrl', function($scope, $htt
       wallet.set('mainData', 'idleLogoutTime', $scope.idleTimeout);
       session.syncWallet('update');
     }
-  });
-
-  getSettings().then(function () {
-    $scope.$broadcast('settings-refresh');
   });
 });

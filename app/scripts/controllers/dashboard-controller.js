@@ -3,13 +3,20 @@
 var sc = angular.module('stellarClient');
 
 sc.controller('DashboardCtrl', function($rootScope, $scope, $timeout, $state, session, TutorialHelper, StellarNetwork, contacts, FlashMessages) {
-    if (session.get('wallet').mainData.needsRecoveryCodeReset) {
-      FlashMessages.add({
-        id: 'migrated-wallet-recovery',
-        type: 'error',
-        template: 'templates/flash-message-migrated-wallet-recovery.html',
-        showCloseIcon: false
-      });
+    if (session.getUser()) {
+      showMigrationFlashMessage();
+    }
+    $scope.$on('userLoaded', showMigrationFlashMessage);
+
+    function showMigrationFlashMessage() {
+      if (session.get('wallet').mainData.needsRecoveryCodeReset) {
+        FlashMessages.add({
+          id: 'migrated-wallet-recovery',
+          type: 'error',
+          template: 'templates/flash-message-migrated-wallet-recovery.html',
+          showCloseIcon: false
+        });
+      }
     }
 
     $scope.startRecoveryProcess = function() {

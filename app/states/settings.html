@@ -1,11 +1,23 @@
 <div class="settings" ng-controller="SettingsCtrl">
     <div class="container">
-        <div class="client-section">
-            <h1 class="title">Settings<span class="link-dashboard"><a href="/#/dashboard">&#8592; back to dashboard</a></span></h1>
-        </div>
-
         <flash-messages class="client-section" id="settings-flash-messages"></flash-messages>
 
+        <div class="client-section">
+          <h1 class="title">Settings<span class="link-dashboard"><a href="/#/dashboard">&#8592; back to dashboard</a></span></h1>
+        </div>
+
+        <div class="modalStatus error-modalStatus" ng-show="state === 'fail'">
+          <div class="modalStatus-title">Oops</div>
+          <div class="modalStatus-info">Loading settings failed...</div>
+          <button class="btn btn-default modalStatus-btn" ng-click="loadSettings()">Try again</button>
+        </div>
+
+        <div class="modalStatus error-modalStatus" ng-show="state === 'loading'">
+          <div class="modalStatus-title"><img src="/images/sending.gif" alt="" /></div>
+          <div class="modalStatus-info">Loading...</div>
+        </div>
+
+        <div ng-show="state === 'loaded'">
         <!-- TODO: add user photos
         <div class="client-section settings-section">
             <div class="row">
@@ -303,6 +315,7 @@
                     </div>
                 </div>
             </div>
+        </div>
         </div>
     </div>
 </div>

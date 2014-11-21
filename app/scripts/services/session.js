@@ -5,7 +5,7 @@ var sc = angular.module('stellarClient');
 
 var cache = {};
 
-sc.service('session', function($rootScope, $http, $timeout, $q, StellarNetwork, Wallet, contacts, UserPrivateInfo) {
+sc.service('session', function($rootScope, $http, $timeout, $q, StellarNetwork, Wallet, contacts, UserPrivateInfo, FlashMessages) {
   var Session = function() {};
 
   Session.prototype.get = function(name){ return cache[name]; };
@@ -48,13 +48,7 @@ sc.service('session', function($rootScope, $http, $timeout, $q, StellarNetwork, 
     }
   };
 
-  var userLoadedPromise = $q.defer();
-  Session.prototype.waitForUserToLoad = function() {
-    return userLoadedPromise.promise;
-  };
-
   Session.prototype.login = function(wallet, logoutOnLegacyWallet) {
-    var self = this;
     try {
       sessionStorage.displayReloadMessage = "display";
     } catch (e) {}
@@ -83,28 +77,8 @@ sc.service('session', function($rootScope, $http, $timeout, $q, StellarNetwork, 
     this.put('signingKeys', signingKeys);
     this.put('address', signingKeys.address);
 
-
-    self.identifyToAnalytics();
-
-    var loadUserPrivateInfo = function() {
-      // Store a user object for the currently authenticated user
-      UserPrivateInfo.load(self.get('username'), self.get('wallet').keychainData.updateToken)
-        .then(function (user) {
-          self.put('userPrivateInfo', user);
-        })
-        .then(function () {
-          $rootScope.$broadcast('userLoaded');
-          userLoadedPromise.resolve();
-        })
-        .then(function () {
-          self.identifyToAnalytics();
-        })
-        .catch(function() {
-          $timeout(loadUserPrivateInfo, 2000);
-        });
-    };
-
-    loadUserPrivateInfo();
+    this.loadUserPrivateData();
+    this.identifyToAnalytics();
 
     // check for the most up to date fairy address
     checkFairyAddress.bind(this)();
@@ -114,6 +88,48 @@ sc.service('session', function($rootScope, $http, $timeout, $q, StellarNetwork, 
 
     // Set loggedIn to be true to signify that it is safe to use the session variables.
     this.put('loggedIn', true);
+  };
+
+  var userLoadedPromise;
+  // Unfortunately $q API doesn't provide a way to check if a promise is finished (resolved/rejected).
+  var userLoadedPromiseFinished = false;
+  Session.prototype.loadUserPrivateData = function() {
+    // Promise is waiting or is resolved.
+    if ((userLoadedPromise && !userLoadedPromiseFinished) || this.get('userPrivateInfo')) {
+      return userLoadedPromise.promise;
+    }
+
+    var self = this;
+    userLoadedPromise = $q.defer();
+    userLoadedPromiseFinished = false;
+    FlashMessages.dismissById('user-data-loading-failed');
+
+    // Store a user object for the currently authenticated user
+    UserPrivateInfo.load(self.get('username'), self.get('wallet').keychainData.updateToken)
+      .then(function (user) {
+        self.put('userPrivateInfo', user);
+        $rootScope.userLoaded = true; // Used in templates
+        $rootScope.$broadcast('userLoaded');
+        userLoadedPromise.resolve();
+      })
+      .then(function () {
+        self.identifyToAnalytics();
+      })
+      .catch(function() {
+        FlashMessages.add({
+          id: 'user-data-loading-failed',
+          type: 'error',
+          template: 'templates/flash-message-user-data-loading-failed.html',
+          showCloseIcon: false,
+          global: true
+        });
+        userLoadedPromise.reject();
+      })
+      .finally(function() {
+        userLoadedPromiseFinished = true;
+      });
+
+    return userLoadedPromise.promise;
   };
 
   Session.prototype.rememberUser = function() {
