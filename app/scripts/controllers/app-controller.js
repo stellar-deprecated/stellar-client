@@ -90,6 +90,12 @@ sc.controller('AppCtrl', function($scope, $rootScope, StellarNetwork, session, $
     }
 
     function handleAccountEntry(data) {
+        // Handle account entry after account merge.
+        if(data.Balance === '0') {
+            $rootScope.account = {};
+            return;
+        }
+
         $rootScope.account = data;
 
         // As per json wire format convention, real ledger entries are CamelCase,

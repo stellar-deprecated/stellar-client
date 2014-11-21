@@ -99,6 +99,13 @@ sc.service('Gateways', function($q, $analytics, session, StellarNetwork, rpStell
     });
   }
 
+  Gateways.markAllRemoved = function() {
+    var mainData = session.get('wallet').mainData;
+    mainData.gateways = {};
+
+    return session.syncWallet('update');
+  };
+
   function addGateway(gateway) {
     return $q.all(gateway.currencies.map(function (currency) {
       return trustCurrency(currency, '9223372036854775806');
