@@ -26,6 +26,11 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, $q, $an
             title: 'You connected your Facebook!',
             subtitle: 'Check the email linked to your facebook account to claim your stellars.'
           };
+        case 'fb_email_missing':
+          return {
+            title: 'Your Facebook does not have an email address!',
+            subtitle: 'Please add an email address to your Facebook account and try again.'
+          };
         case 'sent':
           return {
             title: 'You connected your Facebook!',
@@ -120,6 +125,14 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, $q, $an
         case 'facebook_error':
           $scope.reward.error = {};
           $scope.reward.error.info = "An error occurred while getting your Facebook information.";
+          $scope.reward.error.action = function () {
+            $scope.reward.error = null;
+            $scope.reward.status = 'incomplete';
+          };
+          break;
+        case 'fb_email_missing':
+          $scope.reward.error = {};
+          $scope.reward.error.info = "Please add an email address to your Facebook account and try again.";
           $scope.reward.error.action = function () {
             $scope.reward.error = null;
             $scope.reward.status = 'incomplete';
@@ -317,6 +330,9 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, $q, $an
           break;
         case 'reward_already_queued':
           $scope.reward.updateReward('reward_already_queued');
+          break;
+        case 'fb_email_missing':
+          $scope.reward.updateReward('fb_email_missing');
           break;
         default:
           $scope.reward.updateReward('server_error');
