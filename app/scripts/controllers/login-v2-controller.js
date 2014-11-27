@@ -12,10 +12,31 @@ angular.module('stellarClient').controller('LoginV2Ctrl', function($scope, $stat
     $state.go('login');
   };
 
+  var params;
+
   // HACK: Perform AJAX login, but send a POST request to a hidden iframe to
   // coax Chrome into offering to remember the password.
   $scope.attemptLogin = function() {
-    $scope.asyncLogin();
+    params = {
+      server: Options.WALLET_SERVER+'/v2',
+      username: $stateParams.username.toLowerCase(),
+      password: $scope.password
+    };
+
+    $scope.asyncLogin().catch(function(e) {
+      var forbiddenError = "Login credentials are incorrect.";
+      if ($stateParams.username === $stateParams.username.toLowerCase()) {
+        $scope.loginError = forbiddenError;
+      } else {
+        // If username contains uppercase letters we need to repeat the process with
+        // username passed by the user. It's because of the bug in change-password-v2-controller.
+        // Username was not toLowerCase()'d there thus calculated masterKey was incorrect.
+        params.username = $stateParams.username;
+        $scope.asyncLogin().catch(function(e) {
+          $scope.loginError = forbiddenError;
+        });
+      }
+    });
     return true;
   };
 
@@ -30,12 +51,6 @@ angular.module('stellarClient').controller('LoginV2Ctrl', function($scope, $stat
       $scope.loginError += "cannot be blank.";
       return $q.reject();
     }
-
-    var params = {
-      server: Options.WALLET_SERVER+'/v2',
-      username: $stateParams.username.toLowerCase(),
-      password: $scope.password
-    };
 
     if ($scope.totpRequired) {
       params = _.extend(params, {
@@ -58,13 +73,14 @@ angular.module('stellarClient').controller('LoginV2Ctrl', function($scope, $stat
         walletV2: wallet
       }));
       $state.go('dashboard');
-    }).catch(StellarWallet.errors.Forbidden, function() {
-      $scope.loginError = "Login credentials are incorrect.";
     }).catch(StellarWallet.errors.TotpCodeRequired, function() {
       $scope.loginError = "2-Factor-Authentication code is required to login.";
     }).catch(StellarWallet.errors.ConnectionError, function() {
       $scope.loginError = "Error connecting wallet server. Please try again later.";
     }).catch(function(e) {
+      if (e.name && e.name === 'Forbidden') {
+        return $q.reject(e);
+      }
       Raven.captureMessage('StellarWallet.getWallet unknown error', {
         extra: {
           error: e
