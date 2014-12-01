@@ -95,14 +95,21 @@
 }
 
 .order-book {
-  .order-type {
+  .order-info {
     text-align: center;
-    text-transform: uppercase;
-    font-size: 16px;
-    letter-spacing: 0.1em;
     color: $grey;
     padding: 15px 0;
     border-bottom: 1px solid $light-grey;
+    font-weight: $book-weight;
+    margin: 10px 0;
+
+    .order-type {
+      text-transform: uppercase;
+      font-size: 16px;
+      letter-spacing: 0.1em;
+      padding-bottom: 8px;
+      margin: 0;
+    }
   }
 
   .order-book-table {

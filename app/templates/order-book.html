@@ -4,7 +4,10 @@
     </div>
     <div ng-hide="setCurrentOrderBook.isLoading()">
         <div class="col-sm-6">
-            <h4 class="order-type">Bids</h4>
+            <div class="order-info">
+                <h4 class="order-type">Bids</h4>
+                (buy {{ currentOrderBook.baseCurrency.currency }} for {{ currentOrderBook.counterCurrency.currency }})
+            </div>
             <p ng-hide="currentBids.length" class="order-status">There are no current bids for this currency pair from the selected issuer yet. Make some by submitting a new trade order.</p>
             <table class="order-book-table table" ng-show="currentBids.length">
                 <thead>
@@ -24,7 +27,10 @@
             </table>
         </div>
         <div class="col-sm-6">
-            <h4 class="order-type">Asks</h4>
+            <div class="order-info">
+                <h4 class="order-type">Asks</h4>
+                (sell {{ currentOrderBook.baseCurrency.currency }} for {{ currentOrderBook.counterCurrency.currency }})
+            </div>
             <p ng-hide="currentAsks.length" class="order-status">There are no current asks for this currency pair from the selected issuer yet. Make some by submitting a new trade order.</p>
             <table class="order-book-table table" ng-show="currentAsks.length">
                 <thead>
