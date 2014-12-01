@@ -54,7 +54,7 @@ angular.module('stellarClient').controller('ChangePasswordV2Ctrl', function($sco
 
     var params = {
       server: Options.WALLET_SERVER+'/v2',
-      username: $stateParams.username,
+      username: $stateParams.username.toLowerCase(),
       masterKey: $stateParams.masterKey
     };
 
@@ -75,7 +75,11 @@ angular.module('stellarClient').controller('ChangePasswordV2Ctrl', function($sco
       });
       $state.go('login');
     }).catch(StellarWallet.errors.Forbidden, function(e) {
-      $scope.errors.usernameErrors.push('Forbidden. Are you sure 2FA code is correct?');
+      var errorMsg = 'Forbidden. ';
+      if ($scope.totpRequired) {
+        errorMsg += 'Are you sure 2FA code is correct?';
+      }
+      $scope.errors.usernameErrors.push(errorMsg);
     }).catch(StellarWallet.errors.ConnectionError, function(e) {
       $scope.errors.usernameErrors.push('Error connecting wallet server. Please try again later.');
     }).catch(function(e) {
