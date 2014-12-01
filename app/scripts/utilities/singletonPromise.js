@@ -24,7 +24,7 @@ angular.module('singletonPromise', []).factory('singletonPromise', function ($q)
 
       loading = true;
       try {
-        return $q.when(fun()).finally(function() {
+        return $q.when(fun.apply(null, arguments)).finally(function() {
           loading = false;
         });
       } catch (err) {

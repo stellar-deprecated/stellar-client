@@ -12,18 +12,16 @@ angular.module('stellarClient').controller('LoginV2Ctrl', function($scope, $stat
     $state.go('login');
   };
 
-  var params;
-
   // HACK: Perform AJAX login, but send a POST request to a hidden iframe to
   // coax Chrome into offering to remember the password.
   $scope.attemptLogin = function() {
-    params = {
+    var params = {
       server: Options.WALLET_SERVER+'/v2',
       username: $stateParams.username.toLowerCase(),
       password: $scope.password
     };
 
-    $scope.asyncLogin().catch(function(e) {
+    $scope.asyncLogin(params).catch(function(e) {
       var forbiddenError = "Login credentials are incorrect.";
       if ($stateParams.username === $stateParams.username.toLowerCase()) {
         $scope.loginError = forbiddenError;
@@ -31,8 +29,9 @@ angular.module('stellarClient').controller('LoginV2Ctrl', function($scope, $stat
         // If username contains uppercase letters we need to repeat the process with
         // username passed by the user. It's because of the bug in change-password-v2-controller.
         // Username was not toLowerCase()'d there thus calculated masterKey was incorrect.
+        // Fixes #1102.
         params.username = $stateParams.username;
-        $scope.asyncLogin().catch(function(e) {
+        $scope.asyncLogin(params).catch(function(e) {
           $scope.loginError = forbiddenError;
         });
       }
@@ -40,7 +39,7 @@ angular.module('stellarClient').controller('LoginV2Ctrl', function($scope, $stat
     return true;
   };
 
-  $scope.asyncLogin = singletonPromise(function() {
+  $scope.asyncLogin = singletonPromise(function(params) {
     $scope.loginError = null;
 
     if (!$scope.password || ($scope.totpRequired && !$scope.totpCode)) {
