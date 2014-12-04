@@ -302,6 +302,52 @@
                         </div>
                     </div>
                 </div>
+                <div class="row" ng-controller="DeleteAccountCtrl">
+                    <div class="settings-label col-md-3 col-xs-6">DELETE ACCOUNT</div>
+                    <div class="settings-control col-md-9 col-xs-6">
+                        <div class="row">
+                            <div class="icon-col col-xs-1">
+                                <span class="glyphicon glyphicon-trash"/>
+                            </div>
+                            <div ng-show="state === 'closed'">
+                                <div class="col-xs-10">
+                                    <a href="" ng-click="openForm()">Delete account</a>
+                                </div>
+                            </div>
+                            <div class="col-xs-10" ng-show="state === 'open'">
+                                <div class="row" ng-hide="accountEmpty()">
+                                    <div class="col-md-5 col-xs-12">
+                                        <p>Transfer remaining balances to:</p>
+                                        <input id="account-merge-input" data-toggle="tooltip" placeholder="Destination Account" type="text" class="form-control" ng-model="transferDestination"></input>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 col-xs-12 col-md-push-1">
+                                        <button class="btn btn-default stellar-button settings-confirm-button" ng-click="confirmDelete()">Delete Account</button>
+                                    </div>
+                                    <div class="settings-cancel-button col-md-1 col-xs-1 col-md-pull-4">
+                                        <a href="" ng-click="reset()">Cancel</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-10" ng-show="state === 'confirm'">
+                                <div class="row">
+                                    <div class="col-md-5 col-xs-12">
+                                        Are you sure you want to delete your account<span ng-hide="accountEmpty()"> and transfer your balance to {{ transferDestination }}</span>?
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 col-xs-12 col-md-push-1">
+                                        <button class="btn btn-default stellar-button settings-confirm-button" ng-click="deleteAccount()">{{ deleteAccount.isLoading() ? "Loading..." : "Confirm" }}</button>
+                                    </div>
+                                    <div class="settings-cancel-button col-md-1 col-xs-1 col-md-pull-4">
+                                        <a href="" ng-click="reset()">Cancel</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

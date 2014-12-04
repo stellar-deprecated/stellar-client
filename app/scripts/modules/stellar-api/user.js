@@ -27,5 +27,9 @@ api.service('User', function(http) {
     return http.post('/user/validname', {username: username});
   };
 
+  User.delete = function(params) {
+    return http.post('/user/delete', {username: params.username, updateToken: params.updateToken});
+  };
+
   return User;
 });
