@@ -15,6 +15,19 @@ var protractor    = require("gulp-protractor").protractor;
 var glob          = require('glob');
 var map           = require('map-stream');
 
+// config initialization
+var cfg = {
+    noLintHook:  false,
+    errorOnWarn: process.env.WERROR || false,
+};
+
+// load the local user's options if they exist
+if(fs.existsSync("./config.user.js")) {
+    _.extend(cfg, require("./config.user.js"))
+}
+
+// end config initialization
+
 var runningServer = null;
 
 // load plugins
@@ -68,7 +81,7 @@ function lintReport() {
 gulp.task('scripts:lint', function () {
     var report = lintReport();
 
-    if(process.env.WERROR === true) {
+    if(cfg.errorOnWarn) {
         report = report.pipe(lintErrorReporter());
     }
 
@@ -76,6 +89,10 @@ gulp.task('scripts:lint', function () {
 });
 
 gulp.task('hooks:lint', function () {
+    if(cfg.noLintHook) {
+        process.exit(0);
+    }
+
     // Force the process to exit with errors.
     return lintReport().pipe(lintErrorReporter());
 });

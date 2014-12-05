@@ -12,3 +12,4 @@ stellar-client.sublime-workspace
 *.rdb
 api-docs/
 .npm/
+config.user.js
