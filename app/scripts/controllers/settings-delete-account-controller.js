@@ -27,13 +27,9 @@ sc.controller('DeleteAccountCtrl', function($scope, $rootScope, $q, StellarNetwo
   };
 
   $scope.deleteAccount = singletonPromise(function() {
-    var promises = [
-      mergeAccount(),
-      deleteUser(),
-      deleteWallet()
-    ];
-
-    return $q.all(promises)
+    return mergeAccount()
+      .then(deleteWallet)
+      .then(deleteUser)
       .then(session.logout)
       .catch(function(err) {
         $scope.state = 'open';
