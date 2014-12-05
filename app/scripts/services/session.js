@@ -181,16 +181,20 @@ sc.service('session', function($rootScope, $http, $timeout, StellarNetwork, Wall
       traits.inviterUsername   = privateInfo.inviterUsername;
       traits.claimedInviteCode = privateInfo.claimedInviteCode;
       traits.linkedFacebook    = privateInfo.linkedFacebook;
-
-      if(privateInfo.email) {
-        traits.email = privateInfo.email.address;
-      }
+      traits.email = this.getEmail();
     }
 
 
 
     return traits;
   };
+
+  Session.prototype.getEmail = function() {
+    var privateInfo = this.get("userPrivateInfo") || {};
+    if(privateInfo.email) {
+      return privateInfo.email.address;
+    }
+  }
 
   function checkFairyAddress() {
     /*jshint camelcase: false */
