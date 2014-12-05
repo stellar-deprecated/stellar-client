@@ -19,6 +19,7 @@ window.Options = {
     DOMAIN_NAME: 'stg.stellar.org',
     DEFAULT_FEDERATION_DOMAIN: 'stg.stellar.org',
     API_SERVER: 'https://api-stg.stellar.org',
+    API_STATUS_PATH: '/status.json',
     WALLET_SERVER: 'https://wallet-stg.stellar.org',
 
     // If set, login will persist across sessions (page reload). This is mostly

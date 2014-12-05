@@ -19,6 +19,7 @@ window.Options = {
     DOMAIN_NAME: 'stellar.org',
     DEFAULT_FEDERATION_DOMAIN: 'stellar.org',
     API_SERVER: 'https://api.stellar.org',
+    API_STATUS_PATH: '/status.json',
     WALLET_SERVER: 'https://wallet.stellar.org',
 
     PERSISTENT_SESSION : false,
