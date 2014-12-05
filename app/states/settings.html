@@ -345,6 +345,21 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-xs-10" ng-show="state === 'error'">
+                                <div class="row">
+                                    <div class="col-md-5 col-xs-12">
+                                        An error ocurred while deleting your account.
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 col-xs-12 col-md-push-1">
+                                        <button class="btn btn-default stellar-button settings-confirm-button" ng-click="deleteAccount()">{{ deleteAccount.isLoading() ? "Loading..." : "Retry" }}</button>
+                                    </div>
+                                    <div class="settings-cancel-button col-md-1 col-xs-1 col-md-pull-4">
+                                        <a href="" ng-click="reset()">Cancel</a>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

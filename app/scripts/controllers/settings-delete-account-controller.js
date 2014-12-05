@@ -32,15 +32,7 @@ sc.controller('DeleteAccountCtrl', function($scope, $rootScope, $q, StellarNetwo
       .then(deleteUser)
       .then(session.logout)
       .catch(function(err) {
-        $scope.state = 'open';
-
-        // Construct an error for handleServerError.
-        $scope.handleServerError($('#account-merge-input'))({
-          data: {
-            status: 'fail',
-            message: err || 'Server error'
-          }
-        });
+        $scope.state = 'error';
       });
   });
 
