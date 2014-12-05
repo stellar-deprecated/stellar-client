@@ -90,7 +90,10 @@ sc.controller('DeleteAccountCtrl', function($scope, $rootScope, $q, StellarNetwo
       updateToken: wallet.keychainData.updateToken
     })
       .catch(function(err) {
-        // Unable to delete user.
+        // Check if the error is caused by the user already being deleted.
+        if(err.data.code !== 'invalid_update_token') {
+          return $q.reject(err);
+        }
       });
   }
 
@@ -99,7 +102,10 @@ sc.controller('DeleteAccountCtrl', function($scope, $rootScope, $q, StellarNetwo
 
     return wallet.walletV2.delete({secretKey: wallet.keychainData.signingKeys.secretKey})
       .catch(function(err) {
-        // Unable to delete wallet.
+        // Check if the error is caused by the wallet already being deleted.
+        if(err.name !== 'InvalidSignature') {
+          return $q.reject(err);
+        }
       });
   }
 });
