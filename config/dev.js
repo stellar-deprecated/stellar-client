@@ -20,6 +20,7 @@ window.Options = {
     DEFAULT_FEDERATION_DOMAIN: 'stellar.org',
     API_SERVER: 'http://localhost:3001',
     WALLET_SERVER: 'http://localhost:3000',
+    RIPPLE_GIVEAWAY_SERVER: 'http://localhost:3977',
 
     // If set, login will persist across sessions (page reload). This is mostly
     // intended for developers, be careful about using this in a real setting.
