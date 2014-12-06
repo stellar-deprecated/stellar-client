@@ -23,7 +23,7 @@ ask contributors to follow so that we can merge your changes quickly.
 
 ## Submitting Changes
 
-* <a href="https://www.clahub.com/agreements/stellar/stellar-client">Sign the Contributor License Agreement</a>
+* <a href="https://docs.google.com/forms/d/1g7EF6PERciwn7zfmfke5Sir2n10yddGGSXyZsq98tVY/viewform?usp=send_form">Sign the Contributor License Agreement</a>
 * Push your changes to a topic branch in your fork of the repository.
 * Submit a pull request to the [stellar-client repository](https://github.com/stellar/stellar-client) in the Stellar organization.
  * Include a descriptive [commit message](https://github.com/erlang/otp/wiki/Writing-good-commit-messages).
@@ -44,7 +44,7 @@ an issue number.
 # Additional Resources
 
 * [Bug tracker (Github)](https://github.com/stellar/stellar-client/issues)
-* <a href="https://www.clahub.com/agreements/stellar/stellar-client">Contributor License Agreement</a>
+* <a href="https://docs.google.com/forms/d/1g7EF6PERciwn7zfmfke5Sir2n10yddGGSXyZsq98tVY/viewform?usp=send_form">Contributor License Agreement</a>
 * [Explore the API](https://www.stellar.org/api/)
 * [Readme for stellar-client](https://github.com/stellar/stellar-client/blob/master/README.md)
 * #stellar-dev IRC channel on freenode.org
