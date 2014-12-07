@@ -19,9 +19,6 @@ angular.module('stellarClient').factory('UserPrivateInfo', function($http, $q, $
             .then(function (response) {
                 return Util.tryGet(response, 'data.data');
             })
-            .catch(function () {
-                return {};
-            })
             .then(function (data) {
                 return new UserPrivateInfo(username, updateToken, data);
             });

@@ -14,6 +14,7 @@ sc.factory('FlashMessages', function($rootScope) {
 
   result.add = function(message) {
     var defaults = {
+      global: false, // Global messages won't be dismissed by FlashMessages.dismissAll
       showCloseIcon: true
     };
     message = _.extend(defaults, message);
@@ -21,7 +22,9 @@ sc.factory('FlashMessages', function($rootScope) {
   };
 
   result.dismissAll = function() {
-    result.messages = [];
+    result.messages = result.messages.filter(function(message) {
+      return message.global === true;
+    });
   };
 
   result.dismissById = function(id) {
