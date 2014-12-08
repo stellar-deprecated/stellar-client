@@ -4,7 +4,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('SettingsInflationDestCtrl', function($scope, $q, session, singletonPromise, contacts) {
+sc.controller('SettingsInflationDestCtrl', function($scope, $q, $analytics, session, singletonPromise, contacts) {
   $scope.reset = function () {
     $scope.inflationDest = $scope.account.InflationDest;
     if ($scope.inflationDest) {
@@ -39,6 +39,9 @@ sc.controller('SettingsInflationDestCtrl', function($scope, $q, session, singlet
       })
       .then(function () {
         $scope.reset();
+      })
+      .then(function () {
+        $analytics.eventTrack('Account Updated');
       })
       .catch($scope.handleServerError($('#inflation-dest-input')));
   });
