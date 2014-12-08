@@ -127,6 +127,8 @@ sc.service('session', function($rootScope, $http, $timeout, $analytics, StellarN
         if (this.isPersistent()) {
           wallet.saveLocal();
         }
+
+        $analytics.eventTrack('Account Updated');
       }.bind(this));
   };
 
