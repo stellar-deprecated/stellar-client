@@ -1,6 +1,6 @@
 var sc = angular.module('stellarClient');
 
-sc.controller('TaskMessageCtrl', function ($rootScope, $scope, $state, $filter, session) {
+sc.controller('TaskMessageCtrl', function ($rootScope, $scope, $state, $filter, $analytics, session) {
     $scope.getInvitesLeft = function () {
         return $filter('unsentInviteFilter')(session.getUser().getInvites());
     };
@@ -38,6 +38,7 @@ sc.controller('TaskMessageCtrl', function ($rootScope, $scope, $state, $filter, 
             action: function () {
                 $state.transitionTo('invites');
                 $scope.task = null;
+                $analytics.eventTrack('Invite Selected');
             }
         }
     };
@@ -52,6 +53,7 @@ sc.controller('TaskMessageCtrl', function ($rootScope, $scope, $state, $filter, 
         } else if (user.getNewInvites().length > 0) {
             $scope.newInvites = user.getNewInvites().length;
             $scope.task = $scope.inviteTasks.hasNewInvites;
+            $analytics.eventTrack('Invite Prompted');
         }
     }
 
