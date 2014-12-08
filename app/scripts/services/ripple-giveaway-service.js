@@ -17,5 +17,13 @@ angular.module('stellarClient').service('rippleGiveaway', function($http, userna
     });
   };
 
+  api.claim = function(address, option) {
+    return $http.post(Options.RIPPLE_GIVEAWAY_SERVER+'/claim', {
+      usernameProof: proof,
+      address: address,
+      option: option
+    });
+  };
+
   return api;
 });

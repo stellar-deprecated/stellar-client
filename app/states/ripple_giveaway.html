@@ -30,9 +30,9 @@
 
     <div ng-if="addressData.status == 'associated'">
       Address associated! Options:<br />
-      <label><input type="radio" ng-model="option" value="pro_rata" /> Pro-rata: {{ addressData.pro_rata / 1000000 }} STR</label><br />
-      <label><input type="radio" ng-model="option" value="donation" /> Donation: You can receive up to {{ addressData.ripple_amount / 1000000 }} STR</label><br />
-      <button ng-click=""></button>
+      <label><input type="radio" ng-model="$parent.$parent.option" value="pro_rata" /> Pro-rata: {{ addressData.pro_rata / 1000000 }} STR</label><br />
+      <label><input type="radio" ng-model="$parent.$parent.option" value="donation" /> Donation: You can receive up to {{ addressData.ripple_amount / 1000000 }} STR</label><br />
+      <button ng-click="claim()">Submit</button>
     </div>
 
     <div ng-if="addressData.status == 'donation'">
