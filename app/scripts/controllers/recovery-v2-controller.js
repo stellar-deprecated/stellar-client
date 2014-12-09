@@ -42,6 +42,7 @@ angular.module('stellarClient').controller('RecoveryV2Ctrl', function($scope, $s
         $state.go('change_password_v2', {
           username: params.username,
           masterKey: params.masterKey,
+          recoveryCode: params.recoveryCode,
           totpRequired: $scope.totpRequired
         });
       });
@@ -127,6 +128,7 @@ angular.module('stellarClient').controller('RecoveryV2Ctrl', function($scope, $s
 
     StellarWallet.recover(data).then(function(masterKey) {
       params.masterKey = masterKey;
+      params.recoveryCode = fullRecoveryCode;
       deferred.resolve(params);
     }).catch(StellarWallet.errors.Forbidden, function() {
       $scope.usernameError = "Invalid username or recovery code.";
