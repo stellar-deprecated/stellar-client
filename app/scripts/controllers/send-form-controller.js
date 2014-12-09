@@ -42,6 +42,10 @@ sc.controller('SendFormController', function($rootScope, $scope, Payment, deboun
     $scope.send.pathStatus = 'error';
   });
 
+  $scope.$on('payment:invalid', function(event) {
+    resetPaths();
+  });
+
   $scope.$on('payment:paths', function(event, paths) {
     resetPaths();
     $scope.send.paths = paths;
@@ -98,7 +102,7 @@ sc.controller('SendFormController', function($rootScope, $scope, Payment, deboun
   }
 
   function updateDestination() {
-    clearPoptip();
+    clearPoptip('recipient');
 
     Payment.setDestination($scope.sendFormModel.recipient, $scope.sendFormModel.destinationTag)
       .then(handleDestination)
@@ -106,7 +110,7 @@ sc.controller('SendFormController', function($rootScope, $scope, Payment, deboun
   }
 
   function handleDestination(destination) {
-    clearPoptip();
+    clearPoptip('recipient');
 
     $scope.send.destination = destination;
     $scope.send.currencyChoices = destination.currencyChoices;
@@ -124,17 +128,22 @@ sc.controller('SendFormController', function($rootScope, $scope, Payment, deboun
   }
 
   function handleDestinationError(error) {
-    switch(error) {
-      case 'canceled':
-        return;
+    if(error === 'canceled') {
+      return;
+    }
 
+    $scope.resetDestinationDependencies();
+
+    switch(error) {
       case 'empty':
-        $scope.resetDestinationDependencies();
-        return;
+        break;
+
+      case 'federation-error':
+        showError('Account not found', 'recipient');
+        break;
 
       default:
-        $scope.resetDestinationDependencies();
-        showError(error);
+        showError(error, 'recipient');
     }
   }
 
@@ -142,17 +151,15 @@ sc.controller('SendFormController', function($rootScope, $scope, Payment, deboun
     return $scope.send.destination.requireDestinationTag && !$scope.send.destination.fixedDestinationTag;
   };
 
-  var showError = debounce(function(error) {
-    $('#recipient').tooltip('destroy');
-
-    if(error === 'federation-error') {
-      Util.showTooltip($('#recipient'), "Account not found", "error", "top");
-    }
+  var showError = debounce(function(error, elementId) {
+    var element = $('#' + elementId);
+    element.tooltip('destroy');
+    Util.showTooltip(element, error, "error", "top");
   }, 500);
 
-  function clearPoptip() {
+  function clearPoptip(elementId) {
     showError.cancel();
-    $('#recipient').tooltip('destroy');
+    $('#' + elementId).tooltip('destroy');
   }
 
   function showAddressFound(address) {
@@ -178,9 +185,27 @@ sc.controller('SendFormController', function($rootScope, $scope, Payment, deboun
    */
 
   function updateAmount() {
+    clearPoptip('amount');
+
     Payment.setAmount($scope.sendFormModel.amount, $scope.sendFormModel.currency)
       .then(function(amount) {
+        clearPoptip('amount');
         $scope.send.amount = amount;
+      })
+      .catch(function(err) {
+        if(err === 'empty') {
+          return;
+        }
+
+        switch(err) {
+          case 'invalid-amount':
+            showError('Invalid amount', 'amount');
+            break;
+
+          case 'non-positive-amount':
+            showError('Amount must be positive', 'amount');
+            break;
+        }
       });
   }
 

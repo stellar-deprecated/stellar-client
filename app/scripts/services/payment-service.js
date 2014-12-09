@@ -73,6 +73,7 @@ sc.service('Payment', function($rootScope, $q, StellarNetwork, Destination, Canc
       .catch(function(error) {
         if(error !== 'canceled') {
           destination = Destination.invalid();
+          updatePaths();
         }
 
         return $q.reject(error);
@@ -108,7 +109,19 @@ sc.service('Payment', function($rootScope, $q, StellarNetwork, Destination, Canc
 
     updatePaths();
 
-    return $q.when(amount);
+    if(!value || !amount) {
+      return $q.reject('empty');
+    }
+
+    if(!amount.is_positive()) {
+      return $q.reject('non-positive-amount');
+    }
+
+    if(amount.is_valid()) {
+      return $q.when(amount);
+    }
+
+    return $q.reject('invalid-amount');
   };
 
   /**
@@ -133,7 +146,10 @@ sc.service('Payment', function($rootScope, $q, StellarNetwork, Destination, Canc
     clearPaths();
 
     // Determine if payment is ready to find paths.
-    if(!Payment.isValid()) { return; }
+    if(!Payment.isValid()) {
+      $rootScope.$broadcast('payment:invalid');
+      return;
+    }
 
     // Determine if the amount is enough to fund the destination.
     var finalDestBalance = amount.add(destination.balance);
