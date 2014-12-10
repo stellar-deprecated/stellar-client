@@ -20,7 +20,7 @@
         <div class="invites" ng-show="getSentInvites().length">
             <h2>Sent Invites ({{ getSentInvites().length }})</h2>
             <div id="{{invite.inviteId}}" class="invite-row" ng-repeat="invite in getSentInvites()">
-                <div class="email">{{invite.emailedTo}} <span ng-if="invite.inviteeId">({{invite.inviteeUsername}})</span></div>
+                <div class="email">{{invite.emailedTo}} <span ng-if="invite.inviteeUsername">({{invite.inviteeUsername}})</span></div>
                 <div class="status" ng-class="getInviteStatus(invite).class">{{getInviteStatus(invite).text}}</div>
                 <div class="invite-actions">
                     <span ng-repeat="action in inviteActions | includeInviteActionFilter:invite" ng-init="innerFirst = $first; innerLast = $last">
