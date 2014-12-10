@@ -3,52 +3,84 @@
   <h1 class="title">Ripple Giveaway<span class="link-dashboard"><a href="/#/dashboard">&#8592; back to dashboard</a></span></h1>
 </div>
 
-<div class="client-section">
-  <form name="sendForm" role="form" class="form-horizontal">
-    <div class="form-group send-address">
-      <label for="address" class="col-md-2">Your Ripple address</label>
-      <div class="col-md-6">
-        <input id="address" name="address" type="text" class="form-control" spellcheck="false" ng-model="address" />
+<div class="ripple-giveaway client-section">
+  <div class="pane">
+    <form name="sendForm" role="form" class="form-horizontal" ng-submit="getAddress($event)">
+      <div class="form-group">
+        <label for="address" class="col-md-2">Your Ripple address</label>
+        <div class="col-md-6 input-icon-wrapper">
+          <input id="address" name="address" type="text" class="form-control" spellcheck="false" ng-model="address" />
+        </div>
+        <div class="col-md-4">
+          <button type="submit" class="btn btn-default btn-primary">Check address</button>
+        </div>
       </div>
-    </div>
-  </form>
+    </form>
+  </div>
 
-  <div ng-if="loading">
+  <div class="loading" ng-show="loading">
     Loading...
   </div>
 
-  <div ng-if="addressData">
-    <div ng-if="addressData.status == 'not_associated'">
-      Your Ripple address: {{ addressData.ripple_address }}<br />
-      XRP balance at ledger 6,762,000: {{ addressData.ripple_amount / 1000000 }} XRP<br />
-      Pro-rata: {{ addressData.pro_rata / 1000000 }} STR<br />
-      Donation: You can receive up to {{ addressData.ripple_amount / 1000000 }} STR<br />
-      To claim you are the owner of this Ripple account send 1 XRP to <code>{{ claimData.address }}</code> with Destination tag: <code>{{ claimData.destinationTag }}</code>.<br />
-      <a href="https://www.rippletrade.com/#/send?to={{ claimData.address }}&amount=1&dt={{ claimData.destinationTag }}" target="_blank">Send using Ripple Client</a><br />
-      <strong>Do not send more than 1 XRP. We won't send your money back! You can associate each of your Ripple accounts only once!</strong>
+  <div class="error" ng-show="error">
+    {{ error }}
+  </div>
+
+  <div class="box" ng-show="addressData">
+    <div ng-show="addressData.status == 'not_associated'">
+      <p class="literal info">XRP balance at the ledger 6,762,000:</p>
+      <p class="amount_feedback">{{ addressData.ripple_amount / 1000000 }} XRP</p>
+      <p class="literal info">To claim you are the owner of this Ripple address send 1 XRP from this address to:<br />
+      <div class="dest_feedback">
+        <div class="input-icon-wrapper">
+          <input class="recipient-address" value="{{ claimData.address }} DestinationTag: {{ claimData.destinationTag }}" disabled>
+          <i class="glyphicon glyphicon-globe"></i>
+        </div>
+      </div>
+      <p class="literal"><strong>Do not send more than 1 XRP. We won't send your money back!<br />You can associate each of your Ripple accounts only once!</strong></p>
+      <div class="call-to-action">
+        <div class="row row-padding-small">
+          <a href="https://www.rippletrade.com/#/send?to={{ claimData.address }}&amount=1&dt={{ claimData.destinationTag }}" target="_blank" class="btn btn-default">Send using Ripple Client</a>
+          <a href="#" ng-click="nextStep($event)" class="btn btn-default btn-primary">Continue</a>
+        </div>
+      </div>
     </div>
 
-    <div ng-if="addressData.status == 'associated'">
-      Address associated! Options:<br />
-      <label><input type="radio" ng-model="$parent.$parent.option" value="pro_rata" /> Pro-rata: {{ addressData.pro_rata / 1000000 }} STR</label><br />
-      <label><input type="radio" ng-model="$parent.$parent.option" value="donation" /> Donation: You can receive up to {{ addressData.ripple_amount / 1000000 }} STR</label><br />
-      <button ng-click="claim()">Submit</button>
+    <div ng-show="addressData.status == 'associated'">
+      <p class="literal info">Address associated!</p>
+      <p class="literal info">Choose one of the following options:</p>
+      <label><input type="radio" ng-model="option" value="pro_rata" /> Pro-rata: we will send {{ addressData.pro_rata / 1000000 }} STR right away</label><br />
+      <label><input type="radio" ng-model="option" value="donation" /> Donation: you can receive up to {{ addressData.donation_max / 1000000 }} STR depending how much you will donate</label><br />
+      <p class="literal"><strong>Choose wisely! You won't be able to change that!</strong></p>
+      <div class="call-to-action">
+        <div class="row row-padding-small">
+          <a href="#" ng-click="claim($event)" class="btn btn-default btn-primary">Submit</a>
+        </div>
+      </div>
     </div>
 
-    <div ng-if="addressData.status == 'donation'">
-      You have chosen donation. Send it from your address (<code>{{addressData.ripple_address}}</code>) to one of following charities:
+    <div ng-show="addressData.status == 'donation'">
+      <p class="literal info">You have chosen donation.</p>
+      <p class="literal info">Send it from your address to one of following charities:</p>
 
-      <ul>
-        <li ng-repeat="charity in claimData.charities">
-          {{ charity.name }} (send to <code>{{ charity.address }}</code>)
-        </li>
-      </ul>
+      <div class="dest_feedback" ng-repeat="charity in claimData.charities">
+        <strong>{{ charity.name }}</strong>
+        <div class="input-icon-wrapper">
+          <input class="recipient-address" value="{{ charity.address }}" disabled>
+          <i class="glyphicon glyphicon-globe"></i>
+        </div>
+      </div>
 
-      If you have already sent your donation please wait for a couple of minutes so we can process it.
+      <div class="call-to-action">
+        <div class="row row-padding-small">
+          <a href="#" ng-click="nextStep($event)" class="btn btn-default btn-primary">Continue</a>
+        </div>
+      </div>
     </div>
 
-    <div ng-if="addressData.status == 'claimed'">
-      Stellars for this Ripple address have been sent!
+    <div ng-show="addressData.status == 'claimed'">
+      <p class="literal info">Stellars for this Ripple address have been sent!</p>
+      <p class="literal info">You will receive them shortly!</p>
     </div>
   </div>
 </div>
