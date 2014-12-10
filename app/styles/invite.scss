@@ -40,20 +40,14 @@
 			border-top: 1px solid $grey-border;
 			
 		}
-		span {
-			display: block;
-			float: left;
-		}
 		.email {
+			float: left;
 			font-size: 16px;
 			width: 40%;
 			font-weight: $book-weight;
 		}
-		span.username {
-			display: inline;
-			float: none;
-		}
 		.status {
+			float: left;
 			font-size: 12px;
 			&.success {
 				color: $success;
