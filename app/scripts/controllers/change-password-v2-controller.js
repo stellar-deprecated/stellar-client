@@ -67,6 +67,11 @@ angular.module('stellarClient').controller('ChangePasswordV2Ctrl', function($sco
       return wallet.changePassword({
         newPassword: $scope.data.password,
         secretKey: keychainData.signingKeys.secretKey
+      }).then(function() {
+        return wallet.enableRecovery({
+          recoveryCode: $stateParams.recoveryCode,
+          secretKey: keychainData.signingKeys.secretKey
+        });
       });
     }).then(function() {
       FlashMessages.add({
