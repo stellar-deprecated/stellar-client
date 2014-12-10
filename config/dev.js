@@ -19,6 +19,7 @@ window.Options = {
     DOMAIN_NAME: 'stellar.local.dev',
     DEFAULT_FEDERATION_DOMAIN: 'stellar.org',
     API_SERVER: 'http://localhost:3001',
+    API_STATUS_PATH: '/status.json',
     WALLET_SERVER: 'http://localhost:3000',
 
     // If set, login will persist across sessions (page reload). This is mostly
