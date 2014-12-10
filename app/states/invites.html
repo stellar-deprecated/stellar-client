@@ -22,7 +22,7 @@
             <div id="{{invite.inviteId}}" class="invite-row" ng-repeat="invite in getSentInvites()">
                 <span class="email">
                     {{invite.emailedTo}}
-                    <span class="username" ng-if="invite.inviteeId">({{invite.inviteeUsername}})</span>
+                    <span class="username" ng-if="invite.inviteeUsername">({{invite.inviteeUsername}})</span>
                 </span>
                 <span class="status" ng-class="getInviteStatus(invite).class">{{getInviteStatus(invite).text}}</span>
                 <div class="invite-actions">
