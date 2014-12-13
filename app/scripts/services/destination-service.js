@@ -5,7 +5,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.service('Destination', function($rootScope, $q, StellarNetwork, contacts) {
+sc.service('Destination', function($rootScope, $q, StellarNetwork, contacts, BitcoinBridge) {
 
   /**
    * Resolve a destination from the given input.
@@ -29,17 +29,18 @@ sc.service('Destination', function($rootScope, $q, StellarNetwork, contacts) {
     // parse the raw address/federation name
     recipient = destinationUri.path();
 
-    var destinationPromise;
+    $q.when(function() {
+      // Determine the input type of the recipient.
+      if (isStellarAddress(recipient)) {
+        return getFromStellarAddress(recipient, destinationTag);
+      }
 
-    // Determine the input type of the recipient.
-    if (isAddress(recipient)) {
-      destinationPromise = getFromAddress(recipient, destinationTag);
-    } else {
-      destinationPromise = getFromFederatedName(recipient, destinationTag);
-    }
+      if (BitcoinBridge.isBitcoinAddress(recipient)) {
+        return BitcoinBridge.get(recipient);
+      }
 
-    // Resolve the destination's account info.
-    return destinationPromise
+      return getFromFederatedName(recipient, destinationTag);
+    })
       .then(function(destination) {
         // Determine if the destination tag can be edited.
         destination.fixedDestinationTag = destination.fixedDestinationTag || fixedDestinationTag;
@@ -56,7 +57,7 @@ sc.service('Destination', function($rootScope, $q, StellarNetwork, contacts) {
    *
    * @return {Boolean}
    */
-  function isAddress(recipient) {
+  function isStellarAddress(recipient) {
     return stellar.UInt160.is_valid(recipient);
   }
 
@@ -68,7 +69,7 @@ sc.service('Destination', function($rootScope, $q, StellarNetwork, contacts) {
    *
    * @return {Promise.<Destination>}
    */
-  function getFromAddress(address, destinationTag) {
+  function getFromStellarAddress(address, destinationTag) {
     return $q.when(new Destination({
       inputType: 'address',
       address: address,
