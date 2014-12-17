@@ -3,7 +3,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('InvitesCtrl', function($scope, $http, $q, $filter, session, invites, singletonPromise) {
+sc.controller('InvitesCtrl', function($scope, $http, $q, $filter, $analytics, session, invites, singletonPromise) {
     var INVITE_LINK = "https://launch.stellar.org/#/register?inviteCode=";
 
     $scope.getInvites = function () {
@@ -108,6 +108,7 @@ sc.controller('InvitesCtrl', function($scope, $http, $q, $filter, session, invit
             .success(function (response) {
                 session.getUser().refresh();
                 $scope.invites = session.getUser().getInvites();
+                $scope.trackInviteSentEvent($scope.inviteEmail);
             })
             .error(function (response) {
                 Util.showTooltip($("#invite-email"), response.message, 'error', 'top');
@@ -118,6 +119,14 @@ sc.controller('InvitesCtrl', function($scope, $http, $q, $filter, session, invit
                 });
             });
     });
+
+    $scope.trackInviteSentEvent = function(inviteeEmail) {
+        $analytics.eventTrack('Invite Sent', {
+            toEmail: inviteeEmail,
+            fromEmail: session.getEmail(),
+            fromUsername: session.get('username'),
+        });
+    };
 
     invites.ack()
         .then(function () {

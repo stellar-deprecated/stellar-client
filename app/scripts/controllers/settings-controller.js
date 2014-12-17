@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('stellarClient').controller('SettingsCtrl', function($scope, $http, $state, $stateParams, session, FlashMessages) {
+angular.module('stellarClient').controller('SettingsCtrl', function($scope, $http, $state, $stateParams, $analytics, session, FlashMessages) {
   if ($stateParams['migrated-wallet-recovery']) {
     $scope.migratedWalletRecovery = true;
     FlashMessages.add({
@@ -163,6 +163,8 @@ angular.module('stellarClient').controller('SettingsCtrl', function($scope, $htt
       .success(function (res) {
         // switch the toggle
         toggle.on = !on;
+        // record analytics
+        $analytics.eventTrack('Account Updated');
       })
       .error(function (err, status) {
         if (status < 500 && status > 400) {

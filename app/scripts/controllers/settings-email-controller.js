@@ -1,4 +1,4 @@
-angular.module('stellarClient').controller('SettingsEmailCtrl', function($scope, $http, $state, $q, session, singletonPromise) {
+angular.module('stellarClient').controller('SettingsEmailCtrl', function($scope, $http, $state, $q, $analytics, session, singletonPromise) {
 
   $scope.$on('settings-refresh', function () {
     $scope.email = session.getUser().getEmailAddress();
@@ -39,6 +39,9 @@ angular.module('stellarClient').controller('SettingsEmailCtrl', function($scope,
         })
         .then(function () {
           $scope.verifyToken = null;
+        })
+        .then(function () {
+          $analytics.eventTrack('Account Updated');
         });
   }
 
@@ -50,6 +53,9 @@ angular.module('stellarClient').controller('SettingsEmailCtrl', function($scope,
         })
         .then(function () {
           $scope.newEmail = null;
+        })
+        .then(function () {
+          $analytics.eventTrack('Account Updated');
         })
         .catch($scope.handleServerError($('#email-input')));
   }

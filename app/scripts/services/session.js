@@ -5,7 +5,7 @@ var sc = angular.module('stellarClient');
 
 var cache = {};
 
-sc.service('session', function($rootScope, $http, $timeout, StellarNetwork, Wallet, contacts, UserPrivateInfo) {
+sc.service('session', function($rootScope, $http, $timeout, $analytics, StellarNetwork, Wallet, contacts, UserPrivateInfo) {
   var Session = function() {};
 
   Session.prototype.get = function(name){ return cache[name]; };
@@ -80,7 +80,8 @@ sc.service('session', function($rootScope, $http, $timeout, StellarNetwork, Wall
 
 
     self.identifyToAnalytics();
-    
+    $analytics.eventTrack('Account Logged In');
+
     // Store a user object for the currently authenticated user
     UserPrivateInfo.load(this.get('username'), this.get('wallet').keychainData.updateToken)
       .then(function (user) {
@@ -126,6 +127,8 @@ sc.service('session', function($rootScope, $http, $timeout, StellarNetwork, Wall
         if (this.isPersistent()) {
           wallet.saveLocal();
         }
+
+        $analytics.eventTrack('Account Updated');
       }.bind(this));
   };
 
@@ -145,6 +148,7 @@ sc.service('session', function($rootScope, $http, $timeout, StellarNetwork, Wall
     } catch (e) {}
 
     Wallet.purgeLocal();
+    $analytics.eventTrack('Account Logged Out');
 
     // HACK: Ensure that the app's state is reset by reloading the page.
     if (Options.LOGOUT_WITH_REFRESH) {
@@ -181,15 +185,19 @@ sc.service('session', function($rootScope, $http, $timeout, StellarNetwork, Wall
       traits.inviterUsername   = privateInfo.inviterUsername;
       traits.claimedInviteCode = privateInfo.claimedInviteCode;
       traits.linkedFacebook    = privateInfo.linkedFacebook;
-
-      if(privateInfo.email) {
-        traits.email = privateInfo.email.address;
-      }
+      traits.email = this.getEmail();
     }
 
 
 
     return traits;
+  };
+
+  Session.prototype.getEmail = function() {
+    var privateInfo = this.get("userPrivateInfo") || {};
+    if(privateInfo.email) {
+      return privateInfo.email.address;
+    }
   };
 
   function checkFairyAddress() {
