@@ -1,0 +1,84 @@
+.ripple-giveaway {
+  .loading {
+    text-align: center;
+    font-size: 20px;
+    color: $grey;
+    margin-top: 40px;
+  }
+
+  .pane {
+    background-color: transparent;
+    color: $dark-grey;
+    position: relative;
+    padding: 0 0 25px 0;
+
+    form > div {
+      margin: 15px 0;
+
+      label {
+        padding-left: 0;
+        font-size: 14px;
+        line-height: 36px;
+      }
+
+      button {
+        margin-bottom: auto;
+      }
+    }
+  }
+
+  .error {
+    text-align: center;
+    color: $pending;
+    padding-bottom: 20px;
+  }
+
+  .box > div {
+    text-align: center;
+    border: 1px solid $grey-border;
+    border-radius: 2px;
+    margin: 0 auto 30px auto;
+    max-width: 540px;
+    padding: 30px 36px;
+
+    .info {
+      font-size: 20px;
+      color: $grey;
+    }
+
+    .amount_feedback,
+    .recipient-name {
+      font-size: 46px;
+      font-weight: $book-weight;
+    }
+
+    .recipient-address {
+      width: 100%;
+      padding: 10px 15px;
+      margin-top: 15px;
+      margin-bottom: 40px;
+      border-radius: 2px;
+      border: 1px solid rgba($grey, 0.3);
+      background-color: rgba($light-grey, 0.4);
+
+      + i {
+        font-size: 16px;
+        margin-top: 14px;
+      }
+    }
+
+    button {
+      height: 60px;
+      width: 100%;
+      color: white;
+      background-color: #80D8BF;
+      font-size: 25px;
+      box-shadow: none;
+      border-bottom-color: $brand-primary;
+
+      &:hover {
+        background-color: $brand-primary;
+      }
+    }
+  }
+}

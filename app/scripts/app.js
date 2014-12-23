@@ -149,6 +149,11 @@ stellarClient.config(function($httpProvider, $stateProvider, $urlRouterProvider,
       templateUrl: 'states/trade.html',
       authenticate: true
     })
+    .state('ripple_giveaway', {
+      url:         '/ripple-giveaway',
+      templateUrl: 'states/ripple_giveaway.html',
+      authenticate: true
+    })
   ;
 
   $urlRouterProvider.otherwise('/dashboard');
