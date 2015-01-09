@@ -135,6 +135,7 @@ sc.controller('SendController', function($rootScope, $scope, $analytics, Stellar
     tx.payment($rootScope.account.Account, destination.address, amount.to_json());
 
     if (destination.destinationTag) {
+      destination.destinationTag = parseInt(destination.destinationTag);
       tx.destination_tag(destination.destinationTag);
     }
 
