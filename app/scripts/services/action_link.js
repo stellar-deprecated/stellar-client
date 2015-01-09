@@ -6,14 +6,18 @@ sc.service('ActionLink', function($rootScope, $location) {
   var actionParams;
 
   /**
-   * Parses the search portion of the URL into a parameter object.
-   * If the URL contains an action parameter, the parameters are
-   * stored until they are ready to be processed.
+   * Use the search portion of the URL as the action parameters.
    */
   function recognize() {
     // Get an object containing the URL's parsed search parameters.
-    var params = $location.search();
+    set($location.search());
+  }
 
+  /**
+   * If the parameters contain an action parameter, the parameters are
+   * stored until they are ready to be processed.
+   */
+  function set(params) {
     // Keep the parameters if they contain an action.
     if (_.has(params, 'action')) {
       actionParams = params;
@@ -33,6 +37,7 @@ sc.service('ActionLink', function($rootScope, $location) {
 
   return {
     recognize: recognize,
+    set: set,
     process: process
   };
 });
