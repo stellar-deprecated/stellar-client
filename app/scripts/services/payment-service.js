@@ -104,7 +104,7 @@ sc.service('Payment', function($rootScope, $q, StellarNetwork, Destination, Canc
   Payment.setAmount = function(value, currency) {
     clearPaths();
 
-    var amountString = (value || 0).toFixed(16) + ' ' + currency;
+    var amountString = Number(value || 0.0).toFixed(16) + ' ' + currency;
     amount = new stellar.Amount.from_human(amountString);
 
     updatePaths();
