@@ -57,17 +57,17 @@
                             </div>
                             <!-- User hasn't added email yet -->
                             <div class="col-xs-10" ng-show="getEmailState() == 'none'">
-                                <a href="" ng-click="setEmailState('change')">Add your email</a>
+                                <a href="#" ng-click="setEmailState('change')">Add your email</a>
                             </div>
                             <!-- Show current email with verified check mark (if verified) -->
                             <div class="col-xs-10" ng-show="getEmailState() == 'added'">
                                 <div>
                                     <span class="change-email-control" ng-show='!changingEmail'>{{email}}</span>
                                     <span class="verified-email-status icon icon-tick" ng-show="emailVerified"> Verified</span>
-                                    <a href="" ng-show="!emailVerified" ng-click="setEmailState('verify')">Verify</a>
+                                    <a href="#" ng-show="!emailVerified" ng-click="setEmailState('verify')">Verify</a>
                                 </div>
                                 <div class="secondary-action">
-                                    <a href="" ng-click="setEmailState('change')">Change email</a>
+                                    <a href="#" ng-click="setEmailState('change')">Change email</a>
                                 </div>
                             </div>
                             <!-- Input layout (for add/change email) -->
@@ -82,7 +82,7 @@
                                         <button class="btn btn-default stellar-button settings-confirm-button" ng-click="emailAction()">{{updateEmail.isLoading() ? "Loading..." : "Confirm"}}</button>
                                     </div>
                                     <div class="settings-cancel-button col-md-1 col-xs-1 col-md-pull-4">
-                                        <a href="" ng-click="resetEmailState()">Cancel</a>
+                                        <a href="#" ng-click="resetEmailState()">Cancel</a>
                                     </div>
                                 </div>
                             </div>
@@ -98,7 +98,7 @@
                                         <button class="btn btn-default stellar-button settings-confirm-button" ng-click="emailAction()">{{updateEmail.isLoading() ? "Loading..." : "Confirm"}}</button>
                                     </div>
                                     <div class="settings-cancel-button col-md-1 col-xs-1 col-md-pull-4">
-                                        <a href="" ng-click="resetEmailState()">Cancel</a>
+                                        <a href="#" ng-click="resetEmailState()">Cancel</a>
                                     </div>
                                 </div>
                             </div>
@@ -154,7 +154,7 @@
                                     </div>
                                 </div>
                                 <div class="secondary-action">
-                                    <a href="" ng-click="changingPassword = !changingPassword">{{changingPassword ? 'Cancel' : 'Change Password'}}</a>
+                                    <a href="#" ng-click="changingPassword = !changingPassword">{{changingPassword ? 'Cancel' : 'Change Password'}}</a>
                                 </div>
                             </div>
                         </div>
@@ -270,7 +270,7 @@
                                 <div ng-hide="changing">
                                     <!-- User hasn't added an inflaition dest yet -->
                                     <div class="col-xs-10" ng-hide="inflationDest">
-                                        <a href="" ng-click="change()">Add an inflation destination</a>
+                                        <a href="#" ng-click="change()">Add an inflation destination</a>
                                     </div>
                                     <!-- Show current inflation dest -->
                                     <div class="col-xs-10" ng-show="inflationDest">
@@ -278,7 +278,7 @@
                                             <span class="change-inflation-dest-control">{{ inflationDest | addressToUsername }}</span>
                                         </div>
                                         <div class="secondary-action">
-                                            <a href="" ng-click="change()">Change inflation destination</a>
+                                            <a href="#" ng-click="change()">Change inflation destination</a>
                                         </div>
                                     </div>
                                 </div>
@@ -294,7 +294,7 @@
                                             <button class="btn btn-default stellar-button settings-confirm-button" ng-click="update()">{{ update.isLoading() ? "Loading..." : "Set" }}</button>
                                         </div>
                                         <div class="settings-cancel-button col-md-1 col-xs-1 col-md-pull-4">
-                                            <a href="" ng-click="reset()">Cancel</a>
+                                            <a href="#" ng-click="reset()">Cancel</a>
                                         </div>
                                     </div>
                                 </div>
@@ -311,7 +311,7 @@
                             </div>
                             <div ng-show="state === 'closed'">
                                 <div class="col-xs-10">
-                                    <a href="" ng-click="openForm()">Delete account</a>
+                                    <a href="#" ng-click="openForm()">Delete account</a>
                                 </div>
                             </div>
                             <div class="col-xs-10" ng-show="state === 'open'">
@@ -326,7 +326,7 @@
                                         <button class="btn btn-default stellar-button settings-confirm-button" ng-click="confirmDelete()">Delete Account</button>
                                     </div>
                                     <div class="settings-cancel-button col-md-1 col-xs-1 col-md-pull-4">
-                                        <a href="" ng-click="reset()">Cancel</a>
+                                        <a href="#" ng-click="reset()">Cancel</a>
                                     </div>
                                 </div>
                             </div>
@@ -341,7 +341,7 @@
                                         <button class="btn btn-default stellar-button settings-confirm-button" ng-click="deleteAccount()">{{ deleteAccount.isLoading() ? "Loading..." : "Confirm" }}</button>
                                     </div>
                                     <div class="settings-cancel-button col-md-1 col-xs-1 col-md-pull-4">
-                                        <a href="" ng-click="reset()">Cancel</a>
+                                        <a href="#" ng-click="reset()">Cancel</a>
                                     </div>
                                 </div>
                             </div>
@@ -356,7 +356,7 @@
                                         <button class="btn btn-default stellar-button settings-confirm-button" ng-click="deleteAccount()">{{ deleteAccount.isLoading() ? "Loading..." : "Retry" }}</button>
                                     </div>
                                     <div class="settings-cancel-button col-md-1 col-xs-1 col-md-pull-4">
-                                        <a href="" ng-click="reset()">Cancel</a>
+                                        <a href="#" ng-click="reset()">Cancel</a>
                                     </div>
                                 </div>
                             </div>
