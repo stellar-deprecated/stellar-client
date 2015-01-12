@@ -11,19 +11,19 @@
         </div>
         <div class="collapse navbar-collapse" id="navbar" ng-cloak>
             <ul class="nav navbar-nav navbar-right" ng-hide="loggedIn">
-                <li><a href="#/login" ui-sref="login">LOG IN</a></li>
-                <li><a href="#/register" ui-sref="register" class="sign-up">SIGN UP</a></li>
+                <li><a ui-sref="login">LOG IN</a></li>
+                <li><a ui-sref="register" class="sign-up">SIGN UP</a></li>
             </ul>
 
             <ul class="nav navbar-nav navbar-right" ng-show="loggedIn">
                 <li ng-show="showInvitesLink()">
-                    <a href="#/invites" ng-class="getInvitesClass()">
+                    <a ui-sref="invites" ng-class="getInvitesClass()">
                         <span>invite ({{ getInvitesLeft() }})</span>
                     </a>
                 </li>
-                <li ng-show="showTradingLink()"><a href="#/trading"><span class="glyphicon glyphicon-transfer"></span>trade</a></li>
-                <li><a href="#/settings"><span class="glyphicon glyphicon-cog"></span>{{ username }}</a></li>
-                <li><a href="#/logout" ui-sref="logout"><span class="glyphicon glyphicon-log-out"></span>LOG OUT</a></li>
+                <li ng-show="showTradingLink()"><a ui-sref="trading"><span class="glyphicon glyphicon-transfer"></span>trade</a></li>
+                <li><a ui-sref="settings"><span class="glyphicon glyphicon-cog"></span>{{ username }}</a></li>
+                <li><a ui-sref="logout"><span class="glyphicon glyphicon-log-out"></span>LOG OUT</a></li>
             </ul>
         </div>
     </div>
