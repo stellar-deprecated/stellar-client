@@ -51,7 +51,21 @@
                 <div class="row" ng-controller="SettingsEmailCtrl">
                     <div class="settings-label col-md-3 col-xs-6">EMAIL</div>
                     <div class="settings-control col-md-9 col-xs-6">
-                        <div class="row">
+                        <!-- User data hasn't loaded yet -->
+                        <div class="row" ng-show="loading">
+                            <div class="icon-col col-xs-1">
+                                <span class="icon icon-email"/>
+                            </div>
+                            <div class="col-xs-10">Loading...</div>
+                        </div>
+                        <div class="row" ng-show="error">
+                            <div class="icon-col col-xs-1">
+                                <span class="icon icon-email"/>
+                            </div>
+                            <div class="col-xs-10">{{ error }}</div>
+                        </div>
+                        <!-- User data has loaded -->
+                        <div class="row" ng-hide="loading || error">
                             <div class="icon-col col-xs-1">
                                 <span class="icon icon-email"/>
                             </div>
