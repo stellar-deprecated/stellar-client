@@ -163,9 +163,9 @@
     <div class="offer-status confirm-trade" ng-show="state == 'confirm'">
         You are offering to <b><span ng-if="formData.tradeOperation === 'buy'">buy</span>
         <span ng-if="formData.tradeOperation === 'sell'">sell</span></b><br>
-        <b>{{ formData.baseAmount | roundAmount:formData.baseCurrency.currency }} {{ formData.baseCurrency.currency }}</b><br>
+        <b>{{ formData.baseAmount | roundAmount:formData.baseCurrency.currency }} {{ currencyToString(formData.baseCurrency) }}</b><br>
         for<br>
-        <b>{{ formData.counterAmount | roundAmount:formData.counterCurrency.currency }} {{ formData.counterCurrency.currency }}</b><br>
+        <b>{{ formData.counterAmount | roundAmount:formData.counterCurrency.currency }} {{ currencyToString(formData.counterCurrency) }}</b><br>
         at<br>
         <b>{{ formData.truePrice | roundedAmount:precision }} {{ formData.counterCurrency.currency }}/{{ formData.baseCurrency.currency }}</b><br>
         <div class="button-group">

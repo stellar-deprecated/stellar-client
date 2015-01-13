@@ -39,6 +39,17 @@ sc.controller('TradingCtrl', function($scope, $q, Trading, Gateways, singletonPr
     }
   };
 
+  $scope.currencyToString = function(currency) {
+    var result = currency.currency;
+
+    if(currency.issuer) {
+      var gateway = $scope.issuerToGateway(currency.issuer);
+      result += ' (' + gateway + ')';
+    }
+
+    return result;
+  };
+
   $scope.setCurrentOrderBook = singletonPromise(function() {
     var currencyPair = currentCurrencyPair();
 
