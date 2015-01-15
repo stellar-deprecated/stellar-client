@@ -141,6 +141,14 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, $q, $an
             $scope.reward.status = 'incomplete';
           };
           break;
+        case 'client_error':
+          $scope.reward.error = {};
+          $scope.reward.error.info = "There was a problem with your request.";
+          $scope.reward.error.action = function () {
+            $scope.reward.error = null;
+            $scope.reward.status = 'incomplete';
+          };
+          break;
         case 'fake':
           // TODO: their account is fake
           /* falls through */
@@ -266,7 +274,7 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, $q, $an
           $scope.reward.updateReward('facebook_error');
           break;
         default:
-          $scope.reward.updateReward('server_error');
+          $scope.reward.updateReward('client_error');
           break;
       }
     } else {
@@ -319,7 +327,7 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, $q, $an
           $scope.reward.updateReward('reward_already_queued');
           break;
         default:
-          $scope.reward.updateReward('server_error');
+          $scope.reward.updateReward('client_error');
       }
     } else {
       $scope.reward.updateReward('server_error');
