@@ -13,4 +13,5 @@ install:
 before_script:
   - gulp hooks:lint
 notifications:
-  slack: stellarfoundation:xOJMGp50Rwbq6w59y7HB7pXS
+  slack:
+    secure: IVBboLTh98tGI42yw9U9EJKhlWfCXjcCXtJ91n7w7py+BrZ+l2YDk5Ebd9un63kkI3xKvoY1zySjswhadHTG2pxJe9Xv6FkqFU6Hwz2K0BZLhmAK3qWX02kRPrnJkPcv4xOldZhS8gEv7JcouWIMgNZkbfONlb+8UsxN7zXCbrc=
