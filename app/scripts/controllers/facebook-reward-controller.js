@@ -52,6 +52,11 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, $q, $an
             title: "Your Facebook was updated too recently.",
             subtitle: "Please try again in a couple of days"
           };
+        case 'fb_email_missing':
+          return {
+            title: "Your Facebook account does not have an email address.",
+            subtitle: "Please add an email address to your Facebook account."
+          };
         case 'fake':
           // TODO: their account is fake
         case 'incomplete':
@@ -86,6 +91,12 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, $q, $an
           $scope.reward.error = {};
           $scope.reward.error.info = "As part of our ongoing efforts to prevent fraud, we temporarily deny facebook accounts that have been updated too recently.  Please try again in a couple of days.";
           $scope.reward.error.panel = "Sorry, your Facebook account was updated too recently";
+          $scope.reward.error.action = null;
+          break;
+        case 'fb_email_missing':
+          $scope.reward.error = {};
+          $scope.reward.error.info = "Your Facebook account does not have an email address.";
+          $scope.reward.error.panel = "Please add an email address to your Facebook account.";
           $scope.reward.error.action = null;
           break;
         case 'invalid_fb_email_token':
