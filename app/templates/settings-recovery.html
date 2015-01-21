@@ -4,7 +4,7 @@
 
 <div ng-if="!resetting && !sendingRecoveryCode">
   <span ng-if="hasRecovery">Recovery code generated.</span>
-  <a href="#" ng-click="$parent.resetRecovery($event)">
+  <a href="" ng-click="$parent.resetRecovery($event)">
     <span ng-if="!hasRecovery">generate</span>
     <span ng-if="hasRecovery">reset</span>
   </a>
@@ -30,7 +30,7 @@
         <button type="submit" class="btn btn-default">Submit</button>
       </div>
       <div class="settings-cancel-button col-md-1 col-xs-1 col-md-pull-4">
-        <a href="#" ng-click="cancelResetRecovery($event)">Cancel</a>
+        <a href="" ng-click="cancelResetRecovery($event)">Cancel</a>
       </div>
     </div>
   </form>
