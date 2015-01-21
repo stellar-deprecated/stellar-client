@@ -201,6 +201,7 @@ sc.service('Destination', function($rootScope, $q, StellarNetwork, contacts) {
 
   return {
     get: get,
-    invalid: invalid
+    invalid: invalid,
+    isAddress: isAddress
   };
 });
