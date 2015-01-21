@@ -80,7 +80,7 @@ stellarClient.config(function($httpProvider, $stateProvider, $urlRouterProvider,
       authenticate: false,
       params: {'username': 0, 'totpRequired': 0}
     })
-    .state('recovery_v2', {
+    .state('recovery-v2', {
       url:         '/recovery-v2',
       templateUrl: 'states/recovery_v2.html',
       authenticate: false
@@ -95,7 +95,7 @@ stellarClient.config(function($httpProvider, $stateProvider, $urlRouterProvider,
       templateUrl: 'states/username_recovery.html',
       authenticate: false
     })
-    .state('lost-totp', {
+    .state('lost-2fa-device', {
       url:         '/lost-2fa-device',
       templateUrl: 'states/lost_2fa_device.html',
       authenticate: false
