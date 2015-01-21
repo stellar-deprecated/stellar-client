@@ -13,15 +13,15 @@
                 <span ng-switch-when="removing"         class="text-info">Removing trustlines...</span>
                 <span ng-switch-when="removal_failed">
                     <span class="text-danger">Error!</span> 
-                    <a href="#" ng-click="remove()">retry</a>
+                    <a href="" ng-click="remove()">retry</a>
                 </span>
                 <span ng-switch-when="add_failed">
                     <span class="text-danger">Error!</span> 
-                    <a href="#" ng-click="cancelAdd()">cancel</a>
+                    <a href="" ng-click="cancelAdd()">cancel</a>
                     /
-                    <a href="#" ng-click="retryAdd()">retry</a>
+                    <a href="" ng-click="retryAdd()">retry</a>
                 </span>
-                <a ng-switch-default href="#" ng-click="remove()">remove</a>
+                <a ng-switch-default href="" ng-click="remove()">remove</a>
             </div>
         </li>
     </ul>
