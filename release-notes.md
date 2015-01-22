@@ -4,6 +4,18 @@
 
 [Commits](https://github.com/stellar/stellar-client/commits/master)
 
+##Week 2 - 2015
+
+###New Features and Changes
+
+ - [1128](https://github.com/stellar/stellar-client/pull/1128) Show issuers on the trade confirmations page
+ - [1098](https://github.com/stellar/stellar-client/pull/1098) Add email loading state until user info resolved
+ - -[1127](https://github.com/stellar/stellar-client/pull/1127) Use ui-sref
+
+###Bug Fixes
+
+ - [1126](https://github.com/stellar/stellar-client/pull/1126) Fix a bug introduced in [#1120](https://github.com/stellar/stellar-client/pull/1120)
+
 ##Week 1 - 2015
 
  - [1124](https://github.com/stellar/stellar-client/pull/1124) Add Help Desk link to footer of client
