@@ -133,10 +133,11 @@ angular.module('stellarClient').controller('SettingsRecoveryCtrl', function($sco
 
         // Remove needsRecoveryCodeReset flag
         var wallet = session.get('wallet');
+        wallet.mainData.changePasswordBug = 'resolved';
         if (wallet.mainData.needsRecoveryCodeReset) {
           delete wallet.mainData.needsRecoveryCodeReset;
-          return session.syncWallet('update');
         }
+        return session.syncWallet('update');
       })
       .then(function() {
         $scope.code = null;

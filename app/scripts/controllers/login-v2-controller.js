@@ -58,34 +58,50 @@ angular.module('stellarClient').controller('LoginV2Ctrl', function($scope, $stat
     }
 
     // We don't have to run $scope.$apply because it's wrapped in singletonPromise
-    return StellarWallet.getWallet(params).then(function(wallet) {
-      if ($scope.rememberMe) {
-        session.rememberUser();
-      }
-
-      session.login(new Wallet({
-        version: 2,
-        id: wallet.getWalletId(),
-        key: wallet.getWalletKey(),
-        keychainData: wallet.getKeychainData(),
-        mainData: wallet.getMainData(),
-        walletV2: wallet
-      }));
-      $state.go('dashboard');
-    }).catch(StellarWallet.errors.TotpCodeRequired, function() {
-      $scope.loginError = "2-Factor-Authentication code is required to login.";
-    }).catch(StellarWallet.errors.ConnectionError, function() {
-      $scope.loginError = "Error connecting wallet server. Please try again later.";
-    }).catch(function(e) {
-      if (e.name && e.name === 'Forbidden') {
-        return $q.reject(e);
-      }
-      Raven.captureMessage('StellarWallet.getWallet unknown error', {
-        extra: {
-          error: e
+    return StellarWallet.getWallet(params)
+      .tap(function(wallet) {
+        if ($scope.rememberMe) {
+          session.rememberUser();
         }
+        session.login(new Wallet({
+          version: 2,
+          id: wallet.getWalletId(),
+          key: wallet.getWalletKey(),
+          keychainData: wallet.getKeychainData(),
+          mainData: wallet.getMainData(),
+          walletV2: wallet
+        }));
+      })
+      .then(function(wallet) {
+        var bugDeploy   = new Date('2014-11-17');
+        var bugResolved = new Date('2015-01-11');
+        var updatedAt   = new Date(wallet.getUpdatedAt());
+        if (updatedAt >= bugDeploy && updatedAt <= bugResolved) {
+          var mainData = session.get('wallet').mainData;
+          if (!mainData.changePasswordBug ||
+              mainData.changePasswordBug && mainData.changePasswordBug !== 'resolved') {
+            mainData.changePasswordBug = 'show-info';
+            return session.syncWallet('update');
+          }
+        }
+      })
+      .then(function() {
+        $state.go('dashboard');
+      })
+      .catch(StellarWallet.errors.TotpCodeRequired, function() {
+        $scope.loginError = "2-Factor-Authentication code is required to login.";
+      }).catch(StellarWallet.errors.ConnectionError, function() {
+        $scope.loginError = "Error connecting wallet server. Please try again later.";
+      }).catch(function(e) {
+        if (e.name && e.name === 'Forbidden') {
+          return $q.reject(e);
+        }
+        Raven.captureMessage('StellarWallet.getWallet unknown error', {
+          extra: {
+            error: e
+          }
+        });
+        $scope.loginError = "Unknown error.";
       });
-      $scope.loginError = "Unknown error.";
-    });
   });
 });
