@@ -4,13 +4,25 @@
 
 [Commits](https://github.com/stellar/stellar-client/commits/master)
 
+##Week 3 - 2015
+
+###New Features and Changes
+
+ - [1138](https://github.com/stellar/stellar-client/pull/1138) Add utility for debugging user accounts
+ 
+
+###Bug Fixes
+
+ - [1142](https://github.com/stellar/stellar-client/pull/1142) Use blank href to prevent default link navigation, fixes [1141](https://github.com/stellar/stellar-client/issues/1141)
+ - [1131](https://github.com/stellar/stellar-client/pull/1131) Change state names to work after recent ui-sfref commit, fixes [1127](https://github.com/stellar/stellar-client/pull/1127)
+
 ##Week 2 - 2015
 
 ###New Features and Changes
 
  - [1128](https://github.com/stellar/stellar-client/pull/1128) Show issuers on the trade confirmations page
  - [1098](https://github.com/stellar/stellar-client/pull/1098) Add email loading state until user info resolved
- - -[1127](https://github.com/stellar/stellar-client/pull/1127) Use ui-sref
+ - [1127](https://github.com/stellar/stellar-client/pull/1127) Use ui-sref
 
 ###Bug Fixes
 
