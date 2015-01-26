@@ -57,6 +57,26 @@ angular.module('stellarClient').controller('LoginV2Ctrl', function($scope, $stat
       });
     }
 
+    /**
+    * We're checking if a `wallet` is affected by a bug fixed in #1113.
+    * If it is, we're adding a `changePasswordBug` property to `mainData`
+    * to indicate whether we should display a flash message to a user.
+    * @param wallet StellarWallet
+    */
+    function checkIfAffectedByChangePasswordBug(wallet) {
+      var bugDeploy   = new Date('2014-11-17'); // Bug introduced
+      var bugResolved = new Date('2015-01-12'); // Bugfix deployed
+      var updatedAt   = new Date(wallet.getUpdatedAt());
+      if (updatedAt >= bugDeploy && updatedAt <= bugResolved) {
+        var mainData = session.get('wallet').mainData;
+        if (!mainData.changePasswordBug ||
+          mainData.changePasswordBug && mainData.changePasswordBug !== 'resolved') {
+          mainData.changePasswordBug = 'show-info';
+          return session.syncWallet('update');
+        }
+      }
+    }
+
     // We don't have to run $scope.$apply because it's wrapped in singletonPromise
     return StellarWallet.getWallet(params)
       .tap(function(wallet) {
@@ -72,19 +92,7 @@ angular.module('stellarClient').controller('LoginV2Ctrl', function($scope, $stat
           walletV2: wallet
         }));
       })
-      .then(function(wallet) {
-        var bugDeploy   = new Date('2014-11-17');
-        var bugResolved = new Date('2015-01-11');
-        var updatedAt   = new Date(wallet.getUpdatedAt());
-        if (updatedAt >= bugDeploy && updatedAt <= bugResolved) {
-          var mainData = session.get('wallet').mainData;
-          if (!mainData.changePasswordBug ||
-              mainData.changePasswordBug && mainData.changePasswordBug !== 'resolved') {
-            mainData.changePasswordBug = 'show-info';
-            return session.syncWallet('update');
-          }
-        }
-      })
+      .then(checkIfAffectedByChangePasswordBug)
       .then(function() {
         $state.go('dashboard');
       })
