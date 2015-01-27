@@ -12,6 +12,15 @@ sc.controller('DashboardCtrl', function($rootScope, $scope, $timeout, $state, se
       });
     }
 
+    if (session.get('wallet').mainData.changePasswordBug === 'show-info') {
+      FlashMessages.add({
+        id: 'change-password-bug',
+        type: 'error',
+        template: 'templates/flash-message-change-password-bug.html',
+        showCloseIcon: false
+      });
+    }
+
     $scope.startRecoveryProcess = function() {
       $state.go('settings', {
         'migrated-wallet-recovery': true
