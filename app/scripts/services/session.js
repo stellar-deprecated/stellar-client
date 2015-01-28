@@ -5,7 +5,7 @@ var sc = angular.module('stellarClient');
 
 var cache = {};
 
-sc.service('session', function($rootScope, $http, $timeout, $analytics, $q, StellarNetwork, Wallet, contacts, UserPrivateInfo) {
+sc.service('session', function($rootScope, $http, $timeout, $analytics, $q, StellarNetwork, Wallet, contacts, UserPrivateInfo, Raven) {
   var Session = function() {
     this.waitingForUserInfo = $q.defer();
   };
@@ -82,6 +82,7 @@ sc.service('session', function($rootScope, $http, $timeout, $analytics, $q, Stel
 
 
     self.identifyToAnalytics();
+    self.identifyToRaven();
     $analytics.eventTrack('Account Logged In');
 
     // Store a user object for the currently authenticated user
@@ -178,6 +179,14 @@ sc.service('session', function($rootScope, $http, $timeout, $analytics, $q, Stel
 
   Session.prototype.identifyToAnalytics = function() {
       window.analytics.identify(this.get('username'), this.getAnalyticsTraits());
+  };
+
+  Session.prototype.identifyToRaven = function() {
+    Raven.setUserContext({
+      id: this.get('username'),
+      address: this.get('address'),
+      email: this.getEmail(),
+    });
   };
 
   Session.prototype.getAnalyticsTraits = function() {
