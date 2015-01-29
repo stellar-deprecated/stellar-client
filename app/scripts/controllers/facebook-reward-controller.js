@@ -2,7 +2,7 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, $q, $analytics, session, Facebook) {
+sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, $q, $analytics, session, Facebook, Raven) {
 
   $scope.$on('action-verify-facebook-email', function(event, params){
     if($scope.reward.status === 'sent') { return; }
@@ -274,6 +274,7 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, $q, $an
           $scope.reward.updateReward('facebook_error');
           break;
         default:
+          Raven.captureMessage("Unexpected Response: " + response.code);
           $scope.reward.updateReward('client_error');
           break;
       }
@@ -327,6 +328,7 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, $q, $an
           $scope.reward.updateReward('reward_already_queued');
           break;
         default:
+          Raven.captureMessage("Unexpected Response: " + response.code);
           $scope.reward.updateReward('client_error');
       }
     } else {
