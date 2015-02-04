@@ -36,8 +36,10 @@ var ravenOptions = {
       // Other plugins
       /127\.0\.0\.1:4001\/isrunning/i,  // Cacaoweb
       /webappstoolbarba\.texthelp\.com\//i,
-      /metrics\.itunes\.apple\.com\.edgesuite\.net\//i
-    ]
+      /metrics\.itunes\.apple\.com\.edgesuite\.net\//i,
+      /recaptcha_ajax\.js/i
+    ],
+    maxMessageLength: 1000,
 };
 /* global Raven */
 Raven.config(Options.SENTRY_DSN, ravenOptions).install();
