@@ -67,6 +67,15 @@
         .icon-email {
             font-size: 12px;
         }
+
+        .warning-block {
+            display: block;
+            margin: 6px 0;
+        }
+
+        .warning-title {
+            color: $error;
+        }
     }
 
     .settings-label {

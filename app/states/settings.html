@@ -200,6 +200,10 @@
                             <span>*************</span>
                         </div>
                         <div ng-show="reveal">
+                            <div class="warning-block">
+                                <span class="warning-title">WARNING</span> Don't share your secret key with anyone!
+                                Anyone who knows your secret can steal your funds!
+                            </div>
                             <input type="text" class="form-control stellar-input" value="{{secretKey}}" readonly/>
                         </div>
                         <div class="secondary-action">
