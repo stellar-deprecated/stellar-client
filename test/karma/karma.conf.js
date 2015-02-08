@@ -19,6 +19,7 @@ module.exports = function(config) {
     // list of files / patterns to load in the browser
     files: [
     
+    //global mocks
     'test/karma/mocks/test-mocks.js',
 
     "app/bower_components/jquery/dist/jquery.js",
