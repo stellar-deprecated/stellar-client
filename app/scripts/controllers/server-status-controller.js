@@ -7,7 +7,7 @@ sc.controller('ServerStatusCtrl', function ($scope, $q, $http) {
 
   $http.get('/status.json')
     .success(function(status) {
-      $scope.status = status
+      $scope.status = status;
     })
     .catch(function () {});
 });
