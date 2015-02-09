@@ -49,11 +49,7 @@ module.exports = function(config) {
     "app/bower_components/tweetnacl/nacl-fast.min.js",
     "app/bower_components/angulartics/src/angulartics.js",
     "app/bower_components/angulartics/src/angulartics-segmentio.js",
-    "app/bower_components/URIjs/src/URI.js",
-    
-    
-    'app/bower_components/jquery/dist/jquery.js',
-    'app/bower_components/angular/angular.js',
+    //"app/bower_components/URIjs/src/URI.js",
     'app/bower_components/angular-mocks/angular-mocks.js',
     'app/bower_components/underscore/underscore.js',
     'app/bower_components/stellar-lib/build/stellar-lib.js',
@@ -70,7 +66,7 @@ module.exports = function(config) {
     
 
     // list of files / patterns to exclude
-    exclude: ['app/bower_components/URIjs/**/**.js',],
+    exclude: ['app/bower_components/URIjs/**/**.js',],//couldn't get this URI to work server side
 
     // web server port
     port: 8080,
