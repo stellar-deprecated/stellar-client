@@ -5,11 +5,6 @@ angular.module('stellarClient').controller('LoginV1Ctrl', function($rootScope, $
     angular.element('#password')[0].focus();
   }, 200);
 
-  $scope.goBack = function($event) {
-    $event.preventDefault();
-    $state.go('login');
-  };
-
   // HACK: Perform AJAX login, but send a POST request to a hidden iframe to
   // coax Chrome into offering to remember the password.
   $scope.attemptLogin = function() {

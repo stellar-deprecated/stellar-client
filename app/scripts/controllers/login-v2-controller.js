@@ -7,11 +7,6 @@ angular.module('stellarClient').controller('LoginV2Ctrl', function($scope, $stat
 
   $scope.totpRequired = $stateParams.totpRequired;
 
-  $scope.goBack = function($event) {
-    $event.preventDefault();
-    $state.go('login');
-  };
-
   // HACK: Perform AJAX login, but send a POST request to a hidden iframe to
   // coax Chrome into offering to remember the password.
   $scope.attemptLogin = function() {
