@@ -5,9 +5,5 @@ api.service('stellarApi', function(http, User) {
 
   stellarApi.User = User;
 
-  stellarApi.getStatus = function() {
-    return http.get(Options.API_STATUS_PATH || '/status.json');
-  };
-
   return stellarApi;
 });

@@ -2,11 +2,12 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('ServerStatusCtrl', function ($scope, $q, stellarApi) {
+sc.controller('ServerStatusCtrl', function ($scope, $q, $http) {
   $scope.status = null;
 
-  stellarApi.getStatus()
+  $http.get('/status.json')
     .success(function(status) {
-      $scope.status = status;
-    });
+      $scope.status = status
+    })
+    .catch(function () {});
 });
