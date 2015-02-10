@@ -20,7 +20,8 @@ var ravenOptions = {
       'EBCallBackMessageReceived',
       // See http://toolbar.conduit.com/Developer/HtmlAndGadget/Methods/JSInjection.aspx
       'conduitPage',
-      '[$sce:insecurl]'
+      '[$sce:insecurl]',
+      'o.Recaptcha is undefined'
     ],
     ignoreUrls: [
       // Facebook flakiness
