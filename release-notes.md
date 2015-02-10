@@ -4,6 +4,19 @@
 
 [Commits](https://github.com/stellar/stellar-client/commits/master)
 
+##Week 5 - 2015
+
+###New Features and Changes
+
+- Pull Request [1146](https://github.com/stellar/stellar-client/pull/1146) Add user context to Raven on login
+ - Pull Request [1145](https://github.com/stellar/stellar-client/pull/1145) Add unexpected response loggers to reward handlers
+
+##Week 4 - 2015
+
+###New Features and Changes
+ 
+ - Pull Request [1143](https://github.com/stellar/stellar-client/pull/1143) Display message to users affected by change password bug
+
 ##Week 3 - 2015
 
 ###New Features and Changes
