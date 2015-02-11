@@ -383,7 +383,7 @@ function runE2eTests(baseUrl, done) {
 
 gulp.task('test:unit', function (done) {
   karma.start({
-    configFile: __dirname + 'test/unit/karma.conf.js'
+    configFile: __dirname + '/test/unit/karma.conf.js'
   }, done);
 });
 
