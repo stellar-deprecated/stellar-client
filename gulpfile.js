@@ -381,6 +381,12 @@ function runE2eTests(baseUrl, done) {
         });
 }
 
+gulp.task('test:unit', function (done) {
+  karma.start({
+    configFile: __dirname + 'test/unit/karma.conf.js'
+  }, done);
+});
+
 gulp.task('test:e2e', ['ensure_webdriver_standalone', 'connect-dist'], function (done) {
     runE2eTests('http://localhost:8001/', done);
 });
@@ -390,5 +396,5 @@ gulp.task('test-develop', ['ensure_webdriver_standalone'], function (done) {
 });
 
 gulp.task('test', function (done) {
-    runSequence('test:e2e');
+    runSequence('test:e2e', 'test:unit');
 });
