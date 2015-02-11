@@ -14,6 +14,7 @@ var path          = require('path');
 var protractor    = require("gulp-protractor").protractor;
 var glob          = require('glob');
 var map           = require('map-stream');
+var runSequence = require('run-sequence');
 
 // config initialization
 var cfg = {
@@ -355,7 +356,7 @@ gulp.task('ensure_webdriver_standalone',function(done) {
   }).once('close', done);
 });
 
-function runTests(baseUrl, done) {
+function runE2eTests(baseUrl, done) {
     var searchPath = path.join(__dirname, 'node_modules', 'protractor', 'selenium', 'selenium-server-*.jar');
     var files = glob.sync(searchPath);
     var jarPath = files[0];
@@ -380,10 +381,14 @@ function runTests(baseUrl, done) {
         });
 }
 
-gulp.task('test', ['ensure_webdriver_standalone', 'connect-dist'], function (done) {
-    runTests('http://localhost:8001/', done);
+gulp.task('test:2e2', ['ensure_webdriver_standalone', 'connect-dist'], function (done) {
+    runE2eTests('http://localhost:8001/', done);
 });
 
 gulp.task('test-develop', ['ensure_webdriver_standalone'], function (done) {
-    runTests('http://localhost:8000/', done);
+    runE2eTests('http://localhost:8000/', done);
+});
+
+gulp.task('test', function (done) {
+    runSequence('test:2e2');
 });
