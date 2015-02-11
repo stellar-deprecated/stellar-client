@@ -396,5 +396,5 @@ gulp.task('test-develop', ['ensure_webdriver_standalone'], function (done) {
 });
 
 gulp.task('test', function (done) {
-    runSequence('test:e2e', 'test:unit');
+    runSequence('test:e2e', 'test:unit', done);
 });
