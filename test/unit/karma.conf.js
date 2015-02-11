@@ -20,7 +20,7 @@ module.exports = function(config) {
     files: [
     
     //global mocks
-    'test/karma/mocks/test-mocks.js',
+    'test/unit/mocks/test-mocks.js',
 
     "app/bower_components/jquery/dist/jquery.js",
     "app/bower_components/angular/angular.js",
@@ -60,7 +60,7 @@ module.exports = function(config) {
     'app/scripts/**/*.js',
    
     //specs
-    'test/karma/specs/controllers/add-email-controller-test.js'
+    'test/unit/specs/controllers/add-email-controller-test.js'
       
     ],
     
