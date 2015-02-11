@@ -69,7 +69,6 @@
   },
   "scripts": {
     "test": "gulp test",
-    "unit-test": "gulp test:unit"
   },
   "config": {
     "ghooks": {
