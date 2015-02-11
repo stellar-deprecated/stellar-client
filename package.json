@@ -68,7 +68,7 @@
     "url": "http://github.com/stellar/stellar-client.git"
   },
   "scripts": {
-    "test": "gulp test",
+    "test": "gulp test"
   },
   "config": {
     "ghooks": {
