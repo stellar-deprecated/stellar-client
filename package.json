@@ -69,7 +69,7 @@
   },
   "scripts": {
     "test": "gulp test",
-    "karma-test": "./node_modules/karma/bin/karma start test/unit/karma.conf.js"
+    "unit-test": "./node_modules/karma/bin/karma start test/unit/karma.conf.js"
   },
   "config": {
     "ghooks": {
