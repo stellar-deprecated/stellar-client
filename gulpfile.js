@@ -381,7 +381,7 @@ function runE2eTests(baseUrl, done) {
         });
 }
 
-gulp.task('test:2e2', ['ensure_webdriver_standalone', 'connect-dist'], function (done) {
+gulp.task('test:e2e', ['ensure_webdriver_standalone', 'connect-dist'], function (done) {
     runE2eTests('http://localhost:8001/', done);
 });
 
@@ -390,5 +390,5 @@ gulp.task('test-develop', ['ensure_webdriver_standalone'], function (done) {
 });
 
 gulp.task('test', function (done) {
-    runSequence('test:2e2');
+    runSequence('test:e2e');
 });
