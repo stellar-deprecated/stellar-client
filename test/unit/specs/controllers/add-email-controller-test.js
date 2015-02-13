@@ -16,7 +16,7 @@ describe('Controller: AddEmailCtrl', function () {
   }));
 
   it('should set scope.loading to false', function () {
-    expect(scope.loading).toBe(false);
+    expect(scope.loading).to.equal(false);
   });
 
   
