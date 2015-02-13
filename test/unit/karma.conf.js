@@ -51,7 +51,6 @@ module.exports = function(config) {
     "app/bower_components/angulartics/src/angulartics-segmentio.js",
     //"app/bower_components/URIjs/src/URI.js",
     'app/bower_components/angular-mocks/angular-mocks.js',
-    'app/bower_components/underscore/underscore.js',
     'app/bower_components/stellar-lib/build/stellar-lib.js',
     
     
