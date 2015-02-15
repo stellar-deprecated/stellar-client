@@ -20,7 +20,7 @@ module.exports = function(config) {
     files: [
     
     //global mocks
-    'test/unit/mocks/test-mocks.js',
+    'test/unit/mocks/globals-mocks.js',
 
     "app/bower_components/jquery/dist/jquery.js",
     "app/bower_components/angular/angular.js",
@@ -57,6 +57,9 @@ module.exports = function(config) {
     //app
     'app/scripts/modules/stellar-api/stellar-api.js',
     'app/scripts/**/*.js',
+    
+    //test-only mocks
+    'test/unit/mocks/service-mocks.js',
    
     //specs
     'test/unit/specs/controllers/add-email-controller-test.js'

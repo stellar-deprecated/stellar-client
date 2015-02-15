@@ -4,6 +4,9 @@ describe('Controller: AddEmailCtrl', function () {
 
   // load the controller's module
   beforeEach(module('stellarClient'));
+  //load the mocks for services
+  beforeEach(module('serviceMocks'));
+  
 
   var AddEmailCtrl, scope;
 
@@ -29,7 +32,7 @@ describe('Controller: AddEmailCtrl', function () {
     scope.email = 'test@gmail.com'
     scope.addEmail();
     expect(scope.loading).to.equal(true);
-    expect(scope.errors).to.equal([]);
+    expect(scope.errors).to.be.empty;
   });
 
   
