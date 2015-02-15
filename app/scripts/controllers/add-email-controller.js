@@ -6,7 +6,6 @@ sc.controller('AddEmailCtrl', function ($scope, $rootScope, $http, $state, $anal
   $scope.errors = [];
 
   $scope.addEmail = function() {
-    if (addEmailForm.email.value) {
       $scope.loading = true;
       $scope.errors = [];
 
@@ -27,7 +26,6 @@ sc.controller('AddEmailCtrl', function ($scope, $rootScope, $http, $state, $anal
       .success(addEmailSuccess)
       .error(addEmailError)
       .finally(addEmailDone);
-    }
     
     
     function addEmailSuccess(response) {
