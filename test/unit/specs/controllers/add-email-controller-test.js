@@ -37,7 +37,7 @@ describe('Controller: AddEmailCtrl', function () {
   });
   
   it('The provided email should be posted to the server and upon success added to the wallet data', function () {
-    mockBackend.expectPOST("/test_server/user/email").respond('ok');
+    mockBackend.expectPOST(Options.API_SERVER + "/user/email").respond('ok');
     scope.email = 'test@gmail.com'
     scope.addEmail();
     mockBackend.flush();
@@ -46,7 +46,7 @@ describe('Controller: AddEmailCtrl', function () {
   });
   
   it('If the email is already taken, an error should be shown', function () {
-    mockBackend.expectPOST("/test_server/user/email").respond(500, {status: 'fail', code: 'already_taken'});
+    mockBackend.expectPOST(Options.API_SERVER + "/user/email").respond(500, {status: 'fail', code: 'already_taken'});
     scope.email = 'test@gmail.com'
     scope.addEmail();
     mockBackend.flush();
@@ -56,7 +56,7 @@ describe('Controller: AddEmailCtrl', function () {
   });
   
   it('If the server responds with an unknown error, an error should be shown', function () {
-    mockBackend.expectPOST("/test_server/user/email").respond(500, {status: 'fail', code: 'unknown'});
+    mockBackend.expectPOST(Options.API_SERVER + "/user/email").respond(500, {status: 'fail', code: 'unknown'});
     scope.email = 'test@gmail.com'
     scope.addEmail();
     mockBackend.flush();
