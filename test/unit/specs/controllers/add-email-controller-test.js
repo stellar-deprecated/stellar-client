@@ -8,14 +8,15 @@ describe('Controller: AddEmailCtrl', function () {
   beforeEach(module('serviceMocks'));
   
 
-  var AddEmailCtrl, scope;
+  var AddEmailCtrl, scope, mockBackend;
 
   // Initialize the controller and a mock scope
-  beforeEach(inject(function ($controller, $rootScope) {
+  beforeEach(inject(function ($controller, $rootScope, $httpBackend) {
     scope = $rootScope.$new();
     AddEmailCtrl = $controller('AddEmailCtrl', {
       $scope: scope
     });
+    mockBackend = $httpBackend;
   }));
 
   it('Initially, scope.loading should be false', function () {
@@ -34,6 +35,34 @@ describe('Controller: AddEmailCtrl', function () {
     expect(scope.loading).to.equal(true);
     expect(scope.errors).to.be.empty;
   });
-
+  
+  it('The provided email should be posted to the server and upon success added to the wallet data', function () {
+    mockBackend.expectPOST("/test_server/user/email").respond('ok');
+    scope.email = 'test@gmail.com'
+    scope.addEmail();
+    mockBackend.flush();
+    expect(scope.wallet.mainData.email).to.equal('test@gmail.com')
+    expect(scope.loading).to.equal(false);
+  });
+  
+  it('If the email is already taken, an error should be shown', function () {
+    mockBackend.expectPOST("/test_server/user/email").respond(500, {status: 'fail', code: 'already_taken'});
+    scope.email = 'test@gmail.com'
+    scope.addEmail();
+    mockBackend.flush();
+    expect(scope.wallet.mainData.email).to.equal('');
+    expect(scope.errors).to.include("This email is already taken.");
+    expect(scope.loading).to.equal(false);
+  });
+  
+  it('If the server responds with an unknown error, an error should be shown', function () {
+    mockBackend.expectPOST("/test_server/user/email").respond(500, {status: 'fail', code: 'unknown'});
+    scope.email = 'test@gmail.com'
+    scope.addEmail();
+    mockBackend.flush();
+    expect(scope.wallet.mainData.email).to.equal('');
+    expect(scope.errors).to.include("Server error.");
+    expect(scope.loading).to.equal(false);
+  });
   
 });
