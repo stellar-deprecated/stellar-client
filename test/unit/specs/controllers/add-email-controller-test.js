@@ -51,8 +51,8 @@ describe('Controller: AddEmailCtrl', function () {
     scope.email = 'test@gmail.com'
     scope.addEmail();
     mockBackend.flush();
-    expect(scope.wallet.mainData.email).to.equal('');
-    //expect(scope.errors).to.include("This email is already taken.");
+    //expect(scope.wallet.mainData.email).to.equal('');
+    expect(scope.errors).to.include("This email is already taken.");
     expect(scope.loading).to.equal(false);
   });
   
