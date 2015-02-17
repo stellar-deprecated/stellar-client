@@ -30,8 +30,11 @@
     "angulartics": "0.17.1",
     "URIjs": "1.14.1"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "angular-mocks": "~1.2.0"
+  },
   "resolutions": {
     "angular": "~1.2.17"
   }
 }
+
