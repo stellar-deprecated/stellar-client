@@ -18,6 +18,11 @@ describe('Controller: AddEmailCtrl', function () {
     });
     mockBackend = $httpBackend;
   }));
+  
+  afterEach(function() {
+    mockBackend.verifyNoOutstandingExpectation();
+    mockBackend.verifyNoOutstandingRequest();
+  });
 
   it('Initially, scope.loading should be false', function () {
     expect(scope.loading).to.equal(false);
