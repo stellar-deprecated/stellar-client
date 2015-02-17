@@ -51,7 +51,7 @@ describe('Controller: AddEmailCtrl', function () {
     expect(scope.loading).to.equal(false);
   });
   
-  it('If the email is already taken, an error should be shown', function () {
+  it('If the email is already taken, this should be shown as a error', function () {
     mockBackend.expectPOST(Options.API_SERVER + "/user/email").respond(500, {status: 'fail', code: 'already_taken'});
     scope.email = 'test@gmail.com'
     scope.addEmail();
@@ -61,7 +61,7 @@ describe('Controller: AddEmailCtrl', function () {
     expect(scope.loading).to.equal(false);
   });
   
-  it('If the server responds with an unknown error, an error should be shown', function () {
+  it('If the server responds with an unknown error, this should be shown as a error', function () {
     mockBackend.expectPOST(Options.API_SERVER + "/user/email").respond(500, {status: 'fail', code: 'unknown'});
     scope.email = 'test@gmail.com'
     scope.addEmail();
