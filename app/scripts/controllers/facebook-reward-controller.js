@@ -101,14 +101,6 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, $q, $an
             $scope.reward.status = 'incomplete';
           };
           break;
-        case 'facebook_error':
-          $scope.reward.error = {};
-          $scope.reward.error.info = "Error getting Facebook details.";
-          $scope.reward.error.action = function () {
-            $scope.reward.error = null;
-            $scope.reward.status = 'incomplete';
-          };
-          break;
         case 'already_linked':
           $scope.reward.error = {};
           $scope.reward.error.info = "Another Facebook is already linked to your account.";
@@ -266,6 +258,9 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, $q, $an
         case 'already_taken':
           $scope.reward.updateReward('already_taken');
           break;
+        case 'already_claimed':
+          $scope.reward.updateReward('reward_already_queued');
+          break;
         case 'already_linked':
         case 'bad_token':
           $scope.reward.updateReward('already_linked');
@@ -324,8 +319,12 @@ sc.controller('FacebookRewardCtrl', function ($rootScope, $scope, $http, $q, $an
         case 'fake_account':
           $scope.reward.updateReward('fake');
           break;
+        case 'already_claimed':
         case 'reward_already_queued':
           $scope.reward.updateReward('reward_already_queued');
+          break;
+        case 'facebook_error':
+          $scope.reward.updateReward('facebook_error');
           break;
         default:
           Raven.captureMessage("Unexpected Response: " + response.code);
