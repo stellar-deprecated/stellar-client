@@ -68,3 +68,8 @@ Util.tryGet = function(rootObject, propertyChain) {
     return _.has(currentObject, property) ? currentObject[property] : undefined;
   }, rootObject);
 };
+
+/* jslint bitwise:true */
+Util.isUint32 = function (x) {
+  return x >>> 0 === x;
+};
