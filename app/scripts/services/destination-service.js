@@ -26,6 +26,11 @@ sc.service('Destination', function($rootScope, $q, StellarNetwork, contacts) {
       fixedDestinationTag = true;
     }
 
+    // validate destinationTag is a uint32
+    if (destinationTag && !Util.isUint32(Number(destinationTag))) {
+      return Promise.reject("destinationTag");
+    }
+
     // parse the raw address/federation name
     recipient = destinationUri.path();
 

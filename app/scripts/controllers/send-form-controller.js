@@ -130,6 +130,9 @@ sc.controller('SendFormController', function($rootScope, $scope, Payment, deboun
   function handleDestinationError(error) {
     if(error === 'canceled') {
       return;
+    } else if (error === 'destinationTag') {
+      showError('Invalid destination tag', 'recipient');
+      return;
     }
 
     $scope.resetDestinationDependencies();
