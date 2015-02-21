@@ -1,0 +1,24 @@
+'use strict';
+
+describe('Controller: GatewayListItemCtrl', function () {
+
+  // load the controller's module
+  beforeEach(module('stellarClient'));
+  
+  var GatewayListItemCtrl, scope;
+
+  // Initialize the controller and a mock scope
+  beforeEach(inject(function ($controller, $rootScope) {
+    scope = $rootScope.$new();
+    GatewayListItemCtrl = $controller('GatewayListItemCtrl', {
+      $scope: scope
+    });
+  }));
+
+  it('You should be able to remove the current gateway', function () {
+    scope.gateway = {domain: 'test-gateway', currencies: ['usd', 'cny']};
+    scope.remove();
+    expect(scope.gateway).to.equal(null);
+  });
+ 
+});

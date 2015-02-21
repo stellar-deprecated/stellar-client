@@ -6,7 +6,6 @@ describe('Controller: AddGatewayCtrl', function () {
   beforeEach(module('stellarClient'));
   //load the mocks for services
   beforeEach(module('serviceMocks'));
-  
 
   var AddGatewayCtrl, scope, mockBackend;
 
