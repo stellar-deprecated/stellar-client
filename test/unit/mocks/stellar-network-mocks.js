@@ -9,7 +9,6 @@ angular.module('mockStellarNetwork', [])
       on:       function (event, callback) {
         if (event === 'success'){
           callback('ok')
-          
         };
       }
     }
