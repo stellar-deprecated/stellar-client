@@ -151,6 +151,7 @@ sc.controller('SendController', function($rootScope, $scope, $analytics, Stellar
       $scope.onTransactionError(res);
     });
 
+    saveEventData();
     tx.submit();
 
     $scope.setState('sending');
@@ -215,18 +216,31 @@ sc.controller('SendController', function($rootScope, $scope, $analytics, Stellar
     }
   };
 
-  $scope.trackPaymentEvent = function(eventName) {
+  // Quick fix to solve #1153
+  var eventData;
+  function saveEventData() {
     var destination = _.cloneDeep($scope.send.destination);
     destination.destinationTagPresent = !!destination.destinationTag;
 
-    $analytics.eventTrack(eventName, {
+    eventData = {
       amount:      $scope.send.amount.to_human_full(),
       currency:    $scope.send.currency,
       destination: destination,
       federation:  $scope.send.destination.federatedName,
       indirect:    $scope.send.indirect,
-      sendPath:    $scope.send.path.amount.to_human_full(),
-    });
+      sendPath:    $scope.send.path.amount.to_human_full()
+    };
+  }
+
+  $scope.trackPaymentEvent = function(eventName) {
+    var destination = _.cloneDeep($scope.send.destination);
+    destination.destinationTagPresent = !!destination.destinationTag;
+
+    if (!eventData) {
+      saveEventData();
+    }
+    $analytics.eventTrack(eventName, eventData);
+    eventData = null;
   };
 
   $scope.reset();
