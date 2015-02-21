@@ -9,21 +9,15 @@ describe('Controller: AddGatewayCtrl', function () {
   beforeEach(module('mockSession'));
   beforeEach(module('mockGateway'));
 
-  var AddGatewayCtrl, scope, mockBackend;
+  var AddGatewayCtrl, scope;
 
   // Initialize the controller and a mock scope
-  beforeEach(inject(function ($controller, $rootScope, $httpBackend) {
+  beforeEach(inject(function ($controller, $rootScope) {
     scope = $rootScope.$new();
     AddGatewayCtrl = $controller('AddGatewayCtrl', {
       $scope: scope
     });
-    mockBackend = $httpBackend;
   }));
-  
-  afterEach(function() {
-    mockBackend.verifyNoOutstandingExpectation();
-    mockBackend.verifyNoOutstandingRequest();
-  });
 
   it('Initially, the search params should always be reset', function () {
     expect(scope.gatewaySearch).to.equal('');
