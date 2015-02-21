@@ -3,7 +3,6 @@ var sc = angular.module('stellarClient');
 sc.controller('AddGatewayCtrl', function($scope, $q, session, singletonPromise, StellarNetwork, Gateways) {
   // INHERITED FROM ManageCurrenciesCtrl
   // $scope.gateways
-
   // Populate the add gateway form with parameters from the add-gateway action.
   $scope.$on('action-add-gateway', function(event, params){
     $scope.openManageCurrencies();
@@ -42,7 +41,8 @@ sc.controller('AddGatewayCtrl', function($scope, $q, session, singletonPromise, 
         $scope.foundGateway = gateway;
         $scope.searchStatus = _.any($scope.foundGateway.currencies) ? 'found' : 'no_currencies';
       })
-      .catch(function() {
+      .catch(function(errror) {
+        console.log(error)
         //TODO: we need to target the error better
         $scope.foundGateway = null;
         $scope.searchStatus = 'not_found';

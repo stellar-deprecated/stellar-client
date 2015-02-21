@@ -31,4 +31,27 @@ describe('Controller: AddGatewayCtrl', function () {
     expect(scope.fromActionLink).to.equal(false);
   });
   
+  it('If an empty search is triggered, nothing should happen', function () {
+    expect(scope.gatewaySearch).to.equal('');
+    scope.loadCurrencies();
+    expect(scope.foundGateway).to.equal(null);
+  });
+  
+  it('If a gateway was already added, the searchStatus should reflect that', function () {
+    scope.gateways = {'test-gateway': true};
+    scope.gatewaySearch = 'test-gateway'
+    scope.loadCurrencies();
+    expect(scope.searchStatus).to.equal('already_added');
+  });
+  
+  it('If a gateway is found, the result should be added to foundGateway', function () {
+    scope.gateways = {};
+    scope.gatewaySearch = 'test gateway'
+    var promise = scope.loadCurrencies();
+    promise.then(function (){
+      expect(scope.foundGateway).to.equal({domain: 'test gateway', curencies: ['usd', 'cny']});
+    });
+    
+  });
+  
 });
