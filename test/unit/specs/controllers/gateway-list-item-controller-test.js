@@ -9,10 +9,12 @@ describe('Controller: GatewayListItemCtrl', function () {
   beforeEach(module('mockSession'));
   beforeEach(module('mockStellarNetwork'));
   
-  var GatewayListItemCtrl, scope;
+  var GatewayListItemCtrl, scope, rootScope, inner_session;
 
   // Initialize the controller and a mock scope
-  beforeEach(inject(function ($controller, $rootScope) {
+  beforeEach(inject(function ($controller, $rootScope, session) {
+    rootScope = $rootScope;
+    inner_session = session;
     scope = $rootScope.$new();
     GatewayListItemCtrl = $controller('GatewayListItemCtrl', {
       $scope: scope
@@ -25,8 +27,12 @@ describe('Controller: GatewayListItemCtrl', function () {
             currencies: ['usd', 'cny'],
             status: 'removing'
           };
-    scope.remove();
-    expect(scope.gateway).to.equal(null);
+    var promise = scope.remove();
+    expect(inner_session.get().mainData.gateways['removing-gateway'].status).to.equal('removing');
+    rootScope.$apply();
+    expect(inner_session.get().mainData.gateways['removing-gateway']).to.equal(undefined);
+    
+    
   });
  
 });

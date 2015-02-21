@@ -8,18 +8,18 @@ angular.module('mockSession', [])
       }, 
       mainData: {
         email: '', 
-        gateways: [
-          {
+        gateways: {
+          'test-gateway': {
             domain: 'test-gateway', 
             currencies: ['usd', 'cny']
           },
-          {
+          'removing-gateway': {
             domain: 'removing-gateway', 
             currencies: ['usd', 'cny'],
             status: 'removing'
-          },
-        ]
+          }
+        }
       }
     };
-    return {get: function () {return session_data}}
+    return {get: function () {return session_data}, syncWallet: function () {}}
   }]);
