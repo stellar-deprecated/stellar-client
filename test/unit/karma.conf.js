@@ -62,7 +62,12 @@ module.exports = function(config) {
     'test/unit/mocks/service-mocks.js',
    
     //specs
-    'test/unit/specs/controllers/add-email-controller-test.js'
+    'test/unit/specs/controllers/add-email-controller-test.js',
+    
+    //gateways
+    'test/unit/specs/controllers/add-gateway-controller-test.js',
+    'test/unit/specs/controllers/gateway-list-controller-test.js',
+    'test/unit/specs/controllers/gateway-list-item-controller-test.js'
       
     ],
     
