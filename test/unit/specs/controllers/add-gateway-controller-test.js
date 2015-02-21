@@ -32,7 +32,7 @@ describe('Controller: AddGatewayCtrl, mocking out search', function () {
     expect(scope.foundGateway).to.equal(null);
   });
   
-  it('When searching for a gateway, if the gateway had already been added, the searchStatus should reflect that', function () {
+  it('When searching for a gateway that had already been added, the searchStatus should reflect that', function () {
     scope.gateways = {'test-gateway': true};
     scope.gatewaySearch = 'test-gateway'
     scope.loadCurrencies();
