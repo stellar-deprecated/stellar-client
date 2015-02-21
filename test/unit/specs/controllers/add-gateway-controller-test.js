@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: AddGatewayCtrl', function () {
+describe('Controller: AddGatewayCtrl, mocking out search', function () {
 
   // load the controller's module
   beforeEach(module('stellarClient'));
@@ -32,7 +32,7 @@ describe('Controller: AddGatewayCtrl', function () {
     expect(scope.foundGateway).to.equal(null);
   });
   
-  it('If a gateway was already added, the searchStatus should reflect that', function () {
+  it('When searching for a gateway, if the gateway had already been added, the searchStatus should reflect that', function () {
     scope.gateways = {'test-gateway': true};
     scope.gatewaySearch = 'test-gateway'
     scope.loadCurrencies();
