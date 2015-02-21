@@ -5,6 +5,9 @@ describe('Controller: GatewayListItemCtrl', function () {
   // load the controller's module
   beforeEach(module('stellarClient'));
   
+  //load the mocks for services
+  beforeEach(module('mockSession'));
+  
   var GatewayListItemCtrl, scope;
 
   // Initialize the controller and a mock scope

@@ -4,8 +4,10 @@ describe('Controller: AddEmailCtrl', function () {
 
   // load the controller's module
   beforeEach(module('stellarClient'));
+  
   //load the mocks for services
-  beforeEach(module('serviceMocks'));
+  beforeEach(module('mockSession'));
+  beforeEach(module('mockGateway'));
   
 
   var AddEmailCtrl, scope, mockBackend;

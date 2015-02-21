@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('serviceMocks', [])
+angular.module('mockGateway', [])
   .factory('Gateways', ['$q', function($q) {
     var gateway = {
       search: function (domain) {
