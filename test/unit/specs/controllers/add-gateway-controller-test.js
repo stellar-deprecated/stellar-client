@@ -46,12 +46,21 @@ describe('Controller: AddGatewayCtrl', function () {
   
   it('If a gateway is found, the result should be added to foundGateway', function () {
     scope.gateways = {};
-    scope.gatewaySearch = 'test gateway'
+    scope.gatewaySearch = 'test-gateway'
     var promise = scope.loadCurrencies();
     promise.then(function (){
       expect(scope.foundGateway).to.equal({domain: 'test gateway', curencies: ['usd', 'cny']});
+      expect(scope.searchStatus).to.equal('found');
     });
-    
   });
-  
+
+  it('If no gateway is found, the search status should resolve to not_found', function () {
+    scope.gateways = {};
+    scope.gatewaySearch = 'failing-gateway'
+    var promise = scope.loadCurrencies();
+    promise.then(function (){
+      expect(scope.foundGateway).to.equal(null);
+      expect(scope.searchStatus).to.equal('not_found');
+    });
+  });
 });
