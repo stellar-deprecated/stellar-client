@@ -61,6 +61,7 @@ module.exports = function(config) {
     //test-only mocks
     'test/unit/mocks/gateway-mocks.js',
     'test/unit/mocks/session-mocks.js',
+    'test/unit/mocks/stellar-network-mocks.js',
    
     //specs
     'test/unit/specs/controllers/add-email-controller-test.js',
