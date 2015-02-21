@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('mockStellarNetwork', [])
-  .factory('StellarNetwork', ['$timeout', function($timeout) {
+  .factory('StellarNetwork', [function() {
     var transaction = {
       trustSet: function () {},
       setFlags: function () {},
