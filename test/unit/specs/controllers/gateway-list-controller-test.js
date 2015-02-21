@@ -7,7 +7,6 @@ describe('Controller: GatewayListCtrl', function () {
   //load the mocks for services
   beforeEach(module('serviceMocks'));
   
-
   var GatewayListCtrl, scope;
 
   // Initialize the controller and a mock scope

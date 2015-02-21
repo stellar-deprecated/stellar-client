@@ -15,8 +15,10 @@ angular.module('serviceMocks', [])
         setTimeout(function() {
           if (domain === 'failing-gateway') {
             deferred.reject(found);
+          }
+          else {
+             deferred.resolve(found);
           };
-          deferred.resolve(found);
         }, 10);
         return deferred.promise;
       }, 
