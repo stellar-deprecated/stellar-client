@@ -59,7 +59,8 @@ module.exports = function(config) {
     'app/scripts/**/*.js',
     
     //test-only mocks
-    'test/unit/mocks/service-mocks.js',
+    'test/unit/mocks/gateway-mocks.js',
+    'test/unit/mocks/session-mocks.js',
    
     //specs
     'test/unit/specs/controllers/add-email-controller-test.js',
