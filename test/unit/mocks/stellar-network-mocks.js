@@ -5,7 +5,7 @@ angular.module('mockStellarNetwork', [])
     var transaction = {
       trustSet: function () {},
       setFlags: function () {},
-      submit: function () {},
+      submit:   function () {},
       on:       function (event, callback) {
         if (event === 'success'){
           callback();
