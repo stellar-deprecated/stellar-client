@@ -132,7 +132,6 @@ sc.service('Gateways', function($q, $analytics, session, StellarNetwork, rpStell
   function trustCurrency(currency, value) {
     var deferred = $q.defer();
     var limit    = _.extend({value: value}, currency);
-    console.log(StellarNetwork)
 
     var tx = StellarNetwork.remote.transaction();
     tx.trustSet(session.get('address'), limit);
