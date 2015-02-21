@@ -24,7 +24,7 @@ describe('Controller: GatewayListCtrl', function () {
     expect(scope.hasGateways()).to.equal(true);
   });
   
-  it('If there aren"t any gateways, hasGateways should resolve to false', function () {
+  it("If there aren't any gateways, hasGateways should resolve to false", function () {
     scope.gateways = []
     expect(scope.hasGateways()).to.equal(false);
   });
