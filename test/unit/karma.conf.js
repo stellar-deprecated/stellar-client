@@ -74,7 +74,10 @@ module.exports = function(config) {
     
 
     // list of files / patterns to exclude
-    exclude: ['app/bower_components/URIjs/**/**.js',],//couldn't get this URI to work server side
+    exclude: [
+    'app/bower_components/URIjs/**/**.js',//couldn't get this URI to work server side
+    'app/scripts/libraries/underscore.js'//Why do we have underscore in there? 
+    ],
 
     // web server port
     port: 8080,
