@@ -31,7 +31,8 @@ describe('Controller: GatewayListItemCtrl', function () {
     expect(inner_session.get().mainData.gateways['removing-gateway'].status).to.equal('removing');
     rootScope.$apply();
     expect(inner_session.get().mainData.gateways['removing-gateway']).to.equal(undefined);
-    
+    //note we're not actually removing the gateway from the scope, we're only removing it from the session
+    expect(scope.gateway.status).to.equal('removing')
     
   });
  
