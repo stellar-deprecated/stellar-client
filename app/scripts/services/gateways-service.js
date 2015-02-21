@@ -118,7 +118,7 @@ sc.service('Gateways', function($q, $analytics, session, StellarNetwork, rpStell
   }
 
   function domainsWithStatus(status) {
-    console.log(walletGateways())
+    console.log(_.select(walletGateways(), {status:status}))
     return _.select(walletGateways(), {status:status});
   }
 

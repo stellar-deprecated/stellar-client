@@ -19,7 +19,11 @@ describe('Controller: GatewayListItemCtrl', function () {
   }));
 
   it('You should be able to remove the current gateway', function () {
-    scope.gateway = {domain: 'test-gateway', currencies: ['usd', 'cny']};
+    scope.gateway =  {
+            domain: 'removing-gateway', 
+            currencies: ['usd', 'cny'],
+            status: 'removing'
+          };
     scope.remove();
     expect(scope.gateway).to.equal(null);
   });
