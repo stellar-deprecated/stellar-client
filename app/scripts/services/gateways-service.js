@@ -46,6 +46,8 @@ sc.service('Gateways', function($q, $analytics, session, StellarNetwork, rpStell
   };
 
   Gateways.remove = function(gateway) {
+    //wondering why we're not setting the status of walletGateways()[gateway.domain], 
+    //like it's done in Gateways.add
     gateway.status = "removing";
     return Gateways.syncTrustlines(gateway.domain).then(function() {
       if(!_.has(walletGateways(), gateway.domain)) {

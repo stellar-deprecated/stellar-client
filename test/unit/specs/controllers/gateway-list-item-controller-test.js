@@ -35,5 +35,16 @@ describe('Controller: GatewayListItemCtrl', function () {
     //note we're not actually removing the gateway from the scope, we're only removing it from the session
     expect(scope.gateway.status).to.equal('removing')
   });
+  
+  it('You should be able to retry adding a gateway', function () {
+    scope.gateway = {
+            domain: 'new-gateway', 
+            currencies: ['usd', 'cny'],
+          };
+    expect(inner_session.get().mainData.gateways['new-gateway']).to.equal(undefined);
+    scope.retryAdd();
+    expect(inner_session.get().mainData.gateways['new-gateway'].status).to.equal('adding');
+    
+  });
  
 });
