@@ -22,10 +22,7 @@ describe('Controller: GatewayListItemCtrl', function () {
   }));
 
   it('You should be able to remove the current gateway', function () {
-    scope.gateway =  {
-            domain: 'removing-gateway', 
-            currencies: ['usd', 'cny'],
-          };
+    scope.gateway =  {domain: 'removing-gateway', currencies: ['usd', 'cny']};
     expect(inner_session.get().mainData.gateways['removing-gateway'].domain).to.equal(scope.gateway.domain);
     scope.remove();
     expect(scope.gateway.status).to.equal('removing')
@@ -37,10 +34,7 @@ describe('Controller: GatewayListItemCtrl', function () {
   });
   
   it('You should be able to retry adding a gateway', function () {
-    scope.gateway = {
-            domain: 'new-gateway', 
-            currencies: ['usd', 'cny'],
-          };
+    scope.gateway = {domain: 'new-gateway', currencies: ['usd', 'cny']};
     expect(inner_session.get().mainData.gateways['new-gateway']).to.equal(undefined);
     scope.retryAdd();
     expect(inner_session.get().mainData.gateways['new-gateway'].status).to.equal('adding');
@@ -49,10 +43,7 @@ describe('Controller: GatewayListItemCtrl', function () {
   });
   
   it('You should be able to cancel adding a gateway', function () {
-    scope.gateway = {
-            domain: 'test-gateway', 
-            currencies: ['usd', 'cny']
-          };
+    scope.gateway = {domain: 'test-gateway', currencies: ['usd', 'cny']};
     expect(inner_session.get().mainData.gateways['test-gateway']).to.exists;
     scope.cancelAdd();
     expect(inner_session.get().mainData.gateways['test-gateway']).to.be.undefined;
