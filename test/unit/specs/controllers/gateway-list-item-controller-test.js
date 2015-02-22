@@ -44,7 +44,8 @@ describe('Controller: GatewayListItemCtrl', function () {
     expect(inner_session.get().mainData.gateways['new-gateway']).to.equal(undefined);
     scope.retryAdd();
     expect(inner_session.get().mainData.gateways['new-gateway'].status).to.equal('adding');
-    
+    rootScope.$apply();
+    expect(inner_session.get().mainData.gateways['new-gateway'].status).to.equal('added');
   });
  
 });
