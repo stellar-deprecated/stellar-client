@@ -25,10 +25,10 @@ describe('Controller: GatewayListItemCtrl', function () {
     scope.gateway =  {
             domain: 'removing-gateway', 
             currencies: ['usd', 'cny'],
-            status: 'removing'
           };
     expect(inner_session.get().mainData.gateways['removing-gateway'].domain).to.equal(scope.gateway.domain);
     scope.remove();
+    expect(scope.gateway.status).to.equal('removing')
     expect(inner_session.get().mainData.gateways['removing-gateway'].status).to.equal('removing');
     rootScope.$apply();
     expect(inner_session.get().mainData.gateways['removing-gateway']).to.equal(undefined);

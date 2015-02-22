@@ -16,7 +16,6 @@ angular.module('mockSession', [])
           'removing-gateway': {
             domain: 'removing-gateway', 
             currencies: ['usd', 'cny'],
-            status: 'removing'
           }
         }
       }
