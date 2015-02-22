@@ -47,5 +47,15 @@ describe('Controller: GatewayListItemCtrl', function () {
     rootScope.$apply();
     expect(inner_session.get().mainData.gateways['new-gateway'].status).to.equal('added');
   });
+  
+  it('You should be able to cancel adding a gateway', function () {
+    scope.gateway = {
+            domain: 'test-gateway', 
+            currencies: ['usd', 'cny']
+          };
+    expect(inner_session.get().mainData.gateways['test-gateway']).to.exists;
+    scope.cancelAdd();
+    expect(inner_session.get().mainData.gateways['test-gateway']).to.be.undefined;
+  });
  
 });
