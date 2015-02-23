@@ -11,11 +11,11 @@ angular.module('mockSession', [])
         gateways: {
           'test-gateway': {
             domain: 'test-gateway', 
-            currencies: ['usd', 'cny']
+            currencies: [{currency: 'usd'}, {currency: 'cny'}]
           },
           'removing-gateway': {
             domain: 'removing-gateway', 
-            currencies: ['usd', 'cny'],
+            currencies: [{currency: 'usd'}, {currency: 'cny'}]
           }
         }
       }
