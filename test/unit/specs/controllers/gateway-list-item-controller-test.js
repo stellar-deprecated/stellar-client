@@ -22,6 +22,7 @@ describe('Controller: GatewayListItemCtrl', function () {
   }));
 
   it('You should be able to remove the current gateway', function () {
+    scope.showRemoveAlert = sinon.spy()
     scope.gateway =  {domain: 'removing-gateway', currencies: [{currency: 'usd'}, {currency: 'cny'}]};
     expect(inner_session.get().mainData.gateways['removing-gateway'].domain).to.equal(scope.gateway.domain);
     scope.remove();
@@ -31,6 +32,7 @@ describe('Controller: GatewayListItemCtrl', function () {
     expect(inner_session.get().mainData.gateways['removing-gateway']).to.equal(undefined);
     //note we're not actually removing the gateway from the scope, we're only removing it from the session
     expect(scope.gateway.status).to.equal('removing')
+    expect(scope.showRemoveAlert.calledWithExactly('removing-gateway')).to.be.true
   });
   
   it('You should be able to retry adding a gateway', function () {
