@@ -97,10 +97,10 @@ sc.controller('InvitesCtrl', function($scope, $http, $q, $filter, $analytics, se
     $scope.attemptSendInvite = singletonPromise(function () {
         // use angular's check value method to determine if it's a proper email
         if (!$scope.inviteEmail && inviteForm.email.value) {
-            $scope.emailError = "Invalid email";
+            emailFormError("Invalid email");
             return $q.reject();
         } else if (!inviteForm.email.value) {
-            $scope.emailError = "Email address required";
+            emailFormError("Email address required");
             return $q.reject();
         }
 
@@ -111,7 +111,7 @@ sc.controller('InvitesCtrl', function($scope, $http, $q, $filter, $analytics, se
                 $scope.trackInviteSentEvent($scope.inviteEmail);
             })
             .error(function (response) {
-                Util.showTooltip($("#invite-email"), response.message, 'error', 'top');
+                emailFormError(response.message);
             })
             .then(function () {
                 $('#inviteForm').each(function(){
@@ -119,6 +119,10 @@ sc.controller('InvitesCtrl', function($scope, $http, $q, $filter, $analytics, se
                 });
             });
     });
+
+    function emailFormError(message) {
+        Util.showTooltip($("#invite-email"), message, 'error', 'top');
+    }
 
     $scope.trackInviteSentEvent = function(inviteeEmail) {
         $analytics.eventTrack('Invite Sent', {

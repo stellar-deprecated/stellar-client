@@ -13,7 +13,7 @@ Util.validateUsername = function (username) {
 * - type (error, info)
 * - placement (top, left, right, bottom)
 */
-Util.showTooltip = function (element, title, type, placement) {
+Util.showTooltip = function (element, title, type, placement, extraOptions) {
 
   var template =
     '<div class="tooltip ' + type + '" role="tooltip">' +
@@ -23,14 +23,37 @@ Util.showTooltip = function (element, title, type, placement) {
 
   element.tooltip('destroy');
 
-  element.tooltip(
-    {
-      trigger: "manual",
-      template: template,
-      placement: placement,
-      title: title
-    })
-    .tooltip('show');
+  var options = {
+    trigger: "manual",
+    template: template,
+    placement: placement,
+    title: title
+  };
+
+  // built in delay option does not support manual trigger type
+  var hideTooltipFn = function () {
+    element.tooltip('destroy');
+  };
+  var showTooltipFn = function () {
+    element.tooltip(options).tooltip('show');
+  };
+
+  var showDelay = 0;
+  var hideDelay = 1000;
+
+  if (extraOptions && extraOptions.delay && extraOptions.delay.show) {
+    showDelay = extraOptions.delay.show;
+  }
+  if (extraOptions && extraOptions.delay && extraOptions.delay.hide) {
+    hideDelay = extraOptions.delay.hide;
+  }
+
+  if (showDelay) {
+    hideDelay = hideDelay + showDelay;
+  }
+
+  setTimeout(showTooltipFn, showDelay);
+  setTimeout(hideTooltipFn, hideDelay);
 };
 
 /**
