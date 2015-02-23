@@ -55,3 +55,4 @@ describe('Controller: GatewayListItemCtrl', function () {
   })
  
 });
+

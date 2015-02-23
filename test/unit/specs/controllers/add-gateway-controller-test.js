@@ -9,12 +9,10 @@ describe('Controller: AddGatewayCtrl, mocking out search', function () {
   beforeEach(module('mockSession'));
   beforeEach(module('mockGateway'));
 
-  var AddGatewayCtrl, scope, rootScope, inner_session;
+  var AddGatewayCtrl, scope;
 
   // Initialize the controller and a mock scope
-  beforeEach(inject(function ($controller, $rootScope, session) {
-    rootScope = $rootScope;
-    inner_session = session;
+  beforeEach(inject(function ($controller, $rootScope) {
     scope = $rootScope.$new();
     AddGatewayCtrl = $controller('AddGatewayCtrl', {
       $scope: scope
@@ -61,10 +59,44 @@ describe('Controller: AddGatewayCtrl, mocking out search', function () {
     });
   });
   
+});
+
+
+describe('Controller: AddGatewayCtrl, testing adding without mocked Gateways service', function () {
+
+  // load the controller's module
+  beforeEach(module('stellarClient'));
+  
+  //load the mocks for services
+  beforeEach(module('mockSession'));
+  beforeEach(module('mockStellarNetwork'));
+
+  var AddGatewayCtrl, scope, rootScope, inner_session;
+
+  // Initialize the controller and a mock scope
+  beforeEach(inject(function ($controller, $rootScope, session) {
+    rootScope = $rootScope;
+    inner_session = session;
+    scope = $rootScope.$new();
+    AddGatewayCtrl = $controller('AddGatewayCtrl', {
+      $scope: scope
+    });
+  }));
+  
   it('if you try to add a non-existing gateway, nothing should happen', function () {
     scope.showAddAlert = sinon.spy();
     scope.foundGateway = null;
     scope.addGateway();
     expect(scope.showAddAlert.called).to.be.false
   })
+  
+  it('You should be able to add a gateway that was found', function () {
+    scope.foundGateway = {domain: 'new-gateway', currencies: [{currency: 'usd'}, {currency: 'cny'}]};
+    expect(inner_session.get().mainData.gateways['new-gateway']).to.equal(undefined);
+    scope.addGateway();
+    expect(inner_session.get().mainData.gateways['new-gateway'].status).to.equal('adding');
+    rootScope.$apply();
+    expect(inner_session.get().mainData.gateways['new-gateway'].status).to.equal('added');
+  });
+  
 });
