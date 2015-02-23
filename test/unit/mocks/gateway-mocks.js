@@ -1,12 +1,13 @@
 'use strict';
 
 angular.module('mockGateway', [])
+//This is just a partial mock, mainly to avoid talking directly with stellartxt
   .factory('Gateways', ['$q', function($q) {
     var gateway = {
       search: function (domain) {
         var found = {
           domain: domain,
-          currencies: ['usd', 'cny']
+          currencies: [{currency: 'usd'}, {currency: 'cny'}]
         };
         var deferred = $q.defer();
         setTimeout(function() {
