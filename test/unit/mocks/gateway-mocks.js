@@ -14,7 +14,7 @@ angular.module('mockGateway', [])
             deferred.reject(found);
           }
           else {
-             deferred.resolve(found);
+            deferred.resolve(found);
           };
         return deferred.promise;
       }, 
