@@ -9,10 +9,12 @@ describe('Controller: AddGatewayCtrl, mocking out search', function () {
   beforeEach(module('mockSession'));
   beforeEach(module('mockGateway'));
 
-  var AddGatewayCtrl, scope;
+  var AddGatewayCtrl, scope, rootScope, inner_session;
 
   // Initialize the controller and a mock scope
-  beforeEach(inject(function ($controller, $rootScope) {
+  beforeEach(inject(function ($controller, $rootScope, session) {
+    rootScope = $rootScope;
+    inner_session = session;
     scope = $rootScope.$new();
     AddGatewayCtrl = $controller('AddGatewayCtrl', {
       $scope: scope
@@ -58,4 +60,11 @@ describe('Controller: AddGatewayCtrl, mocking out search', function () {
       expect(scope.searchStatus).to.equal('not_found');
     });
   });
+  
+  it('if you try to add a non-existing gateway, nothing should happen', function () {
+    scope.showAddAlert = sinon.spy();
+    scope.foundGateway = null;
+    scope.addGateway();
+    expect(scope.showAddAlert.called).to.be.false
+  })
 });
