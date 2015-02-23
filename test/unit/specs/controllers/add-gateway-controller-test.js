@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: AddGatewayCtrl, mocking out search', function () {
+describe('Controller: AddGatewayCtrl, mocking out Gateways.search', function () {
 
   // load the controller's module
   beforeEach(module('stellarClient'));
@@ -62,7 +62,7 @@ describe('Controller: AddGatewayCtrl, mocking out search', function () {
 });
 
 
-describe('Controller: AddGatewayCtrl, testing adding without mocked Gateways service', function () {
+describe('Controller: AddGatewayCtrl, without mocking out Gateways', function () {
 
   // load the controller's module
   beforeEach(module('stellarClient'));
