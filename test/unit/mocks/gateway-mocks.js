@@ -10,14 +10,12 @@ angular.module('mockGateway', [])
           currencies: [{currency: 'usd'}, {currency: 'cny'}]
         };
         var deferred = $q.defer();
-        setTimeout(function() {
           if (domain === 'failing-gateway') {
             deferred.reject(found);
           }
           else {
              deferred.resolve(found);
           };
-        }, 10);
         return deferred.promise;
       }, 
     };
