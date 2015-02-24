@@ -18,18 +18,27 @@ angular.module('stellarClient').controller('RegistrationCtrl', function(
   Wallet,
   FlashMessages,
   invites,
-  reCAPTCHA,
+  vcRecaptchaService,
   stellarApi) {
 
   // Provide a default value to protect against stale config files.
   Options.MAX_WALLET_ATTEMPTS = Options.MAX_WALLET_ATTEMPTS || 3;
 
+  $scope.recaptchaKey = Options.CAPTCHA_KEY;
+  $scope.recaptchaWidgetId = null;
+  $scope.onRecaptchaSuccess = function (response) {
+    $scope.data.recaptchaResponse = response;
+  };
+  $scope.setRecaptchaWidgetId = function (widgetId) {
+    $scope.widgetId = widgetId;
+  };
+
   $scope.data = {
     username:             '',
     password:             '',
     passwordConfirmation: '',
-    recap:                '',
-    secret:               ''
+    secret:               '',
+    recaptchaResponse:    null
   };
 
   session.put('inviteCode', $stateParams.inviteCode);
@@ -186,6 +195,11 @@ angular.module('stellarClient').controller('RegistrationCtrl', function(
 
     var validInput = true;
 
+    if (!$scope.data.recaptchaResponse) {
+      validInput = false;
+      $scope.errors.captchaErrors.push("Invalid captcha");
+    }
+
     if (!data.username) {
       validInput = false;
       $scope.errors.usernameErrors.push('The username field is required.');
@@ -222,7 +236,7 @@ angular.module('stellarClient').controller('RegistrationCtrl', function(
     var params = {
       username: data.username,
       address: data.signingKeys.address,
-      recap: data.recap
+      recaptchaResponse: data.recaptchaResponse
     };
 
     // Submit the registration data to the server.
@@ -248,8 +262,7 @@ angular.module('stellarClient').controller('RegistrationCtrl', function(
   function showRegistrationErrors(response) {
     /* jshint camelcase:false */
 
-    // In case of a failed registration you need to reload the captcha because each challenge can be checked just once
-    reCAPTCHA.reload();
+    vcRecaptchaService.reload($scope.recaptchaWidgetId);
 
     if (response && response.status === "fail") {
       var field;
@@ -327,8 +340,7 @@ angular.module('stellarClient').controller('RegistrationCtrl', function(
         $scope.errors.usernameErrors.push('Unknown error. Please try again later.');
       }
 
-      // In case of a failed registration you need to reload the captcha because each challenge can be checked just once
-      reCAPTCHA.reload();
+      vcRecaptchaService.reload($scope.recaptchaWidgetId);
 
       // Release username
       $http.post(Options.API_SERVER + "/failedRegistration", {
