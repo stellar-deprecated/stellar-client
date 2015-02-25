@@ -54,7 +54,7 @@ angular.module('stellarClient').controller('ChangePasswordV2Ctrl', function($sco
 
     var params = {
       server: Options.WALLET_SERVER+'/v2',
-      username: $stateParams.username.toLowerCase(),
+      username: $stateParams.username.toLowerCase()+'@stellar.org',
       masterKey: $stateParams.masterKey
     };
 

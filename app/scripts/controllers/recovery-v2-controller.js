@@ -108,9 +108,6 @@ angular.module('stellarClient').controller('RecoveryV2Ctrl', function($scope, $s
   function recover(params) {
     var deferred = $q.defer();
 
-    // Append domain
-    params.username += '@stellar.org';
-
     var userPartBytes = bs58.decode(params.recoveryCode);
     var serverPartBytes = bs58.decode(params.serverRecoveryCode);
     var fullRecoveryCodeBytes = userPartBytes.concat(serverPartBytes);
@@ -118,7 +115,7 @@ angular.module('stellarClient').controller('RecoveryV2Ctrl', function($scope, $s
 
     var data = {
       server: Options.WALLET_SERVER+'/v2',
-      username: params.username,
+      username: params.username+'@stellar.org',
       recoveryCode: fullRecoveryCode
     };
 
