@@ -4,11 +4,37 @@
 
 [Commits](https://github.com/stellar/stellar-client/commits/master)
 
+##Week 7 - 2015
+
+Many thanks to @gterzian for his contribution to stellar-client!
+
+###New Features and Changes
+
+ - Pull Request [1151](https://github.com/stellar/stellar-client/pull/1151) First karma test passing (Thank you @gterzian)
+
+###Bug Fixes
+
+ - Pull Request [1161](https://github.com/stellar/stellar-client/pull/1161) Check destination tag is a valid unsigned 32-bit integer, fixes Issue [1159](https://github.com/stellar/stellar-client/issues/1159)
+ - Pull Request [1154](https://github.com/stellar/stellar-client/pull/1154) Bump angular re-captcha version to fix [1137](https://github.com/stellar/stellar-client/issues/1137) Cannot read property 'destroy' of undefined (error)
+
+##Week 6 - 2015
+
+###New Features and Changes
+
+ - Pull Request [1148](https://github.com/stellar/stellar-client/pull/1148) Notify users that their secret should stay secret
+  - Pull Request [1152](https://github.com/stellar/stellar-client/pull/1152) Check frontend-client server for status.json (check server status)
+
+
+###Bug Fixes
+
+- Pull Request [1147](https://github.com/stellar/stellar-client/pull/1147) Fix back buttons.  Fixes bug introduced in [1127](https://github.com/stellar/stellar-client/pull/1127)
+
+
 ##Week 5 - 2015
 
 ###New Features and Changes
 
-- Pull Request [1146](https://github.com/stellar/stellar-client/pull/1146) Add user context to Raven on login
+ - Pull Request [1146](https://github.com/stellar/stellar-client/pull/1146) Add user context to Raven on login
  - Pull Request [1145](https://github.com/stellar/stellar-client/pull/1145) Add unexpected response loggers to reward handlers
 
 ##Week 4 - 2015
