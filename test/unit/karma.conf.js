@@ -44,7 +44,7 @@ module.exports = function(config) {
     "app/bower_components/zeroclipboard/dist/ZeroClipboard.js",
     "app/bower_components/ng-clip/src/ngClip.js",
     "app/bower_components/bignumber.js/bignumber.js",
-    "app/bower_components/angular-re-captcha/angular-re-captcha.js",
+    "app/bower_components/angular-recaptcha/release/angular-recaptcha.js",
     "app/bower_components/stellar-wallet-js-sdk/build/stellar-wallet.min.js",
     "app/bower_components/tweetnacl/nacl-fast.min.js",
     "app/bower_components/angulartics/src/angulartics.js",

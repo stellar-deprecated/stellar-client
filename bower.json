@@ -26,9 +26,9 @@
     "stellar-lib": "0.10.1",
     "zeroclipboard": "2.1.6",
     "bignumber.js": "1.4.1",
-    "angular-re-captcha": "0.1.0",
     "angulartics": "0.17.1",
-    "URIjs": "1.14.1"
+    "URIjs": "1.14.1",
+    "angular-recaptcha": "~2.1.1"
   },
   "devDependencies": {
     "angular-mocks": "~1.2.0"
@@ -37,4 +37,3 @@
     "angular": "~1.2.17"
   }
 }
-
