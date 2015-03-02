@@ -47,6 +47,7 @@ sc.service('Gateways', function($q, $analytics, session, StellarNetwork, rpStell
 
   Gateways.remove = function(gateway) {
     gateway.status = "removing";
+    walletGateways()[gateway.domain].status = "removing";
     return Gateways.syncTrustlines(gateway.domain).then(function() {
       if(!_.has(walletGateways(), gateway.domain)) {
         track(gateway, 'Gateway Removed');

@@ -59,16 +59,26 @@ module.exports = function(config) {
     'app/scripts/**/*.js',
     
     //test-only mocks
-    'test/unit/mocks/service-mocks.js',
+    'test/unit/mocks/gateway-mocks.js',
+    'test/unit/mocks/session-mocks.js',
+    'test/unit/mocks/stellar-network-mocks.js',
    
     //specs
-    'test/unit/specs/controllers/add-email-controller-test.js'
+    'test/unit/specs/controllers/add-email-controller-test.js',
+    
+    //gateways
+    'test/unit/specs/controllers/add-gateway-controller-test.js',
+    'test/unit/specs/controllers/gateway-list-controller-test.js',
+    'test/unit/specs/controllers/gateway-list-item-controller-test.js'
       
     ],
     
 
     // list of files / patterns to exclude
-    exclude: ['app/bower_components/URIjs/**/**.js',],//couldn't get this URI to work server side
+    exclude: [
+    'app/bower_components/URIjs/**/**.js',//couldn't get this URI to work server side
+    'app/scripts/libraries/underscore.js'//Why do we have underscore in there? 
+    ],
 
     // web server port
     port: 8080,
