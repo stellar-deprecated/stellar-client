@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('stellarClient').controller('LoginCtrl', function($rootScope, $scope, $state, $http, $timeout, $q, session, singletonPromise, FlashMessages) {
+angular.module('stellarClient').controller('LoginCtrl', function($rootScope, $scope, $state, $http, $timeout, $q, session, singletonPromise, usernameHelper, FlashMessages) {
   $scope.username   = null;
   $scope.loginError = null;
 
@@ -19,7 +19,7 @@ angular.module('stellarClient').controller('LoginCtrl', function($rootScope, $sc
       return $q.reject();
     }
 
-    var usernameV2 = $scope.username+'@stellar.org';
+    var usernameV2 = usernameHelper.normalizeV2Username($scope.username);
 
     return $http.post(Options.WALLET_SERVER + '/v2/wallets/show_login_params', {
         username: usernameV2

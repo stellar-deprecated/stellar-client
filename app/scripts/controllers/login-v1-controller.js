@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('stellarClient').controller('LoginV1Ctrl', function($rootScope, $scope, $http, $state, $stateParams, $q, session, invites, Wallet, singletonPromise, usernameProof) {
+angular.module('stellarClient').controller('LoginV1Ctrl', function($rootScope, $scope, $http, $state, $stateParams, $q, session, invites, Wallet, singletonPromise, usernameProof, usernameHelper) {
   setTimeout(function() {
     angular.element('#password')[0].focus();
   }, 200);
@@ -113,7 +113,7 @@ angular.module('stellarClient').controller('LoginV1Ctrl', function($rootScope, $
     // Perform a migration
     StellarWallet.createWallet({
       server: Options.WALLET_SERVER+'/v2',
-      username: $stateParams.username.toLowerCase()+'@stellar.org',
+      username: usernameHelper.normalizeV2Username($stateParams.username),
       password: $scope.password,
       publicKey: signingKeys.publicKey,
       keychainData: JSON.stringify(wallet.keychainData),

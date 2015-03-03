@@ -2,7 +2,7 @@
 
 /* global StellarWallet */
 
-angular.module('stellarClient').controller('ChangePasswordV2Ctrl', function($scope, $state, $stateParams, FlashMessages) {
+angular.module('stellarClient').controller('ChangePasswordV2Ctrl', function($scope, $state, $stateParams, usernameHelper, FlashMessages) {
   $scope.totpRequired = $stateParams.totpRequired;
 
   $scope.data = {
@@ -54,7 +54,7 @@ angular.module('stellarClient').controller('ChangePasswordV2Ctrl', function($sco
 
     var params = {
       server: Options.WALLET_SERVER+'/v2',
-      username: $stateParams.username.toLowerCase()+'@stellar.org',
+      username: usernameHelper.normalizeV2Username($stateParams.username),
       masterKey: $stateParams.masterKey
     };
 
