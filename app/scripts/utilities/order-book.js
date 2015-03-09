@@ -78,7 +78,7 @@ angular.module('stellarClient').factory('OrderBook', function($q, $rootScope, Tr
    * stellard (since subscriptions are owned on the Remote) t
    *
    */
-  OrderBook.prototype.injestOffers = function(added, changed, removed) {
+  OrderBook.prototype.ingestOffers = function(added, changed, removed) {
     var self = this;
 
     _.each(added, overwriteOffer);
@@ -112,7 +112,7 @@ angular.module('stellarClient').factory('OrderBook', function($q, $rootScope, Tr
     }
   };
 
-  OrderBook.prototype.injestTrade = function(trade) {
+  OrderBook.prototype.ingestTrade = function(trade) {
     if (_.isEqual(this.getCurrencyPair(), trade.currencyPair)) {
       this.lastPrice = trade.price;
       $rootScope.$broadcast("trading:order-book-updated", this);
@@ -181,13 +181,13 @@ angular.module('stellarClient').factory('OrderBook', function($q, $rootScope, Tr
     var removed = TransactionCurator.getOffersAffectedByTx(tx, 'DeletedNode');
 
     _(orderbooks).each(function (orderbook, key) {
-      orderbook.injestOffers(added, changed, removed);
+      orderbook.ingestOffers(added, changed, removed);
     });
   }
 
   function updateLastPrices(e, trade) {
     _(orderbooks).each(function (orderbook, key) {
-      orderbook.injestTrade(trade);
+      orderbook.ingestTrade(trade);
     });
   }
 
