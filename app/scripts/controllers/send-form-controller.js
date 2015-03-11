@@ -162,7 +162,10 @@ sc.controller('SendFormController', function($rootScope, $scope, Payment, deboun
 
   function clearPoptip(elementId) {
     showError.cancel();
-    $('#' + elementId).tooltip('destroy');
+    var element = $('#' + elementId);
+    if (typeof element.tooltip === 'function') {
+      element.tooltip('destroy');
+    }
   }
 
   function showAddressFound(address) {
