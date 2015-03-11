@@ -31,6 +31,8 @@ angular.module('stellarClient').controller('Lost2FADeviceCtrl', function($scope,
         }
       });
       $scope.error = 'Unknown error. Please try again later.';
+    }).finally(function() {
+      $scope.$apply();
     });
   });
 });
