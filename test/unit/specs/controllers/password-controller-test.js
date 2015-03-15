@@ -44,7 +44,7 @@ describe('Controller: PasswordCtrl', function () {
     expect(scope.confirmPasswordClass()).to.equal('glyphicon-remove');
   });
   
-  it('If the password and its confirmation partially match, show a glyhicon-non', function () {
+  it('If the password and its confirmation partially match, show a glyhicon-none', function () {
     scope.data = {password: 'testpassword', passwordConfirmation: 'test'}
     scope.status = {passwordConfirmValid: false};
     expect(scope.confirmPasswordClass()).to.equal('glyphicon-none');
