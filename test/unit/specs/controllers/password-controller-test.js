@@ -51,5 +51,30 @@ describe('Controller: PasswordCtrl', function () {
     expect(scope.confirmPasswordClass()).to.equal('glyphicon-none');
   });
   
+  it('If the password is empty, passwordStrength should return an empty string', function () {
+    scope.data = {password: ''}
+    expect(scope.passwordStrength()).to.equal('');
+  });
+  
+  it('If the password is weak, passwordStrength should return WEAK', function () {
+    scope.data = {password: 'abc'}
+    expect(scope.passwordStrength()).to.equal('WEAK');
+  });
+  
+  it('If the password is not quite good enough, passwordStrength should return ALMOST', function () {
+    scope.data = {password: 'serend'}
+    expect(scope.passwordStrength()).to.equal('ALMOST');
+  });
+  
+  it('If the password is OK, passwordStrength should return GOOD', function () {
+    scope.data = {password: 'serendip'}
+    expect(scope.passwordStrength()).to.equal('GOOD');
+  });
+  
+  it('If the password is really good, passwordStrength should return STRONG', function () {
+    scope.data = {password: 'yAs5woN8E5oG5BA$wk'}
+    expect(scope.passwordStrength()).to.equal('STRONG');
+  });
+  
   
 });
