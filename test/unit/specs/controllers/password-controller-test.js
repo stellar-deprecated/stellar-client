@@ -16,6 +16,8 @@ describe('Controller: PasswordCtrl', function () {
   beforeEach(inject(function ($controller, $rootScope, $httpBackend) {
     scope = $rootScope.$new();
     scope.validators = [];
+    scope.errors = {};
+    scope.status = {};
     PasswordCtrl = $controller('PasswordCtrl', {
       $scope: scope
     });
@@ -74,6 +76,33 @@ describe('Controller: PasswordCtrl', function () {
   it('If the password is really good, passwordStrength should return STRONG', function () {
     scope.data = {password: 'yAs5woN8E5oG5BA$wk'}
     expect(scope.passwordStrength()).to.equal('STRONG');
+  });
+  
+  it('Only good password that come with a matching confirmation should be valid', function () {
+    scope.data = {password: 'yAs5woN8E5oG5BA$wk', passwordConfirmation: 'yAs5woN8E5oG5BA$wk'}
+    scope.checkPassword();
+    expect(scope.status.passwordValid).to.be.true;
+    expect(scope.status.passwordConfirmValid).to.be.true;
+    expect(scope.errors.passwordErrors).to.be.empty;
+    expect(scope.errors.passwordConfirmErrors).to.be.empty;
+  });
+  
+  it('A weak password, even with a matching confirmation, should not be valid', function () {
+    scope.data = {password: 'hello', passwordConfirmation: 'hello'}
+    scope.checkPassword();
+    expect(scope.status.passwordValid).to.be.false;
+    expect(scope.status.passwordConfirmValid).to.be.true;
+    expect(scope.errors.passwordErrors).to.be.empty;
+    expect(scope.errors.passwordConfirmErrors).to.be.empty;
+  });
+  
+  it('Without a matching confirmation, a password should not be valid', function () {
+    scope.data = {password: 'yAs5woN8E5oG5BA$wk', passwordConfirmation: ''}
+    scope.checkPassword();
+    expect(scope.status.passwordValid).to.be.true;
+    expect(scope.status.passwordConfirmValid).to.be.false;
+    expect(scope.errors.passwordErrors).to.be.empty;
+    expect(scope.errors.passwordConfirmErrors).to.be.empty;
   });
   
   
