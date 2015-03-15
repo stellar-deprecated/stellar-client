@@ -26,4 +26,11 @@ describe('Controller: PasswordCtrl', function () {
     expect(scope.passwordConfirmation).to.equal('');
   });
   
+  it('passwordClass() should reflect the validity of status.passwordValid', function () {
+    scope.status = {passwordValid: true};
+    expect(scope.passwordClass()).to.equal('glyphicon-ok');
+    scope.status = {passwordValid: false};
+    expect(scope.passwordClass()).to.equal('glyphicon-none');
+  });
+  
 });
