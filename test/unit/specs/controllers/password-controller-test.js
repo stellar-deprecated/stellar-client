@@ -10,6 +10,7 @@ describe('Controller: PasswordCtrl', function () {
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope) {
     scope = $rootScope.$new();
+    //the stuff below is all inherited from the parent scope (RegistrationCtrl)
     scope.validators = [];
     scope.errors = {};
     scope.status = {};
