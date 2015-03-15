@@ -26,6 +26,7 @@ describe('Controller: PasswordCtrl', function () {
   it('Should initialize the scope', function () {
     expect(scope.loading).to.equal(false);
     expect(scope.passwordConfirmation).to.equal('');
+    expect(scope.validators).to.be.ok
   });
   
   it('passwordClass() should reflect the validity of status.passwordValid', function () {
@@ -78,7 +79,7 @@ describe('Controller: PasswordCtrl', function () {
     expect(scope.passwordStrength()).to.equal('STRONG');
   });
   
-  it('Only good password that come with a matching confirmation should be valid', function () {
+  it('Only good password that comes with a matching confirmation should be valid', function () {
     scope.data = {password: 'yAs5woN8E5oG5BA$wk', passwordConfirmation: 'yAs5woN8E5oG5BA$wk'}
     scope.checkPassword();
     expect(scope.status.passwordValid).to.be.true;
@@ -105,5 +106,28 @@ describe('Controller: PasswordCtrl', function () {
     expect(scope.errors.passwordConfirmErrors).to.be.empty;
   });
   
+  it('If there is no password, validateInput should mark that as an error', function () {
+    scope.data = {password: ''}
+    var validInput = scope.validators.pop()();
+    expect(validInput).to.be.false;
+    expect(scope.errors.passwordErrors).to.include('The password field is required.')
+  });
   
+  it('If the password is invalid, validateInput should mark that as an error', function () {
+    scope.data = {password: 'Great password'}
+    scope.status.passwordValid = false;
+    var validInput = scope.validators.pop()();
+    expect(validInput).to.be.false;
+    expect(scope.errors.passwordErrors).to.include('The password is not strong enough.')
+  });
+  
+  it('If the password is valid but the confirmation is not, validateInput should mark that as an error', function () {
+    scope.data = {password: 'Great password'}
+    scope.status.passwordValid = true;
+    scope.status.passwordConfirmValid = false;
+    var validInput = scope.validators.pop()();
+    expect(validInput).to.be.false;
+    expect(scope.errors.passwordConfirmErrors).to.include('The passwords do not match.')
+  });
+    
 });
