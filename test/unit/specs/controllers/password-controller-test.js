@@ -4,16 +4,11 @@ describe('Controller: PasswordCtrl', function () {
 
   // load the controller's module
   beforeEach(module('stellarClient'));
-  
-  //load the mocks for services
-  beforeEach(module('mockSession'));
-  beforeEach(module('mockGateway'));
-  
 
-  var PasswordCtrl, scope, mockBackend;
+  var PasswordCtrl, scope;
 
   // Initialize the controller and a mock scope
-  beforeEach(inject(function ($controller, $rootScope, $httpBackend) {
+  beforeEach(inject(function ($controller, $rootScope) {
     scope = $rootScope.$new();
     scope.validators = [];
     scope.errors = {};
