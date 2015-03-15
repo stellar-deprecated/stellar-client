@@ -33,4 +33,23 @@ describe('Controller: PasswordCtrl', function () {
     expect(scope.passwordClass()).to.equal('glyphicon-none');
   });
   
+  it('if the password is valid, and the password confirmation matches, show a glyphicon-ok', function () {
+    scope.data = {password: 'testpassword', passwordConfirmation: 'testpassword'}
+    scope.status = {passwordConfirmValid: true};
+    expect(scope.confirmPasswordClass()).to.equal('glyphicon-ok');
+  });
+  
+  it('If the password and its confirmation do not match, show a glyhicon-remove', function () {
+    scope.data = {password: 'testpassword', passwordConfirmation: 'test33'}
+    scope.status = {passwordConfirmValid: false};
+    expect(scope.confirmPasswordClass()).to.equal('glyphicon-remove');
+  });
+  
+  it('If the password and its confirmation partially match, show a glyhicon-non', function () {
+    scope.data = {password: 'testpassword', passwordConfirmation: 'test'}
+    scope.status = {passwordConfirmValid: false};
+    expect(scope.confirmPasswordClass()).to.equal('glyphicon-none');
+  });
+  
+  
 });
