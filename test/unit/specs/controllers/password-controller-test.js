@@ -79,7 +79,7 @@ describe('Controller: PasswordCtrl', function () {
     expect(scope.passwordStrength()).to.equal('STRONG');
   });
   
-  it('Only good password that comes with a matching confirmation should be valid', function () {
+  it('Only good passwords that comes with a matching confirmation should be valid', function () {
     scope.data = {password: 'yAs5woN8E5oG5BA$wk', passwordConfirmation: 'yAs5woN8E5oG5BA$wk'}
     scope.checkPassword();
     expect(scope.status.passwordValid).to.be.true;
