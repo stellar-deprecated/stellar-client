@@ -18,6 +18,9 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <input id="email" name="email" type="email" class="form-control" ng-class="{'input-error': errors.length}" placeholder="Email Address" ng-model="email" ng-change="errors = []">
+                    <label id="checkbox">
+                        <input type="checkbox" name="subscribe" ng-model="subscribe"> Subscribe to news from Stellar
+                    </label>
                 </div>
             </div>
             <div class="form-group">

@@ -15,11 +15,12 @@ sc.controller('AddEmailCtrl', function ($scope, $rootScope, $http, $state, $anal
         $scope.loading = false;
         return;
       }
-      
+
       var wallet = session.get('wallet');
 
       var data = {
         email: $scope.email,
+        subscribe: $scope.subscribe,
         username: session.get('username'),
         updateToken: wallet.keychainData.updateToken
       };
@@ -29,8 +30,8 @@ sc.controller('AddEmailCtrl', function ($scope, $rootScope, $http, $state, $anal
       .error(addEmailError)
       .finally(addEmailDone);
     }
-    
-    
+
+
     function addEmailSuccess(response) {
       // Store the email address in the wallet.
       wallet.mainData.email = $scope.email;
@@ -38,7 +39,7 @@ sc.controller('AddEmailCtrl', function ($scope, $rootScope, $http, $state, $anal
 
       // Switch to the verify overlay.
       $scope.rewards[2].status = "unverified";
-      
+
       return session.getUser().refresh().then(function() {
         session.identifyToAnalytics();
         $analytics.eventTrack("Email Entered");
