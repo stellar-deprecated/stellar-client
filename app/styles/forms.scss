@@ -5,6 +5,10 @@ label {
   letter-spacing: 0.02em;
 }
 
+#email, #checkbox input {
+  margin-bottom: 4px;
+}
+
 input[type="text"],
 input[type="email"],
 input[type="number"],
@@ -35,10 +39,10 @@ input[type="password"] {
   }
 }
 
-input[type=number]::-webkit-inner-spin-button, 
-input[type=number]::-webkit-outer-spin-button { 
-  -webkit-appearance: none; 
-  margin: 0; 
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 .btn,
@@ -158,7 +162,7 @@ input[type=number]::-webkit-outer-spin-button {
         padding: 10px 15px;
         font-size: 16px;
         font-weight: $book-weight;
-        
+
         &:hover {
           font-weight: $medium-weight;
         }
@@ -340,6 +344,6 @@ select.form-control {
       button {
         margin: 15px 0;
       }
-    }   
+    }
   }
 }

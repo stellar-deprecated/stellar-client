@@ -92,9 +92,10 @@ angular.module('stellarClient').factory('UserPrivateInfo', function($http, $q, $
         return this.email && this.email.verified;
     };
 
-    UserPrivateInfo.prototype.changeEmail = function (email) {
+    UserPrivateInfo.prototype.changeEmail = function (email, subscribe) {
         var data = {
             username: this.username,
+            subscribe: subscribe,
             updateToken: this.updateToken,
             email: email
         };
