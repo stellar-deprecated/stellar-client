@@ -64,7 +64,7 @@ angular.module('stellarClient').controller('SettingsEmailCtrl', function($scope,
 
 
   function changeEmail () {
-    return session.getUser().changeEmail($scope.newEmail)
+    return session.getUser().changeEmail($scope.newEmail, $scope.subscribe)
         .then(function () {
           return $scope.refreshAndInitialize();
         })
