@@ -4,7 +4,25 @@
 
 [Commits](https://github.com/stellar/stellar-client/commits/master)
 
-##Week 10 -2015
+##Week 12 - 2015 (March 16-22)
+
+###New Features and Changes
+
+ - Pull Request [1183](https://github.com/stellar/stellar-client/pull/1183) Add subscribe checkbox to add email forms. Fixes Issue [1182](https://github.com/stellar/stellar-client/issues/1182) 
+
+ - Pull Request [1179](https://github.com/stellar/stellar-client/pull/1179) Add apply() to lost-2fa-device-controller. 
+
+ - Pull Request [1180](https://github.com/stellar/stellar-client/pull/1180) Fix $(...).tooltip is not a function errors in Sentry. 
+
+ - Pull Request [1177](https://github.com/stellar/stellar-client/pull/1177) Fix misspellings, add ingores to raven
+
+##Week 11 - 2015 (March 9-15)
+
+###New Features and Changes
+
+ - Pull Request [1175](https://github.com/stellar/stellar-client/pull/1175) Change minimum balance copy. Fixes Issue [1174](https://github.com/stellar/stellar-client/issues/1174)
+
+##Week 10 - 2015 (March 2-8)
 
 _Many thanks to @gterzian for his contributions to stellar-client_
 
@@ -12,7 +30,7 @@ _Many thanks to @gterzian for his contributions to stellar-client_
 
  - Pull Request [1167](https://github.com/stellar/stellar-client/pull/1167) Test coverage for Gateways Controllers (Thank you @gterzian)
 
-##Week 9 -2015
+##Week 9 - 2015 
 
 ##New Features and Changes
 
