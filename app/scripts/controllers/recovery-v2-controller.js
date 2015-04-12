@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('stellarClient').controller('RecoveryV2Ctrl', function($scope, $state, $q, $http, singletonPromise, debounce) {
+angular.module('stellarClient').controller('RecoveryV2Ctrl', function($scope, $state, $q, $http, singletonPromise, debounce, usernameHelper) {
   $scope.username = null;
   $scope.totpRequired = false;
   $scope.recoveryCode = null;
@@ -15,10 +15,9 @@ angular.module('stellarClient').controller('RecoveryV2Ctrl', function($scope, $s
     }
 
     $scope.usernameClass = 'glyphicon-refresh spin';
-    var username = $scope.username + '@stellar.org';
 
     $http.post(Options.WALLET_SERVER + '/v2/wallets/show_login_params', {
-      username: username
+      username: usernameHelper.normalizeV2Username($scope.username)
     }).success(function(response) {
       $scope.totpRequired = response.totpRequired;
     }).error(function(body, status) {
@@ -108,9 +107,6 @@ angular.module('stellarClient').controller('RecoveryV2Ctrl', function($scope, $s
   function recover(params) {
     var deferred = $q.defer();
 
-    // Append domain
-    params.username += '@stellar.org';
-
     var userPartBytes = bs58.decode(params.recoveryCode);
     var serverPartBytes = bs58.decode(params.serverRecoveryCode);
     var fullRecoveryCodeBytes = userPartBytes.concat(serverPartBytes);
@@ -118,7 +114,7 @@ angular.module('stellarClient').controller('RecoveryV2Ctrl', function($scope, $s
 
     var data = {
       server: Options.WALLET_SERVER+'/v2',
-      username: params.username,
+      username: usernameHelper.normalizeV2Username(params.username),
       recoveryCode: fullRecoveryCode
     };
 

@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('stellarClient').controller('Lost2FADeviceCtrl', function($scope, singletonPromise) {
+angular.module('stellarClient').controller('Lost2FADeviceCtrl', function($scope, singletonPromise, usernameHelper) {
   $scope.error = null;
   $scope.sent = false;
 
@@ -14,7 +14,7 @@ angular.module('stellarClient').controller('Lost2FADeviceCtrl', function($scope,
 
     StellarWallet.lostTotpDevice({
       server: Options.WALLET_SERVER+'/v2',
-      username: $scope.username+'@stellar.org',
+      username: usernameHelper.normalizeV2Username($scope.username),
       password: $scope.password
     }).then(function() {
       $scope.sent = true;

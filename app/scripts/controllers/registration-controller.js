@@ -19,6 +19,7 @@ angular.module('stellarClient').controller('RegistrationCtrl', function(
   FlashMessages,
   invites,
   vcRecaptchaService,
+  usernameHelper,
   stellarApi) {
 
   // Provide a default value to protect against stale config files.
@@ -308,7 +309,7 @@ angular.module('stellarClient').controller('RegistrationCtrl', function(
 
     StellarWallet.createWallet({
       server: Options.WALLET_SERVER+'/v2',
-      username: data.username.toLowerCase()+'@stellar.org',
+      username: usernameHelper.normalizeV2Username(data.username),
       password: data.password,
       publicKey: data.signingKeys.publicKey,
       keychainData: JSON.stringify(keychainData),
