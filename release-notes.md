@@ -4,6 +4,12 @@
 
 [Commits](https://github.com/stellar/stellar-client/commits/master)
 
+##Week 15 2015 (April 13-19)
+
+##New Features and Changes
+
+ - Pull Request [1173](https://github.com/stellar/stellar-client/pull/1173) Remove domain name from input field for password change
+
 ##Week 12 - 2015 (March 16-22)
 
 ###New Features and Changes
