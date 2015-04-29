@@ -104,16 +104,18 @@ describe('Controller: PasswordCtrl', function () {
   
   it('If there is no password, validateInput should mark that as an error', function () {
     scope.data = {password: ''}
-    var validInput = scope.validators.pop()();
-    expect(validInput).to.be.false;
+    _.forEach(scope.validators, function(validator) {
+      expect(validator()).to.be.false;
+    });
     expect(scope.errors.passwordErrors).to.include('The password field is required.')
   });
   
   it('If the password is invalid, validateInput should mark that as an error', function () {
     scope.data = {password: 'Great password'}
     scope.status.passwordValid = false;
-    var validInput = scope.validators.pop()();
-    expect(validInput).to.be.false;
+    _.forEach(scope.validators, function(validator) {
+      expect(validator()).to.be.false;
+    });
     expect(scope.errors.passwordErrors).to.include('The password is not strong enough.')
   });
   
@@ -121,8 +123,9 @@ describe('Controller: PasswordCtrl', function () {
     scope.data = {password: 'Great password'}
     scope.status.passwordValid = true;
     scope.status.passwordConfirmValid = false;
-    var validInput = scope.validators.pop()();
-    expect(validInput).to.be.false;
+    _.forEach(scope.validators, function(validator) {
+      expect(validator()).to.be.false;
+    });
     expect(scope.errors.passwordConfirmErrors).to.include('The passwords do not match.')
   });
     
