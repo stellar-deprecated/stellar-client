@@ -65,11 +65,15 @@ module.exports = function(config) {
    
     //specs
     'test/unit/specs/controllers/add-email-controller-test.js',
+    'test/unit/specs/controllers/manage-currencies-test.js',
     
     //gateways
     'test/unit/specs/controllers/add-gateway-controller-test.js',
     'test/unit/specs/controllers/gateway-list-controller-test.js',
-    'test/unit/specs/controllers/gateway-list-item-controller-test.js'
+    'test/unit/specs/controllers/gateway-list-item-controller-test.js',
+      
+    //password
+    'test/unit/specs/controllers/password-controller-test.js'
       
     ],
     
