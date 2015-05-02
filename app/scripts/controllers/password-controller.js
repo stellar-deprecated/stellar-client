@@ -2,49 +2,13 @@
 
 var sc = angular.module('stellarClient');
 
-sc.controller('PasswordCtrl', function($scope, passwordStrengthComputations, badPasswords) {  
+sc.controller('PasswordCtrl', function($scope) {  
   $scope.loading = false;
   $scope.passwordConfirmation = '';
 
-  // Remove default password requirements.
-  delete passwordStrengthComputations.aspects.minimumLength;
-  delete passwordStrengthComputations.aspects.uppercaseLetters;
-  delete passwordStrengthComputations.aspects.lowercaseLetters;
-  delete passwordStrengthComputations.aspects.numbers;
-  delete passwordStrengthComputations.aspects.duplicates;
-  delete passwordStrengthComputations.aspects.consecutive;
-  delete passwordStrengthComputations.aspects.dictionary;
-  delete passwordStrengthComputations.aspects.symbols;
-
-  // Enforce 8 character minimum.
-  passwordStrengthComputations.aspects.minLength = {
-    weight: 100,
-    strength: function(password){
-      var minLength = 8;
-      if(password.length < minLength/2) { return 25; }
-      if(password.length < minLength)   { return 50; }
-      if(password.length < 2*minLength) { return 75; }
-      return 100;
-    }
-  };
-
-  passwordStrengthComputations.aspects.sameAsUsername = {
-    weight: 1,
-    strength: function(password) {
-      return $scope.data.username === password ? -1000 : 0;
-    }
-  };
-
-  passwordStrengthComputations.aspects.dictionary = {
-    weight: 1,
-    strength: function(password) {
-      return badPasswords.contains(password) ? -1000 : 0;
-    }
-  };
-
   $scope.checkPassword = function(){
     $scope.errors.passwordErrors = [];
-    $scope.status.passwordValid = (passwordStrengthComputations.getStrength($scope.data.password) > 50);
+    $scope.status.passwordValid = (zxcvbn($scope.data.password).score > 3);
     $scope.checkConfirmPassword();
   };
 
