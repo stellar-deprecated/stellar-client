@@ -1,4 +1,5 @@
 'use strict';
+/* global zxcvbn*/
 
 var sc = angular.module('stellarClient');
 
