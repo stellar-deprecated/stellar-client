@@ -72,10 +72,10 @@ sc.controller('PasswordCtrl', function($scope, passwordStrengthComputations, bad
   $scope.passwordStrength = function(){
     if(!$scope.data.password) { return ''; }
 
-    var strength = passwordStrengthComputations.getStrength($scope.data.password);
-    if(strength < 25) { return 'WEAK'; }
-    if(strength < 50) { return 'ALMOST'; }
-    if(strength < 75) { return 'GOOD'; }
+    var strength = zxcvbn($scope.data.password).score;
+    if(strength < 2) { return 'WEAK'; }
+    if(strength < 3) { return 'ALMOST'; }
+    if(strength < 4) { return 'GOOD'; }
     return 'STRONG';
   };
 

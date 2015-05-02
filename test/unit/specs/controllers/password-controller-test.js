@@ -61,12 +61,12 @@ describe('Controller: PasswordCtrl', function () {
   });
   
   it('If the password is not quite good enough, passwordStrength should return ALMOST', function () {
-    scope.data = {password: 'serend'}
+    scope.data = {password: 'serendip'}
     expect(scope.passwordStrength()).to.equal('ALMOST');
   });
   
   it('If the password is OK, passwordStrength should return GOOD', function () {
-    scope.data = {password: 'serendip'}
+    scope.data = {password: 'serend$ip'}
     expect(scope.passwordStrength()).to.equal('GOOD');
   });
   
