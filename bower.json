@@ -28,7 +28,8 @@
     "bignumber.js": "1.4.1",
     "angulartics": "0.17.1",
     "URIjs": "1.14.1",
-    "angular-recaptcha": "~2.1.1"
+    "angular-recaptcha": "~2.1.1",
+    "zxcvbn": "*"
   },
   "devDependencies": {
     "angular-mocks": "~1.2.0"
