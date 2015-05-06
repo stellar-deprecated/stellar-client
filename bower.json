@@ -10,6 +10,7 @@
     "angular-ui-router": "0.2.11",
     "ng-debounce": "0.1.5",
     "angular-facebook": "0.2.3",
+    "angular-password-strength": "0.0.4",
     "angular-qr": "0.2.0",
     "autofill-event": "1.0.0",
     "crypto-js": "http://crypto-js.googlecode.com/files/CryptoJS%20v3.1.2.zip",
