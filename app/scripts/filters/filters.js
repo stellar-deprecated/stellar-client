@@ -2,6 +2,7 @@ var filterMod = angular.module('filters', []);
 var Amount = stellar.Amount;
 
 /* jshint camelcase:false */
+/* global zxcvbn*/
 
 
 // TODO: var iso4217 = require('../data/iso4217');
@@ -23,6 +24,18 @@ filterMod.filter('amountToHuman', function () {
         opts.max_sig_digits = 6;
         return input.to_human(opts);
     };
+});
+
+filterMod.filter('passwordScore', function () {
+  
+  return function (input) {
+    var strength = zxcvbn(input).score;
+    if(strength < 2) { return 'level1'; }
+    if(strength < 3) { return 'level2'; }
+    if(strength < 4) { return 'level3'; }
+    return 'level4';
+  };
+  
 });
 
 /**
