@@ -18,7 +18,6 @@ var stellarClient = angular.module('stellarClient', [
   'debounce',
   'singletonPromise',
   'ui.router',
-  'vr.passwordStrength',
   'ngClipboard',
   'vcRecaptcha',
   'ja.qr',
