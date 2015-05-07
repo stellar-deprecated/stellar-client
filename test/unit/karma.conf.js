@@ -58,6 +58,7 @@ module.exports = function(config) {
     //app
     'app/scripts/modules/stellar-api/stellar-api.js',
     'app/scripts/**/*.js',
+    'app/scripts/filters/filters.js',
     
     //test-only mocks
     'test/unit/mocks/gateway-mocks.js',
@@ -74,7 +75,10 @@ module.exports = function(config) {
     'test/unit/specs/controllers/gateway-list-item-controller-test.js',
       
     //password
-    'test/unit/specs/controllers/password-controller-test.js'
+    'test/unit/specs/controllers/password-controller-test.js',
+      
+    //filters
+    'test/unit/specs/filters/passwordscore_filter_test.js'
       
     ],
     
