@@ -54,35 +54,35 @@ describe('Controller: PasswordCtrl', function () {
     scope.data = {password: ''}
     scope.$digest();
     expect(scope.passwordStrength).to.equal('');
-    expect(scope.passowrdScore).to.equal('null');
+    expect(scope.passwordScore).to.equal('null');
   });
   
   it('If the password is weak, passwordStrength should return WEAK', function () {
     scope.data = {password: 'abc'}
     scope.$digest();
     expect(scope.passwordStrength).to.equal('WEAK');
-    expect(scope.passowrdScore).to.equal('level1');
+    expect(scope.passwordScore).to.equal('level1');
   });
   
   it('If the password is not quite good enough, passwordStrength should return ALMOST', function () {
     scope.data = {password: 'serendip'}
     scope.$digest();
     expect(scope.passwordStrength).to.equal('ALMOST');
-    expect(scope.passowrdScore).to.equal('level2');
+    expect(scope.passwordScore).to.equal('level2');
   });
   
   it('If the password is OK, passwordStrength should return GOOD', function () {
     scope.data = {password: 'serend$ip'}
     scope.$digest();
     expect(scope.passwordStrength).to.equal('GOOD');
-    expect(scope.passowrdScore).to.equal('level3');
+    expect(scope.passwordScore).to.equal('level3');
   });
   
   it('If the password is really good, passwordStrength should return STRONG', function () {
     scope.data = {password: 'yAs5woN8E5oG5BA$wk'}
     scope.$digest();
     expect(scope.passwordStrength).to.equal('STRONG');
-    expect(scope.passowrdScore).to.equal('level4');
+    expect(scope.passwordScore).to.equal('level4');
   });
   
   it('Only good passwords that comes with a matching confirmation should be valid', function () {
