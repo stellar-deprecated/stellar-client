@@ -6,6 +6,30 @@ var sc = angular.module('stellarClient');
 sc.controller('PasswordCtrl', function($scope) {  
   $scope.loading = false;
   $scope.passwordConfirmation = '';
+  $scope.passowrdScore = 0;
+  $scope.passwordStrength = '';
+  
+  $scope.$watch('data.password', function(newValue, oldValue) {
+    var score = zxcvbn($scope.data.password).score;
+    if (score < 2) {
+       $scope.passowrdScore = 'level1';
+       $scope.passwordStrength = 'WEAK';
+       return 
+    }
+    if (score < 3) { 
+      $scope.passowrdScore = 'level2';
+      $scope.passwordStrength = 'ALMOST';
+      return 
+    }
+    if (strength < 4) { 
+      $scope.passowrdScore = 'level3';
+      $scope.passwordStrength = 'GOOD';
+      return  
+    }
+    $scope.passowrdScore = 'level4';
+    $scope.passwordStrength = 'STRONG';
+    return  
+  });
 
   $scope.checkPassword = function(){
     $scope.errors.passwordErrors = [];
@@ -32,16 +56,6 @@ sc.controller('PasswordCtrl', function($scope) {
       var passwordPrefix = $scope.data.password.slice(0, $scope.data.passwordConfirmation.length);
       return $scope.data.passwordConfirmation !== passwordPrefix ? 'glyphicon-remove' : 'glyphicon-none';
     }
-  };
-
-  $scope.passwordStrength = function(){
-    if(!$scope.data.password) { return ''; }
-
-    var strength = zxcvbn($scope.data.password).score;
-    if(strength < 2) { return 'WEAK'; }
-    if(strength < 3) { return 'ALMOST'; }
-    if(strength < 4) { return 'GOOD'; }
-    return 'STRONG';
   };
 
   // Validate the passwords are valid and matching.

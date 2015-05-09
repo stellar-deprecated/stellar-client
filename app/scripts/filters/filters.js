@@ -26,18 +26,6 @@ filterMod.filter('amountToHuman', function () {
     };
 });
 
-filterMod.filter('passwordScore', function () {
-  
-  return function (input) {
-    var strength = zxcvbn(input).score;
-    if(strength < 2) { return 'level1'; }
-    if(strength < 3) { return 'level2'; }
-    if(strength < 4) { return 'level3'; }
-    return 'level4';
-  };
-  
-});
-
 /**
 * Takes an amount and currency code and formats it with the the number of decimal places as specified in currencies.js
 */

@@ -75,10 +75,7 @@ module.exports = function(config) {
     'test/unit/specs/controllers/gateway-list-item-controller-test.js',
       
     //password
-    'test/unit/specs/controllers/password-controller-test.js',
-      
-    //filters
-    'test/unit/specs/filters/passwordscore_filter_test.js'
+    'test/unit/specs/controllers/password-controller-test.js'
       
     ],
     
