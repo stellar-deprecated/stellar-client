@@ -6,40 +6,40 @@ var sc = angular.module('stellarClient');
 sc.controller('PasswordCtrl', function($scope) {  
   $scope.loading = false;
   $scope.passwordConfirmation = '';
-  $scope.passowrdScore = 'null';
+  $scope.passwordScore = 'null';
   $scope.passwordStrength = '';
   $scope.rawScore = 0;
   
   $scope.$watch('data.password', function(newValue, oldValue) {
     if (newValue == ''){
-      $scope.passowrdScore = 'null';
+      $scope.passwordScore = 'null';
       $scope.passwordStrength = '';
       return
     }
     var score = zxcvbn($scope.data.password).score;
     $scope.rawScore = score;
     if (score < 2) {
-       $scope.passowrdScore = 'level1';
+       $scope.passwordScore = 'level1';
        $scope.passwordStrength = 'WEAK';
        return 
     }
     if (score < 3) { 
-      $scope.passowrdScore = 'level2';
+      $scope.passwordScore = 'level2';
       $scope.passwordStrength = 'ALMOST';
       return 
     }
     if (score < 4) { 
-      $scope.passowrdScore = 'level3';
+      $scope.passwordScore = 'level3';
       $scope.passwordStrength = 'GOOD';
       return  
     }
-    $scope.passowrdScore = 'level4';
+    $scope.passwordScore = 'level4';
     $scope.passwordStrength = 'STRONG';
     return  
   });
   
   $scope.passwordScoreClass = function () {
-    return $scope.passowrdScore;
+    return $scope.passwordScore;
   };
 
   $scope.checkPassword = function(){
