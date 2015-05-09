@@ -14,6 +14,7 @@ sc.controller('PasswordCtrl', function($scope) {
     if (newValue === '') {
       $scope.passwordScore = 'null';
       $scope.passwordStrength = '';
+      $scope.rawScore = 0;
       return;
     }
     var score = zxcvbn(newValue).score;

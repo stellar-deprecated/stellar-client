@@ -76,6 +76,15 @@ describe('Controller: PasswordCtrl', function () {
     expect(scope.rawScore).to.equal(2);
   });
   
+  it('The rawscore should be reset to 0 if the password input is removed', function () {
+    scope.data = {password: 'serendip'}
+    scope.$digest();
+    expect(scope.rawScore).to.equal(2);
+    scope.data = {password: ''}
+    scope.$digest();
+    expect(scope.rawScore).to.equal(0);
+  });
+  
   it('If the password is OK, they should be set to GOOD and level3', function () {
     scope.data = {password: 'serend$ip'}
     scope.$digest();
