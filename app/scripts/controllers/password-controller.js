@@ -11,31 +11,31 @@ sc.controller('PasswordCtrl', function($scope) {
   $scope.rawScore = 0;
   
   $scope.$watch('data.password', function(newValue, oldValue) {
-    if (newValue == ''){
+    if (newValue === '') {
       $scope.passwordScore = 'null';
       $scope.passwordStrength = '';
-      return
+      return;
     }
     var score = zxcvbn($scope.data.password).score;
     $scope.rawScore = score;
     if (score < 2) {
        $scope.passwordScore = 'level1';
        $scope.passwordStrength = 'WEAK';
-       return 
+       return;
     }
     if (score < 3) { 
       $scope.passwordScore = 'level2';
       $scope.passwordStrength = 'ALMOST';
-      return 
+      return;
     }
     if (score < 4) { 
       $scope.passwordScore = 'level3';
       $scope.passwordStrength = 'GOOD';
-      return  
+      return;  
     }
     $scope.passwordScore = 'level4';
     $scope.passwordStrength = 'STRONG';
-    return  
+    return;  
   });
   
   $scope.passwordScoreClass = function () {

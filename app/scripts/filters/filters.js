@@ -2,7 +2,6 @@ var filterMod = angular.module('filters', []);
 var Amount = stellar.Amount;
 
 /* jshint camelcase:false */
-/* global zxcvbn*/
 
 
 // TODO: var iso4217 = require('../data/iso4217');
