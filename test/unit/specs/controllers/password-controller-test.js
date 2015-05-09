@@ -23,6 +23,9 @@ describe('Controller: PasswordCtrl', function () {
     expect(scope.loading).to.equal(false);
     expect(scope.passwordConfirmation).to.equal('');
     expect(scope.validators).to.be.ok
+    expect(scope.passwordStrength).to.equal('');
+    expect(scope.passwordScore).to.equal('null');
+    expect(scope.rawScore).to.equal(0);
   });
   
   it('passwordClass() should reflect the validity of status.passwordValid', function () {
