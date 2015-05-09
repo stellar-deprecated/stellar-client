@@ -52,31 +52,37 @@ describe('Controller: PasswordCtrl', function () {
   
   it('If the password is empty, passwordStrength should return an empty string', function () {
     scope.data = {password: ''}
-    expect(scope.passwordStrength()).to.equal('');
+    scope.$digest();
+    expect(scope.passwordStrength).to.equal('');
   });
   
   it('If the password is weak, passwordStrength should return WEAK', function () {
     scope.data = {password: 'abc'}
-    expect(scope.passwordStrength()).to.equal('WEAK');
+    scope.$digest();
+    expect(scope.passwordStrength).to.equal('WEAK');
   });
   
   it('If the password is not quite good enough, passwordStrength should return ALMOST', function () {
     scope.data = {password: 'serendip'}
-    expect(scope.passwordStrength()).to.equal('ALMOST');
+    scope.$digest();
+    expect(scope.passwordStrength).to.equal('ALMOST');
   });
   
   it('If the password is OK, passwordStrength should return GOOD', function () {
     scope.data = {password: 'serend$ip'}
-    expect(scope.passwordStrength()).to.equal('GOOD');
+    scope.$digest();
+    expect(scope.passwordStrength).to.equal('GOOD');
   });
   
   it('If the password is really good, passwordStrength should return STRONG', function () {
     scope.data = {password: 'yAs5woN8E5oG5BA$wk'}
-    expect(scope.passwordStrength()).to.equal('STRONG');
+    scope.$digest();
+    expect(scope.passwordStrength).to.equal('STRONG');
   });
   
   it('Only good passwords that comes with a matching confirmation should be valid', function () {
     scope.data = {password: 'yAs5woN8E5oG5BA$wk', passwordConfirmation: 'yAs5woN8E5oG5BA$wk'}
+    scope.$digest();
     scope.checkPassword();
     expect(scope.status.passwordValid).to.be.true;
     expect(scope.status.passwordConfirmValid).to.be.true;
@@ -86,6 +92,7 @@ describe('Controller: PasswordCtrl', function () {
   
   it('A weak password, even with a matching confirmation, should not be valid', function () {
     scope.data = {password: 'hello', passwordConfirmation: 'hello'}
+    scope.$digest();
     scope.checkPassword();
     expect(scope.status.passwordValid).to.be.false;
     expect(scope.status.passwordConfirmValid).to.be.true;
@@ -95,6 +102,7 @@ describe('Controller: PasswordCtrl', function () {
   
   it('Without a matching confirmation, a password should not be valid', function () {
     scope.data = {password: 'yAs5woN8E5oG5BA$wk', passwordConfirmation: ''}
+    scope.$digest();
     scope.checkPassword();
     expect(scope.status.passwordValid).to.be.true;
     expect(scope.status.passwordConfirmValid).to.be.false;
