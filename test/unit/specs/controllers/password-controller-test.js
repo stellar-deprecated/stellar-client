@@ -24,7 +24,7 @@ describe('Controller: PasswordCtrl', function () {
     expect(scope.passwordConfirmation).to.equal('');
     expect(scope.validators).to.be.ok
     expect(scope.passwordStrength).to.equal('');
-    expect(scope.passwordScore).to.equal('null');
+    expect(scope.passwordLevel).to.equal('null');
     expect(scope.rawScore).to.equal(0);
   });
   
@@ -57,14 +57,14 @@ describe('Controller: PasswordCtrl', function () {
     scope.data = {password: ''}
     scope.$digest();
     expect(scope.passwordStrength).to.equal('');
-    expect(scope.passwordScore).to.equal('null');
+    expect(scope.passwordLevel).to.equal('null');
   });
   
   it('If the password is weak, the strenght, score and raw score of the password should be set to WEAK, level1 and 0', function () {
     scope.data = {password: 'abc'}
     scope.$digest();
     expect(scope.passwordStrength).to.equal('WEAK');
-    expect(scope.passwordScore).to.equal('level1');
+    expect(scope.passwordLevel).to.equal('level1');
     expect(scope.rawScore).to.equal(0);
   });
   
@@ -72,7 +72,7 @@ describe('Controller: PasswordCtrl', function () {
     scope.data = {password: 'serendip'}
     scope.$digest();
     expect(scope.passwordStrength).to.equal('ALMOST');
-    expect(scope.passwordScore).to.equal('level2');
+    expect(scope.passwordLevel).to.equal('level2');
     expect(scope.rawScore).to.equal(2);
   });
   
@@ -89,7 +89,7 @@ describe('Controller: PasswordCtrl', function () {
     scope.data = {password: 'serend$ip'}
     scope.$digest();
     expect(scope.passwordStrength).to.equal('GOOD');
-    expect(scope.passwordScore).to.equal('level3');
+    expect(scope.passwordLevel).to.equal('level3');
     expect(scope.rawScore).to.equal(3);
   });
   
@@ -97,7 +97,7 @@ describe('Controller: PasswordCtrl', function () {
     scope.data = {password: 'yAs5woN8E5oG5BA$wk'}
     scope.$digest();
     expect(scope.passwordStrength).to.equal('STRONG');
-    expect(scope.passwordScore).to.equal('level4');
+    expect(scope.passwordLevel).to.equal('level4');
     expect(scope.rawScore).to.equal(4);
   });
   
