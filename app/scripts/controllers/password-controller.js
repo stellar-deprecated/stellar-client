@@ -16,7 +16,7 @@ sc.controller('PasswordCtrl', function($scope) {
       $scope.passwordStrength = '';
       return;
     }
-    var score = zxcvbn($scope.data.password).score;
+    var score = zxcvbn(newValue).score;
     $scope.rawScore = score;
     if (score < 2) {
        $scope.passwordScore = 'level1';
