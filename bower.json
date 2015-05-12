@@ -28,7 +28,7 @@
     "angulartics": "0.17.1",
     "URIjs": "1.14.1",
     "angular-recaptcha": "~2.1.1",
-    "zxcvbn": "git+https://github.com/dropbox/zxcvbn.git#90b7d2908d1305e0ab9f0fe0d983041e546af760"
+    "zxcvbn": "git+https://github.com/dropbox/zxcvbn.git#0064153c1b4be7d09b26dd0b8c141ca0da66ce38"
   },
   "devDependencies": {
     "angular-mocks": "~1.2.0"
