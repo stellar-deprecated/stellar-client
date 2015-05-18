@@ -24,7 +24,7 @@ describe('Controller: PasswordCtrl', function () {
     expect(scope.passwordConfirmation).to.equal('');
     expect(scope.validators).to.be.ok
     expect(scope.passwordStrength).to.equal('');
-    expect(scope.passwordLevel).to.equal('null');
+    expect(scope.passwordLevel).to.be.null;
     expect(scope.rawScore).to.equal(0);
   });
   
@@ -57,7 +57,7 @@ describe('Controller: PasswordCtrl', function () {
     scope.data = {password: ''}
     scope.$digest();
     expect(scope.passwordStrength).to.equal('');
-    expect(scope.passwordLevel).to.equal('null');
+    expect(scope.passwordLevel).to.be.null;
   });
   
   it('If the password is weak, the strenght, score and raw score of the password should be set to WEAK, level1 and 0', function () {
