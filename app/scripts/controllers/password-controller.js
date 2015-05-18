@@ -1,50 +1,51 @@
 'use strict';
+/* global zxcvbn*/
 
 var sc = angular.module('stellarClient');
 
-sc.controller('PasswordCtrl', function($scope, passwordStrengthComputations, badPasswords) {  
+sc.controller('PasswordCtrl', function($scope) {  
   $scope.loading = false;
   $scope.passwordConfirmation = '';
-
-  // Remove default password requirements.
-  delete passwordStrengthComputations.aspects.minimumLength;
-  delete passwordStrengthComputations.aspects.uppercaseLetters;
-  delete passwordStrengthComputations.aspects.lowercaseLetters;
-  delete passwordStrengthComputations.aspects.numbers;
-  delete passwordStrengthComputations.aspects.duplicates;
-  delete passwordStrengthComputations.aspects.consecutive;
-  delete passwordStrengthComputations.aspects.dictionary;
-  delete passwordStrengthComputations.aspects.symbols;
-
-  // Enforce 8 character minimum.
-  passwordStrengthComputations.aspects.minLength = {
-    weight: 100,
-    strength: function(password){
-      var minLength = 8;
-      if(password.length < minLength/2) { return 25; }
-      if(password.length < minLength)   { return 50; }
-      if(password.length < 2*minLength) { return 75; }
-      return 100;
+  $scope.passwordLevel = 'null';
+  $scope.passwordStrength = '';
+  $scope.rawScore = 0;
+  
+  $scope.$watch('data.password', function(newValue, oldValue) {
+    if (newValue === '') {
+      $scope.passwordLevel = 'null';
+      $scope.passwordStrength = '';
+      $scope.rawScore = 0;
+      return;
     }
-  };
-
-  passwordStrengthComputations.aspects.sameAsUsername = {
-    weight: 1,
-    strength: function(password) {
-      return $scope.data.username === password ? -1000 : 0;
+    var score = zxcvbn(newValue).score;
+    $scope.rawScore = score;
+    if (score < 2) {
+       $scope.passwordLevel = 'level1';
+       $scope.passwordStrength = 'WEAK';
+       return;
     }
-  };
-
-  passwordStrengthComputations.aspects.dictionary = {
-    weight: 1,
-    strength: function(password) {
-      return badPasswords.contains(password) ? -1000 : 0;
+    if (score < 3) { 
+      $scope.passwordLevel = 'level2';
+      $scope.passwordStrength = 'ALMOST';
+      return;
     }
+    if (score < 4) { 
+      $scope.passwordLevel = 'level3';
+      $scope.passwordStrength = 'GOOD';
+      return;  
+    }
+    $scope.passwordLevel = 'level4';
+    $scope.passwordStrength = 'STRONG';
+    return;  
+  });
+  
+  $scope.passwordLevelClass = function () {
+    return $scope.passwordLevel;
   };
 
   $scope.checkPassword = function(){
     $scope.errors.passwordErrors = [];
-    $scope.status.passwordValid = (passwordStrengthComputations.getStrength($scope.data.password) > 50);
+    $scope.status.passwordValid = ($scope.rawScore > 3);
     $scope.checkConfirmPassword();
   };
 
@@ -67,16 +68,6 @@ sc.controller('PasswordCtrl', function($scope, passwordStrengthComputations, bad
       var passwordPrefix = $scope.data.password.slice(0, $scope.data.passwordConfirmation.length);
       return $scope.data.passwordConfirmation !== passwordPrefix ? 'glyphicon-remove' : 'glyphicon-none';
     }
-  };
-
-  $scope.passwordStrength = function(){
-    if(!$scope.data.password) { return ''; }
-
-    var strength = passwordStrengthComputations.getStrength($scope.data.password);
-    if(strength < 25) { return 'WEAK'; }
-    if(strength < 50) { return 'ALMOST'; }
-    if(strength < 75) { return 'GOOD'; }
-    return 'STRONG';
   };
 
   // Validate the passwords are valid and matching.

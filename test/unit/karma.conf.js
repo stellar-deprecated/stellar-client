@@ -52,11 +52,13 @@ module.exports = function(config) {
     "app/bower_components/URIjs/src/URI.js",
     'app/bower_components/angular-mocks/angular-mocks.js',
     'app/bower_components/stellar-lib/build/stellar-lib.js',
+    'app/bower_components/zxcvbn/zxcvbn.js',
     
     
     //app
     'app/scripts/modules/stellar-api/stellar-api.js',
     'app/scripts/**/*.js',
+    'app/scripts/filters/filters.js',
     
     //test-only mocks
     'test/unit/mocks/gateway-mocks.js',

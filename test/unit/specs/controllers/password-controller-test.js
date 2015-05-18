@@ -23,6 +23,9 @@ describe('Controller: PasswordCtrl', function () {
     expect(scope.loading).to.equal(false);
     expect(scope.passwordConfirmation).to.equal('');
     expect(scope.validators).to.be.ok
+    expect(scope.passwordStrength).to.equal('');
+    expect(scope.passwordLevel).to.equal('null');
+    expect(scope.rawScore).to.equal(0);
   });
   
   it('passwordClass() should reflect the validity of status.passwordValid', function () {
@@ -52,31 +55,55 @@ describe('Controller: PasswordCtrl', function () {
   
   it('If the password is empty, passwordStrength should return an empty string', function () {
     scope.data = {password: ''}
-    expect(scope.passwordStrength()).to.equal('');
+    scope.$digest();
+    expect(scope.passwordStrength).to.equal('');
+    expect(scope.passwordLevel).to.equal('null');
   });
   
-  it('If the password is weak, passwordStrength should return WEAK', function () {
+  it('If the password is weak, the strenght, score and raw score of the password should be set to WEAK, level1 and 0', function () {
     scope.data = {password: 'abc'}
-    expect(scope.passwordStrength()).to.equal('WEAK');
+    scope.$digest();
+    expect(scope.passwordStrength).to.equal('WEAK');
+    expect(scope.passwordLevel).to.equal('level1');
+    expect(scope.rawScore).to.equal(0);
   });
   
-  it('If the password is not quite good enough, passwordStrength should return ALMOST', function () {
-    scope.data = {password: 'serend'}
-    expect(scope.passwordStrength()).to.equal('ALMOST');
-  });
-  
-  it('If the password is OK, passwordStrength should return GOOD', function () {
+  it('If the password is not good enough, they should be set to ALMOST and level2', function () {
     scope.data = {password: 'serendip'}
-    expect(scope.passwordStrength()).to.equal('GOOD');
+    scope.$digest();
+    expect(scope.passwordStrength).to.equal('ALMOST');
+    expect(scope.passwordLevel).to.equal('level2');
+    expect(scope.rawScore).to.equal(2);
   });
   
-  it('If the password is really good, passwordStrength should return STRONG', function () {
+  it('The rawscore should be reset to 0 if the password input is removed', function () {
+    scope.data = {password: 'serendip'}
+    scope.$digest();
+    expect(scope.rawScore).to.equal(2);
+    scope.data = {password: ''}
+    scope.$digest();
+    expect(scope.rawScore).to.equal(0);
+  });
+  
+  it('If the password is OK, they should be set to GOOD and level3', function () {
+    scope.data = {password: 'serend$ip'}
+    scope.$digest();
+    expect(scope.passwordStrength).to.equal('GOOD');
+    expect(scope.passwordLevel).to.equal('level3');
+    expect(scope.rawScore).to.equal(3);
+  });
+  
+  it('If the password is really good, they should be set to STRONG and level4', function () {
     scope.data = {password: 'yAs5woN8E5oG5BA$wk'}
-    expect(scope.passwordStrength()).to.equal('STRONG');
+    scope.$digest();
+    expect(scope.passwordStrength).to.equal('STRONG');
+    expect(scope.passwordLevel).to.equal('level4');
+    expect(scope.rawScore).to.equal(4);
   });
   
   it('Only good passwords that comes with a matching confirmation should be valid', function () {
     scope.data = {password: 'yAs5woN8E5oG5BA$wk', passwordConfirmation: 'yAs5woN8E5oG5BA$wk'}
+    scope.$digest();
     scope.checkPassword();
     expect(scope.status.passwordValid).to.be.true;
     expect(scope.status.passwordConfirmValid).to.be.true;
@@ -86,6 +113,7 @@ describe('Controller: PasswordCtrl', function () {
   
   it('A weak password, even with a matching confirmation, should not be valid', function () {
     scope.data = {password: 'hello', passwordConfirmation: 'hello'}
+    scope.$digest();
     scope.checkPassword();
     expect(scope.status.passwordValid).to.be.false;
     expect(scope.status.passwordConfirmValid).to.be.true;
@@ -95,6 +123,7 @@ describe('Controller: PasswordCtrl', function () {
   
   it('Without a matching confirmation, a password should not be valid', function () {
     scope.data = {password: 'yAs5woN8E5oG5BA$wk', passwordConfirmation: ''}
+    scope.$digest();
     scope.checkPassword();
     expect(scope.status.passwordValid).to.be.true;
     expect(scope.status.passwordConfirmValid).to.be.false;
