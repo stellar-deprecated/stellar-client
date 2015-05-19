@@ -36,13 +36,11 @@ sc.controller('PasswordCtrl', function($scope) {
     }
     $scope.passwordLevel = 'level4';
     $scope.passwordStrength = 'STRONG';
-  });
 
-  $scope.checkPassword = function(){
     $scope.errors.passwordErrors = [];
     $scope.status.passwordValid = ($scope.rawScore > 3);
     $scope.checkConfirmPassword();
-  };
+  });
 
   $scope.checkConfirmPassword = function(){
     $scope.status.passwordConfirmValid = ($scope.data.password === $scope.data.passwordConfirmation);
