@@ -16,11 +16,11 @@
             </ul>
 
             <ul class="nav navbar-nav navbar-right" ng-show="loggedIn">
-                <li ng-show="showInvitesLink()">
-                    <a ui-sref="invites" ng-class="getInvitesClass()">
-                        <span>invite ({{ getInvitesLeft() }})</span>
-                    </a>
-                </li>
+                <!--<li ng-show="showInvitesLink()">-->
+                    <!--<a ui-sref="invites" ng-class="getInvitesClass()">-->
+                        <!--<span>invite ({{ getInvitesLeft() }})</span>-->
+                    <!--</a>-->
+                <!--</li>-->
                 <li ng-show="showTradingLink()"><a ui-sref="trading"><span class="glyphicon glyphicon-transfer"></span>trade</a></li>
                 <li><a ui-sref="settings"><span class="glyphicon glyphicon-cog"></span>{{ username }}</a></li>
                 <li><a ui-sref="logout"><span class="glyphicon glyphicon-log-out"></span>LOG OUT</a></li>

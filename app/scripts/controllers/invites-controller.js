@@ -132,10 +132,10 @@ sc.controller('InvitesCtrl', function($scope, $http, $q, $filter, $analytics, se
         });
     };
 
-    invites.ack()
-        .then(function () {
-            session.getUser().refresh();
-        });
+    //invites.ack()
+    //    .then(function () {
+    //        session.getUser().refresh();
+    //    });
 });
 
 sc.filter('includeInviteActionFilter', function () {

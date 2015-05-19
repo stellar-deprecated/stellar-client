@@ -45,19 +45,19 @@ sc.controller('TaskMessageCtrl', function ($rootScope, $scope, $state, $filter, 
 
     $scope.task = null;
 
-    function loadTasks() {
-        var user = session.getUser();
+    //function loadTasks() {
+    //    var user = session.getUser();
+    //
+    //    if (user.getInviteCode() && !user.hasClaimedInviteCode()) {
+    //        $scope.task = $scope.inviteTasks.hasInviteCode;
+    //    } else if (user.getNewInvites().length > 0) {
+    //        $scope.newInvites = user.getNewInvites().length;
+    //        $scope.task = $scope.inviteTasks.hasNewInvites;
+    //        $analytics.eventTrack('Invite Prompted');
+    //    }
+    //}
 
-        if (user.getInviteCode() && !user.hasClaimedInviteCode()) {
-            $scope.task = $scope.inviteTasks.hasInviteCode;
-        } else if (user.getNewInvites().length > 0) {
-            $scope.newInvites = user.getNewInvites().length;
-            $scope.task = $scope.inviteTasks.hasNewInvites;
-            $analytics.eventTrack('Invite Prompted');
-        }
-    }
-
-    $scope.$on('userLoaded', function () {
-        loadTasks();
-    });
+    //$scope.$on('userLoaded', function () {
+    //    loadTasks();
+    //});
 });
