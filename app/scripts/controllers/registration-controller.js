@@ -1,5 +1,5 @@
 'use strict';
-/* global SigningKeys */
+/* global SigningKeys, StellarBase */
 /* jshint camelcase: false */
 
 angular.module('stellarClient').controller('RegistrationCtrl', function(
@@ -228,6 +228,8 @@ angular.module('stellarClient').controller('RegistrationCtrl', function(
 
   function generateSigningKeys(data) {
     data.signingKeys = StellarWallet.util.generateKeyPair($scope.data.secret);
+    var keyPair = StellarBase.Keypair.fromSeed(data.signingKeys.secret);
+    data.signingKeys.newAddress = keyPair.address();
     return $q.when(data);
   }
 
@@ -237,6 +239,7 @@ angular.module('stellarClient').controller('RegistrationCtrl', function(
     var params = {
       username: data.username,
       address: data.signingKeys.address,
+      newAddress: data.signingKeys.newAddress,
       recaptchaResponse: data.recaptchaResponse
     };
 
