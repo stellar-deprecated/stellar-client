@@ -22,7 +22,6 @@
     "ng-clip": "0.2.4",
     "stellar-wallet-js-sdk": "git+https://github.com/stellar/stellar-wallet-js-sdk.git#master",
     "tweetnacl": "0.11.2",
-    "stellar-base": "git+https://github.com/stellar/js-stellar-base.git#e7e7bd16ebbeaa7b8f252011bbfcaaf4f38ec18d",
     "stellar-lib": "0.10.1",
     "zeroclipboard": "2.1.6",
     "bignumber.js": "1.4.1",
