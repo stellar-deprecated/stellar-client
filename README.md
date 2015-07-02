@@ -1,6 +1,9 @@
 # Stellar Client
 
+
 [![Build Status](https://travis-ci.org/stellar/stellar-client.svg)](https://travis-ci.org/stellar/stellar-client)
+
+Status: INACTIVE. This repository is not in active development. It points to the stellard network, which is being replaced by stellar-core. Please refer to the replacement repository, [interstellar-client](https://github.com/stellar/interstellar-client), which points to the [stellar-core](https://github.com/stellar/stellar-core) network.
 
 The Stellar client is an AngularJS application that allows users to interact with the Stellar network from their browser.
 This client allows users to register for an account, generate a wallet containing cryptographic keys, and submit transactions to the Stellar network.
