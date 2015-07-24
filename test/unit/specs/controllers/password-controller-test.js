@@ -104,7 +104,6 @@ describe('Controller: PasswordCtrl', function () {
   it('Only good passwords that comes with a matching confirmation should be valid', function () {
     scope.data = {password: 'yAs5woN8E5oG5BA$wk', passwordConfirmation: 'yAs5woN8E5oG5BA$wk'}
     scope.$digest();
-    scope.checkPassword();
     expect(scope.status.passwordValid).to.be.true;
     expect(scope.status.passwordConfirmValid).to.be.true;
     expect(scope.errors.passwordErrors).to.be.empty;
@@ -114,7 +113,6 @@ describe('Controller: PasswordCtrl', function () {
   it('A weak password, even with a matching confirmation, should not be valid', function () {
     scope.data = {password: 'hello', passwordConfirmation: 'hello'}
     scope.$digest();
-    scope.checkPassword();
     expect(scope.status.passwordValid).to.be.false;
     expect(scope.status.passwordConfirmValid).to.be.true;
     expect(scope.errors.passwordErrors).to.be.empty;
@@ -124,7 +122,6 @@ describe('Controller: PasswordCtrl', function () {
   it('Without a matching confirmation, a password should not be valid', function () {
     scope.data = {password: 'yAs5woN8E5oG5BA$wk', passwordConfirmation: ''}
     scope.$digest();
-    scope.checkPassword();
     expect(scope.status.passwordValid).to.be.true;
     expect(scope.status.passwordConfirmValid).to.be.false;
     expect(scope.errors.passwordErrors).to.be.empty;
