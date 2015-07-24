@@ -228,7 +228,7 @@ angular.module('stellarClient').controller('RegistrationCtrl', function(
 
   function generateSigningKeys(data) {
     data.signingKeys = StellarWallet.util.generateKeyPair($scope.data.secret);
-    var keyPair = StellarBase.Keypair.fromSeed(data.signingKeys.secret);
+    var keyPair = new StellarBase.Keypair({publicKey: nacl.util.decodeBase64(data.signingKeys.publicKey)});
     data.signingKeys.newAddress = keyPair.address();
     return $q.when(data);
   }
