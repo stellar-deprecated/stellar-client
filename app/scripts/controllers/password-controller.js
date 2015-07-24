@@ -19,27 +19,23 @@ sc.controller('PasswordCtrl', function($scope) {
     }
     var score = zxcvbn(newValue).score;
     $scope.rawScore = score;
+    $scope.status.passwordValid = (score > 3);
+    $scope.errors.passwordErrors = [];
+    $scope.checkConfirmPassword();
+
     if (score < 2) {
-       $scope.passwordLevel = 'level1';
-       $scope.passwordStrength = 'WEAK';
-       return;
-    }
-    if (score < 3) { 
+      $scope.passwordLevel = 'level1';
+      $scope.passwordStrength = 'WEAK';
+    } else if (score < 3) {
       $scope.passwordLevel = 'level2';
       $scope.passwordStrength = 'ALMOST';
-      return;
-    }
-    if (score < 4) { 
+    } else if (score < 4) {
       $scope.passwordLevel = 'level3';
       $scope.passwordStrength = 'GOOD';
-      return;  
+    } else {
+      $scope.passwordLevel = 'level4';
+      $scope.passwordStrength = 'STRONG';
     }
-    $scope.passwordLevel = 'level4';
-    $scope.passwordStrength = 'STRONG';
-
-    $scope.errors.passwordErrors = [];
-    $scope.status.passwordValid = ($scope.rawScore > 3);
-    $scope.checkConfirmPassword();
   });
 
   $scope.checkConfirmPassword = function(){
