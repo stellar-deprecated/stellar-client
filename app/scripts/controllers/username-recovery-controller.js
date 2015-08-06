@@ -2,7 +2,16 @@
 /* global recoverform */
 var sc = angular.module('stellarClient');
 
-sc.controller('UsernameRecoveryCtrl', function($rootScope, $scope, $http, $state, $q, singletonPromise) {
+sc.controller('UsernameRecoveryCtrl', function($rootScope, $scope, $http, $state, $q, singletonPromise, vcRecaptchaService) {
+
+  $scope.recaptchaKey = Options.CAPTCHA_KEY;
+  $scope.recaptchaWidgetId = null;
+  $scope.onRecaptchaSuccess = function (response) {
+    $scope.recaptchaResponse = response;
+  };
+  $scope.setRecaptchaWidgetId = function (widgetId) {
+    $scope.widgetId = widgetId;
+  };
 
     $scope.attemptRecovery = singletonPromise(function () {
         if (!$scope.email && recoverform.email.value) {
@@ -13,12 +22,11 @@ sc.controller('UsernameRecoveryCtrl', function($rootScope, $scope, $http, $state
             return $q.reject();
         }
 
-        var config = {
-            params: {
-                email: $scope.email
-            }
+        var params = {
+            email:             $scope.email,
+            recaptchaResponse: $scope.recaptchaResponse,
         };
-        return $http.get(Options.API_SERVER + "/user/forgotUsername", config)
+        return $http.post(Options.API_SERVER + "/user/forgotUsername", params)
         .success(function (response) {
             $state.go('login');
             $rootScope.recoveringUsername = true;
@@ -26,6 +34,8 @@ sc.controller('UsernameRecoveryCtrl', function($rootScope, $scope, $http, $state
         .error(function (response) {
             if (response.code === "not_found") {
                 $scope.emailError = "No username with that email";
+            } else if (response.code === "captcha") {
+                $scope.emailError = response.message;
             } else {
                 $scope.emailError = "Server error";
             }
