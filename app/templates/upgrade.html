@@ -1,0 +1,30 @@
+<div class="upgrade client-section" ng-controller="UpgradeCtrl">
+  <div class="container" ng-if="view === 'loading'">
+    Loading...
+  </div>
+
+  <div class="container" ng-if="view === 'intro'">
+    <h1>Upgrade</h1>
+    <h2>Click the button below to upgrade these to the new network</h2>
+    <div class="form-group row">
+      <div class="errors col-sm-offset-1 col-sm-6">
+        <div class="tip">{{ error }}</div>
+      </div>
+    </div>
+    <button ng-click="upgrade()" class="btn btn-default">Upgrade</button>
+  </div>
+
+  <div class="container" ng-if="view === 'upgrading'">
+    Almost there...
+  </div>
+
+  <div class="container" ng-if="view === 'upgraded'">
+    <h1>Migration successful!</h1>
+
+    <h2>You have {{balance / 1000000}} Lumens.</h2>
+    <p>
+      Your secret key on the new network is: <strong>{{newNetworkSecretSeed}}</strong><br />
+      Your address on the new network is: <strong>{{newNetworkAddress}}</strong>
+    </p>
+  </div>
+</div>

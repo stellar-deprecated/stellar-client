@@ -151,8 +151,9 @@ gulp.task('html', ['config', 'styles', 'scripts', 'flash'], function (done) {
             .pipe(jsFilter)
             .pipe($.sourcemaps.init())
             .pipe($.replace('_GIT_REVISION_GOES_HERE_',revision))
-            .pipe($.ngAnnotate())
-            .pipe($.uglify())
+            .pipe($.uglify({
+              mangle: false
+            }))
             .pipe($.rev())
             .pipe(jsFilter.restore())
             .pipe(cssFilter)
