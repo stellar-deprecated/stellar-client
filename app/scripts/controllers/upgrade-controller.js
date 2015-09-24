@@ -25,7 +25,7 @@ angular.module('stellarClient').controller('UpgradeCtrl', function($scope, sessi
             $scope.error = 'We could not find your address.';
             break;
           case 'invalid_address':
-            $scope.error = 'New network address ('+$scope.newNetworkAddress+') is invalid.';
+            $scope.error = 'New network address is invalid.';
             break;
           case 'already_claimed':
             $scope.error = 'This address has been already claimed.';
@@ -47,7 +47,7 @@ angular.module('stellarClient').controller('UpgradeCtrl', function($scope, sessi
       } else {
         $scope.view = 'upgraded';
       }
-      $scope.balance = response.str_balance;
+      $scope.balance = Math.floor(response.str_balance / 1000000);
     })
     .error(function(response){
       $scope.view = 'intro';

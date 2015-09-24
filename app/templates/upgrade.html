@@ -1,30 +1,41 @@
-<div class="upgrade client-section" ng-controller="UpgradeCtrl">
-  <div class="container" ng-if="view === 'loading'">
-    Loading...
+<div class="upgrade client-section container" ng-controller="UpgradeCtrl">
+  <div class="loading" ng-if="view === 'loading'">
+    <p rp-spinner="4" class="literal">Loading upgrade status...</p>
+    <img class="sending-rocket" src="./images/sending.gif"/>
   </div>
 
-  <div class="container" ng-if="view === 'intro'">
-    <h1>Upgrade</h1>
-    <h2>Click the button below to upgrade these to the new network</h2>
-    <div class="form-group row">
+  <div class="upgrade-intro" ng-if="view === 'intro'">
+    <h2>Upgrade</h2>
+    <p>Click the button below to upgrade your account to the new network.</p>
+    <div class="form-group row" ng-if="error">
       <div class="errors col-sm-offset-1 col-sm-6">
         <div class="tip">{{ error }}</div>
       </div>
     </div>
-    <button ng-click="upgrade()" class="btn btn-default">Upgrade</button>
+    <button ng-click="upgrade()" class="btn btn-default btn-primary submit">Upgrade</button>
   </div>
 
-  <div class="container" ng-if="view === 'upgrading'">
-    Almost there...
+  <div class="loading" ng-if="view === 'upgrading'">
+    <p rp-spinner="4" class="literal">Almost there...</p>
+    <img class="sending-rocket" src="./images/sending.gif"/>
   </div>
 
-  <div class="container" ng-if="view === 'upgraded'">
+  <div class="upgraded" ng-if="view === 'upgraded'">
+    <div class="icon">
+      <img class="migration-ok" src="./images/migration-ok.png"/>
+    </div>
     <h1>Migration successful!</h1>
 
-    <h2>You have {{balance / 1000000}} Lumens.</h2>
-    <p>
-      Your secret key on the new network is: <strong>{{newNetworkSecretSeed}}</strong><br />
-      Your address on the new network is: <strong>{{newNetworkAddress}}</strong>
-    </p>
+    <p>You have {{balance}} lumens.</p>
+    <p class="margin">Spend them wisely. ;)</p>
+
+    <div class="keypair">
+      <p>Your secret key on the new network is: <strong>{{newNetworkSecretSeed}}</strong></p>
+      <p>Your address on the new network is: <strong>{{newNetworkAddress}}</strong></p>
+    </div>
+
+    <div class="client">
+      <p>You can access your lumens at: <a href="https://stellar.org/developers/tools/simple" target="_blank">stellar.org/developers/tools/simple</a></p>
+    </div>
   </div>
 </div>
