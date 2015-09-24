@@ -93,11 +93,11 @@ describe('Controller: AddGatewayCtrl, without mocking out Gateways', function ()
   it('You should be able to add a gateway that was found', function () {
     scope.showAddAlert = sinon.spy();
     scope.foundGateway = {domain: 'new-gateway', currencies: [{currency: 'usd'}, {currency: 'cny'}]};
-    expect(inner_session.get().mainData.gateways['new-gateway']).to.equal(undefined);
+    expect(inner_session.get('wallet').mainData.gateways['new-gateway']).to.equal(undefined);
     scope.addGateway();
-    expect(inner_session.get().mainData.gateways['new-gateway'].status).to.equal('adding');
+    expect(inner_session.get('wallet').mainData.gateways['new-gateway'].status).to.equal('adding');
     rootScope.$apply();
-    expect(inner_session.get().mainData.gateways['new-gateway'].status).to.equal('added');
+    expect(inner_session.get('wallet').mainData.gateways['new-gateway'].status).to.equal('added');
     expect(scope.showAddAlert.calledWithExactly('new-gateway')).to.be.true
   });
   

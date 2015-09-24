@@ -52,6 +52,7 @@ module.exports = function(config) {
     "app/bower_components/URIjs/src/URI.js",
     'app/bower_components/angular-mocks/angular-mocks.js',
     'app/bower_components/stellar-lib/build/stellar-lib.js',
+    'app/bower_components/stellar-base/stellar-base.js',
     'app/bower_components/zxcvbn/zxcvbn.js',
     
     
@@ -63,6 +64,7 @@ module.exports = function(config) {
     //test-only mocks
     'test/unit/mocks/gateway-mocks.js',
     'test/unit/mocks/session-mocks.js',
+    'test/unit/mocks/stellar-api-mocks.js',
     'test/unit/mocks/stellar-network-mocks.js',
    
     //specs
@@ -75,7 +77,10 @@ module.exports = function(config) {
     'test/unit/specs/controllers/gateway-list-item-controller-test.js',
       
     //password
-    'test/unit/specs/controllers/password-controller-test.js'
+    'test/unit/specs/controllers/password-controller-test.js',
+
+    //upgrade
+    'test/unit/specs/controllers/upgrade-controller-test.js'
       
     ],
     
