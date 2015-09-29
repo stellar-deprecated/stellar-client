@@ -39,6 +39,11 @@ angular.module('stellarClient').controller('UpgradeCtrl', function($scope, sessi
       });
   };
 
+  $scope.reveal = function($event) {
+    $event.preventDefault();
+    $scope.revealSecret = true;
+  };
+
   stellarApi.Upgrade.balance({address: session.get('address')})
     .success(function(response) {
       /*jshint camelcase: false */

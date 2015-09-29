@@ -30,7 +30,15 @@
     <p class="margin">Spend them wisely. ;)</p>
 
     <div class="keypair">
-      <p>Your secret key on the new network is: <strong>{{newNetworkSecretSeed}}</strong></p>
+      <p>Your secret key on the new network is:
+        <strong ng-if="!revealSecret">XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</strong>
+        <a ng-if="!revealSecret" href="#" ng-click="reveal($event)">[reveal]</a>
+        <strong ng-if="revealSecret">{{newNetworkSecretSeed}}</strong>
+      </p>
+      <p class="warning" ng-if="revealSecret">
+        <span class="warning-title">Warning!</span> Don't share your secret key with anyone!
+        Anyone who knows your secret can steal your funds!
+      </p>
       <p>Your address on the new network is: <strong>{{newNetworkAddress}}</strong></p>
     </div>
 

@@ -82,6 +82,15 @@
         /* Secret seed and address are long so break them */
         word-wrap: break-word;
       }
+
+      p.warning {
+        text-transform: uppercase;
+        font-size: 15px;
+
+        .warning-title {
+          color: #D41B32;
+        }
+      }
     }
 
     .client {
