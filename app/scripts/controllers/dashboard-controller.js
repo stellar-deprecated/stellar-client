@@ -3,6 +3,12 @@
 var sc = angular.module('stellarClient');
 
 sc.controller('DashboardCtrl', function($rootScope, $scope, $timeout, $state, session, TutorialHelper, StellarNetwork, contacts, FlashMessages) {
+    FlashMessages.add({
+        title: 'Upgrade notice',
+        showCloseIcon: false,
+        template: 'templates/flash-message-upgrade.html'
+    });
+
     if (session.get('wallet').mainData.needsRecoveryCodeReset) {
       FlashMessages.add({
         id: 'migrated-wallet-recovery',
