@@ -30,6 +30,9 @@ angular.module('stellarClient').controller('UpgradeCtrl', function($scope, sessi
           case 'already_claimed':
             $scope.error = 'This address has been already claimed.';
             break;
+          case 'balance_too_low':
+            $scope.error = 'Your old network account has less than 20 STR in it. Use upgrade CLI to upgrade your account to existing new network account.';
+            break;
           case 'invalid_signature':
             $scope.error = 'Signature is not valid.';
             break;
