@@ -1,115 +1,115 @@
 <div class="dashboard" ng-class="tutorials.get('dashboard')" ng-controller="DashboardCtrl">
-    <div class="controls-container client-section">
-        <div class="container">
-            <disconnected-alert></disconnected-alert>
-            <div class="row controls">
-                <div class="dash-balance-container col-sm-6 col-sm-push-3">
-                    <div class="single-balance-container" ng-hide="currencies.length">
-                        <div ng-show="$root.accountStatus == 'loaded'">
-                            <span class="dash-balance" rp-tooltip="{{$root.balance  | rpamount}}  (minimum balance: {{ $root.reserve | rpamount }} STR)" ng-bind-html="$root.balance | rpamount:{rel_precision: 0} | shrinkText:84:6"></span>
-                            <div class="dash-balance-info">Current Balance <b>Stellars</b></div>
-                            <div class="dash-links">
-                                <a class="manage-currency-link" ng-click="openManageCurrencies();" href="">
-                                    <i class="glyphicon glyphicon-th-list"></i>
-                                    <span ng-hide="accountLines.length">add a currency</span>
-                                    <span ng-show="accountLines.length">manage currencies</span>
-                                </a>
-                            </div>
-                        </div>
-                        <span ng-hide="$root.accountStatus == 'loaded'" class="dash-balance" ng-bind-html="statusMessage() | shrinkText:84:6"></span>
-                    </div>
-                    <div class="multi-balance-container" ng-show="currencies.length">
-                        <div class="dash-currency-line row">
-                            <div class="currency-unit col-xs-6">{{ 'STR' | currencyName }}</div>
-                            <div class="currency-balance col-xs-6">{{ $root.balance | rpamount:{rel_precision: 0} }}</div>
-                        </div>
-                        <div ng-repeat="currency in topCurrencies" class="dash-currency-line row">
-                            <div class="currency-unit col-xs-6">{{ currency | currencyName }}</div>
-                            <div class="currency-balance col-xs-6">{{ balances[currency] | roundAmount:currency }}</div>
-                        </div>
-                        <div class="dash-links">
-                            <a class="manage-currency-link" ng-click="openBalances();" href="">view all balances ({{ nonZeroAccountLines.length + 1 }})</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="dash-receive-container col-xs-6 col-sm-3 col-sm-pull-6">
-                    <div class="img-container "><img src="images/wallet.png"></div>
-                    <button class="btn btn-default" ng-click="openReceive()" ng-show="!showTab || tab != 'receive'">
-                        <i class="icon icon-receive"></i>
-                        Receive
-                    </button>
-                    <div class="no-button" ng-show="showTab && tab == 'receive'"><i class="icon icon-receive"></i>Receive</div>
-                </div>
-                <div class="dash-send-container col-xs-6 col-sm-3">
-                    <div class="img-container"><img src="images/rocket.png"></div>
-                    <button class="btn btn-default" ng-click="openSend()" ng-show="!showTab || tab != 'send'">
-                        <i class="icon icon-send"></i>
-                        Send
-                    </button>
-                    <div class="no-button" ng-show="showTab && tab == 'send'"><i class="icon icon-send"></i>Send</div>
-                </div>
-            </div>
-            <div class="row arrow-row">
-                <div class="col-sm-3" ng-show="showTab && tab == 'receive'">
-                    <div class="arrow arrow-shadow"></div>
-                    <div class="arrow"></div>
-                </div>
-                <div class="col-sm-3 col-sm-offset-9" ng-show="showTab && tab == 'send'">
-                    <div class="arrow arrow-shadow"></div>
-                    <div class="arrow"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row tx-tip-container">
-        <div class="container">
-            <div class="client-section">
-                <div class="tx-tip"ng-show="showTransaction" ng-click="clearNotification()">
-                    <div class="tx-type" ng-class="newTransaction.type">
-                        <i ng-class="typeIcons[newTransaction.type]"></i>
-                    </div><!-- Prevent space between inline blocks
-                 --><div class="tx-message">You {{ newTransaction.type }} <span class="amount">
-                        {{ newTransaction.amount.to_human() }} {{ newTransaction.currency }}</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <!--<div class="controls-container client-section">-->
+        <!--<div class="container">-->
+            <!--<disconnected-alert></disconnected-alert>-->
+            <!--<div class="row controls">-->
+                <!--<div class="dash-balance-container col-sm-6 col-sm-push-3">-->
+                    <!--<div class="single-balance-container" ng-hide="currencies.length">-->
+                        <!--<div ng-show="$root.accountStatus == 'loaded'">-->
+                            <!--<span class="dash-balance" rp-tooltip="{{$root.balance  | rpamount}}  (minimum balance: {{ $root.reserve | rpamount }} STR)" ng-bind-html="$root.balance | rpamount:{rel_precision: 0} | shrinkText:84:6"></span>-->
+                            <!--<div class="dash-balance-info">Current Balance <b>Stellars</b></div>-->
+                            <!--<div class="dash-links">-->
+                                <!--<a class="manage-currency-link" ng-click="openManageCurrencies();" href="">-->
+                                    <!--<i class="glyphicon glyphicon-th-list"></i>-->
+                                    <!--<span ng-hide="accountLines.length">add a currency</span>-->
+                                    <!--<span ng-show="accountLines.length">manage currencies</span>-->
+                                <!--</a>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                        <!--<span ng-hide="$root.accountStatus == 'loaded'" class="dash-balance" ng-bind-html="statusMessage() | shrinkText:84:6"></span>-->
+                    <!--</div>-->
+                    <!--<div class="multi-balance-container" ng-show="currencies.length">-->
+                        <!--<div class="dash-currency-line row">-->
+                            <!--<div class="currency-unit col-xs-6">{{ 'STR' | currencyName }}</div>-->
+                            <!--<div class="currency-balance col-xs-6">{{ $root.balance | rpamount:{rel_precision: 0} }}</div>-->
+                        <!--</div>-->
+                        <!--<div ng-repeat="currency in topCurrencies" class="dash-currency-line row">-->
+                            <!--<div class="currency-unit col-xs-6">{{ currency | currencyName }}</div>-->
+                            <!--<div class="currency-balance col-xs-6">{{ balances[currency] | roundAmount:currency }}</div>-->
+                        <!--</div>-->
+                        <!--<div class="dash-links">-->
+                            <!--<a class="manage-currency-link" ng-click="openBalances();" href="">view all balances ({{ nonZeroAccountLines.length + 1 }})</a>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <!--<div class="dash-receive-container col-xs-6 col-sm-3 col-sm-pull-6">-->
+                    <!--<div class="img-container "><img src="images/wallet.png"></div>-->
+                    <!--<button class="btn btn-default" ng-click="openReceive()" ng-show="!showTab || tab != 'receive'">-->
+                        <!--<i class="icon icon-receive"></i>-->
+                        <!--Receive-->
+                    <!--</button>-->
+                    <!--<div class="no-button" ng-show="showTab && tab == 'receive'"><i class="icon icon-receive"></i>Receive</div>-->
+                <!--</div>-->
+                <!--<div class="dash-send-container col-xs-6 col-sm-3">-->
+                    <!--<div class="img-container"><img src="images/rocket.png"></div>-->
+                    <!--<button class="btn btn-default" ng-click="openSend()" ng-show="!showTab || tab != 'send'">-->
+                        <!--<i class="icon icon-send"></i>-->
+                        <!--Send-->
+                    <!--</button>-->
+                    <!--<div class="no-button" ng-show="showTab && tab == 'send'"><i class="icon icon-send"></i>Send</div>-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="row arrow-row">-->
+                <!--<div class="col-sm-3" ng-show="showTab && tab == 'receive'">-->
+                    <!--<div class="arrow arrow-shadow"></div>-->
+                    <!--<div class="arrow"></div>-->
+                <!--</div>-->
+                <!--<div class="col-sm-3 col-sm-offset-9" ng-show="showTab && tab == 'send'">-->
+                    <!--<div class="arrow arrow-shadow"></div>-->
+                    <!--<div class="arrow"></div>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+    <!--<div class="row tx-tip-container">-->
+        <!--<div class="container">-->
+            <!--<div class="client-section">-->
+                <!--<div class="tx-tip"ng-show="showTransaction" ng-click="clearNotification()">-->
+                    <!--<div class="tx-type" ng-class="newTransaction.type">-->
+                        <!--<i ng-class="typeIcons[newTransaction.type]"></i>-->
+                    <!--</div>&lt;!&ndash; Prevent space between inline blocks-->
+                 <!--&ndash;&gt;<div class="tx-message">You {{ newTransaction.type }} <span class="amount">-->
+                        <!--{{ newTransaction.amount.to_human() }} {{ newTransaction.currency }}</span>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
 
-    <div class="tab-panes client-section" ng-class="{open: showTab, visible: overflowVisible}">
-        <div class="container">
-            <div class="send-container" ng-include="'templates/send.html'" ng-show="tab==='send'"></div>
-            <div class="receive-container" ng-include="'templates/receive.html'" ng-show="tab==='receive'"></div>
-            <div class="balances-container" ng-include="'templates/balances.html'" ng-show="tab==='balances'"></div>
-            <div class="manage-currencies-container" ng-include="'templates/manage-currencies.html'" ng-show="tab==='manage-currencies'"></div>
-        </div>
-    </div>
+    <!--<div class="tab-panes client-section" ng-class="{open: showTab, visible: overflowVisible}">-->
+        <!--<div class="container">-->
+            <!--<div class="send-container" ng-include="'templates/send.html'" ng-show="tab==='send'"></div>-->
+            <!--<div class="receive-container" ng-include="'templates/receive.html'" ng-show="tab==='receive'"></div>-->
+            <!--<div class="balances-container" ng-include="'templates/balances.html'" ng-show="tab==='balances'"></div>-->
+            <!--<div class="manage-currencies-container" ng-include="'templates/manage-currencies.html'" ng-show="tab==='manage-currencies'"></div>-->
+        <!--</div>-->
+    <!--</div>-->
 
-    <div class="invite-messages" id="invite-task-messages" ng-show="task" ng-controller="TaskMessageCtrl">
-        <div class="container">
-            <div class="invite-message row">
-                <p>{{task.getText()}} {{task.getSubtext()}}</p>
-                <button ng-click="task.action()">{{task.getButtonText()}}</button>
-            </div>
-        </div>
-    </div>
-    <flash-messages class="client-section" id="dashboard-flash-messages"></flash-messages>
-    <!--<div ng-include="'templates/reward-container.html'"></div>-->
-    <div class="client-section" ng-show="showRewards()">
-      <div class="container">
-        <div class="flash-message-container container">
-          <div class="flash-message">
-            <div class="flash-body">
-              <span class="flash-info">
-                Educational giveaway is temporarily paused. New one in the works!
-                <a href="https://stellarorg.zendesk.com/hc/en-us/articles/205113595" target="_blank">Learn more.</a>
-              </span>
-            </div>
-            <div class="flash-accent"></div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <!--<div class="invite-messages" id="invite-task-messages" ng-show="task" ng-controller="TaskMessageCtrl">-->
+        <!--<div class="container">-->
+            <!--<div class="invite-message row">-->
+                <!--<p>{{task.getText()}} {{task.getSubtext()}}</p>-->
+                <!--<button ng-click="task.action()">{{task.getButtonText()}}</button>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+    <!--<flash-messages class="client-section" id="dashboard-flash-messages"></flash-messages>-->
+    <!--&lt;!&ndash;<div ng-include="'templates/reward-container.html'"></div>&ndash;&gt;-->
+    <!--<div class="client-section" ng-show="showRewards()">-->
+      <!--<div class="container">-->
+        <!--<div class="flash-message-container container">-->
+          <!--<div class="flash-message">-->
+            <!--<div class="flash-body">-->
+              <!--<span class="flash-info">-->
+                <!--Educational giveaway is temporarily paused. New one in the works!-->
+                <!--<a href="https://stellarorg.zendesk.com/hc/en-us/articles/205113595" target="_blank">Learn more.</a>-->
+              <!--</span>-->
+            <!--</div>-->
+            <!--<div class="flash-accent"></div>-->
+          <!--</div>-->
+        <!--</div>-->
+      <!--</div>-->
+    <!--</div>-->
     <div ng-include="'templates/upgrade.html'"></div>
-    <div ng-include="'templates/transaction-history.html'"></div>
+    <!--<div ng-include="'templates/transaction-history.html'"></div>-->
 </div>
