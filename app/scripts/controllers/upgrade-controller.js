@@ -22,22 +22,22 @@ angular.module('stellarClient').controller('UpgradeCtrl', function($scope, sessi
         $scope.view = 'intro';
         switch(response && response.code) {
           case 'not_found':
-            $scope.error = 'We could not find your address.';
+            $scope.error = 'Couldn't locate account. Contact <a href="mailto:support@stellar.org">support@stellar.org</a>.';
             break;
           case 'invalid_address':
-            $scope.error = 'New network address is invalid.';
+            $scope.error = 'Invalid address. Contact <a href="mailto:support@stellar.org">support@stellar.org</a>.';
             break;
           case 'already_claimed':
-            $scope.error = 'This address has been already claimed.';
+            $scope.error = 'Account already upgraded. To sign in, go to the <a href="https://www.stellar.org/account-viewer/#/">account viewer</a>.';
             break;
           case 'balance_too_low':
-            $scope.error = 'Your old network account has less than 20 STR in it. Use upgrade CLI to upgrade your account to existing new network account.';
+            $scope.error = 'Account has less than 20 STR. To upgrade, use the <a href="https://github.com/stellar/stellar-upgrade/releases">command line tool</a>.';
             break;
           case 'invalid_signature':
-            $scope.error = 'Signature is not valid.';
+            $scope.error = 'Invalid signature. Contact <a href="mailto:support@stellar.org">support@stellar.org</a>.';
             break;
           default:
-            $scope.error = 'An error occurred.';
+            $scope.error = 'Couldn't upgrade. Please try again in a moment.';
         }
       });
   };
