@@ -22,7 +22,7 @@ angular.module('stellarClient').controller('UpgradeCtrl', function($scope, sessi
         $scope.view = 'intro';
         switch(response && response.code) {
           case 'not_found':
-            $scope.error = 'Couldn't locate account. Contact <a href="mailto:support@stellar.org">support@stellar.org</a>.';
+            $scope.error = 'Couldn\'t locate account. Contact <a href="mailto:support@stellar.org">support@stellar.org</a>.';
             break;
           case 'invalid_address':
             $scope.error = 'Invalid address. Contact <a href="mailto:support@stellar.org">support@stellar.org</a>.';
@@ -37,7 +37,7 @@ angular.module('stellarClient').controller('UpgradeCtrl', function($scope, sessi
             $scope.error = 'Invalid signature. Contact <a href="mailto:support@stellar.org">support@stellar.org</a>.';
             break;
           default:
-            $scope.error = 'Couldn't upgrade. Please try again in a moment.';
+            $scope.error = 'Couldn\'t upgrade. Please try again in a moment.';
         }
       });
   };
