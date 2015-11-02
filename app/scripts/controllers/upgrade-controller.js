@@ -28,10 +28,10 @@ angular.module('stellarClient').controller('UpgradeCtrl', function($scope, sessi
             $scope.error = 'Invalid address. Contact <a href="mailto:support@stellar.org">support@stellar.org</a>.';
             break;
           case 'already_claimed':
-            $scope.error = 'Account already upgraded. To sign in, go to the <a href="https://www.stellar.org/account-viewer/#/">account viewer</a>.';
+            $scope.error = 'Account already upgraded. To sign in, go to the <a href="https://www.stellar.org/account-viewer/" target="_blank">account viewer</a>.';
             break;
           case 'balance_too_low':
-            $scope.error = 'Account has less than 20 STR. To upgrade, use the <a href="https://github.com/stellar/stellar-upgrade/releases">command line tool</a>.';
+            $scope.error = 'Account has less than 20 STR. To upgrade, use the <a href="https://github.com/stellar/stellar-upgrade/releases" target="_blank">command line tool</a>.';
             break;
           case 'invalid_signature':
             $scope.error = 'Invalid signature. Contact <a href="mailto:support@stellar.org">support@stellar.org</a>.';
@@ -55,7 +55,7 @@ angular.module('stellarClient').controller('UpgradeCtrl', function($scope, sessi
       } else {
         $scope.view = 'upgraded';
       }
-      $scope.balance = Math.floor(response.str_balance / 1000000);
+      $scope.balance = response.str_balance;
     })
     .error(function(response){
       $scope.view = 'intro';
