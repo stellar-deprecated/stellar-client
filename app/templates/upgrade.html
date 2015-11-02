@@ -6,23 +6,23 @@
 
   <div class="upgrade-intro" ng-if="view === 'intro'">
     <h2>The upgraded Stellar network is here!</h2>
-    <p>When you upgrade your account:
+    <p>When you upgrade:
     <ul>
         <li>Your stellars will be called lumens. If you have 20 stellars, you'll have 20 lumens.</li>
-        <li>Instead of a username and password, you'll get a public key and secret key to access your account. Please store your secret key privately.</li>
+        <li>Instead of a username and password, you'll get a public key and secret key to access your account. Please store your secret key privately. Stellar.org does not have a record of your secret key.</li>
     </ul></p>
     <p><center><strong>Protect your secret key—anyone who has it can access your account.</strong></center></p>
-    <p>Read more about the <a href="https://www.stellar.org/blog/stellar-network-upgrade/">network upgrade</a>.</p>
+    <p>Read more about the <a href="https://www.stellar.org/blog/stellar-network-upgrade/">upgrade</a>.</p>
     <div class="form-group row" ng-if="error">
       <div class="errors col-sm-offset-1 col-sm-6">
         <div class="tip">{{ error }}</div>
       </div>
     </div>
-    <button ng-click="upgrade()" class="btn btn-default btn-primary submit">Upgrade account</button>
+    <button ng-click="upgrade()" class="btn btn-default btn-primary submit">Upgrade</button>
   </div>
 
   <div class="loading" ng-if="view === 'upgrading'">
-    <p rp-spinner="4" class="literal">Almost there...</p>
+    <p rp-spinner="4" class="literal">Upgrading...</p>
     <img class="sending-rocket" src="./images/sending.gif"/>
   </div>
 
@@ -30,25 +30,25 @@
     <div class="icon">
       <img class="migration-ok" src="./images/migration-ok.png"/>
     </div>
-    <h1>Your account is upgraded!</h1>
+    <h1>Upgraded!</h1>
 
     <p>You have {{balance}} lumens.</p>
 
     <div class="keypair">
-    <p> Access your account using your public and secret keys. Username and password no longer work.</p>    
+    <p> Access your account using your public and secret keys. Original username and password no longer work.</p>    
       <p>Secret key:
         <strong ng-if="!revealSecret">XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</strong>
         <a ng-if="!revealSecret" href="#" ng-click="reveal($event)">[reveal]</a>
         <strong ng-if="revealSecret">{{newNetworkSecretSeed}}</strong>
       </p>
       <p class="warning" ng-if="revealSecret">
-        <span class="warning-title">Copy and store your secret key privately.</span> Anyone who has your secret key can access your account. Stellar.org does not have a record of it.
+        <span class="warning-title">Copy and store your secret key privately.</span> Anyone who has it can access your account. Stellar.org does not have a record of your secret key.
       </p>
       <p>Public key: <strong>{{newNetworkAddress}}</strong></p>
     </div>
 
     <div class="client">
-      <p>To check your balance or send lumens, go to the <a href="https://stellar.org/developers/tools/simple" target="_blank">account viewer</a></p>
+      <p>To sign in to your account, go to the <a href="https://www.stellar.org/account-viewer/#/">account viewer</a>.</p>
     </div>
   </div>
 </div>
