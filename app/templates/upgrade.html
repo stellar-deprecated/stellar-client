@@ -1,0 +1,54 @@
+<div class="upgrade client-section container" ng-controller="UpgradeCtrl">
+  <div class="loading" ng-if="view === 'loading'">
+    <p rp-spinner="4" class="literal">Upgrading...</p>
+    <img class="sending-rocket" src="./images/sending.gif"/>
+  </div>
+
+  <div class="upgrade-intro" ng-if="view === 'intro'">
+    <h2>The upgraded Stellar network is here!</h2>
+    <p>When you upgrade:</p>
+    <ul>
+        <li>Your stellars will be called lumens. If you have 20 stellars, you'll have 20 lumens.</li>
+        <li>Instead of a username and password, you'll get a public key and secret key to access your account. Please store your secret key privately. Stellar.org does not have a record of your secret key.</li>
+    </ul>
+    <p><center><strong>Protect your secret key—anyone who has it can access your account.</strong></center></p>
+    <p>Read more about the <a href="https://www.stellar.org/blog/stellar-network-upgrade/" target="_blank">upgrade</a>.</p>
+    <div class="form-group row" ng-if="error">
+      <div class="errors col-sm-offset-1 col-sm-6">
+        <div class="tip">{{ error }}</div>
+      </div>
+    </div>
+    <button ng-click="upgrade()" class="btn btn-default btn-primary submit">Upgrade</button>
+  </div>
+
+  <div class="loading" ng-if="view === 'upgrading'">
+    <p rp-spinner="4" class="literal">Upgrading...</p>
+    <img class="sending-rocket" src="./images/sending.gif"/>
+  </div>
+
+  <div class="upgraded" ng-if="view === 'upgraded'">
+    <div class="icon">
+      <img class="migration-ok" src="./images/migration-ok.png"/>
+    </div>
+    <h1>Upgraded!</h1>
+
+    <p>You have {{balance}} lumens.</p>
+
+    <div class="keypair">
+    <p> Access your account using your public and secret keys. Original username and password no longer work.</p>    
+      <p>Secret key:
+        <strong ng-if="!revealSecret">XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</strong>
+        <a ng-if="!revealSecret" href="#" ng-click="reveal($event)">[reveal]</a>
+        <strong ng-if="revealSecret">{{newNetworkSecretSeed}}</strong>
+      </p>
+      <p class="warning" ng-if="revealSecret">
+        <span class="warning-title">Copy and store your secret key privately.</span> Anyone who has it can access your account. Stellar.org does not have a record of your secret key.
+      </p>
+      <p>Public key: <strong>{{newNetworkAddress}}</strong></p>
+    </div>
+
+    <div class="client">
+      <p>To sign in to your account, go to the <a href="https://www.stellar.org/account-viewer/" target="_blank">account viewer</a>.</p>
+    </div>
+  </div>
+</div>
