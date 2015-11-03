@@ -9,6 +9,7 @@ angular.module('stellarClient').controller('UpgradeCtrl', function($scope, sessi
   $scope.newNetworkSecretSeed = keypair.seed();
   $scope.newNetworkAddress = keypair.address();
   $scope.balance = null;
+  $scope.balance = null;
   $scope.view = 'loading';
 
   $scope.upgrade = function() {
@@ -56,6 +57,7 @@ angular.module('stellarClient').controller('UpgradeCtrl', function($scope, sessi
         $scope.view = 'upgraded';
       }
       $scope.balance = response.str_balance;
+      $scope.balances = response.balances;
     })
     .error(function(response){
       $scope.view = 'intro';

@@ -6,6 +6,13 @@
 
   <div class="upgrade-intro" ng-if="view === 'intro'">
     <h2>The upgraded Stellar network is here!</h2>
+    <span ng-if="balance">
+      <p>You have:</p>
+      <ul>
+        <li>{{balance}} STR</li>
+        <li ng-repeat="trust in balances">{{trust.balance}} {{trust.code}} issued by <code>{{trust.issuer}}</code></li>
+      </ul>
+    </span>
     <p>When you upgrade:</p>
     <ul>
         <li>Your stellars will be called lumens. If you have 20 stellars, you'll have 20 lumens.</li>
