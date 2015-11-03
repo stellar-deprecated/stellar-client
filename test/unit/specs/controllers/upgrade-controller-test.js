@@ -39,7 +39,7 @@ describe('Controller: UpgradeCtrl', function () {
       mockBackend.expectGET(Options.API_SERVER + "/upgrade/balance")
         .respond(JSON.stringify({
           oldAddress: "gKVuMHCLGxvCHv2i8EH2QwEA7oQM36wybY",
-          str_balance: "1000000000",
+          str_balance: "1000",
           balances: [{code: 'USD', issuer: 'gMue2N5jDZCPtPz6xFpsxrDej8EXTUGesf', balance: '120.50'}],
           claimed: false,
           upgraded: false
@@ -47,14 +47,14 @@ describe('Controller: UpgradeCtrl', function () {
       createController();
       mockBackend.flush();
       expect(scope.view).to.equal('intro');
-      expect(scope.balance).to.equal(1000);
+      expect(scope.balance).to.equal("1000");
     });
 
     it('should show "upgraded" view if account is upgraded', function() {
       mockBackend.expectGET(Options.API_SERVER + "/upgrade/balance")
         .respond(JSON.stringify({
           oldAddress: "gKVuMHCLGxvCHv2i8EH2QwEA7oQM36wybY",
-          str_balance: "1000000000",
+          str_balance: "1000",
           balances: [{code: 'USD', issuer: 'gMue2N5jDZCPtPz6xFpsxrDej8EXTUGesf', balance: '120.50'}],
           claimed: true,
           upgraded: false
@@ -62,7 +62,7 @@ describe('Controller: UpgradeCtrl', function () {
       createController();
       mockBackend.flush();
       expect(scope.view).to.equal('upgraded');
-      expect(scope.balance).to.equal(1000);
+      expect(scope.balance).to.equal("1000");
     });
   });
 
@@ -71,7 +71,7 @@ describe('Controller: UpgradeCtrl', function () {
       mockBackend.expectGET(Options.API_SERVER + "/upgrade/balance")
         .respond(JSON.stringify({
           oldAddress: "gKVuMHCLGxvCHv2i8EH2QwEA7oQM36wybY",
-          str_balance: "1000000000",
+          str_balance: "1000",
           balances: [{code: 'USD', issuer: 'gMue2N5jDZCPtPz6xFpsxrDej8EXTUGesf', balance: '120.50'}],
           claimed: false,
           upgraded: false
@@ -80,7 +80,7 @@ describe('Controller: UpgradeCtrl', function () {
       mockBackend.flush();
 
       expect(scope.view).to.equal('intro');
-      expect(scope.balance).to.equal(1000);
+      expect(scope.balance).to.equal("1000");
     });
 
     it('should show "upgraded" view if upgrade was successful', function() {
@@ -94,7 +94,7 @@ describe('Controller: UpgradeCtrl', function () {
       scope.upgrade();
       mockBackend.flush();
       expect(scope.view).to.equal('upgraded');
-      expect(scope.balance).to.equal(1000);
+      expect(scope.balance).to.equal("1000");
       expect(scope.newNetworkSecretSeed).to.be.equal('SDSVBXV5GD6GT7AGEQQRAHXKFDXQUGRUUNOXVXLXPWL7OEYQUSMN5AH3');
       expect(scope.newNetworkAddress).to.be.equal('GBBM6BKZPEHWYO3E3YKREDPQXMS4VK35YLNU7NFBRI26RAN7GI5POFBB');
       expect(scope.error).to.be.empty;
@@ -106,7 +106,7 @@ describe('Controller: UpgradeCtrl', function () {
       scope.upgrade();
       mockBackend.flush();
       expect(scope.view).to.equal('intro');
-      expect(scope.balance).to.equal(1000);
+      expect(scope.balance).to.equal("1000");
       expect(scope.error).to.not.be.empty;
     });
   });
