@@ -93,11 +93,11 @@ stellarClient.config(function($httpProvider, $stateProvider, $urlRouterProvider,
       templateUrl: 'states/lost_2fa_device.html',
       authenticate: false
     })
-    .state('register', {
-      url:         '/register?inviteCode',
-      templateUrl: 'states/register.html',
-      authenticate: false
-    })
+    //.state('register', {
+    //  url:         '/register?inviteCode',
+    //  templateUrl: 'states/register.html',
+    //  authenticate: false
+    //})
     .state('logout', {
       url:         '/logout',
       authenticate: true
@@ -154,7 +154,7 @@ stellarClient.run(function($location, $state, ipCookie){
   var forceToRegister = atRoot && firstTime;
 
     if(forceToRegister) {
-      $state.transitionTo('register');
+      $state.transitionTo('login');
       ipCookie("weve_been_here_before", "true", {expires: new Date('01 Jan 2030 00:00:00 GMT')});
     }
 });
