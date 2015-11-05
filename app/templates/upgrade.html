@@ -42,10 +42,11 @@
     <h2>You have {{balance}} lumens.</h2>
 
     <span ng-if="balances">
-      <p>On the legacy network, you have:</p>
+      <p>You still have:</p>
       <ul>
-        <li ng-repeat="trust in balances">{{trust.balance}} {{trust.code}} issued by <code>{{trust.issuer}}</code></li>
+        <li ng-repeat="trust in balances"><strong>{{trust.balance}} {{trust.code}}</strong> issued by <code>{{trust.issuer}}</code></li>
       </ul>
+      <p>Please contact your gateway(s) if they have not upgraded.</p>
     </span>
 
     <div class="keypair">
