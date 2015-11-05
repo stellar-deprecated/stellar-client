@@ -39,7 +39,14 @@
     </div>
     <h1>Upgraded!</h1>
 
-    <p>You have {{balance}} lumens.</p>
+    <h2>You have {{balance}} lumens.</h2>
+
+    <span ng-if="balances">
+      <p>On the legacy network, you have:</p>
+      <ul>
+        <li ng-repeat="trust in balances">{{trust.balance}} {{trust.code}} issued by <code>{{trust.issuer}}</code></li>
+      </ul>
+    </span>
 
     <div class="keypair">
     <p> Access your account using your public and secret keys. Original username and password no longer work.</p>    

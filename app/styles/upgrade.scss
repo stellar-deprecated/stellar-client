@@ -58,13 +58,21 @@
       color: #5A6973;
     }
 
-    p {
+    h2 {
       font-size: 22px;
       color: #9CABB2;
     }
 
-    p.margin {
+    h2.margin {
       padding-top: 20px;
+    }
+
+    p {
+      margin-top: 20px;
+    }
+
+    ul {
+      list-style-type: none;
     }
 
     .keypair {
