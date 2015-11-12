@@ -39,6 +39,7 @@ sc.controller('UsernameRecoveryCtrl', function($rootScope, $scope, $http, $state
             } else {
                 $scope.emailError = "Server error";
             }
+            vcRecaptchaService.reload($scope.recaptchaWidgetId);
         });
     });
 });
