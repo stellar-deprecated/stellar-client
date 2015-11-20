@@ -228,6 +228,11 @@ input[type=number]::-webkit-outer-spin-button {
           border-color: $success transparent;
         }
       }
+
+      a {
+        color: white;
+        text-decoration: underline;
+      }
     }
   }
 

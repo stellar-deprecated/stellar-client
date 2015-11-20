@@ -22,7 +22,7 @@
     <p>Read more about the <a href="https://www.stellar.org/blog/stellar-network-upgrade/" target="_blank">upgrade</a>.</p>
     <div class="form-group row" ng-if="error">
       <div class="errors col-sm-offset-1 col-sm-6">
-        <div class="tip">{{ error }}</div>
+        <div class="tip" ng-bind-html="error"></div>
       </div>
     </div>
     <button ng-click="upgrade()" class="btn btn-default btn-primary submit">Upgrade</button>
