@@ -58,6 +58,13 @@ angular.module('stellarClient').controller('LoginCtrl', function($rootScope, $sc
     });
   }
 
+  FlashMessages.add({
+    title: 'The Stellar network has upgraded!',
+    info: 'If you\'ve already upgraded, view your lumens balance at https://www.stellar.org/account-viewer/. To upgrade, or to see what you still have in addition to lumens, log in below.',
+    type: 'info',
+    showCloseIcon: false,
+  });
+
   if (sessionStorage.displayReloadMessage === "display") {
     try {
       sessionStorage.displayReloadMessage = false;
