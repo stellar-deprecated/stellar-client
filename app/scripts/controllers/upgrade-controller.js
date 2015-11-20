@@ -23,7 +23,7 @@ angular.module('stellarClient').controller('UpgradeCtrl', function($scope, sessi
         $scope.view = 'intro';
         switch(response && response.code) {
           case 'not_found':
-            $scope.error = 'Couldn\'t locate account. Contact <a href="mailto:support@stellar.org">support@stellar.org</a>.';
+            $scope.error = 'Account contains 0 STR. Create a <a href="https://www.stellar.org/developers/learn/concepts/list-of-operations.html#create-account">new account on the upgraded network</a>.';
             break;
           case 'invalid_address':
             $scope.error = 'Invalid address. Contact <a href="mailto:support@stellar.org">support@stellar.org</a>.';
