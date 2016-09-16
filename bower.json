@@ -12,7 +12,7 @@
     "angular-facebook": "0.2.3",
     "angular-qr": "0.2.0",
     "autofill-event": "1.0.0",
-    "crypto-js": "http://crypto-js.googlecode.com/files/CryptoJS%20v3.1.2.zip",
+    "crypto-js": "https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/crypto-js/CryptoJS%20v3.1.2.zip",
     "angular-moment": "0.7.1",
     "fontawesome": "4.1.0",
     "lodash": "2.4.1",
