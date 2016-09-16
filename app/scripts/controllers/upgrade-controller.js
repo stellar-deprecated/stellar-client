@@ -7,7 +7,7 @@ angular.module('stellarClient').controller('UpgradeCtrl', function($scope, $sce,
   var keypair = StellarBase.Keypair.fromBase58Seed(keys.secret);
 
   $scope.newNetworkSecretSeed = keypair.seed();
-  $scope.newNetworkAddress = keypair.address();
+  $scope.newNetworkAddress = keypair.accountId();
   $scope.balance = null;
   $scope.balance = null;
   $scope.view = 'loading';
