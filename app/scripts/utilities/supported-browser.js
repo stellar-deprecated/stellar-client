@@ -9,6 +9,12 @@ function isSupportedBrowser() {
   if(!Modernizr.websockets)                           { return false; }
   if(!Modernizr.dataview)                             { return false; }
 
+  // Ensure cryptographically strong entropy
+  if (!((window.crypto   && window.crypto.getRandomValues) ||
+        (window.msCrypto && window.msCrypto.getRandomValues))) {
+    return false;
+  }
+
   // HACK: A specific version of Android's stock browser (AppleWebKit/534.30)
   // has a broken implementation of WebSocket. This can be removed if Modernizr
   // fixes the issue (https://github.com/Modernizr/Modernizr/issues/1399).

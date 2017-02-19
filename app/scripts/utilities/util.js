@@ -56,34 +56,6 @@ Util.showTooltip = function (element, title, type, placement, extraOptions) {
   setTimeout(hideTooltipFn, hideDelay);
 };
 
-/**
- * Seed the sjcl random function with Math.random() in the case where we are
- * on a crappy browser (IE) and we've yet to get enough entropy from the
- * sjcl entropy collector.
- *
- * it sucks, but this is our last minute fix for IE support.  Our fix going
- * forward will be to use window.msCrypto on ie11, and on ie10 request
- * some mouse movement from the user (maybe?).
- *
- */
-Util.ensureEntropy = function() {
-  var isEnough = function() {
-    return sjcl.random.isReady() !== sjcl.random._NOT_READY;
-  };
-
-  if(isEnough()){
-    return;
-  }
-
-  for (var i = 0; i < 8; i++) {
-    sjcl.random.addEntropy(Math.random(), 32, "Math.random()");
-  }
-
-  if(!isEnough()) {
-    throw "Unable to seed sjcl entropy pool";
-  }
-};
-
 Util.tryGet = function(rootObject, propertyChain) {
   var propertyNames = propertyChain.split('.');
 
