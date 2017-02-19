@@ -39,6 +39,7 @@ sc.controller('RewardPaneCtrl', function ($http, $scope, $rootScope, $q, session
     'updated_too_recently': 'icon icon-clock',
     'ineligible': 'icon icon-lock', // TODO: Use yield sign icon.
     'fb_email_unverified': 'icon icon-clock',
+    'fb_email_missing': 'icon icon-clock',
   };
 
   /**
