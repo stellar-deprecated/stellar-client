@@ -1,6 +1,6 @@
 language: node_js
 node_js:
-  - "0.10"
+  - "6.9"
 before_install:
   - mkdir -p .npm
   - "export DISPLAY=:99.0"
