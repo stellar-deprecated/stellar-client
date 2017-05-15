@@ -24,7 +24,7 @@ angular.module('stellarClient').controller('UpgradeCtrl', function($scope, $sce,
         var error;
         switch(response && response.code) {
           case 'not_found':
-            error = 'Account contains 0 STR. Create a <a href="https://www.stellar.org/developers/learn/integration-guides/building-blocks/account-management.html" target="_blank">new account on the upgraded network</a>.';
+            error = 'Account contains 0 STR. Create a <a href="https://www.stellar.org/developers/guides/concepts/accounts.html" target="_blank">new account on the upgraded network</a>.';
             break;
           case 'invalid_address':
             error = 'Invalid address. Contact <a href="mailto:support@stellar.org">support@stellar.org</a>.';
