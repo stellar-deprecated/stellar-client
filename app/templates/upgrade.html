@@ -61,8 +61,17 @@
       <p>Please contact your gateway(s) if they have not upgraded.</p>
     </span>
 
-    <div class="keypair">
-      <p> Access your account using your public and secret keys. Original username and password no longer work.</p>
+    <div class="keypair" ng-if="have_keys">
+    <p> Access your account using your public and secret keys. Original username and password no longer work.</p>
+      <p>Secret key:
+        <strong ng-if="!$parent.revealSecret">XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</strong>
+        <a ng-if="!$parent.revealSecret" href="#" ng-click="reveal($event)">[reveal]</a>
+        <strong ng-if="$parent.revealSecret">{{$parent.newNetworkSecretSeed}}</strong>
+      </p>
+      <p class="warning" ng-if="$parent.revealSecret">
+        <span class="warning-title">Copy and store your secret key privately.</span> Anyone who has it can access your account. Stellar.org does not have a record of your secret key.
+      </p>
+      <p>Public key: <strong>{{$parent.newNetworkAddress}}</strong></p>
     </div>
 
     <div class="client">

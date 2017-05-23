@@ -66,12 +66,14 @@ angular.module('stellarClient').controller('UpgradeCtrl', function($scope, $sce,
         var keypair = StellarBase.Keypair.random();
         $scope.newNetworkSecretSeed = keypair.seed();
         $scope.newNetworkAddress = keypair.accountId();
+        $scope.have_keys = true;
       } else {
         $scope.view = 'upgraded';
         if (response.have_keys) {
           var keypair = StellarBase.Keypair.fromBase58Seed(keys.secret);
           $scope.newNetworkSecretSeed = keypair.seed();
           $scope.newNetworkAddress = keypair.accountId();
+          $scope.have_keys = true;
         }
       }
       $scope.balance = response.str_balance;
