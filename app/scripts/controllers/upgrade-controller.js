@@ -3,18 +3,15 @@
 /*global StellarBase */
 
 angular.module('stellarClient').controller('UpgradeCtrl', function($scope, $sce, session, stellarApi, upgradeMessage) {
-  var keys = session.get('signingKeys');
-  var keypair = StellarBase.Keypair.fromBase58Seed(keys.secret);
-
-  $scope.newNetworkSecretSeed = keypair.seed();
-  $scope.newNetworkAddress = keypair.accountId();
-  $scope.balance = null;
   $scope.balance = null;
   $scope.view = 'loading';
+
+  var keys = session.get('signingKeys');
 
   $scope.upgrade = function() {
     $scope.view = 'upgrading';
     var message = upgradeMessage(keys, $scope.newNetworkAddress);
+    message.code = $scope.confirmationCode;
     stellarApi.Upgrade.upgrade(message)
       .success(function() {
         $scope.view = 'upgraded';
@@ -25,6 +22,13 @@ angular.module('stellarClient').controller('UpgradeCtrl', function($scope, $sce,
         switch(response && response.code) {
           case 'maintenance':
             error = 'Maintenance. Please try again later.';
+            break;
+          case 'no_confirmation_code':
+            error = 'Confirmation code has been sent to your email address added to your Stellar account. Please copy it in the form below.';
+            $scope.showConfirmationCodeInput = true;
+            break;
+          case 'invalid_confirmation_code':
+            error = 'Invalid confirmation code. Please try again.';
             break;
           case 'not_found':
             error = 'Account contains 0 STR. Create a <a href="https://www.stellar.org/developers/guides/concepts/accounts.html" target="_blank">new account on the upgraded network</a>.';
@@ -59,8 +63,18 @@ angular.module('stellarClient').controller('UpgradeCtrl', function($scope, $sce,
       /*jshint camelcase: false */
       if (!response.claimed) {
         $scope.view = 'intro';
+        var keypair = StellarBase.Keypair.random();
+        $scope.newNetworkSecretSeed = keypair.seed();
+        $scope.newNetworkAddress = keypair.accountId();
+        $scope.have_keys = true;
       } else {
         $scope.view = 'upgraded';
+        if (response.have_keys) {
+          var keypair = StellarBase.Keypair.fromBase58Seed(keys.secret);
+          $scope.newNetworkSecretSeed = keypair.seed();
+          $scope.newNetworkAddress = keypair.accountId();
+          $scope.have_keys = true;
+        }
       }
       $scope.balance = response.str_balance;
       $scope.balances = response.balances;
@@ -70,7 +84,7 @@ angular.module('stellarClient').controller('UpgradeCtrl', function($scope, $sce,
       var error;
       switch(response && response.code) {
         case 'not_found':
-          error = 'Account contains 0 STR. Create a <a href="https://www.stellar.org/developers/learn/integration-guides/building-blocks/account-management.html" target="_blank">new account on the upgraded network</a>.';
+          error = 'Account contains 0 STR. Create a <a href="https://www.stellar.org/developers/guides/concepts/accounts.html" target="_blank">new account on the upgraded network</a>.';
           break;
         default:
           error = 'An error occurred.';
