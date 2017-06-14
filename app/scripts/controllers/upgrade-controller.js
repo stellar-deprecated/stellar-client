@@ -23,6 +23,9 @@ angular.module('stellarClient').controller('UpgradeCtrl', function($scope, $sce,
           case 'maintenance':
             error = 'Maintenance. Please try again later.';
             break;
+          case 'contact_support':
+            error = 'Please contact support: hello@stellar.org';
+            break;
           case 'no_confirmation_code':
             error = 'Confirmation code has been sent to your email address added to your Stellar account. Please copy it in the form below.';
             $scope.showConfirmationCodeInput = true;
