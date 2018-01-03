@@ -26,6 +26,9 @@ angular.module('stellarClient').controller('UpgradeCtrl', function($scope, $sce,
           case 'contact_support':
             error = 'Please contact support: hello@stellar.org';
             break;
+          case 'account_blocked':
+            error = 'Your account has been blocked from upgrading because it looks like you created multiple accounts while only one account per person was allowed.';
+            break;
           case 'no_confirmation_code':
             error = 'Confirmation code has been sent to your email address added to your Stellar account. Please copy it in the form below.';
             $scope.showConfirmationCodeInput = true;

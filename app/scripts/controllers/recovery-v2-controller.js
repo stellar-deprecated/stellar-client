@@ -89,7 +89,7 @@ angular.module('stellarClient').controller('RecoveryV2Ctrl', function($scope, $s
             if (body.code === 'invalid') {
               $scope.recoveryError = 'Invalid username or recovery code.';
             } else if (body.code === 'disabled') {
-              $scope.recoveryError = 'Recovery has been disabled for this account.';
+              $scope.recoveryError = body.message;
             }
             break;
           case 0:
