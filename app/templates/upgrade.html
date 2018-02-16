@@ -29,12 +29,12 @@
       Please copy your secret key NOW! After clicking "Upgrade" button below you will no longer be able to see your secret key and we WILL NOT be able to recover it. Protect your secret key—anyone who has it can access your account.
     </strong></center></p>
     <p>Read more about the <a href="https://www.stellar.org/blog/stellar-network-upgrade/" target="_blank">upgrade</a>.</p>
-    <p>Please type in your secret key to confirm.</p>
-    <div class="form-group">
-      <div class="col-sm-6">
-        <input class="form-control" ng-model="confirmSecretKey" autocomplete="off" /><br />
-      </div>
-    </div>
+
+    <p ng-if="!showConfirmationCodeInput">
+      Please type in your secret key to confirm:<br />
+      <input class="confirmation-code" ng-model="$parent.confirmSecretKey" autocomplete="off" />
+    </p>
+
     <div class="form-group row" ng-if="error">
       <div class="errors col-sm-offset-1 col-sm-6">
         <div class="tip" ng-bind-html="error"></div>
@@ -43,7 +43,7 @@
     <div ng-if="showConfirmationCodeInput">
       <input type="text" class="confirmation-code" ng-model="$parent.$parent.confirmationCode" />
     </div>
-    <button ng-click="upgrade()" class="btn btn-default btn-primary submit" ng-disabled="confirmSecretKey !== newNetworkSecretSeed">Upgrade and confirm secret key has been copied</button>
+    <button ng-click="upgrade()" class="btn btn-default btn-primary submit" ng-disabled="!showConfirmationCodeInput && confirmSecretKey !== newNetworkSecretSeed">Upgrade and confirm secret key has been copied</button>
   </div>
 
   <div class="loading" ng-if="view === 'upgrading'">
