@@ -69,11 +69,10 @@
     "postinstall": "npx bower install",
     "start": "gulp develop",
     "build": "gulp",
+    "lint": "gulp hooks:lint",
     "test": "gulp test"
   },
   "config": {
-    "ghooks": {
-      "pre-commit": "gulp hooks:lint"
-    }
+    "ghooks": {}
   }
 }
