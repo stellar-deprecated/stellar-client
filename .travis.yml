@@ -1,17 +1,14 @@
 language: node_js
 node_js:
-  - "6.9"
+    - "6.9"
 before_install:
-  - mkdir -p .npm
-  - "export DISPLAY=:99.0"
-  - "sh -e /etc/init.d/xvfb start"
+    - mkdir -p .npm
+    - "export DISPLAY=:99.0"
+    - "sh -e /etc/init.d/xvfb start"
 install:
-  - npm install -g npm@2.1.7
-  - npm install
-  - npm install -g bower
-  - bower install
+    - npm install
 before_script:
-  - gulp hooks:lint
+    - gulp hooks:lint
 notifications:
-  slack:
-    secure: IVBboLTh98tGI42yw9U9EJKhlWfCXjcCXtJ91n7w7py+BrZ+l2YDk5Ebd9un63kkI3xKvoY1zySjswhadHTG2pxJe9Xv6FkqFU6Hwz2K0BZLhmAK3qWX02kRPrnJkPcv4xOldZhS8gEv7JcouWIMgNZkbfONlb+8UsxN7zXCbrc=
+    slack:
+        secure: IVBboLTh98tGI42yw9U9EJKhlWfCXjcCXtJ91n7w7py+BrZ+l2YDk5Ebd9un63kkI3xKvoY1zySjswhadHTG2pxJe9Xv6FkqFU6Hwz2K0BZLhmAK3qWX02kRPrnJkPcv4xOldZhS8gEv7JcouWIMgNZkbfONlb+8UsxN7zXCbrc=

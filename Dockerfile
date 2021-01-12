@@ -14,8 +14,9 @@ RUN apt-get update && apt-get install -y curl git make g++ bzip2 apt-transport-h
 
 ENV NODE_ENV=prd CI=true
 
-RUN rm -rf app/bower_components && mkdir -p .npm && npm install && \
-    ./node_modules/.bin/bower --allow-root install && ./node_modules/.bin/gulp dist
+# RUN rm -rf app/bower_components && mkdir -p .npm && npm install && \
+#     ./node_modules/.bin/bower --allow-root install && ./node_modules/.bin/gulp dist
+RUN npm install && npm build
 
 FROM nginx:1.17
 
