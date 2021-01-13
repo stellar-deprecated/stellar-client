@@ -59,7 +59,7 @@ angular.module('stellarClient').controller('LoginCtrl', function($rootScope, $sc
   }
 
   FlashMessages.add({
-    title: 'The Account Upgrade service is temporarily unavavilable',
+    title: 'The Account Upgrade service is temporarily unavailable',
     info: 'We are actively working to restore it. In the meantime, please reach out to legacy@stellar.org if you need help',
     type: 'error',
     showCloseIcon: false,
