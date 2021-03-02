@@ -3,14 +3,12 @@
 
         <flash-messages></flash-messages>
         <div ng-include="'templates/server-status.html'"></div>
-        <!-- Removing any sort of ability to log in or recover anything
-        This is done as we update the banner to indicate this service is down while we upgrade 1/12/21 -->
-        <!-- <h1 class="title">Log in</h1> -->
+        <h1 class="title">Log in</h1>
 
         <iframe name="chrome-password-manager-fix" src="about:blank" style="display:none;"></iframe>
         <form role="form" class="form-horizontal" ng-controller="LoginCtrl" ng-submit="attemptLogin()"
             action="chrome-password-manager-fix.html" method="post" target="chrome-password-manager-fix">
-            <!-- <div class="form-group">
+            <div class="form-group">
                 <div class="errors col-sm-offset-3 col-sm-6">
                     <div class="tip">{{ loginError }}</div>
                 </div>
@@ -34,9 +32,9 @@
                 <div class="col-sm-offset-3 col-sm-6">
                     <span class="recovery-info"><a ui-sref="username-recovery">Forgot username?</a></span>
                 </div>
-            </div> -->
+            </div>
         </form>
 
-        <!-- <div class="news" ng-include="'templates/news.html'"></div> -->
+        <div class="news" ng-include="'templates/news.html'"></div>
     </div>
 </div>
