@@ -26,6 +26,6 @@ RUN ./node_modules/.bin/bower --allow-root install
 ADD . /app/src
 RUN npm run build
 
-FROM nginx:1.17
+FROM nginx:1.23
 
 COPY --from=build /app/src/dist/ /usr/share/nginx/html/
