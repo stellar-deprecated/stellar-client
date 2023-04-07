@@ -29,3 +29,4 @@ RUN npm run build
 FROM nginx:1.23
 
 COPY --from=build /app/src/dist/ /usr/share/nginx/html/
+COPY nginx_custom.conf /etc/nginx/conf.d/custom.conf
